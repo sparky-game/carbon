@@ -1,0 +1,32 @@
+#+AUTHOR: Wasym A. Alonso
+#+TITLE: Carbon
+
+#+CAPTION: Carbon logo
+
+# Repository info badges
+#+begin_html
+<p>
+<a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GNU GPL v3.0"></a>
+</p>
+#+end_html
+
+(...)
+
+# GNU GPLv3+ License notice
+#+begin_quote
+This work and all its documentation is licensed under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License. @@html:<br>@@
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. @@html:<br>@@
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#+end_quote
+
+* Table of Contents :toc:
+- [[#build][Build]]
+- [[#usage][Usage]]
+
+* Build
+
+(...)
+
+* Usage
+
+(...)
