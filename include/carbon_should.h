@@ -23,3 +23,23 @@
       return false;                                                     \
     }                                                                   \
   }
+
+#define carbon_should_be_true(actual)                                   \
+  {                                                                     \
+    if (actual != true) {                                                \
+      CARBON_ERROR("%s:%d :: FAILED -> got 'false', expected 'true'\n", \
+                   __FILE__,                                            \
+                   __LINE__);                                           \
+      return false;                                                     \
+    }                                                                   \
+  }
+
+#define carbon_should_be_false(actual)                                  \
+  {                                                                     \
+    if (actual != false) {                                               \
+      CARBON_ERROR("%s:%d :: FAILED -> got 'true', expected 'false'\n", \
+                   __FILE__,                                            \
+                   __LINE__);                                           \
+      return false;                                                     \
+    }                                                                   \
+  }
