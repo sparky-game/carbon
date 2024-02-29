@@ -2,6 +2,7 @@
 #+TITLE: Carbon
 
 #+CAPTION: Carbon logo
+[[assets/logo.png]]
 
 # Repository info badges
 #+begin_html
@@ -20,13 +21,133 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 #+end_quote
 
 * Table of Contents :toc:
-- [[#build][Build]]
 - [[#usage][Usage]]
+  - [[#target-code][Target code]]
+  - [[#test-code][Test code]]
+  - [[#test-suite-entrypoint][Test suite entrypoint]]
+- [[#code-coverage][Code coverage]]
 
-* Build
+* Usage
 
 (...)
 
-* Usage
+#+begin_src sh
+$  git submodule add https://github.com/iWas-Coder/carbon vendor/carbon
+#+end_src
+
+** Target code
+
+(...)
+
+#+begin_src c
+// include/x.h
+
+#pragma once
+
+void inc_int(int *x);
+#+end_src
+
+#+begin_src c
+// src/x.c
+
+#include <x.h>
+
+void inc_int(int *x) {
+  ++(*x);
+}
+#+end_src
+
+(...)
+
+- ~$CC~ :: ~gcc~
+- ~$CPPFLAGS~ :: ~-I include~
+- ~$CFLAGS~ :: ~-Wall -Wextra -pedantic -Werror -fanalyzer~
+- ~$CCOVFLAGS~ :: ~-fprofile-arcs -ftest-coverage~
+#+begin_src sh
+$  $CC $CPPFLAGS $CFLAGS $CCOVFLAGS -c src/x.c -o build/x.o
+#+end_src
+
+(...)
+
+- ~$AR~ :: ~ar -rc~
+#+begin_src sh
+$  $AR libx.a build/*.o
+#+end_src
+
+** Test code
+
+(...)
+
+#+begin_src c
+// test/include/x_test.h
+
+#pragma once
+
+void x_test_register(void);
+#+end_src
+
+(...)
+
+#+begin_src c
+// test/src/x_test.c
+
+#define CARBON_IMPLEMENTATION
+#include <carbon.h>
+
+#include <x.h>
+#include <x_test.h>
+
+static bool_t x_test_inc_int(void) {
+  int a = 1, b = 0;
+  carbon_should_not_be(a, b);
+  inc_int(&b);
+  carbon_should_be(a, b);
+  return true;
+}
+
+void x_test_register(void) {
+  CARBON_REGISTER_TEST(x_test_inc_int);
+}
+#+end_src
+
+(...)
+
+- ~$CC~ :: ~gcc~
+- ~$CPPFLAGS~ :: ~-I include~
+- ~$CFLAGS~ :: ~-Wall -Wextra -pedantic -Werror -fanalyzer~
+#+begin_src sh
+$  $CC $CPPFLAGS $CFLAGS -c test/src/x_test.c -o build/test/x_test.o
+#+end_src
+
+** Test suite entrypoint
+
+(...)
+
+#+begin_src c
+// test/src/test.c
+
+#define CARBON_IMPLEMENTATION
+#include <carbon.h>
+
+#include <x_test.h>
+
+int main(void) {
+  x_test_register();
+
+  carbon_test_manager_run();
+  return 0;
+}
+#+end_src
+
+(...)
+
+- ~$CC~ :: ~gcc~
+- ~$CCOVFLAGS~ :: ~-fprofile-arcs -ftest-coverage~
+- ~$LDFLAGS~ :: ~-Wl,--build-id -L . -lx~
+#+begin_src sh
+$  $CC $CCOVFLAGS build/test/x_test.o $LDFLAGS -o build/test/test
+#+end_src
+
+* Code coverage
 
 (...)
