@@ -1,12 +1,17 @@
 #+AUTHOR: Wasym A. Alonso
-#+TITLE: Carbon
 
-#+CAPTION: Carbon logo
-[[assets/logo.png]]
+# Logo & Title
+#+begin_html
+<h1 align="center">
+<img src="assets/logo.png" alt="Carbon Logo">
+<br/>
+Carbon
+</h1>
+#+end_html
 
 # Repository info badges
 #+begin_html
-<p>
+<p align="center">
 <a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GNU GPL v3.0"></a>
 </p>
 #+end_html
@@ -59,19 +64,8 @@ void inc_int(int *x) {
 
 (...)
 
-- ~$CC~ :: ~gcc~
-- ~$CPPFLAGS~ :: ~-I include~
-- ~$CFLAGS~ :: ~-Wall -Wextra -pedantic -Werror -fanalyzer~
-- ~$CCOVFLAGS~ :: ~-fprofile-arcs -ftest-coverage~
 #+begin_src sh
-$  $CC $CPPFLAGS $CFLAGS $CCOVFLAGS -c src/x.c -o build/x.o
-#+end_src
-
-(...)
-
-- ~$AR~ :: ~ar -rc~
-#+begin_src sh
-$  $AR libx.a build/*.o
+$  gcc -I include -Wall -Wextra -pedantic -Werror -fanalyzer --coverage -c src/x.c -o build/x.o
 #+end_src
 
 ** Test code
@@ -86,16 +80,12 @@ $  $AR libx.a build/*.o
 void x_test_register(void);
 #+end_src
 
-(...)
-
 #+begin_src c
 // test/src/x_test.c
 
-#define CARBON_IMPLEMENTATION
-#include <carbon.h>
-
 #include <x.h>
 #include <x_test.h>
+#include <carbon.h>
 
 static bool_t x_test_inc_int(void) {
   int a = 1, b = 0;
@@ -112,11 +102,8 @@ void x_test_register(void) {
 
 (...)
 
-- ~$CC~ :: ~gcc~
-- ~$CPPFLAGS~ :: ~-I include~
-- ~$CFLAGS~ :: ~-Wall -Wextra -pedantic -Werror -fanalyzer~
 #+begin_src sh
-$  $CC $CPPFLAGS $CFLAGS -c test/src/x_test.c -o build/test/x_test.o
+$  gcc -I include -I test/include -I vendor/carbon/include -Wall -Wextra -pedantic -Werror -fanalyzer -c test/src/x_test.c -o build/test/x_test.o
 #+end_src
 
 ** Test suite entrypoint
@@ -128,7 +115,6 @@ $  $CC $CPPFLAGS $CFLAGS -c test/src/x_test.c -o build/test/x_test.o
 
 #define CARBON_IMPLEMENTATION
 #include <carbon.h>
-
 #include <x_test.h>
 
 int main(void) {
@@ -141,13 +127,22 @@ int main(void) {
 
 (...)
 
-- ~$CC~ :: ~gcc~
-- ~$CCOVFLAGS~ :: ~-fprofile-arcs -ftest-coverage~
-- ~$LDFLAGS~ :: ~-Wl,--build-id -L . -lx~
 #+begin_src sh
-$  $CC $CCOVFLAGS build/test/x_test.o $LDFLAGS -o build/test/test
+$  gcc -I test/include -I vendor/carbon/include -Wall -Wextra -pedantic -Werror -fanalyzer -c test/src/test.c -o build/test/test.o
+#+end_src
+
+(...)
+
+#+begin_src sh
+$  gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id -o build/test/test
 #+end_src
 
 * Code coverage
+
+(...)
+
+#+begin_src sh
+$  gcov -nd build/*.o
+#+end_src
 
 (...)
