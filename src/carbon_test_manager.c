@@ -31,12 +31,13 @@ CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name) {
   };
 }
 
-CARBON_API void carbon_test_manager_run(void) {
+CARBON_API int carbon_test_manager_run(void) {
   if (!test_suite.tests || !test_suite.n) {
     CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `test_suite` has not been initialized\n");
     return;
   }
 
+  int exit_code = 0;
   size_t passed = 0, failed = 0;
   clock_t total_time_start = clock();
   for (size_t i = 0; i < test_suite.n; ++i) {
@@ -57,6 +58,7 @@ CARBON_API void carbon_test_manager_run(void) {
                  failed,
                  passed,
                  total_time);
+    ++exit_code;
   }
   else {
     CARBON_INFO("=========== %zu passed in %.2fs ===========\n",
@@ -64,4 +66,5 @@ CARBON_API void carbon_test_manager_run(void) {
                 total_time);
   }
   free(test_suite.tests);
+  return exit_code;
 }
