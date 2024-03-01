@@ -16,6 +16,7 @@ typedef struct {
 } Tests;
 
 void carbon_test_manager_register(TestFunc test_func, char *name);
+void carbon_test_manager_cleanup(void);
 int carbon_test_manager_run(void);
 
 #endif  // CARBON_TEST_MANAGER_H_
