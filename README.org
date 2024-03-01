@@ -9,10 +9,28 @@ Carbon
 </h1>
 #+end_html
 
+# Subtitle
+#+begin_html
+<h4 align="center">
+You can't unit test C, right?
+</h4>
+#+end_html
+
+# Buy Me A Coffee
+#+begin_html
+<p align="center">
+<a href="https://www.buymeacoffee.com/iwas.coder">
+<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height=41 width=174>
+</a>
+</p>
+#+end_html
+
 # Repository info badges
 #+begin_html
 <p align="center">
-<a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GNU GPL v3.0"></a>
+<img src="https://img.shields.io/github/license/iwas-coder/carbon?color=blue" alt="License">
+<img src="https://img.shields.io/github/repo-size/iwas-coder/carbon?color=blue" alt="Size">
+<img src="https://img.shields.io/github/v/tag/iwas-coder/carbon?color=blue" alt="Release">
 </p>
 #+end_html
 
@@ -40,6 +58,19 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 $  git submodule add https://github.com/iWas-Coder/carbon vendor/carbon
 #+end_src
 
+(...)
+
+#+begin_src sh
+CFLAGS="-Wall -Wextra -pedantic -Werror -fanalyzer"
+#+end_src
+- ~-Wall~ :: This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.
+- ~-Wextra~ :: This  enables some extra warning flags that are not enabled by ~-Wall~.
+- ~-pedantic~ :: Issue all the warnings demanded by strict ISO C and ISO C++; reject all programs that use forbidden extensions, and some other programs that do not follow ISO C and ISO C++.
+- ~-Werror~ :: Make all warnings into errors.
+- ~-fanalyzer~ :: This option enables an static analysis of program flow which  looks for "interesting" interprocedural paths through the code, and issues warnings for problems found on them.
+
+(...)
+
 ** Target code
 
 (...)
@@ -65,7 +96,7 @@ void inc_int(int *x) {
 (...)
 
 #+begin_src sh
-$  gcc -I include -Wall -Wextra -pedantic -Werror -fanalyzer --coverage -c src/x.c -o build/x.o
+$  gcc -I include $CFLAGS --coverage -c src/x.c -o build/x.o
 #+end_src
 
 ** Test code
@@ -103,7 +134,7 @@ void x_test_register(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I include -I test/include -I vendor/carbon/include -Wall -Wextra -pedantic -Werror -fanalyzer -c test/src/x_test.c -o build/test/x_test.o
+$  gcc -I include -I test/include -I vendor/carbon/include $CFLAGS -c test/src/x_test.c -o build/test/x_test.o
 #+end_src
 
 ** Test suite entrypoint
@@ -120,15 +151,14 @@ $  gcc -I include -I test/include -I vendor/carbon/include -Wall -Wextra -pedant
 int main(void) {
   x_test_register();
 
-  carbon_test_manager_run();
-  return 0;
+  return carbon_test_manager_run();
 }
 #+end_src
 
 (...)
 
 #+begin_src sh
-$  gcc -I test/include -I vendor/carbon/include -Wall -Wextra -pedantic -Werror -fanalyzer -c test/src/test.c -o build/test/test.o
+$  gcc -I test/include -I vendor/carbon/include $CFLAGS -c test/src/test.c -o build/test/test.o
 #+end_src
 
 (...)
@@ -142,7 +172,7 @@ $  gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id
 (...)
 
 #+begin_src sh
-$  gcov -nd build/*.o
+$  gcov -n -abdkq build/*.o
 #+end_src
 
 (...)
