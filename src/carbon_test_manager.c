@@ -1,5 +1,5 @@
 #ifndef CARBON_IMPLEMENTATION
-#include <carbon_test_manager.h>
+#include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
 #include <time.h>
@@ -7,24 +7,32 @@
 
 static Tests test_suite = {0};
 
-CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name) {
-  ++test_suite.n;
+CARBON_API Test *carbon_test_manager_alloc(void) {
+  Test *p = 0;
+  size_t size = sizeof(Test);
   if (!test_suite.tests) {
-    test_suite.tests = malloc(sizeof(Test));
-    if (!test_suite.tests) {
-      CARBON_ERROR("[ERROR]: carbon_test_manager_register :: failed to allocate memory\n");
+    p = malloc(size);
+    if (!p) {
+      CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to allocate memory (%zuB)\n", size);
       exit(1);
     }
   }
   else {
-    Test *p = test_suite.tests;
-    test_suite.tests = realloc(test_suite.tests, test_suite.n * sizeof(Test));
-    if (!test_suite.tests) {
-      CARBON_ERROR("[ERROR]: carbon_test_manager_register :: failed to allocate memory\n");
-      free(p);
+    size *= test_suite.n;
+    Test *prev_p = test_suite.tests;
+    p = realloc(test_suite.tests, size);
+    if (!p) {
+      CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to reallocate memory (%zuB)\n", size);
+      free(prev_p);
       exit(1);
     }
   }
+  return p;
+}
+
+CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name) {
+  ++test_suite.n;
+  test_suite.tests = carbon_test_manager_alloc();
   test_suite.tests[test_suite.n - 1] = (Test) {
     .f = test_func,
     .name = name
@@ -38,16 +46,15 @@ CARBON_API void carbon_test_manager_cleanup(void) {
   }
 
   free(test_suite.tests);
-  test_suite = {0};
+  test_suite = (Tests) {0};
 }
 
 CARBON_API int carbon_test_manager_run(void) {
   if (!test_suite.tests || !test_suite.n) {
     CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `test_suite` has not been initialized\n");
-    return;
+    return 1;
   }
 
-  int exit_code = 0;
   size_t passed = 0, failed = 0;
   clock_t total_time_start = clock();
   for (size_t i = 0; i < test_suite.n; ++i) {
@@ -68,11 +75,11 @@ CARBON_API int carbon_test_manager_run(void) {
                  failed,
                  passed,
                  total_time);
-    ++exit_code;
+    return 1;
   }
   else CARBON_INFO("=========== %zu passed in %.2fs ===========\n",
                    passed,
                    total_time);
   carbon_test_manager_cleanup();
-  return exit_code;
+  return 0;
 }
