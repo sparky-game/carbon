@@ -13,8 +13,9 @@ typedef struct {
 typedef struct {
   Test *tests;
   size_t n;
-} Tests;
+} Suite;
 
+Suite carbon_test_manager_spawn(void);
 Test *carbon_test_manager_alloc(void);
 void carbon_test_manager_register(TestFunc test_func, char *name);
 void carbon_test_manager_cleanup(void);

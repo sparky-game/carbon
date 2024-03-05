@@ -5,7 +5,11 @@
 #include <time.h>
 #include <stdlib.h>
 
-static Tests test_suite = {0};
+static Suite test_suite = {0};
+
+CARBON_API Suite carbon_test_manager_spawn(void) {
+  return (Suite) {0};
+}
 
 CARBON_API Test *carbon_test_manager_alloc(void) {
   Test *p = 0;
@@ -46,7 +50,7 @@ CARBON_API void carbon_test_manager_cleanup(void) {
   }
 
   free(test_suite.tests);
-  test_suite = (Tests) {0};
+  test_suite = (Suite) {0};
 }
 
 CARBON_API int carbon_test_manager_run(void) {
