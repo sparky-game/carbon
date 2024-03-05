@@ -70,7 +70,7 @@ $(TEST_BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
 	$(Q)mkdir -p $@
 
-# ****************** 'carbon': link ****************** #
+# **************** 'carbon': archive ***************** #
 $(OUT): $(OBJS)
 	@echo "  $(PPO_AR)      $@"
 	$(Q)$(AR) $@ $^
