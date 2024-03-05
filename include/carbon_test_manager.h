@@ -16,8 +16,10 @@ typedef struct {
 } Suite;
 
 Suite carbon_test_manager_spawn(void);
-Test *carbon_test_manager_alloc(void);
+Test *carbon_test_manager_alloc(Suite *s);
+void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name);
 void carbon_test_manager_register(TestFunc test_func, char *name);
+void carbon_test_manager_cleanup_s(Suite *s);
 void carbon_test_manager_cleanup(void);
 int carbon_test_manager_run(void);
 

@@ -11,10 +11,10 @@ CARBON_API Suite carbon_test_manager_spawn(void) {
   return (Suite) {0};
 }
 
-CARBON_API Test *carbon_test_manager_alloc(void) {
+CARBON_API Test *carbon_test_manager_alloc(Suite *s) {
   Test *p = 0;
   size_t size = sizeof(Test);
-  if (!test_suite.tests) {
+  if (!s->tests) {
     p = malloc(size);
     if (!p) {
       CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to allocate memory (%zuB)\n", size);
@@ -22,9 +22,9 @@ CARBON_API Test *carbon_test_manager_alloc(void) {
     }
   }
   else {
-    size *= test_suite.n;
-    Test *prev_p = test_suite.tests;
-    p = realloc(test_suite.tests, size);
+    size *= s->n;
+    Test *prev_p = s->tests;
+    p = realloc(s->tests, size);
     if (!p) {
       CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to reallocate memory (%zuB)\n", size);
       free(prev_p);
@@ -34,23 +34,32 @@ CARBON_API Test *carbon_test_manager_alloc(void) {
   return p;
 }
 
-CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name) {
-  ++test_suite.n;
-  test_suite.tests = carbon_test_manager_alloc();
-  test_suite.tests[test_suite.n - 1] = (Test) {
+CARBON_API void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name) {
+  ++s->n;
+  s->tests = carbon_test_manager_alloc(s);
+  s->tests[s->n - 1] = (Test) {
     .f = test_func,
     .name = name
   };
 }
 
-CARBON_API void carbon_test_manager_cleanup(void) {
-  if (!test_suite.tests || !test_suite.n) {
-    CARBON_ERROR("[ERROR]: carbon_test_manager_cleanup :: `test_suite` has not been initialized\n");
+CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name) {
+  carbon_test_manager_register_s(&test_suite, test_func, name);
+}
+
+CARBON_API void carbon_test_manager_cleanup_s(Suite *s) {
+  if (!s->tests || !s->n) {
+    CARBON_ERROR("[ERROR]: carbon_test_manager_cleanup_s :: Suite `s` has not been initialized\n");
     return;
   }
 
-  free(test_suite.tests);
-  test_suite = (Suite) {0};
+  free(s->tests);
+  s->tests = 0;
+  s->n = 0;
+}
+
+CARBON_API void carbon_test_manager_cleanup(void) {
+  carbon_test_manager_cleanup_s(&test_suite);
 }
 
 CARBON_API int carbon_test_manager_run(void) {
