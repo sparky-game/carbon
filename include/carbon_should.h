@@ -1,9 +1,59 @@
 #pragma once
 
+#include <string.h>
+
 #define carbon_should_be(expected, actual)                              \
   {                                                                     \
-    if ((expected) != (actual)) {                                        \
+    if ((int) (expected) != (int) (actual)) {                            \
       CARBON_ERROR("%s:%d :: FAILED -> got '%d', expected '%d'\n",      \
+                   __FILE__,                                            \
+                   __LINE__,                                            \
+                   (int) (actual),                                      \
+                   (int) (expected));                                   \
+      return false;                                                     \
+    }                                                                   \
+  }
+
+#define carbon_should_not_be(expected, actual)                          \
+  {                                                                     \
+    if ((int) (expected) == (int) (actual)) {                            \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%d == %d', expected not to\n", \
+                   __FILE__,                                            \
+                   __LINE__,                                            \
+                   (int) (actual),                                      \
+                   (int) (expected));                                   \
+      return false;                                                     \
+    }                                                                   \
+  }
+
+#define carbon_should_be_p(expected, actual)                            \
+  {                                                                     \
+    if ((void *) (expected) != (void *) (actual)) {                      \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%p', expected '%p'\n",      \
+                   __FILE__,                                            \
+                   __LINE__,                                            \
+                   (void *) (actual),                                   \
+                   (void *) (expected));                                \
+      return false;                                                     \
+    }                                                                   \
+  }
+
+#define carbon_should_not_be_p(expected, actual)                        \
+  {                                                                     \
+    if ((void *) (expected) == (void *) (actual)) {                      \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%p == %p', expected not to\n", \
+                   __FILE__,                                            \
+                   __LINE__,                                            \
+                   (void *) (actual),                                   \
+                   (void *) (expected));                                \
+      return false;                                                     \
+    }                                                                   \
+  }
+
+#define carbon_should_be_s(expected, actual)                            \
+  {                                                                     \
+    if (strcmp((expected), (actual))) {                                 \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%s', expected '%s'\n",      \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (actual),                                            \
@@ -12,10 +62,10 @@
     }                                                                   \
   }
 
-#define carbon_should_not_be(expected, actual)                          \
+#define carbon_should_not_be_s(expected, actual)                        \
   {                                                                     \
-    if ((expected) == (actual)) {                                        \
-      CARBON_ERROR("%s:%d :: FAILED -> got '%d == %d', expected not to\n", \
+    if (!strcmp((expected), (actual))) {                                \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%s == %s', expected not to\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (actual),                                            \
