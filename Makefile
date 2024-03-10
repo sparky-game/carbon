@@ -41,16 +41,15 @@ OUT      = $(BUILD_DIR)/lib$(NAME).a
 TEST_OUT = $(TEST_BUILD_DIR)/test
 
 # Build targets
-TGTS = $(NAME) check
 DIR_TGTS = $(BUILD_DIR) $(TEST_BUILD_DIR)
 
 
 ###################
 # === TARGETS === #
 ###################
-.PHONY: all $(TGTS) clean
+.PHONY: all $(NAME) check clean
 
-all: $(TGTS)
+all: $(NAME)
 	$(Q):
 
 $(NAME): $(BUILD_DIR) $(OUT)
