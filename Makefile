@@ -33,7 +33,7 @@ AR            = ar -rc
 COV           = --coverage
 CPPFLAGS      = -I $(HDR_DIR)
 CPPFLAGS_TEST = $(CPPFLAGS) -I $(TEST_DIR)/$(HDR_DIR)
-CFLAGS        = -Wall -Wextra -pedantic -Werror -fanalyzer -ggdb
+CFLAGS        = -Wall -Wextra -pedantic -Werror -fanalyzer
 LDFLAGS_TEST  = -Wl,--build-id -L $(BUILD_DIR) -l$(NAME)
 
 # Build output
@@ -41,7 +41,7 @@ OUT      = $(BUILD_DIR)/lib$(NAME).a
 TEST_OUT = $(TEST_BUILD_DIR)/test
 
 # Build targets
-TGTS = carbon check
+TGTS = $(NAME) check
 DIR_TGTS = $(BUILD_DIR) $(TEST_BUILD_DIR)
 
 
@@ -53,7 +53,7 @@ DIR_TGTS = $(BUILD_DIR) $(TEST_BUILD_DIR)
 all: $(TGTS)
 	$(Q):
 
-carbon: $(BUILD_DIR) $(OUT)
+$(NAME): $(BUILD_DIR) $(OUT)
 	@echo "Carbon: $(OUT) is ready"
 
 check: $(TEST_BUILD_DIR) $(TEST_OUT)

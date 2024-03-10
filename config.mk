@@ -1,2 +1,2 @@
-# Verbose control
+# Verbosity
 Q = @
