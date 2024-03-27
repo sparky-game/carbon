@@ -60,17 +60,6 @@ $  git submodule add https://github.com/iWas-Coder/carbon vendor/carbon
 
 (...)
 
-#+begin_src sh
-CFLAGS="-Wall -Wextra -pedantic -Werror -fanalyzer"
-#+end_src
-- ~-Wall~ :: This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.
-- ~-Wextra~ :: This  enables some extra warning flags that are not enabled by ~-Wall~.
-- ~-pedantic~ :: Issue all the warnings demanded by strict ISO C and ISO C++; reject all programs that use forbidden extensions, and some other programs that do not follow ISO C and ISO C++.
-- ~-Werror~ :: Make all warnings into errors.
-- ~-fanalyzer~ :: This option enables an static analysis of program flow which  looks for "interesting" interprocedural paths through the code, and issues warnings for problems found on them.
-
-(...)
-
 ** Target code
 
 (...)
@@ -96,7 +85,7 @@ void inc_int(int *x) {
 (...)
 
 #+begin_src sh
-$  gcc -I include $CFLAGS --coverage -c src/x.c -o build/x.o
+$  gcc -I include --coverage -c src/x.c -o build/x.o
 #+end_src
 
 ** Test code
@@ -134,7 +123,7 @@ void x_test_register(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I include -I test/include -I vendor/carbon/include $CFLAGS -c test/src/x_test.c -o build/test/x_test.o
+$  gcc -I include -I test/include -I vendor/carbon/include -c test/src/x_test.c -o build/test/x_test.o
 #+end_src
 
 ** Test suite entrypoint
@@ -158,7 +147,7 @@ int main(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I test/include -I vendor/carbon/include $CFLAGS -c test/src/test.c -o build/test/test.o
+$  gcc -I test/include -I vendor/carbon/include -c test/src/test.c -o build/test/test.o
 #+end_src
 
 (...)
