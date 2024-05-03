@@ -74,8 +74,8 @@ void carbon_test_manager_cleanup_s(Suite *s) {
     return;
   }
   free(s->tests);
-  s->tests = 0;
-  s->n = 0;
+  *s = (Suite) {0};
+  s = 0;
 }
 
 void carbon_test_manager_cleanup(void) {
@@ -83,6 +83,8 @@ void carbon_test_manager_cleanup(void) {
 }
 
 unsigned char carbon_test_manager_run(void) {
+  CARBON_INFO("*** BSD Carbon (%s) ***\n", CARBON_VERSION);
+  CARBON_INFO("---------------------------------------\n");
   if (!test_suite.tests || !test_suite.n) {
     CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `test_suite` has not been initialized\n");
     return 1;
