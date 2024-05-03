@@ -153,7 +153,7 @@ $  gcc -I include -I test/include -I vendor/carbon -c test/src/x_test.c -o build
 (...)
 
 #+begin_src c
-// test/src/test.c
+// test/src/carbon.c
 
 #define CARBON_IMPLEMENTATION
 #include <carbon.h>
@@ -168,7 +168,7 @@ int main(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I test/include -I vendor/carbon -c test/src/test.c -o build/test/test.o
+$  gcc -I test/include -I vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
 #+end_src
 
 (...)
