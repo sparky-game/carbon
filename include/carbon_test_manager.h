@@ -3,7 +3,7 @@
 
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, #f)
 
-typedef bool_t (*TestFunc)(void);
+typedef unsigned char (*TestFunc)(void);
 
 typedef struct {
   TestFunc f;
@@ -21,7 +21,7 @@ void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name);
 void carbon_test_manager_register(TestFunc test_func, char *name);
 void carbon_test_manager_cleanup_s(Suite *s);
 void carbon_test_manager_cleanup(void);
-int carbon_test_manager_run(void);
+unsigned char carbon_test_manager_run(void);
 
 #endif  // CARBON_TEST_MANAGER_H_
 

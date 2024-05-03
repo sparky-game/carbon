@@ -1,19 +1,19 @@
 #include <carbon.h>
 #include <carbon_test_manager_test.h>
 
-bool_t test_dummy(void) {
+unsigned char test_dummy(void) {
   carbon_should_be_true(1 == 1);
-  return true;
+  return 1;
 }
 
-bool_t carbon_test_manager_test_suite_creation(void) {
+unsigned char carbon_test_manager_test_suite_creation(void) {
   Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
-  return true;
+  return 1;
 }
 
-bool_t carbon_test_manager_test_registration(void) {
+unsigned char carbon_test_manager_test_registration(void) {
   Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
@@ -26,7 +26,7 @@ bool_t carbon_test_manager_test_registration(void) {
   carbon_test_manager_cleanup_s(&s);
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
-  return true;
+  return 1;
 }
 
 void carbon_test_manager_test_register(void) {

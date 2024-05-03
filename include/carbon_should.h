@@ -10,7 +10,7 @@
                    __LINE__,                                            \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
@@ -22,7 +22,7 @@
                    __LINE__,                                            \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
@@ -34,7 +34,7 @@
                    __LINE__,                                            \
                    (void *) (actual),                                   \
                    (void *) (expected));                                \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
@@ -46,7 +46,7 @@
                    __LINE__,                                            \
                    (void *) (actual),                                   \
                    (void *) (expected));                                \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
@@ -58,7 +58,7 @@
                    __LINE__,                                            \
                    (actual),                                            \
                    (expected));                                         \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
@@ -70,26 +70,26 @@
                    __LINE__,                                            \
                    (actual),                                            \
                    (expected));                                         \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
 #define carbon_should_be_true(actual)                                   \
   {                                                                     \
-    if ((actual) != true) {                                              \
+    if (!(actual)) {                                                    \
       CARBON_ERROR("%s:%d :: FAILED -> got 'false', expected 'true'\n", \
                    __FILE__,                                            \
                    __LINE__);                                           \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }
 
 #define carbon_should_be_false(actual)                                  \
   {                                                                     \
-    if ((actual) != false) {                                             \
+    if ((actual)) {                                                     \
       CARBON_ERROR("%s:%d :: FAILED -> got 'true', expected 'false'\n", \
                    __FILE__,                                            \
                    __LINE__);                                           \
-      return false;                                                     \
+      return 0;                                                         \
     }                                                                   \
   }

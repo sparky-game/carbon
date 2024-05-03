@@ -1,3 +1,24 @@
+# 
+# Carbon --- A simple C/C++ unit testing framework
+# Copyright (C) 2024 Wasym A. Alonso
+# 
+# This file is part of Carbon.
+# 
+# Carbon is free software: you can redistribute it and/or modify
+# it under the terms of the BSD 3-Clause "New" or "Revised" License
+# as published by The Regents of the University of California.
+# 
+# Carbon is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# BSD 3-Clause "New" or "Revised" License for more details.
+# 
+# You should have received a copy of the BSD 3-Clause "New" or
+# "Revised" License along with Carbon.
+# If not, see <https://opensource.org/license/BSD-3-Clause>.
+# 
+
+
 #+AUTHOR: Wasym A. Alonso
 
 # Logo & Title
@@ -16,11 +37,11 @@ You can't unit test C, right?
 </h4>
 #+end_html
 
-# Buy Me A Coffee
+# Repository marketing badges
 #+begin_html
 <p align="center">
 <a href="https://www.buymeacoffee.com/iwas.coder">
-<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height=41 width=174>
+<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height=41>
 </a>
 </p>
 #+end_html
@@ -28,19 +49,20 @@ You can't unit test C, right?
 # Repository info badges
 #+begin_html
 <p align="center">
-<img src="https://img.shields.io/github/license/iwas-coder/carbon?color=blue" alt="License">
-<img src="https://img.shields.io/github/repo-size/iwas-coder/carbon?color=blue" alt="Size">
-<img src="https://img.shields.io/github/v/tag/iwas-coder/carbon?color=blue" alt="Release">
+<img src="https://img.shields.io/github/license/sparky-game/carbon?color=blue" alt="License">
+<img src="https://img.shields.io/github/repo-size/sparky-game/carbon?color=blue" alt="Size">
+<img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Release">
+<img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
 </p>
 #+end_html
 
 (...)
 
-# GNU GPLv3+ License notice
+# BSD-3-Clause License notice
 #+begin_quote
-This work and all its documentation is licensed under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License. @@html:<br>@@
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. @@html:<br>@@
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+Carbon is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License as published by The Regents of the University of California. @@html:<br>@@
+Carbon is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License for more details. @@html:<br>@@
+You should have received a copy of the BSD 3-Clause "New" or "Revised" License along with Carbon. If not, see <https://opensource.org/license/BSD-3-Clause>.
 #+end_quote
 
 * Table of Contents :toc:
