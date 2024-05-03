@@ -1,0 +1,43 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'include/**'
+      - 'src/**'
+      - 'test/**'
+      - 'carbon.h'
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+    paths:
+      - 'include/**'
+      - 'src/**'
+      - 'test/**'
+      - 'carbon.h'
+  schedule:
+    - cron: '0 0 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    permissions:
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v4
+      - name: setup-codeql
+        uses: github/codeql-action/init@v3
+        with:
+          languages: c-cpp
+      - name: test
+        run: |
+          gcc -I test/include -I . test/src/* -o test/carbon
+          ./test/carbon
+      - name: analyze
+        uses: github/codeql-action/analyze@v3
