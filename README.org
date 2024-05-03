@@ -1,5 +1,5 @@
 # 
-# Carbon --- A simple C/C++ unit testing framework
+# BSD Carbon --- A simple C/C++ unit testing framework
 # Copyright (C) 2024 Wasym A. Alonso
 # 
 # This file is part of Carbon.
