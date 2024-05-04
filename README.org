@@ -56,6 +56,15 @@ You can't unit test C, right?
 </p>
 #+end_html
 
+# Repository CI badges
+#+begin_html
+<p align="center">
+<a href="https://github.com/sparky-game/carbon/actions/workflows/test.yaml">
+<img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
+</a>
+</p>
+#+end_html
+
 (...)
 
 # BSD-3-Clause License notice
