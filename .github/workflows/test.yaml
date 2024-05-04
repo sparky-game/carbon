@@ -37,7 +37,7 @@ jobs:
           languages: c-cpp
       - name: test
         run: |
-          gcc -I test/include -I . test/src/* -o test/carbon
+          gcc -I test/include -I . -std=c99 test/src/* -o test/carbon
           ./test/carbon
       - name: analyze
         uses: github/codeql-action/analyze@v3
