@@ -87,7 +87,7 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
 (...)
 
 #+begin_src sh
-$  git submodule add https://github.com/iWas-Coder/carbon vendor/carbon
+$  git submodule add https://github.com/sparky-game/carbon vendor/carbon
 #+end_src
 
 (...)
