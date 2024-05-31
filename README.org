@@ -117,7 +117,7 @@ void inc_int(int *x) {
 (...)
 
 #+begin_src sh
-$  gcc -I include --coverage -c src/x.c -o build/x.o
+gcc -I include --coverage -c src/x.c -o build/x.o
 #+end_src
 
 ** Test code
@@ -155,7 +155,7 @@ void x_test_register(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I include -I test/include -I vendor/carbon -c test/src/x_test.c -o build/test/x_test.o
+gcc -I include -I test/include -I vendor/carbon -c test/src/x_test.c -o build/test/x_test.o
 #+end_src
 
 ** Test suite entrypoint
@@ -178,13 +178,13 @@ int main(void) {
 (...)
 
 #+begin_src sh
-$  gcc -I test/include -I vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
+gcc -I test/include -I vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
 #+end_src
 
 (...)
 
 #+begin_src sh
-$  gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id -o build/test/carbon
+gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id -o build/test/carbon
 #+end_src
 
 * Code coverage
@@ -192,7 +192,7 @@ $  gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id
 (...)
 
 #+begin_src sh
-$  gcov -n -abdkq build/*.o
+gcov -n -abdkq build/*.o
 #+end_src
 
 (...)
