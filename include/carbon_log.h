@@ -23,5 +23,9 @@
 
 #include <stdio.h>
 
+#define CARBON_COLOR_RESET   "\033[0m"
+#define CARBON_COLOR_RED     "\033[1;31m"
+#define CARBON_COLOR_GREEN   "\033[1;32m"
+
 #define CARBON_INFO(msg, ...) printf(msg, ##__VA_ARGS__)
 #define CARBON_ERROR(msg, ...) fprintf(stderr, msg, ##__VA_ARGS__)

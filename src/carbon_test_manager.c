@@ -94,24 +94,24 @@ unsigned char carbon_test_manager_run(void) {
   for (size_t i = 0; i < test_suite.n; ++i) {
     unsigned char result = test_suite.tests[i].f();
     if (result) {
-      CARBON_INFO("\033[1;32m(%zu/%zu) %s :: PASSED\033[0m\n", i + 1, test_suite.n, test_suite.tests[i].name);
+      CARBON_INFO(CARBON_COLOR_GREEN "(%zu/%zu) %s :: PASSED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
       ++passed;
     }
     else {
-      CARBON_ERROR("\033[1;31m(%zu/%zu) %s :: FAILED\033[0m\n", i + 1, test_suite.n, test_suite.tests[i].name);
+      CARBON_ERROR(CARBON_COLOR_RED "(%zu/%zu) %s :: FAILED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
       ++failed;
     }
   }
   clock_t total_time_stop = clock();
   double total_time = (double) (total_time_stop - total_time_start) / CLOCKS_PER_SEC;
   if (failed) {
-    CARBON_ERROR("\033[1;31m=========== %zu failed, %zu passed in %.2fs ===========\033[0m\n",
+    CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
                  failed,
                  passed,
                  total_time);
     return 1;
   }
-  else CARBON_INFO("\033[1;32m=========== %zu passed in %.2fs ===========\033[0m\n",
+  else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
                    passed,
                    total_time);
   carbon_test_manager_cleanup();
