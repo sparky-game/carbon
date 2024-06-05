@@ -104,20 +104,22 @@ unsigned char carbon_test_manager_run(void) {
   }
   clock_t total_time_stop = clock();
   double total_time = (double) (total_time_stop - total_time_start) / CLOCKS_PER_SEC;
+  unsigned int total_time_micro = (unsigned int) (total_time * 1e6);
+  unsigned char status = 0;
   if (failed) {
-    if ((int) total_time == 0) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
-                                           failed,
-                                           passed,
-                                           (int) (total_time * 1e6));
+    if (!((int) total_time)) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+                                          failed,
+                                          passed,
+                                          total_time_micro);
     else CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", failed, passed, total_time);
-    return 1;
+    ++status;
   }
   else {
-    if ((int) total_time == 0) CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
-                                          passed,
-                                          (int) (total_time * 1e6));
+    if (!((int) total_time)) CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+                                         passed,
+                                         total_time_micro);
     else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", passed, total_time);
   }
   carbon_test_manager_cleanup();
-  return 0;
+  return status;
 }
