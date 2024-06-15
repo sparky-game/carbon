@@ -21,7 +21,7 @@
 
 #pragma once
 
-#define CARBON_VERSION "v0.2-alpha"
+#define CARBON_VERSION "v0.3-alpha"
 
 #include "include/carbon_log.h"
 #include "include/carbon_junit.h"
