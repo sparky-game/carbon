@@ -39,5 +39,11 @@ jobs:
         run: |
           gcc -I test/include -I . -std=c99 test/src/* -o test/carbon
           ./test/carbon
+      - name: test-results-report
+        if: ${{ always() }}
+        uses: test-summary/action@v2
+        with:
+          paths: carbon_results.xml
+          output: carbon_results.md
       - name: analyze
         uses: github/codeql-action/analyze@v3
