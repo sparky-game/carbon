@@ -90,9 +90,13 @@ unsigned char carbon_test_manager_run(void) {
     return 1;
   }
   size_t passed = 0, failed = 0;
+  carbon_junit_testsuite junit_testsuite_info = { .tests = test_suite.n };
+  carbon_junit_testcase junit_testcase_infos[test_suite.n] = {};
   clock_t total_time_start = clock();
   for (size_t i = 0; i < test_suite.n; ++i) {
     unsigned char result = test_suite.tests[i].f();
+    memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
+    strncpy(junit_testcase_infos[i].name, test_suite.tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
     if (result) {
       CARBON_INFO(CARBON_COLOR_GREEN "(%zu/%zu) %s :: PASSED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
       ++passed;
@@ -100,12 +104,15 @@ unsigned char carbon_test_manager_run(void) {
     else {
       CARBON_ERROR(CARBON_COLOR_RED "(%zu/%zu) %s :: FAILED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
       ++failed;
+      ++junit_testcase_infos[i].has_failed;
     }
   }
   clock_t total_time_stop = clock();
   double total_time = (double) (total_time_stop - total_time_start) / CLOCKS_PER_SEC;
   unsigned int total_time_micro = (unsigned int) (total_time * 1e6);
   unsigned char status = 0;
+  junit_testsuite_info.time = total_time;
+  junit_testsuite_info.failures = failed;
   if (failed) {
     if (!((int) total_time)) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
                                           failed,
@@ -120,6 +127,7 @@ unsigned char carbon_test_manager_run(void) {
                                          total_time_micro);
     else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", passed, total_time);
   }
+  carbon_junit_output(&junit_testsuite_info, junit_testcase_infos);
   carbon_test_manager_cleanup();
   return status;
 }

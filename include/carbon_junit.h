@@ -19,11 +19,26 @@
  */
 
 
-#pragma once
+#ifndef CARBON_JUNIT_H_
+#define CARBON_JUNIT_H_
 
-#define CARBON_VERSION "v0.2-alpha"
+#define CARBON_JUNIT_TESTCASE_NAME_MAX_LEN 512
 
-#include "include/carbon_log.h"
-#include "include/carbon_junit.h"
-#include "include/carbon_should.h"
-#include "include/carbon_test_manager.h"
+typedef struct {
+  double time;
+  size_t tests;
+  size_t failures;
+} carbon_junit_testsuite;
+
+typedef struct {
+  char name[CARBON_JUNIT_TESTCASE_NAME_MAX_LEN];
+  unsigned char has_failed;
+} carbon_junit_testcase;
+
+void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs);
+
+#endif  // CARBON_JUNIT_H_
+
+#ifdef CARBON_IMPLEMENTATION
+#include "../src/carbon_junit.c"
+#endif  // CARBON_IMPLEMENTATION
