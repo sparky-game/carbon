@@ -80,6 +80,7 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
   - [[#target-code][Target code]]
   - [[#test-code][Test code]]
   - [[#test-suite-entrypoint][Test suite entrypoint]]
+  - [[#execution][Execution]]
 - [[#code-coverage][Code coverage]]
 
 * Usage
@@ -187,12 +188,18 @@ gcc -I test/include -I vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
 gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id -o build/test/carbon
 #+end_src
 
-* Code coverage
+** Execution
 
 (...)
 
 #+begin_src sh
-gcov -n -abdkq build/*.o
+./build/test/carbon
 #+end_src
+
+(...)
+
+Additionally, it will create a file named ~carbon_results.xml~ with the execution results formatted as JUnit XML.
+
+* Code coverage
 
 (...)
