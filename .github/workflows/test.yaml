@@ -44,6 +44,5 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: carbon_results.xml
-          output: carbon_results.md
       - name: analyze
         uses: github/codeql-action/analyze@v3
