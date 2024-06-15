@@ -91,7 +91,8 @@ unsigned char carbon_test_manager_run(void) {
   }
   size_t passed = 0, failed = 0;
   carbon_junit_testsuite junit_testsuite_info = { .tests = test_suite.n };
-  carbon_junit_testcase junit_testcase_infos[test_suite.n] = {};
+  carbon_junit_testcase junit_testcase_infos[test_suite.n];
+  memset(junit_testcase_infos, 0, test_suite.n * sizeof(carbon_junit_testcase));
   clock_t total_time_start = clock();
   for (size_t i = 0; i < test_suite.n; ++i) {
     unsigned char result = test_suite.tests[i].f();
