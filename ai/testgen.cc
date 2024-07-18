@@ -1,3 +1,5 @@
+#include <sstream>
+#include <fstream>
 #include <iostream>
 #include "vendor/gemma.cpp/util/app.h"
 #include "vendor/gemma.cpp/util/args.h"
@@ -5,21 +7,50 @@
 #include "vendor/gemma.cpp/evals/benchmark_helper.h"
 
 static constexpr auto system_prompt {
-  "Just write the function that has been requested, no main, no examples, no nonsense."
-  "When finished writing the function, do not repeat it, just write it once."
-  "Do not explain anything, just write the code requested."
-  "Do not use any markdown formatting at all, just plain text."
-  "Only write the plain text code with no additional formatting."
-  "Always use 2 space indenting, no tabs."
-  "Taking into consideration all of the instructions above, do what is requested next:"
+  "Strictly follow the following instructions and rules:"
+  "- Just write the function that has been requested, no main, no examples, no nonsense."
+  "- When finished writing the function, do not repeat it, just write it once."
+  "- Do not explain anything, just write the code requested."
+  "- Do not use any markdown formatting at all, just plain text."
+  "- Only write the plain text code with no additional formatting."
+  "- Always use 2 space indenting, no tabs."
+  "- Do not write multiple blocks of code, just one."
+  "- Do not use any third-party dependency, just built-in features."
+  "Taking into consideration all of the instructions above, perform the following order as strictly as possible:"
 };
 
-std::vector<int> tokenize(const std::string &prompt, const gcpp::GemmaTokenizer &tokenizer) {
+static constexpr auto user_prompt {
+  "C++. We have a function that computes GCD of pair of numbers. Write a unit test for it."
+};
+
+static inline std::vector<int> tokenize(const std::string &prompt, const gcpp::GemmaTokenizer &tokenizer) {
   std::string ctx { std::string(system_prompt) + "\n" + prompt + "\n" };
   std::vector<int> tokens;
   HWY_ASSERT(tokenizer.Encode(ctx, &tokens));
   tokens.insert(tokens.begin(), gcpp::BOS_ID);
   return tokens;
+}
+
+static inline void preprocess_output(std::stringstream &ss) {
+  std::string line;
+  std::vector<std::string> lines;
+  while (std::getline(ss, line)) lines.emplace_back(line);
+  ss.str("");
+  ss.clear();
+  for (const auto &i : lines) {
+    if (i.find("```") == std::string::npos) ss << i << std::endl;
+  }
+}
+
+static inline bool it_builds(const std::stringstream &ss) {
+  std::ofstream ofs { "tmp.cc" };
+  if (not ofs) throw std::runtime_error { "unable to open/create file for writing (`./tmp.cc`)" };
+  ofs << ss.str();
+  ofs.close();
+  int result { std::system("clang++ -S tmp.cc -o /dev/null >/dev/null 2>&1") };
+  std::remove("tmp.cc");
+  if (result != 0) return false;
+  return true;
 }
 
 int main(int argc, char **argv) {
@@ -37,7 +68,9 @@ int main(int argc, char **argv) {
   inference.multiturn = false;
 
   gcpp::AppArgs app(argc, argv);
-  app.num_threads = 2;
+  app.num_threads = 1;
+  if (argc >= 3 and argv[1] == std::string("-t")) app.num_threads = std::atoi(argv[2]);
+  else std::cout << "WARNING: using 1 thread for inference by default.\n" << std::endl;
 
   if (const char* err { loader.Validate() }) HWY_ABORT("%s", err);
   if (const char* err { inference.Validate() }) HWY_ABORT("%s", err);
@@ -50,18 +83,16 @@ int main(int argc, char **argv) {
   std::random_device rand_dev;
   std::mt19937 rand_gen { rand_dev() };
 
-  constexpr auto user_prompt {
-    "Write a function in C++ which checks whether a number is prime."
-  };
   std::vector<int> prompt { tokenize(user_prompt, model.Tokenizer()) };
   size_t prompt_size { prompt.size() };
-
   size_t pos {0};
-  auto stream_token = [prompt_size, &pos, &model](int token, float) {
+  std::stringstream buf;
+  auto stream_token = [prompt_size, &pos, &buf, &model](int token, float) {
     ++pos;
     if (pos > prompt_size and token != gcpp::EOS_ID) {
       std::string tok;
       HWY_ASSERT(model.Tokenizer().Decode(std::vector<int>{token}, &tok));
+      buf << tok;
       std::cout << tok << std::flush;
     }
     return true;
@@ -81,4 +112,12 @@ int main(int argc, char **argv) {
   std::cout << "  prefill_tok_sec:     " << timings.prefill_tok_sec << std::endl;
   std::cout << "  gen_tok_sec:         " << timings.gen_tok_sec << std::endl;
   std::cout << "  time_to_first_token: " << timings.time_to_first_token << std::endl;
+
+  std::cout << "\n\n1. Pre-Process:" << std::endl;
+  preprocess_output(buf);
+  std::cout << buf.str();
+
+  std::cout << "\n\n2. It builds?:" << std::endl;
+  if (it_builds(buf)) std::cout << "Yes. Hurray!" << std::endl;
+  else std::cout << "No. Maybe next time..." << std::endl;
 }
