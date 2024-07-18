@@ -118,7 +118,7 @@ void inc_int(int *x) {
 (...)
 
 #+begin_src sh
-gcc -I include --coverage -c src/x.c -o build/x.o
+clang -I include --coverage -c src/x.c -o build/x.o
 #+end_src
 
 ** Test code
@@ -156,7 +156,7 @@ void x_test_register(void) {
 (...)
 
 #+begin_src sh
-gcc -I include -I test/include -I vendor/carbon -c test/src/x_test.c -o build/test/x_test.o
+clang -I include -I test/include -isystem vendor/carbon -c test/src/x_test.c -o build/test/x_test.o
 #+end_src
 
 ** Test suite entrypoint
@@ -179,13 +179,13 @@ int main(void) {
 (...)
 
 #+begin_src sh
-gcc -I test/include -I vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
+clang -I test/include -isystem vendor/carbon -c test/src/carbon.c -o build/test/carbon.o
 #+end_src
 
 (...)
 
 #+begin_src sh
-gcc --coverage build/x.o build/test/x_test.o build/test/test.o -Wl,--build-id -o build/test/carbon
+clang --coverage build/x.o build/test/x_test.o build/test/carbon.o -o build/test/carbon
 #+end_src
 
 ** Execution
