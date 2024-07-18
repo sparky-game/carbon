@@ -1,3 +1,7 @@
 * text eol=lf
 
 *.png binary
+
+*.spm filter=lfs diff=lfs merge=lfs -text
+*.sbs filter=lfs diff=lfs merge=lfs -text
+*.sbs.* filter=lfs diff=lfs merge=lfs -text
