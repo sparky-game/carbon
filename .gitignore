@@ -1,2 +1,5 @@
+ai/build/
+
 *.xml
 test/carbon
+ai/testgen
