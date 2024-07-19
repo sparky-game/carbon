@@ -145,7 +145,7 @@ static unsigned char x_test_inc_int(void) {
   carbon_should_not_be(a, b);
   inc_int(&b);
   carbon_should_be(a, b);
-  return 1;
+  return CARBON_OK;
 }
 
 void x_test_register(void) {
