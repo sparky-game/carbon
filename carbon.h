@@ -21,7 +21,7 @@
 
 #pragma once
 
-#define CARBON_VERSION "v0.3-alpha"
+#define CARBON_VERSION "v0.4-alpha"
 
 #ifdef __cplusplus
 extern "C" {
