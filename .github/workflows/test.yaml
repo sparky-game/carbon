@@ -37,7 +37,7 @@ jobs:
           languages: c-cpp
       - name: test
         run: |
-          gcc -I test/include -I . -std=c99 test/src/* -o test/carbon
+          clang -I test/include -I . -std=c99 test/src/* -o test/carbon
           ./test/carbon
       - name: test-results-report
         if: ${{ always() }}
