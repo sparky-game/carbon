@@ -21,18 +21,5 @@
 
 #pragma once
 
-#define CARBON_VERSION "v0.3-alpha"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "include/carbon_log.h"
-#include "include/carbon_junit.h"
-#include "include/carbon_should.h"
-#include "include/carbon_defines.h"
-#include "include/carbon_test_manager.h"
-
-#ifdef __cplusplus
-}
-#endif
+#define CARBON_OK 1
+#define CARBON_KO 0

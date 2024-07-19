@@ -24,27 +24,84 @@
 
 static unsigned char carbon_should_test_should_be(void) {
   carbon_should_be(1, 1);
-  return 1;
+  return CARBON_OK;
 }
 
 static unsigned char carbon_should_test_should_not_be(void) {
   carbon_should_not_be(2, 1);
-  return 1;
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_lt(void) {
+  carbon_should_be_lt(2, 1);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_le(void) {
+  carbon_should_be_le(1, 1);
+  carbon_should_be_le(2, 1);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_gt(void) {
+  carbon_should_be_gt(1, 2);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_ge(void) {
+  carbon_should_be_ge(1, 1);
+  carbon_should_be_ge(1, 2);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_p(void) {
+  int i = 7;
+  int *i_addr = &i;
+  carbon_should_be_p(i_addr, &i);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_not_be_p(void) {
+  int i = 7, j = 9;
+  carbon_should_not_be_p(0, &i);
+  carbon_should_not_be_p(0, &j);
+  carbon_should_not_be_p(&i, &j);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_be_s(void) {
+  const char *s = "Hello, World!";
+  carbon_should_be_s("Hello, World!", s);
+  return CARBON_OK;
+}
+
+static unsigned char carbon_should_test_should_not_be_s(void) {
+  const char *s = "Hello, World!";
+  carbon_should_not_be_s("Hello, Seaman!", s);
+  return CARBON_OK;
 }
 
 static unsigned char carbon_should_test_should_be_true(void) {
   carbon_should_be_true(1 == 1);
-  return 1;
+  return CARBON_OK;
 }
 
 static unsigned char carbon_should_test_should_be_false(void) {
   carbon_should_be_false(2 == 1);
-  return 1;
+  return CARBON_OK;
 }
 
 void carbon_should_test_register(void) {
   CARBON_REGISTER_TEST(carbon_should_test_should_be);
   CARBON_REGISTER_TEST(carbon_should_test_should_not_be);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_lt);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_le);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_gt);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_ge);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_p);
+  CARBON_REGISTER_TEST(carbon_should_test_should_not_be_p);
+  CARBON_REGISTER_TEST(carbon_should_test_should_be_s);
+  CARBON_REGISTER_TEST(carbon_should_test_should_not_be_s);
   CARBON_REGISTER_TEST(carbon_should_test_should_be_true);
   CARBON_REGISTER_TEST(carbon_should_test_should_be_false);
 }

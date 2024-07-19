@@ -31,7 +31,7 @@
                    __LINE__,                                            \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -43,7 +43,7 @@
                    __LINE__,                                            \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -57,7 +57,7 @@
                    (int) (expected),                                    \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -71,13 +71,13 @@
                    (int) (expected),                                    \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_gt(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) >= (int) (actual)) {                           \
+    if ((int) (expected) >= (int) (actual)) {                            \
       CARBON_ERROR("%s:%d :: FAILED -> got '%d <= %d', expected '%d > %d'\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
@@ -85,7 +85,7 @@
                    (int) (expected),                                    \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -99,31 +99,31 @@
                    (int) (expected),                                    \
                    (int) (actual),                                      \
                    (int) (expected));                                   \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_p(expected, actual)                            \
   {                                                                     \
-    if ((void *) (expected) != (void *) (actual)) {                     \
+    if ((void *) (expected) != (void *) (actual)) {                      \
       CARBON_ERROR("%s:%d :: FAILED -> got '%p', expected '%p'\n",      \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (void *) (actual),                                   \
                    (void *) (expected));                                \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_not_be_p(expected, actual)                        \
   {                                                                     \
-    if ((void *) (expected) == (void *) (actual)) {                     \
+    if ((void *) (expected) == (void *) (actual)) {                      \
       CARBON_ERROR("%s:%d :: FAILED -> got '%p == %p', expected not to\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (void *) (actual),                                   \
                    (void *) (expected));                                \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -135,7 +135,7 @@
                    __LINE__,                                            \
                    (actual),                                            \
                    (expected));                                         \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -147,7 +147,7 @@
                    __LINE__,                                            \
                    (actual),                                            \
                    (expected));                                         \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -157,7 +157,7 @@
       CARBON_ERROR("%s:%d :: FAILED -> got 'false', expected 'true'\n", \
                    __FILE__,                                            \
                    __LINE__);                                           \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
 
@@ -167,6 +167,6 @@
       CARBON_ERROR("%s:%d :: FAILED -> got 'true', expected 'false'\n", \
                    __FILE__,                                            \
                    __LINE__);                                           \
-      return 0;                                                         \
+      return CARBON_KO;                                                 \
     }                                                                   \
   }
