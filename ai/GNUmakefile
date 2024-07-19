@@ -5,6 +5,7 @@ PPO_CXX   = CXX
 PPO_LD    = LD
 
 CXX           = clang++
+SHA256SUM     = sha256sum -c
 OPTIMIZATIONS = -pipe -O3
 
 HIGHWAY_HDR_DIR   = vendor/highway
@@ -44,6 +45,7 @@ GEMMACPP_CXXFLAGS  = -std=c++17 $(OPTIMIZATIONS)
 TESTGEN_BUILD_DIR   = build
 TESTGEN_WEIGHTS_IN := $(wildcard model/weights.sbs.*)
 TESTGEN_WEIGHTS_OUT = $(TESTGEN_BUILD_DIR)/weights.sbs
+TESTGEN_WEIGHTS_SUM = model/weights.sha256
 TESTGEN_SRCS        = testgen.cc
 TESTGEN_OBJS        = $(patsubst %.cc, $(TESTGEN_BUILD_DIR)/%.o, $(TESTGEN_SRCS))
 TESTGEN_CPPFLAGS    = -isystem $(HIGHWAY_HDR_DIR) -isystem $(GEMMACPP_HDR_DIR)
@@ -63,10 +65,11 @@ $(DIRS_OUT):
 	@mkdir -p $@
 
 $(TESTGEN_WEIGHTS_OUT): $(TESTGEN_WEIGHTS_IN)
-	@for i in $^; do                     \
+	@[ ! -e $@ ] && for i in $^; do      \
 	  echo "  $(PPO_MERGE)   $$i >> $@"; \
 	  cat $$i >> $@;                     \
 	done
+	@$(SHA256SUM) $(TESTGEN_WEIGHTS_SUM) >/dev/null 2>&1
 
 $(TESTGEN_OUT): $(HIGHWAY_OBJS) $(SENTENCEPIECE_OBJS) $(GEMMACPP_OBJS) $(TESTGEN_OBJS)
 	@echo "  $(PPO_LD)      $@"
