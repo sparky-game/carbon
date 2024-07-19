@@ -50,7 +50,7 @@
 #define carbon_should_be_lt(expected, actual)                           \
   {                                                                     \
     if ((int) (expected) <= (int) (actual)) {                            \
-      CARBON_ERROR("%s:%d :: FAILED -> got '%d >= %d', expected '%d < %d'", \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%d >= %d', expected '%d < %d'\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (int) (actual),                                      \
@@ -64,7 +64,7 @@
 #define carbon_should_be_le(expected, actual)                           \
   {                                                                     \
     if ((int) (expected) < (int) (actual)) {                            \
-      CARBON_ERROR("%s:%d :: FAILED -> got '%d > %d', expected '%d <= %d'", \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%d > %d', expected '%d <= %d'\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (int) (actual),                                      \
@@ -77,8 +77,8 @@
 
 #define carbon_should_be_gt(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) >= (int) (actual)) {                            \
-      CARBON_ERROR("%s:%d :: FAILED -> got '%d <= %d', expected '%d > %d'", \
+    if ((int) (expected) >= (int) (actual)) {                           \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%d <= %d', expected '%d > %d'\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (int) (actual),                                      \
@@ -92,7 +92,7 @@
 #define carbon_should_be_ge(expected, actual)                           \
   {                                                                     \
     if ((int) (expected) > (int) (actual)) {                            \
-      CARBON_ERROR("%s:%d :: FAILED -> got '%d < %d', expected '%d >= %d'", \
+      CARBON_ERROR("%s:%d :: FAILED -> got '%d < %d', expected '%d >= %d'\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
                    (int) (actual),                                      \
@@ -105,7 +105,7 @@
 
 #define carbon_should_be_p(expected, actual)                            \
   {                                                                     \
-    if ((void *) (expected) != (void *) (actual)) {                      \
+    if ((void *) (expected) != (void *) (actual)) {                     \
       CARBON_ERROR("%s:%d :: FAILED -> got '%p', expected '%p'\n",      \
                    __FILE__,                                            \
                    __LINE__,                                            \
@@ -117,7 +117,7 @@
 
 #define carbon_should_not_be_p(expected, actual)                        \
   {                                                                     \
-    if ((void *) (expected) == (void *) (actual)) {                      \
+    if ((void *) (expected) == (void *) (actual)) {                     \
       CARBON_ERROR("%s:%d :: FAILED -> got '%p == %p', expected not to\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
