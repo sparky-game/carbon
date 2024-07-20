@@ -7,6 +7,9 @@
 #include "vendor/gemma.cpp/gemma/gemma.h"
 #include "vendor/gemma.cpp/evals/benchmark_helper.h"
 
+#define CARBON_AI_ABORT_ERROR(err) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, (err))
+#define CARBON_AI_ABORT_USAGE HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
+
 static constexpr auto system_prompt {
   "Strictly follow the following instructions and rules:\n"
   "- Just write the function that has been requested, no main, no examples, no nonsense.\n"
@@ -98,27 +101,27 @@ int main(int argc, char **argv) {
   std::string src_file, test_file;
   switch (argc) {
   case 5:
-    if (argv[1] != std::string("--src")) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (not std::filesystem::exists(argv[2])) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (argv[3] != std::string("--test")) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (not std::filesystem::exists(argv[4])) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
+    if (argv[1] != std::string("--src")) CARBON_AI_ABORT_USAGE;
+    if (not std::filesystem::exists(argv[2])) CARBON_AI_ABORT_USAGE;
+    if (argv[3] != std::string("--test")) CARBON_AI_ABORT_USAGE;
+    if (not std::filesystem::exists(argv[4])) CARBON_AI_ABORT_USAGE;
     src_file = argv[2];
     test_file = argv[4];
     break;
   case 7:
-    if (argv[3] != std::string("--src")) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (not std::filesystem::exists(argv[4])) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (argv[5] != std::string("--test")) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
-    if (not std::filesystem::exists(argv[6])) HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
+    if (argv[3] != std::string("--src")) CARBON_AI_ABORT_USAGE;
+    if (not std::filesystem::exists(argv[4])) CARBON_AI_ABORT_USAGE;
+    if (argv[5] != std::string("--test")) CARBON_AI_ABORT_USAGE;
+    if (not std::filesystem::exists(argv[6])) CARBON_AI_ABORT_USAGE;
     src_file = argv[4];
     test_file = argv[6];
     break;
   default:
-    HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0]);
+    CARBON_AI_ABORT_USAGE;
   }
 
-  if (const char* err { loader.Validate() }) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, err);
-  if (const char* err { inference.Validate() }) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, err);
+  if (const char* err { loader.Validate() }) CARBON_AI_ABORT_ERROR(err);
+  if (const char* err { inference.Validate() }) CARBON_AI_ABORT_ERROR(err);
 
   std::string src_file_contents { load_file_contents(src_file) };
   std::string test_file_contents { load_file_contents(test_file) };
