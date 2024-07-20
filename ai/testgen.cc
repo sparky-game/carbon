@@ -166,8 +166,8 @@ int main(int argc, char **argv) {
   std::cout << "  time_to_first_token: " << timings.time_to_first_token << std::endl;
 
   preprocess_output(buf);
-  if (it_builds(buf)) std::cout << "It builds (:D)" << std::endl;
-  else std::cout << "It doesn't build (D:)" << std::endl;
+  if (it_builds(buf)) std::cout << "\nIt builds (:D)" << std::endl;
+  else std::cout << "\nIt doesn't build (D:)" << std::endl;
 
   std::ofstream ofs { "tmp.cc" };
   if (not ofs) throw std::runtime_error { "unable to open/create file for writing (`./tmp.cc`)" };
