@@ -171,4 +171,12 @@ int main(int argc, char **argv) {
   std::cout << "\n\n2. It builds?:" << std::endl;
   if (it_builds(buf)) std::cout << "Yes. Hurray!" << std::endl;
   else std::cout << "No. Maybe next time..." << std::endl;
+
+  std::ofstream ofs { "tmp.cc" };
+  if (not ofs) throw std::runtime_error { "unable to open/create file for writing (`./tmp.cc`)" };
+  ofs << buf.str();
+  ofs.close();
+  [[maybe_unused]] int result { std::system(("diff -u " + test_file + " tmp.cc > testgen.diff").c_str()) };
+  std::remove("tmp.cc");
+  std::cout << "\nOutput from BSD Carbon AI written to: `testgen.diff`" << std::endl;
 }
