@@ -20,6 +20,7 @@ static constexpr auto system_prompt {
   "- Always use 2 space indenting, no tabs.\n"
   "- Do not write multiple blocks of code, just one.\n"
   "- Do not use any third-party dependency, just built-in features.\n"
+  "- Do not remove any original content, always extend it while maintaining original code.\n"
   "Take all of these instructions into consideration while performing as accurate as possible the following requests.\n"
 };
 static constexpr auto test_code_prompt {
@@ -164,13 +165,9 @@ int main(int argc, char **argv) {
   std::cout << "  gen_tok_sec:         " << timings.gen_tok_sec << std::endl;
   std::cout << "  time_to_first_token: " << timings.time_to_first_token << std::endl;
 
-  std::cout << "\n\n1. Pre-Process:" << std::endl;
   preprocess_output(buf);
-  std::cout << buf.str();
-
-  std::cout << "\n\n2. It builds?:" << std::endl;
-  if (it_builds(buf)) std::cout << "Yes. Hurray!" << std::endl;
-  else std::cout << "No. Maybe next time..." << std::endl;
+  if (it_builds(buf)) std::cout << "It builds (:D)" << std::endl;
+  else std::cout << "It doesn't build (D:)" << std::endl;
 
   std::ofstream ofs { "tmp.cc" };
   if (not ofs) throw std::runtime_error { "unable to open/create file for writing (`./tmp.cc`)" };
