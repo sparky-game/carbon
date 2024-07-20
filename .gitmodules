@@ -1,0 +1,12 @@
+[submodule "ai/vendor/highway"]
+	path = ai/vendor/highway
+	url = https://github.com/google/highway
+[submodule "ai/vendor/sentencepiece"]
+	path = ai/vendor/sentencepiece
+	url = https://github.com/google/sentencepiece
+[submodule "ai/vendor/gemma.cpp"]
+	path = ai/vendor/gemma.cpp
+	url = https://github.com/google/gemma.cpp
+[submodule "ai/model"]
+	path = ai/model
+	url = https://huggingface.co/sparky-game/carbon
