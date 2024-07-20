@@ -1,6 +1,7 @@
 PPO_MKDIR = MKDIR
 PPO_CLEAN = CLEAN
 PPO_MERGE = MERGE
+PPO_HASH  = HASH
 PPO_CXX   = CXX
 PPO_LD    = LD
 
@@ -69,6 +70,7 @@ $(TESTGEN_WEIGHTS_OUT): $(TESTGEN_WEIGHTS_IN)
 	  echo "  $(PPO_MERGE)   $$i >> $@"; \
 	  cat $$i >> $@;                     \
 	done
+	@echo "  $(PPO_HASH)    $@"
 	@$(SHA256SUM) $(TESTGEN_WEIGHTS_SUM) >/dev/null 2>&1
 
 $(TESTGEN_OUT): $(HIGHWAY_OBJS) $(SENTENCEPIECE_OBJS) $(GEMMACPP_OBJS) $(TESTGEN_OBJS)
