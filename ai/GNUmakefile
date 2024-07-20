@@ -69,7 +69,7 @@ $(TESTGEN_WEIGHTS_OUT): $(TESTGEN_WEIGHTS_IN)
 	@[ ! -e $@ ] && for i in $^; do      \
 	  echo "  $(PPO_MERGE)   $$i >> $@"; \
 	  cat $$i >> $@;                     \
-	done
+	done || true
 	@echo "  $(PPO_HASH)    $@"
 	@$(SHA256SUM) $(TESTGEN_WEIGHTS_SUM) >/dev/null 2>&1
 
