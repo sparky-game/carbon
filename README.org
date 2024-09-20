@@ -46,6 +46,7 @@ You can't unit test C, right?
 #+end_html
 
 /Carbon/ helps you write better C/C++ tests. 🙂
+
 /Carbon/ is a testing framework that focuses on being lightweight and straightforward, giving the best possible development experience. Whether you work on GNU/Linux, BSDs, Windows or macOS, if you write C/C++ code, /Carbon/ can help you.
 
 #+begin_quote
