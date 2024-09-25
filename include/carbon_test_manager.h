@@ -23,6 +23,8 @@
 #define CARBON_TEST_MANAGER_H_
 
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, #f)
+#define CARBON_TEST_FQN(ctx_name, unit_name) ctx_name ## _test_ ## unit_name
+#define CARBON_TEST(ctx_name, unit_name) static unsigned char CARBON_TEST_FQN(ctx_name, unit_name)(void)
 
 typedef unsigned char (*TestFunc)(void);
 
