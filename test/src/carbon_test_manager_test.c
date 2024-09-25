@@ -27,14 +27,14 @@ static unsigned char test_dummy(void) {
   return CARBON_OK;
 }
 
-static unsigned char carbon_test_manager_test_suite_creation(void) {
+CARBON_TEST(carbon_test_manager, suite_creation) {
   Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
   return CARBON_OK;
 }
 
-static unsigned char carbon_test_manager_test_registration(void) {
+CARBON_TEST(carbon_test_manager, registration) {
   Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
