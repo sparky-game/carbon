@@ -120,7 +120,7 @@ void x_test_register(void);
 #include "x.h"
 #include "x_test.h"
 
-static unsigned char x_test_inc_int(void) {
+CARBON_TEST(x, inc_int) {
   int a = 1, b = 0;
   carbon_should_not_be(a, b);
   inc_int(&b);
