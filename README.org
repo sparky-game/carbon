@@ -150,7 +150,8 @@ clang -isystem vendor/carbon -c x_test.c
 #include <carbon.h>
 #include "x_test.h"
 
-int main(void) {
+int main(int argc, char **argv) {
+  carbon_test_manager_argparse(argc, argv);
   x_test_register();
   return carbon_test_manager_run();
 }
