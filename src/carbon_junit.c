@@ -28,10 +28,11 @@
 #define XML_OUT_FILENAME "carbon_results.xml"
 #define ISO_8601_FMT     "%Y-%m-%dT%H:%M:%S%z"
 
-void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs) {
-  FILE *fd = fopen(XML_OUT_FILENAME, "w");
+void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs, const char *out_filename) {
+  if (!out_filename) out_filename = XML_OUT_FILENAME;
+  FILE *fd = fopen(out_filename, "w");
   if (!fd) {
-    CARBON_ERROR("[ERROR]: carbon_junit_output :: unable to open file (`carbon_results.xml`)\n");
+    CARBON_ERROR("[ERROR]: carbon_junit_output :: unable to open file (`%s`)\n", out_filename);
     return;
   }
   time_t t = time(0);

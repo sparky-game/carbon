@@ -35,7 +35,7 @@ typedef struct {
   unsigned char has_failed;
 } carbon_junit_testcase;
 
-void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs);
+void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs, const char *out_filename);
 
 #endif  // CARBON_JUNIT_H_
 

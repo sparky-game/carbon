@@ -38,6 +38,11 @@ typedef struct {
   size_t n;
 } Suite;
 
+typedef struct {
+  char *output;
+} CmdArgs;
+
+void carbon_test_manager_argparse(int argc, char **argv);
 Suite carbon_test_manager_spawn(void);
 Test *carbon_test_manager_alloc(Suite *s);
 void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name);

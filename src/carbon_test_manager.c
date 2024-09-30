@@ -27,6 +27,42 @@
 #include <stdlib.h>
 
 static Suite test_suite = {0};
+static CmdArgs cmd_args = {0};
+
+static const char * const help_msg = "usage: %s [OPTION]\n"
+  "Options:\n"
+  "  -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)\n"
+  "  -h, --help       display this help and exit\n"
+  "  -v, --version    output version information and exit\n\n"
+  "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
+  "BSD Carbon home page: <https://github.com/sparky-game/carbon>\n";
+
+static const char * const version_msg = "BSD Carbon %s\n"
+  "Copyright (C) 2024 Wasym A. Alonso\n"
+  "License MIT: <https://opensource.org/license/MIT>.\n"
+  "This is free software: you are free to change and redistribute it.\n"
+  "There is NO WARRANTY, to the extent permitted by law.\n\n"
+  "Written by Wasym A. Alonso\n";
+
+void carbon_test_manager_argparse(int argc, char **argv) {
+  if (argc == 1) return;
+  if (argc == 3 && (!strcmp(argv[1], "-o") || !strcmp(argv[1], "--output"))) {
+    cmd_args.output = argv[2];
+    return;
+  }
+  if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
+    CARBON_INFO(help_msg, argv[0]);
+    exit(0);
+  }
+  if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
+    CARBON_INFO(version_msg, CARBON_VERSION);
+    exit(0);
+  }
+  else {
+    CARBON_ERROR("[ERROR]: unrecognized option\nTry '%s --help' for more information.\n", argv[0]);
+    exit(1);
+  }
+}
 
 Suite carbon_test_manager_spawn(void) {
   return (Suite) {0};
@@ -128,7 +164,7 @@ unsigned char carbon_test_manager_run(void) {
                                          total_time_micro);
     else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", passed, total_time);
   }
-  carbon_junit_output(&junit_testsuite_info, junit_testcase_infos);
+  carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
   carbon_test_manager_cleanup();
   return status;
 }

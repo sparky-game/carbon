@@ -24,7 +24,8 @@
 #include <carbon_should_test.h>
 #include <carbon_test_manager_test.h>
 
-int main(void) {
+int main(int argc, char **argv) {
+  carbon_test_manager_argparse(argc, argv);
   carbon_should_test_register();
   carbon_test_manager_test_register();
   return carbon_test_manager_run();
