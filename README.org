@@ -182,4 +182,11 @@ Additionally, it will create a file named ~carbon_results.xml~ with the executio
 
 * Code coverage
 
-(...)
+/Code/ or /test coverage/ is a metric which measures the amount of source code getting executed when a test suite is run. It's important to mention that this measurement doesn't relate by any means to the quality of the codebase, it just reflects how complete and thorough a specific test suite is, nothing more.
+
+Nevertheless, it's a nice metric to have, and it's important that /Carbon/ supports it. As we're working with C/C++, the most used tool for the job is ~gcov~. When using the ~--coverage~ flag, it passes to the compiler/linker specific flags to produce certain code instrumentation.
+
+- The ~*.gcno~ notes files are generated when the source files are compiled with the ~-ftest-coverage~ option (contained inside the ~--coverage~ flag). It contains information to reconstruct the basic block graphs and assign soure line numbers to blocks.
+- The ~*.gcda~ count data files are generated when a program linked with ~-lgcov~ option (contained inside the ~--coverage~ flag) containing object files built with the ~-fprofile-arcs~ option (contained inside the ~--coverage~ flag) is executed. It contains arc transition counts, value profile counts and some summary information.
+
+They shouldn't be accessed manually, but with ~gcov~ itself, using one of its formatting options, e.g. ~--json-format~.
