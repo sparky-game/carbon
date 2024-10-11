@@ -19,13 +19,13 @@
  */
 
 
-#define CARBON_IMPLEMENTATION
-#include <carbon.h>
-#include <carbon_should_test.h>
-#include <carbon_test_manager_test.h>
+#pragma once
 
-int main(int argc, char **argv) {
-  carbon_should_test_register();
-  carbon_test_manager_test_register();
-  return carbon_test_manager_run();
-}
+int carbon_main(int argc, char **argv);
+
+#define main(...)                               \
+  main(int argc, char **argv) {                 \
+    carbon_test_manager_argparse(argc, argv);   \
+    return carbon_main(argc, argv);             \
+  };                                            \
+  int carbon_main(__VA_ARGS__)

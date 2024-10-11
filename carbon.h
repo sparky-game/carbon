@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include "include/carbon_log.h"
+#include "include/carbon_main.h"
 #include "include/carbon_junit.h"
 #include "include/carbon_should.h"
 #include "include/carbon_defines.h"
