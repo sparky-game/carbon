@@ -43,7 +43,7 @@ CARBON_TEST(carbon_test_manager, registration) {
   carbon_should_be(1, s.n);
   carbon_should_be_s("test_dummy", s.tests[0].name);
 
-  carbon_test_manager_cleanup_s(&s);
+  carbon_test_manager_cleanup(&s);
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
   return CARBON_OK;

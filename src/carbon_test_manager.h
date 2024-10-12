@@ -51,12 +51,17 @@ typedef struct {
 } CmdArgs;
 
 void carbon_test_manager_argparse(int argc, char **argv);
+
 Suite carbon_test_manager_spawn(void);
+
 Test *carbon_test_manager_alloc(Suite *s);
+
+void carbon_test_manager_cleanup(Suite *s);
+
 void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name);
 void carbon_test_manager_register(TestFunc test_func, char *name);
-void carbon_test_manager_cleanup_s(Suite *s);
-void carbon_test_manager_cleanup(void);
+
+unsigned char carbon_test_manager_run_s(Suite *s);
 unsigned char carbon_test_manager_run(void);
 
 #endif  // CARBON_TEST_MANAGER_H_

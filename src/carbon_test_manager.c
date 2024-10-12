@@ -104,7 +104,7 @@ void carbon_test_manager_register(TestFunc test_func, char *name) {
   carbon_test_manager_register_s(&test_suite, test_func, name);
 }
 
-void carbon_test_manager_cleanup_s(Suite *s) {
+void carbon_test_manager_cleanup(Suite *s) {
   if (!s->tests || !s->n) {
     CARBON_ERROR("[ERROR]: carbon_test_manager_cleanup_s :: Suite `s` has not been initialized\n");
     return;
@@ -114,32 +114,28 @@ void carbon_test_manager_cleanup_s(Suite *s) {
   s = 0;
 }
 
-void carbon_test_manager_cleanup(void) {
-  carbon_test_manager_cleanup_s(&test_suite);
-}
-
-unsigned char carbon_test_manager_run(void) {
+unsigned char carbon_test_manager_run_s(Suite *s) {
   CARBON_INFO("*** BSD Carbon (%s) ***\n", CARBON_VERSION);
   CARBON_INFO("---------------------------------------\n");
-  if (!test_suite.tests || !test_suite.n) {
-    CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `test_suite` has not been initialized\n");
+  if (!s->tests || !s->n) {
+    CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `(Suite *) s` has not been initialized\n");
     return 1;
   }
   size_t passed = 0, failed = 0;
-  carbon_junit_testsuite junit_testsuite_info = { .tests = test_suite.n };
-  carbon_junit_testcase junit_testcase_infos[test_suite.n];
-  memset(junit_testcase_infos, 0, test_suite.n * sizeof(carbon_junit_testcase));
+  carbon_junit_testsuite junit_testsuite_info = { .tests = s->n };
+  carbon_junit_testcase junit_testcase_infos[s->n];
+  memset(junit_testcase_infos, 0, s->n * sizeof(carbon_junit_testcase));
   clock_t total_time_start = clock();
-  for (size_t i = 0; i < test_suite.n; ++i) {
-    unsigned char result = test_suite.tests[i].f();
+  for (size_t i = 0; i < s->n; ++i) {
+    unsigned char result = s->tests[i].f();
     memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
-    strncpy(junit_testcase_infos[i].name, test_suite.tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
+    strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
     if (result) {
-      CARBON_INFO(CARBON_COLOR_GREEN "(%zu/%zu) %s :: PASSED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
+      CARBON_INFO(CARBON_COLOR_GREEN "(%zu/%zu) %s :: PASSED" CARBON_COLOR_RESET "\n", i + 1, s->n, s->tests[i].name);
       ++passed;
     }
     else {
-      CARBON_ERROR(CARBON_COLOR_RED "(%zu/%zu) %s :: FAILED" CARBON_COLOR_RESET "\n", i + 1, test_suite.n, test_suite.tests[i].name);
+      CARBON_ERROR(CARBON_COLOR_RED "(%zu/%zu) %s :: FAILED" CARBON_COLOR_RESET "\n", i + 1, s->n, s->tests[i].name);
       ++failed;
       ++junit_testcase_infos[i].has_failed;
     }
@@ -165,6 +161,10 @@ unsigned char carbon_test_manager_run(void) {
     else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", passed, total_time);
   }
   carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
-  carbon_test_manager_cleanup();
+  carbon_test_manager_cleanup(s);
   return status;
+}
+
+unsigned char carbon_test_manager_run(void) {
+  return carbon_test_manager_run_s(&test_suite);
 }
