@@ -137,7 +137,7 @@ clang -isystem vendor/carbon -c x_test.c
 #include <carbon.h>
 
 int main(void) {
-  return carbon_test_manager_run();
+  return CARBON_RUN_ALL();
 }
 #+end_src
 
@@ -157,9 +157,17 @@ clang --coverage x.o x_test.o carbon.o -o carbon
 
 (...)
 
-#+begin_src sh
-./carbon
-#+end_src
+#+begin_example
+$ ./carbon -h
+usage: ./test/carbon [OPTION]
+Options:
+  -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)
+  -h, --help       display this help and exit
+  -v, --version    output version information and exit
+
+Report bugs to: <https://github.com/sparky-game/carbon/issues>
+BSD Carbon home page: <https://github.com/sparky-game/carbon>
+#+end_example
 
 (...)
 
