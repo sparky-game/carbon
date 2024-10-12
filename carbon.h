@@ -21,18 +21,19 @@
 
 #pragma once
 
+#define CARBON_NAME "BSD Carbon"
 #define CARBON_VERSION "v0.5-alpha"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "include/carbon_log.h"
-#include "include/carbon_main.h"
-#include "include/carbon_junit.h"
-#include "include/carbon_should.h"
-#include "include/carbon_defines.h"
-#include "include/carbon_test_manager.h"
+#include "src/carbon_log.h"
+#include "src/carbon_main.h"
+#include "src/carbon_junit.h"
+#include "src/carbon_should.h"
+#include "src/carbon_defines.h"
+#include "src/carbon_test_manager.h"
 
 #ifdef __cplusplus
 }

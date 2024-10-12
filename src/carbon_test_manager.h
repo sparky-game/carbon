@@ -22,9 +22,17 @@
 #ifndef CARBON_TEST_MANAGER_H_
 #define CARBON_TEST_MANAGER_H_
 
-#define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, #f)
+#define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_EXPAND_AND_QUOTE(f))
 #define CARBON_TEST_FQN(ctx_name, unit_name) ctx_name ## _test_ ## unit_name
-#define CARBON_TEST(ctx_name, unit_name) static unsigned char CARBON_TEST_FQN(ctx_name, unit_name)(void)
+#define CARBON_TEST_DECL(ctx_name, unit_name) static unsigned char CARBON_TEST_FQN(ctx_name, unit_name)(void)
+#define CARBON_TEST_REG_DECL(ctx_name, unit_name) __attribute__((constructor)) static void CARBON_EXPAND_AND_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
+
+#define CARBON_TEST(ctx_name, unit_name)                        \
+  CARBON_TEST_DECL(ctx_name, unit_name);                        \
+  CARBON_TEST_REG_DECL(ctx_name, unit_name) {                   \
+    CARBON_REGISTER_TEST(CARBON_TEST_FQN(ctx_name, unit_name)); \
+  }                                                             \
+  CARBON_TEST_DECL(ctx_name, unit_name)
 
 typedef unsigned char (*TestFunc)(void);
 
@@ -54,5 +62,5 @@ unsigned char carbon_test_manager_run(void);
 #endif  // CARBON_TEST_MANAGER_H_
 
 #ifdef CARBON_IMPLEMENTATION
-#include "../src/carbon_test_manager.c"
+#include "carbon_test_manager.c"
 #endif  // CARBON_IMPLEMENTATION

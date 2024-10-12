@@ -35,9 +35,9 @@ static const char * const help_msg = "usage: %s [OPTION]\n"
   "  -h, --help       display this help and exit\n"
   "  -v, --version    output version information and exit\n\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
-  "BSD Carbon home page: <https://github.com/sparky-game/carbon>\n";
+  "%s home page: <https://github.com/sparky-game/carbon>\n";
 
-static const char * const version_msg = "BSD Carbon %s\n"
+static const char * const version_msg = "%s %s\n"
   "Copyright (C) 2024 Wasym A. Alonso\n"
   "License MIT: <https://opensource.org/license/MIT>.\n"
   "This is free software: you are free to change and redistribute it.\n"
@@ -51,11 +51,11 @@ void carbon_test_manager_argparse(int argc, char **argv) {
     return;
   }
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
-    CARBON_INFO(help_msg, argv[0]);
+    CARBON_INFO(help_msg, argv[0], CARBON_NAME);
     exit(0);
   }
   if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
-    CARBON_INFO(version_msg, CARBON_VERSION);
+    CARBON_INFO(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
   else {

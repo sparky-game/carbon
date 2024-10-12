@@ -20,7 +20,6 @@
 
 
 #include <carbon.h>
-#include <carbon_should_test.h>
 
 CARBON_TEST(carbon_should, should_be) {
   carbon_should_be(1, 1);
@@ -89,19 +88,4 @@ CARBON_TEST(carbon_should, should_be_true) {
 CARBON_TEST(carbon_should, should_be_false) {
   carbon_should_be_false(2 == 1);
   return CARBON_OK;
-}
-
-void carbon_should_test_register(void) {
-  CARBON_REGISTER_TEST(carbon_should_test_should_be);
-  CARBON_REGISTER_TEST(carbon_should_test_should_not_be);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_lt);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_le);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_gt);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_ge);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_p);
-  CARBON_REGISTER_TEST(carbon_should_test_should_not_be_p);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_s);
-  CARBON_REGISTER_TEST(carbon_should_test_should_not_be_s);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_true);
-  CARBON_REGISTER_TEST(carbon_should_test_should_be_false);
 }

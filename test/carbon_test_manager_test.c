@@ -20,7 +20,6 @@
 
 
 #include <carbon.h>
-#include <carbon_test_manager_test.h>
 
 static unsigned char test_dummy(void) {
   carbon_should_be_true(1 == 1);
@@ -48,9 +47,4 @@ CARBON_TEST(carbon_test_manager, registration) {
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
   return CARBON_OK;
-}
-
-void carbon_test_manager_test_register(void) {
-  CARBON_REGISTER_TEST(carbon_test_manager_test_suite_creation);
-  CARBON_REGISTER_TEST(carbon_test_manager_test_registration);
 }
