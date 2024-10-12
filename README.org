@@ -58,8 +58,8 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
 * Table of Contents :toc:
 - [[#usage][Usage]]
   - [[#target-code][Target code]]
-  - [[#test-code][Test code]]
-  - [[#test-suite-entrypoint][Test suite entrypoint]]
+  - [[#test-case][Test case]]
+  - [[#entrypoint][Entrypoint]]
   - [[#execution][Execution]]
 - [[#code-coverage][Code coverage]]
 
@@ -74,8 +74,6 @@ git submodule add https://github.com/sparky-game/carbon vendor/carbon
 (...)
 
 ** Target code
-
-(...)
 
 #+begin_src c
 // x.h
@@ -97,13 +95,7 @@ void inc_int(int *x) {
 
 (...)
 
-#+begin_src sh
-clang --coverage -c x.c
-#+end_src
-
-** Test code
-
-(...)
+** Test case
 
 #+begin_src c
 // x_test.c
@@ -122,13 +114,7 @@ CARBON_TEST(x, inc_int) {
 
 (...)
 
-#+begin_src sh
-clang -isystem vendor/carbon -c x_test.c
-#+end_src
-
-** Test suite entrypoint
-
-(...)
+** Entrypoint
 
 #+begin_src c
 // carbon.c
@@ -144,13 +130,7 @@ int main(void) {
 (...)
 
 #+begin_src sh
-clang -isystem vendor/carbon -c carbon.c
-#+end_src
-
-(...)
-
-#+begin_src sh
-clang --coverage x.o x_test.o carbon.o -o carbon
+clang -isystem vendor/carbon -std=c99 x.c x_test.c carbon.c -o carbon
 #+end_src
 
 ** Execution
