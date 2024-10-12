@@ -22,7 +22,7 @@
 #pragma once
 
 #define CARBON_NAME "BSD Carbon"
-#define CARBON_VERSION "v0.5-alpha"
+#define CARBON_VERSION "v0.6-alpha"
 
 #ifdef __cplusplus
 extern "C" {
