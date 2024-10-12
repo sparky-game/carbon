@@ -23,5 +23,5 @@
 #include <carbon.h>
 
 int main(void) {
-  return carbon_test_manager_run();
+  return CARBON_RUN_ALL();
 }

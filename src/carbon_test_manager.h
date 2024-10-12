@@ -34,6 +34,9 @@
   }                                                             \
   CARBON_TEST_DECL(ctx_name, unit_name)
 
+#define CARBON_RUN(suite) carbon_test_manager_run_s(suite)
+#define CARBON_RUN_ALL carbon_test_manager_run
+
 typedef unsigned char (*TestFunc)(void);
 
 typedef struct {
