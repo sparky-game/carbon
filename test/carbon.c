@@ -22,6 +22,6 @@
 #define CARBON_IMPLEMENTATION
 #include <carbon.h>
 
-int main(int argc, char **argv) {
+int main(void) {
   return carbon_test_manager_run();
 }
