@@ -130,7 +130,7 @@ int main(void) {
 (...)
 
 #+begin_src sh
-clang -isystem vendor/carbon -std=c99 x.c x_test.c carbon.c -o carbon
+cc -I vendor/carbon -std=c99 x.c x_test.c carbon.c -o carbon
 #+end_src
 
 ** Execution
