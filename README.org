@@ -106,19 +106,10 @@ clang --coverage -c x.c
 (...)
 
 #+begin_src c
-// x_test.h
-
-#pragma once
-
-void x_test_register(void);
-#+end_src
-
-#+begin_src c
 // x_test.c
 
 #include <carbon.h>
 #include "x.h"
-#include "x_test.h"
 
 CARBON_TEST(x, inc_int) {
   int a = 1, b = 0;
@@ -126,10 +117,6 @@ CARBON_TEST(x, inc_int) {
   inc_int(&b);
   carbon_should_be(a, b);
   return CARBON_OK;
-}
-
-void x_test_register(void) {
-  CARBON_REGISTER_TEST(x_test_inc_int);
 }
 #+end_src
 
@@ -148,10 +135,8 @@ clang -isystem vendor/carbon -c x_test.c
 
 #define CARBON_IMPLEMENTATION
 #include <carbon.h>
-#include "x_test.h"
 
-int main(int argc, char **argv) {
-  x_test_register();
+int main(void) {
   return carbon_test_manager_run();
 }
 #+end_src
