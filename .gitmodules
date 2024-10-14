@@ -7,6 +7,3 @@
 [submodule "ai/vendor/gemma.cpp"]
 	path = ai/vendor/gemma.cpp
 	url = https://github.com/google/gemma.cpp
-[submodule "ai/model"]
-	path = ai/model
-	url = https://huggingface.co/sparky-game/carbon
