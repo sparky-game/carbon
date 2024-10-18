@@ -23,10 +23,11 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
-#include "vendor/gemma.cpp/util/app.h"
-#include "vendor/gemma.cpp/util/args.h"
-#include "vendor/gemma.cpp/gemma/gemma.h"
-#include "vendor/gemma.cpp/evals/benchmark_helper.h"
+
+#include <util/app.h>
+#include <util/args.h>
+#include <gemma/gemma.h>
+#include <evals/benchmark_helper.h>
 
 #define CARBON_AI_ABORT_ERROR(err) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, (err))
 #define CARBON_AI_ABORT_USAGE HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
@@ -149,7 +150,7 @@ int main(int argc, char **argv) {
   std::string test_file_contents { load_file_contents(test_file) };
 
   gcpp::Gemma model { gcpp::CreateGemma(loader, thread_pool) };
-  gcpp::KVCache kv_cache { gcpp::KVCache::Create(model.Info().model) };
+  gcpp::KVCache kv_cache { gcpp::KVCache::Create(model.Info().model, 16) };
   gcpp::TimingInfo timings;
   std::random_device rand_dev;
   std::mt19937 rand_gen { rand_dev() };
