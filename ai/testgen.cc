@@ -102,7 +102,7 @@ static inline bool it_builds(const std::stringstream &ss) {
 
 int main(int argc, char **argv) {
   gcpp::LoaderArgs loader(argc, argv);
-  loader.tokenizer = "model/tokenizer.spm";
+  loader.tokenizer = "build/tokenizer.spm";
   loader.weights = "build/weights.sbs";
   loader.model_type_str = "7b-it";
   loader.weight_type_str = "sfp";
