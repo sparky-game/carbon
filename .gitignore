@@ -1,6 +1,7 @@
-ai/build/
-
 *.xml
+carbon
 test/carbon
-ai/testgen
+
+ai/build/
+ai/build/testgen
 ai/*.diff
