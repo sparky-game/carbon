@@ -6,6 +6,8 @@
 
 double carbon_time_get(void);
 
+void carbon_time_sleep(unsigned long long ms);
+
 #endif  // CARBON_TIME_H_
 
 #ifdef CARBON_IMPLEMENTATION

@@ -18,10 +18,12 @@ static void clock_setup(void) {
   clock_freq = 1.0 / (double) freq.QuadPart;
   QueryPerformanceCounter(&start_time);
 }
-#elif _POSIX_C_SOURCE >= 199309L
+#else
 #include <time.h>
-#elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+#include <unistd.h>
+#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 #include <sys/time.h>
+#endif
 #endif
 
 double carbon_time_get(void) {
@@ -39,6 +41,20 @@ double carbon_time_get(void) {
   gettimeofday(&now, 0);
   return now.tv_sec + now.tv_usec * 1e-6;
 #else
-#error "`carbon_time_get` not implemented"
+#error `carbon_time_get` not implemented for this platform
+#endif
+}
+
+void carbon_time_sleep(unsigned long long ms) {
+#ifdef _WIN32
+  Sleep(ms);
+#elif _POSIX_C_SOURCE >= 199309L
+  struct timespec ts;
+  ts.tv_sec = ms / 1e3;
+  ts.tv_nsec = (ms % (unsigned long long) 1e3) * 1e6;
+  nanosleep(&ts, 0);
+#else
+#warning The actual implementation of `carbon_time_sleep` uses only second-level resolution. To get a high precision implementation, change to a different C standard
+  sleep(ms / 1e3);
 #endif
 }
