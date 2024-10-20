@@ -107,7 +107,7 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
   carbon_junit_testsuite junit_testsuite_info = { .tests = s->n };
   carbon_junit_testcase junit_testcase_infos[s->n];
   memset(junit_testcase_infos, 0, s->n * sizeof(carbon_junit_testcase));
-  clock_t total_time_start = clock();
+  Clock clk = carbon_clock_start();
   for (size_t i = 0; i < s->n; ++i) {
     unsigned char result = s->tests[i].f();
     memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
@@ -122,25 +122,30 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
       ++junit_testcase_infos[i].has_failed;
     }
   }
-  clock_t total_time_stop = clock();
-  double total_time = (double) (total_time_stop - total_time_start) / CLOCKS_PER_SEC;
-  unsigned int total_time_micro = (unsigned int) (total_time * 1e6);
+  carbon_clock_update(&clk);
+  carbon_clock_stop(&clk);
+  unsigned int total_time_micro = (unsigned int) (clk.elapsed * 1e6);
   unsigned char status = 0;
-  junit_testsuite_info.time = total_time;
+  junit_testsuite_info.time = clk.elapsed;
   junit_testsuite_info.failures = failed;
   if (failed) {
-    if (!((int) total_time)) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
-                                          failed,
-                                          passed,
-                                          total_time_micro);
-    else CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", failed, passed, total_time);
+    if (!((int) clk.elapsed)) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+                                           failed,
+                                           passed,
+                                           total_time_micro);
+    else CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
+                      failed,
+                      passed,
+                      clk.elapsed);
     ++status;
   }
   else {
-    if (!((int) total_time)) CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
-                                         passed,
-                                         total_time_micro);
-    else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n", passed, total_time);
+    if (!((int) clk.elapsed)) CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+                                          passed,
+                                          total_time_micro);
+    else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
+                     passed,
+                     clk.elapsed);
   }
   carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
   carbon_test_manager_cleanup(s);

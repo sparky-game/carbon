@@ -40,7 +40,9 @@ extern "C" {
 
 #include "src/carbon_log.h"
 #include "src/carbon_main.h"
+#include "src/carbon_time.h"
 #include "src/carbon_junit.h"
+#include "src/carbon_clock.h"
 #include "src/carbon_should.h"
 #include "src/carbon_defines.h"
 #include "src/carbon_test_manager.h"
