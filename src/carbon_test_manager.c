@@ -41,7 +41,7 @@ void carbon_test_manager_argparse(int argc, char **argv) {
     exit(0);
   }
   else {
-    CARBON_ERROR("[ERROR]: unrecognized option\nTry '%s --help' for more information.\n", argv[0]);
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "unrecognized option\nTry '%s --help' for more information." CARBON_COLOR_RESET "\n", argv[0]);
     exit(1);
   }
 }
@@ -56,7 +56,7 @@ Test *carbon_test_manager_alloc(Suite *s) {
   if (!s->tests) {
     p = malloc(size);
     if (!p) {
-      CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to allocate memory (%zuB)\n", size);
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_alloc :: failed to allocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
       exit(1);
     }
   }
@@ -65,7 +65,7 @@ Test *carbon_test_manager_alloc(Suite *s) {
     Test *prev_p = s->tests;
     p = realloc(s->tests, size);
     if (!p) {
-      CARBON_ERROR("[ERROR]: carbon_test_manager_alloc :: failed to reallocate memory (%zuB)\n", size);
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_alloc :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
       free(prev_p);
       exit(1);
     }
@@ -88,7 +88,7 @@ void carbon_test_manager_register(TestFunc test_func, char *name) {
 
 void carbon_test_manager_cleanup(Suite *s) {
   if (!s->tests || !s->n) {
-    CARBON_ERROR("[ERROR]: carbon_test_manager_cleanup_s :: Suite `s` has not been initialized\n");
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_cleanup_s :: Suite `s` has not been initialized" CARBON_COLOR_RESET "\n");
     return;
   }
   free(s->tests);
@@ -97,13 +97,13 @@ void carbon_test_manager_cleanup(Suite *s) {
 }
 
 unsigned char carbon_test_manager_run_s(Suite *s) {
-  CARBON_INFO("*** %s (%s) ***\n", CARBON_NAME, CARBON_VERSION);
+  CARBON_INFO(CARBON_COLOR_CYAN "*** %s (%s) ***" CARBON_COLOR_RESET "\n", CARBON_NAME, CARBON_VERSION);
   CARBON_INFO("=======================================\n");
   if (!s->tests || !s->n) {
-    CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `(Suite *) s` has not been initialized\n");
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_run :: `(Suite *) s` has not been initialized" CARBON_COLOR_RESET "\n");
     return 1;
   }
-  CARBON_INFO("Collected %zu tests\n", s->n);
+  CARBON_INFO(CARBON_COLOR_YELLOW "[*] Collected %zu tests" CARBON_COLOR_RESET "\n", s->n);
   CARBON_INFO("=======================================\n");
   size_t passed = 0, failed = 0;
   carbon_junit_testsuite junit_testsuite_info = { .tests = s->n };
@@ -131,21 +131,21 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
   junit_testsuite_info.time = clk.elapsed;
   junit_testsuite_info.failures = failed;
   if (failed) {
-    if (!((int) clk.elapsed)) CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+    if (!((int) clk.elapsed)) CARBON_ERROR("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
                                            failed,
                                            passed,
                                            total_time_micro);
-    else CARBON_ERROR(CARBON_COLOR_RED "=========== %zu failed, %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
+    else CARBON_ERROR("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
                       failed,
                       passed,
                       clk.elapsed);
     ++status;
   }
   else {
-    if (!((int) clk.elapsed)) CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %uμs ===========" CARBON_COLOR_RESET "\n",
+    if (!((int) clk.elapsed)) CARBON_INFO("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
                                           passed,
                                           total_time_micro);
-    else CARBON_INFO(CARBON_COLOR_GREEN "=========== %zu passed in %.2fs ===========" CARBON_COLOR_RESET "\n",
+    else CARBON_INFO("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
                      passed,
                      clk.elapsed);
   }
