@@ -31,7 +31,7 @@
 
 #pragma once
 
-#define CARBON_NAME "BSD Carbon"
+#define CARBON_NAME "SPARKY Carbon"
 #define CARBON_VERSION "v0.6-alpha"
 
 #ifdef __cplusplus
