@@ -97,12 +97,14 @@ void carbon_test_manager_cleanup(Suite *s) {
 }
 
 unsigned char carbon_test_manager_run_s(Suite *s) {
-  CARBON_INFO("*** BSD Carbon (%s) ***\n", CARBON_VERSION);
-  CARBON_INFO("---------------------------------------\n");
+  CARBON_INFO("*** %s (%s) ***\n", CARBON_NAME, CARBON_VERSION);
+  CARBON_INFO("=======================================\n");
   if (!s->tests || !s->n) {
     CARBON_ERROR("[ERROR]: carbon_test_manager_run :: `(Suite *) s` has not been initialized\n");
     return 1;
   }
+  CARBON_INFO("Collected %zu tests\n", s->n);
+  CARBON_INFO("=======================================\n");
   size_t passed = 0, failed = 0;
   carbon_junit_testsuite junit_testsuite_info = { .tests = s->n };
   carbon_junit_testcase junit_testcase_infos[s->n];
