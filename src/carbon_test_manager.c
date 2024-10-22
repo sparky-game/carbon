@@ -5,7 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#include <time.h>
 #include <stdlib.h>
 
 static Suite test_suite = {0};
