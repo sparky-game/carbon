@@ -1,0 +1,32 @@
+name: security
+
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/security.yaml']
+  schedule:
+    - cron: '0 9 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  security-analysis:
+    permissions:
+      id-token: write
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v4
+      - name: run-checks
+        uses: ossf/scorecard-action@v2.4.0
+        with:
+          results_format: sarif
+          results_file: results.sarif
+          publish_results: true
+      - name: upload-results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
