@@ -17,7 +17,7 @@ static const char * const help_msg = "usage: %s [OPTION]\n"
   "  -h, --help       display this help and exit\n"
   "  -v, --version    output version information and exit\n\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
-  "%s home page: <https://github.com/sparky-game/carbon>\n";
+  "%s homepage: <https://github.com/sparky-game/carbon>\n";
 
 static const char * const version_msg = "%s %s\n"
   "Copyright (C) 2024 Wasym A. Alonso\n"
