@@ -4,20 +4,21 @@
 #ifndef CARBON_JUNIT_H_
 #define CARBON_JUNIT_H_
 
+#define CARBON_JUNIT_XML_OUT_FILENAME      "carbon_results.xml"
 #define CARBON_JUNIT_TESTCASE_NAME_MAX_LEN 512
 
 typedef struct {
   double time;
   size_t tests;
   size_t failures;
-} carbon_junit_testsuite;
+} JUnitTestsuite;
 
 typedef struct {
   char name[CARBON_JUNIT_TESTCASE_NAME_MAX_LEN];
   unsigned char has_failed;
-} carbon_junit_testcase;
+} JUnitTestcase;
 
-void carbon_junit_output(carbon_junit_testsuite *junit_ts, carbon_junit_testcase *junit_tcs, const char *out_filename);
+void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename);
 
 #endif  // CARBON_JUNIT_H_
 

@@ -13,7 +13,7 @@ static CmdArgs cmd_args = {0};
 
 static const char * const help_msg = "usage: %s [OPTION]\n"
   "Options:\n"
-  "  -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)\n"
+  "  -o, --output     output JUnit XML test results to specific file (default: `%s`)\n"
   "  -h, --help       display this help and exit\n"
   "  -v, --version    output version information and exit\n\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
@@ -33,7 +33,7 @@ void carbon_test_manager_argparse(int argc, char **argv) {
     return;
   }
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
-    CARBON_INFO(help_msg, argv[0], CARBON_NAME);
+    CARBON_INFO(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME, CARBON_NAME);
     exit(0);
   }
   if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
@@ -104,11 +104,12 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
     return 1;
   }
   CARBON_INFO(CARBON_COLOR_YELLOW "[*] Collected %zu tests" CARBON_COLOR_RESET "\n", s->n);
+  CARBON_INFO(CARBON_COLOR_YELLOW "[*] Output to ./%s" CARBON_COLOR_RESET "\n", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================\n");
   size_t passed = 0, failed = 0;
-  carbon_junit_testsuite junit_testsuite_info = { .tests = s->n };
-  carbon_junit_testcase junit_testcase_infos[s->n];
-  memset(junit_testcase_infos, 0, s->n * sizeof(carbon_junit_testcase));
+  JUnitTestsuite junit_testsuite_info = { .tests = s->n };
+  JUnitTestcase junit_testcase_infos[s->n];
+  memset(junit_testcase_infos, 0, s->n * sizeof(JUnitTestcase));
   Clock clk = carbon_clock_start();
   for (size_t i = 0; i < s->n; ++i) {
     unsigned char result = s->tests[i].f();
