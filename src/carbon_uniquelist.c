@@ -8,6 +8,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if _POSIX_C_SOURCE < 199309L
+#warning Using custom implementation of `strdup`. If wanted to use the stdlib one, change to a different C standard
+
+// NOTE: same implementation as in musl (https://git.musl-libc.org/cgit/musl/tree/src/string/strdup.c)
+static char *strdup(const char *s) {
+  size_t len = strlen(s);
+  char *data = malloc(len + 1);
+  if (!data) return 0;
+  return memcpy(data, s, len + 1);
+}
+#endif
+
 UniqueList carbon_uniquelist_create(void) {
   UniqueList ul = {
     .size = 0,
