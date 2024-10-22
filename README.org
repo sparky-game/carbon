@@ -76,6 +76,18 @@ git submodule add https://github.com/sparky-game/carbon vendor/carbon
 
 (...)
 
+#+begin_src cmake
+FetchContent_Declare(
+  carbon
+  GIT_REPOSITORY "https://github.com/sparky-game/carbon"
+  GIT_TAG        27dfae9d77e415b08bd993345f2bdddec30dfb76
+  GIT_PROGRESS   TRUE
+)
+FetchContent_MakeAvailable(carbon)
+#+end_src
+
+(...)
+
 ** Target code
 
 #+begin_src c
