@@ -20,7 +20,7 @@ CARBON_TEST(carbon_test_manager, registration) {
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
 
-  carbon_test_manager_register_s(&s, test_dummy, "test_dummy");
+  carbon_test_manager_register_s(&s, test_dummy, "test_dummy", __FILE__);
   carbon_should_not_be_p(0, s.tests);
   carbon_should_be(1, s.n);
   carbon_should_be_s("test_dummy", s.tests[0].name);

@@ -7,6 +7,9 @@
 
 #include <stdlib.h>
 
+#include <sys/wait.h>
+#include <sys/stat.h>
+
 static Suite test_suite = {0};
 static CmdArgs cmd_args = {0};
 
@@ -39,10 +42,133 @@ void carbon_test_manager_argparse(int argc, char **argv) {
     CARBON_INFO(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
-  else {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "unrecognized option\nTry '%s --help' for more information." CARBON_COLOR_RESET "\n", argv[0]);
+  CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "unrecognized option\nTry '%s --help' for more information." CARBON_COLOR_RESET "\n", argv[0]);
+  exit(1);
+}
+
+void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
+#ifndef CARBON_FEATURE_REBUILD
+#warning Currently the auto-rebuilding feature is disabled. If you want to enable it, be sure to define the `CARBON_FEATURE_REBUILD` macro.
+  (void) bin_file;
+  (void) src_file;
+  return;
+#else
+  if (strstr(bin_file, ".old")) return;
+  test_suite.files = carbon_uniquelist_create();
+  carbon_uniquelist_push(&test_suite.files, src_file);
+  for (size_t i = 0; i < test_suite.n; ++i) {
+    carbon_uniquelist_push(&test_suite.files, test_suite.tests[i].filename);
+  }
+  // 0. Check if needs rebuild (compare timestamps of binary vs source)
+  struct stat statbuf = {0};
+  if (-1 == stat(bin_file, &statbuf)) {
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to stat file" CARBON_COLOR_RESET "\n");
+    carbon_test_manager_cleanup(&test_suite);
     exit(1);
   }
+  int bin_timestamp = statbuf.st_mtime;
+  unsigned char needs_rebuild = 0;
+  for (size_t i = 0; i < test_suite.files.size; ++i) {
+    if (-1 == stat(test_suite.files.items[i], &statbuf)) {
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to stat file" CARBON_COLOR_RESET "\n");
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+    int src_timestamp = statbuf.st_mtime;
+    // NOTE: if even a single source file is fresher than binary file, then it needs rebuild
+    if (src_timestamp > bin_timestamp) {
+      ++needs_rebuild;
+      break;
+    }
+  }
+  if (!needs_rebuild) return;
+  // 1. Rename `./carbon` -> `./carbon.old`
+  char bin_file_old[128] = {0};
+  strcpy(bin_file_old, bin_file);
+  strcat(bin_file_old, ".old");
+  if (!carbon_fs_rename(bin_file, bin_file_old)) {
+    carbon_test_manager_cleanup(&test_suite);
+    exit(1);
+  }
+  // 2. Rebuild binary using `test_suite.files` as args
+  int rebuild_status_code = 0;
+  pid_t rebuild_child_pid = fork();
+  if (rebuild_child_pid == -1) {
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to fork child process" CARBON_COLOR_RESET "\n");
+    if (!carbon_fs_rename(bin_file_old, bin_file)) {
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+  }
+  else if (rebuild_child_pid == 0) {
+    char *argv[test_suite.files.size + 9];
+#if defined(__GNUC__)
+    argv[0] = "gcc";
+#elif defined(__clang__)
+    argv[0] = "clang";
+#else
+    argv[0] = "cc";
+#endif
+    argv[1] = "-D";
+    argv[2] = "CARBON_FEATURE_REBUILD";
+    argv[3] = "-I";
+    argv[4] = ".";
+    argv[5] = "-fsanitize=address,undefined";
+    argv[6] = "-o";
+    argv[7] = (char *) bin_file;
+    for (size_t i = 0; i < test_suite.files.size; ++i) {
+      argv[i + 8] = test_suite.files.items[i];
+    }
+    argv[test_suite.files.size + 8] = 0;
+    if (-1 == execvp(argv[0], argv)) {
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp from child process" CARBON_COLOR_RESET "\n");
+      if (!carbon_fs_rename(bin_file_old, bin_file)) {
+        carbon_test_manager_cleanup(&test_suite);
+        exit(1);
+      }
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+  }
+  // 3. Wait for rebuilding (child process) ends correctly
+  else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
+  if (rebuild_status_code != 0) {
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: errors detected during rebuild" CARBON_COLOR_RESET "\n");
+    if (!carbon_fs_rename(bin_file_old, bin_file)) {
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+    carbon_test_manager_cleanup(&test_suite);
+    exit(1);
+  }
+  CARBON_INFO(CARBON_COLOR_YELLOW "[*] Binary rebuilt successfully (`%s`)" CARBON_COLOR_RESET "\n", bin_file);
+  CARBON_INFO("=======================================\n");
+  // 4. Replace current binary with new one (execvp)
+  if (cmd_args.output) {
+    char *argv[] = {(char *) bin_file, "-o", cmd_args.output, 0};
+    if (-1 == execvp(argv[0], argv)) {
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
+      if (!carbon_fs_rename(bin_file_old, bin_file)) {
+        carbon_test_manager_cleanup(&test_suite);
+        exit(1);
+      }
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+  }
+  else {
+    char *argv[] = {(char *) bin_file, 0};
+    if (-1 == execvp(argv[0], argv)) {
+      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
+      if (!carbon_fs_rename(bin_file_old, bin_file)) {
+        carbon_test_manager_cleanup(&test_suite);
+        exit(1);
+      }
+      carbon_test_manager_cleanup(&test_suite);
+      exit(1);
+    }
+  }
+#endif
 }
 
 Suite carbon_test_manager_spawn(void) {
@@ -72,17 +198,18 @@ Test *carbon_test_manager_alloc(Suite *s) {
   return p;
 }
 
-void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name) {
+void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name, char *filename) {
   ++s->n;
   s->tests = carbon_test_manager_alloc(s);
   s->tests[s->n - 1] = (Test) {
     .f = test_func,
-    .name = name
+    .name = name,
+    .filename = filename
   };
 }
 
-void carbon_test_manager_register(TestFunc test_func, char *name) {
-  carbon_test_manager_register_s(&test_suite, test_func, name);
+void carbon_test_manager_register(TestFunc test_func, char *name, char *filename) {
+  carbon_test_manager_register_s(&test_suite, test_func, name, filename);
 }
 
 void carbon_test_manager_cleanup(Suite *s) {
@@ -91,6 +218,7 @@ void carbon_test_manager_cleanup(Suite *s) {
     return;
   }
   free(s->tests);
+  carbon_uniquelist_destroy(&s->files);
   *s = (Suite) {0};
   s = 0;
 }
