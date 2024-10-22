@@ -20,7 +20,7 @@ static const char * const help_msg = "usage: %s [OPTION]\n"
 
 static const char * const version_msg = "%s %s\n"
   "Copyright (C) 2024 Wasym A. Alonso\n"
-  "License MIT: <https://opensource.org/license/MIT>.\n"
+  "License BSD-3-Clause: <https://opensource.org/license/BSD-3-Clause>.\n"
   "This is free software: you are free to change and redistribute it.\n"
   "There is NO WARRANTY, to the extent permitted by law.\n\n"
   "Written by Wasym A. Alonso\n";
