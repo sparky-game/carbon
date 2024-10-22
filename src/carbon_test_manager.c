@@ -102,6 +102,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   }
   else if (rebuild_child_pid == 0) {
     char *argv[test_suite.files.size + 9];
+    memset(argv, 0, (test_suite.files.size + 9) * sizeof(char *));
 #if defined(__GNUC__)
     argv[0] = "gcc";
 #elif defined(__clang__)
@@ -119,7 +120,6 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     for (size_t i = 0; i < test_suite.files.size; ++i) {
       argv[i + 8] = test_suite.files.items[i];
     }
-    argv[test_suite.files.size + 8] = 0;
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp from child process" CARBON_COLOR_RESET "\n");
       if (!carbon_fs_rename(bin_file_old, bin_file)) {
@@ -144,29 +144,20 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   CARBON_INFO(CARBON_COLOR_YELLOW "[*] Binary rebuilt successfully (`%s`)" CARBON_COLOR_RESET "\n", bin_file);
   CARBON_INFO("=======================================\n");
   // 4. Replace current binary with new one (execvp)
+  char *argv[4] = {0};
+  argv[0] = (char *) bin_file;
   if (cmd_args.output) {
-    char *argv[] = {(char *) bin_file, "-o", cmd_args.output, 0};
-    if (-1 == execvp(argv[0], argv)) {
-      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
-      if (!carbon_fs_rename(bin_file_old, bin_file)) {
-        carbon_test_manager_cleanup(&test_suite);
-        exit(1);
-      }
-      carbon_test_manager_cleanup(&test_suite);
-      exit(1);
-    }
+    argv[1] = "-o";
+    argv[2] = cmd_args.output;
   }
-  else {
-    char *argv[] = {(char *) bin_file, 0};
-    if (-1 == execvp(argv[0], argv)) {
-      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
-      if (!carbon_fs_rename(bin_file_old, bin_file)) {
-        carbon_test_manager_cleanup(&test_suite);
-        exit(1);
-      }
+  if (-1 == execvp(argv[0], argv)) {
+    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
+    if (!carbon_fs_rename(bin_file_old, bin_file)) {
       carbon_test_manager_cleanup(&test_suite);
       exit(1);
     }
+    carbon_test_manager_cleanup(&test_suite);
+    exit(1);
   }
 #endif
 }
