@@ -39,6 +39,7 @@ extern "C" {
 #endif
 
 #include "src/carbon_log.h"
+#include "src/carbon_fs.h"
 #include "src/carbon_main.h"
 #include "src/carbon_time.h"
 #include "src/carbon_junit.h"
