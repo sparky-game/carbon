@@ -139,14 +139,14 @@ cc -I vendor/carbon -std=c99 x.c x_test.c carbon.c -o carbon
 
 #+begin_example
 $ ./carbon -h
-usage: ./test/carbon [OPTION]
+usage: ./carbon [OPTION]
 Options:
   -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)
   -h, --help       display this help and exit
   -v, --version    output version information and exit
 
 Report bugs to: <https://github.com/sparky-game/carbon/issues>
-BSD Carbon home page: <https://github.com/sparky-game/carbon>
+SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
 #+end_example
 
 (...)
