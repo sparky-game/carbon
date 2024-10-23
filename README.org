@@ -42,9 +42,8 @@ You can't unit test C, right?
 # Repository CI badges
 #+begin_html
 <p align="center">
-<a href="https://github.com/sparky-game/carbon/actions/workflows/test.yaml">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
-</a>
+<img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
 </p>
 #+end_html
 
