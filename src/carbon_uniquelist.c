@@ -13,7 +13,7 @@
 
 // NOTE: same implementation as in musl (https://git.musl-libc.org/cgit/musl/tree/src/string/strdup.c)
 static char *strdup(const char *s) {
-  size_t len = strlen(s);
+  usz len = strlen(s);
   char *data = malloc(len + 1);
   if (!data) return 0;
   return memcpy(data, s, len + 1);
@@ -25,7 +25,7 @@ UniqueList carbon_uniquelist_create(void) {
     .size = 0,
     .capacity = 1
   };
-  size_t size = ul.capacity * sizeof(char *);
+  usz size = ul.capacity * sizeof(char *);
   ul.items = malloc(size);
   if (!ul.items) {
     CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_create :: failed to allocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
@@ -35,7 +35,7 @@ UniqueList carbon_uniquelist_create(void) {
 }
 
 void carbon_uniquelist_destroy(UniqueList *ul) {
-  for (size_t i = 0; i < ul->size; ++i) {
+  for (usz i = 0; i < ul->size; ++i) {
     free(ul->items[i]);
   }
   free(ul->items);
@@ -48,7 +48,7 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
   if (ul->size == ul->capacity) {
     ul->capacity *= 2;
     char **prev_p = ul->items;
-    size_t size = ul->capacity * sizeof(char *);
+    usz size = ul->capacity * sizeof(char *);
     ul->items = realloc(ul->items, size);
     if (!ul->items) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_push :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
@@ -65,7 +65,7 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
 }
 
 static int find_idx(UniqueList *ul, const char *s) {
-  for (size_t i = 0; i < ul->size; ++i) {
+  for (usz i = 0; i < ul->size; ++i) {
     if (!strcmp(ul->items[i], s)) return i;
   }
   return -1;
@@ -78,14 +78,14 @@ void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
     return;
   }
   free(ul->items[idx]);
-  for (size_t i = idx; i < ul->size - 1; ++i) {
+  for (usz i = idx; i < ul->size - 1; ++i) {
     ul->items[i] = ul->items[i + 1];
   }
   --ul->size;
   if (ul->size > 0 && ul->size < ul->capacity / 4) {
     ul->capacity /= 2;
     char **prev_p = ul->items;
-    size_t size = ul->capacity * sizeof(char *);
+    usz size = ul->capacity * sizeof(char *);
     ul->items = realloc(ul->items, size);
     if (!ul->items && ul->size > 0) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_push :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
@@ -95,8 +95,8 @@ void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
   }
 }
 
-unsigned char carbon_uniquelist_contains(UniqueList *ul, const char *s) {
-  for (size_t i = 0; i < ul->size; ++i) {
+u8 carbon_uniquelist_contains(UniqueList *ul, const char *s) {
+  for (usz i = 0; i < ul->size; ++i) {
     if (!strcmp(ul->items[i], s)) return 1;
   }
   return 0;

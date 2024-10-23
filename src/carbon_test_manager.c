@@ -56,7 +56,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (strstr(bin_file, ".old")) return;
   test_suite.files = carbon_uniquelist_create();
   carbon_uniquelist_push(&test_suite.files, src_file);
-  for (size_t i = 0; i < test_suite.n; ++i) {
+  for (usz i = 0; i < test_suite.n; ++i) {
     carbon_uniquelist_push(&test_suite.files, test_suite.tests[i].filename);
   }
   // 0. Check if needs rebuild (compare timestamps of binary vs source)
@@ -67,8 +67,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     exit(1);
   }
   int bin_timestamp = statbuf.st_mtime;
-  unsigned char needs_rebuild = 0;
-  for (size_t i = 0; i < test_suite.files.size; ++i) {
+  u8 needs_rebuild = 0;
+  for (usz i = 0; i < test_suite.files.size; ++i) {
     if (-1 == stat(test_suite.files.items[i], &statbuf)) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to stat file" CARBON_COLOR_RESET "\n");
       carbon_test_manager_cleanup(&test_suite);
@@ -117,7 +117,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     argv[5] = "-fsanitize=address,undefined";
     argv[6] = "-o";
     argv[7] = (char *) bin_file;
-    for (size_t i = 0; i < test_suite.files.size; ++i) {
+    for (usz i = 0; i < test_suite.files.size; ++i) {
       argv[i + 8] = test_suite.files.items[i];
     }
     if (-1 == execvp(argv[0], argv)) {
@@ -168,7 +168,7 @@ Suite carbon_test_manager_spawn(void) {
 
 Test *carbon_test_manager_alloc(Suite *s) {
   Test *p = 0;
-  size_t size = sizeof(Test);
+  usz size = sizeof(Test);
   if (!s->tests) {
     p = malloc(size);
     if (!p) {
@@ -214,7 +214,7 @@ void carbon_test_manager_cleanup(Suite *s) {
   s = 0;
 }
 
-unsigned char carbon_test_manager_run_s(Suite *s) {
+u8 carbon_test_manager_run_s(Suite *s) {
   CARBON_INFO(CARBON_COLOR_CYAN "*** %s (%s) ***" CARBON_COLOR_RESET "\n", CARBON_NAME, CARBON_VERSION);
   CARBON_INFO("=======================================\n");
   if (!s->tests || !s->n) {
@@ -224,13 +224,13 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
   CARBON_INFO(CARBON_COLOR_YELLOW "[*] Collected %zu tests" CARBON_COLOR_RESET "\n", s->n);
   CARBON_INFO(CARBON_COLOR_YELLOW "[*] Output to ./%s" CARBON_COLOR_RESET "\n", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================\n");
-  size_t passed = 0, failed = 0;
+  usz passed = 0, failed = 0;
   JUnitTestsuite junit_testsuite_info = { .tests = s->n };
   JUnitTestcase junit_testcase_infos[s->n];
   memset(junit_testcase_infos, 0, s->n * sizeof(JUnitTestcase));
   Clock clk = carbon_clock_start();
-  for (size_t i = 0; i < s->n; ++i) {
-    unsigned char result = s->tests[i].f();
+  for (usz i = 0; i < s->n; ++i) {
+    u8 result = s->tests[i].f();
     memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
     strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
     if (result) {
@@ -245,8 +245,8 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
   }
   carbon_clock_update(&clk);
   carbon_clock_stop(&clk);
-  unsigned int total_time_micro = (unsigned int) (clk.elapsed * 1e6);
-  unsigned char status = 0;
+  u32 total_time_micro = (u32) (clk.elapsed * 1e6);
+  u8 status = 0;
   junit_testsuite_info.time = clk.elapsed;
   junit_testsuite_info.failures = failed;
   if (failed) {
@@ -273,6 +273,6 @@ unsigned char carbon_test_manager_run_s(Suite *s) {
   return status;
 }
 
-unsigned char carbon_test_manager_run(void) {
+u8 carbon_test_manager_run(void) {
   return carbon_test_manager_run_s(&test_suite);
 }

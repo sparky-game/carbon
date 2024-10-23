@@ -8,14 +8,14 @@
 #define CARBON_JUNIT_TESTCASE_NAME_MAX_LEN 512
 
 typedef struct {
-  double time;
-  size_t tests;
-  size_t failures;
+  f64 time;
+  usz tests;
+  usz failures;
 } JUnitTestsuite;
 
 typedef struct {
   char name[CARBON_JUNIT_TESTCASE_NAME_MAX_LEN];
-  unsigned char has_failed;
+  u8 has_failed;
 } JUnitTestcase;
 
 void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename);

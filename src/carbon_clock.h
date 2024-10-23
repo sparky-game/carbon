@@ -5,8 +5,8 @@
 #define CARBON_CLOCK_H_
 
 typedef struct {
-  double initial;
-  double elapsed;
+  f64 initial;
+  f64 elapsed;
 } Clock;
 
 Clock carbon_clock_start(void);

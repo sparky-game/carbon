@@ -9,13 +9,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-static double clock_freq;
+static f64 clock_freq;
 static LARGE_INTEGER start_time;
 
 static void clock_setup(void) {
   LARGE_INTEGER freq;
   QueryPerformanceFrequency(&freq);
-  clock_freq = 1.0 / (double) freq.QuadPart;
+  clock_freq = 1.0 / (f64) freq.QuadPart;
   QueryPerformanceCounter(&start_time);
 }
 #else
@@ -26,12 +26,12 @@ static void clock_setup(void) {
 #endif
 #endif
 
-double carbon_time_get(void) {
+f64 carbon_time_get(void) {
 #ifdef _WIN32
   if (!clock_freq) clock_setup();
   LARGE_INTEGER now;
   QueryPerformanceCounter(&now);
-  return (double) now.QuadPart * clock_freq;
+  return (f64) now.QuadPart * clock_freq;
 #elif _POSIX_C_SOURCE >= 199309L
   struct timespec now;
   clock_gettime(CLOCK_MONOTONIC_RAW, &now);
@@ -45,13 +45,13 @@ double carbon_time_get(void) {
 #endif
 }
 
-void carbon_time_sleep(unsigned long long ms) {
+void carbon_time_sleep(u64 ms) {
 #ifdef _WIN32
   Sleep(ms);
 #elif _POSIX_C_SOURCE >= 199309L
   struct timespec ts;
   ts.tv_sec = ms / 1e3;
-  ts.tv_nsec = (ms % (unsigned long long) 1e3) * 1e6;
+  ts.tv_nsec = (ms % (u64) 1e3) * 1e6;
   nanosleep(&ts, 0);
 #else
 #warning The compiled implementation of `carbon_time_sleep` uses only second-level resolution. To get a high precision implementation, change to a different C standard

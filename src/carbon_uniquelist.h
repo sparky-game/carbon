@@ -6,8 +6,8 @@
 
 typedef struct {
   char **items;
-  size_t size;
-  size_t capacity;
+  usz size;
+  usz capacity;
 } UniqueList;
 
 UniqueList carbon_uniquelist_create(void);
@@ -18,7 +18,7 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s);
 
 void carbon_uniquelist_pop(UniqueList *ul, const char *s);
 
-unsigned char carbon_uniquelist_contains(UniqueList *ul, const char *s);
+u8 carbon_uniquelist_contains(UniqueList *ul, const char *s);
 
 #endif  // CARBON_UNIQUELIST_H_
 

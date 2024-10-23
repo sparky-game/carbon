@@ -38,6 +38,7 @@
 extern "C" {
 #endif
 
+#include "src/carbon_defines.h"
 #include "src/carbon_log.h"
 #include "src/carbon_fs.h"
 #include "src/carbon_main.h"
@@ -45,7 +46,6 @@ extern "C" {
 #include "src/carbon_junit.h"
 #include "src/carbon_clock.h"
 #include "src/carbon_should.h"
-#include "src/carbon_defines.h"
 #include "src/carbon_uniquelist.h"
 #include "src/carbon_test_manager.h"
 

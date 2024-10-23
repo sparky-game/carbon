@@ -4,7 +4,7 @@
 #ifndef CARBON_FS_H_
 #define CARBON_FS_H_
 
-unsigned char carbon_fs_rename(const char *old, const char *new);
+u8 carbon_fs_rename(const char *old, const char *new);
 
 #endif  // CARBON_FS_H_
 

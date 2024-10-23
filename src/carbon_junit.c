@@ -7,7 +7,7 @@
 
 #include <time.h>
 
-#define ISO_8601_FMT     "%Y-%m-%dT%H:%M:%S%z"
+#define ISO_8601_FMT "%Y-%m-%dT%H:%M:%S%z"
 
 void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename) {
   if (!out_filename) out_filename = CARBON_JUNIT_XML_OUT_FILENAME;
@@ -21,7 +21,7 @@ void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, con
   char timestamp[30];
   strftime(timestamp, sizeof(timestamp), ISO_8601_FMT, tm_info);
   fprintf(fd, "<testsuite timestamp=\"%s\" time=\"%.6f\" tests=\"%zu\" failures=\"%zu\">\n", timestamp, junit_ts->time, junit_ts->tests, junit_ts->failures);
-  for (size_t i = 0; i < junit_ts->tests; ++i) {
+  for (usz i = 0; i < junit_ts->tests; ++i) {
     if (junit_tcs[i].has_failed) {
       fprintf(fd, "  <testcase name=\"%s\">\n", junit_tcs[i].name);
       fprintf(fd, "    <failure />\n");

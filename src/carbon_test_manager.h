@@ -6,7 +6,7 @@
 
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_EXPAND_AND_QUOTE(f), __FILE__)
 #define CARBON_TEST_FQN(ctx_name, unit_name) ctx_name ## _test_ ## unit_name
-#define CARBON_TEST_DECL(ctx_name, unit_name) static unsigned char CARBON_TEST_FQN(ctx_name, unit_name)(void)
+#define CARBON_TEST_DECL(ctx_name, unit_name) static u8 CARBON_TEST_FQN(ctx_name, unit_name)(void)
 #define CARBON_TEST_REG_DECL(ctx_name, unit_name) __attribute__((constructor)) static void CARBON_EXPAND_AND_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
 
 #define CARBON_TEST(ctx_name, unit_name)                        \
@@ -18,7 +18,7 @@
 
 #define CARBON_RUN_ALL carbon_test_manager_run
 
-typedef unsigned char (*TestFunc)(void);
+typedef u8 (*TestFunc)(void);
 
 typedef struct {
   TestFunc f;
@@ -49,8 +49,8 @@ void carbon_test_manager_cleanup(Suite *s);
 void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name, char *filename);
 void carbon_test_manager_register(TestFunc test_func, char *name, char *filename);
 
-unsigned char carbon_test_manager_run_s(Suite *s);
-unsigned char carbon_test_manager_run(void);
+u8 carbon_test_manager_run_s(Suite *s);
+u8 carbon_test_manager_run(void);
 
 #endif  // CARBON_TEST_MANAGER_H_
 

@@ -4,9 +4,9 @@
 #ifndef CARBON_TIME_H_
 #define CARBON_TIME_H_
 
-double carbon_time_get(void);
+f64 carbon_time_get(void);
 
-void carbon_time_sleep(unsigned long long ms);
+void carbon_time_sleep(u64 ms);
 
 #endif  // CARBON_TIME_H_
 
