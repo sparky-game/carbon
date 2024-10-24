@@ -78,6 +78,8 @@ typedef unsigned char u8;
 CARBON_STATIC_ASSERT(sizeof(u8)  == 1, "Expected u8 to be 1 byte");
 typedef unsigned int u32;
 CARBON_STATIC_ASSERT(sizeof(u32) == 4, "Expected u32 to be 4 bytes");
+typedef signed int i32;
+CARBON_STATIC_ASSERT(sizeof(i32) == 4, "Expected i32 to be 4 bytes");
 typedef unsigned long long u64;
 CARBON_STATIC_ASSERT(sizeof(u64) == 8, "Expected u64 to be 8 bytes");
 typedef float f32;

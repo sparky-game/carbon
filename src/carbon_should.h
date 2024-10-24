@@ -7,80 +7,80 @@
 
 #define carbon_should_be(expected, actual)                              \
   {                                                                     \
-    if ((int) (expected) != (int) (actual)) {                            \
+    if ((i32) (expected) != (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d', expected '%d'" CARBON_COLOR_RESET " \n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_not_be(expected, actual)                          \
   {                                                                     \
-    if ((int) (expected) == (int) (actual)) {                            \
+    if ((i32) (expected) == (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d == %d', expected not to" CARBON_COLOR_RESET "\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_lt(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) <= (int) (actual)) {                            \
+    if ((i32) (expected) <= (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d >= %d', expected '%d < %d'" CARBON_COLOR_RESET "\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected),                                    \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected),                                    \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_le(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) < (int) (actual)) {                            \
+    if ((i32) (expected) < (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d > %d', expected '%d <= %d'" CARBON_COLOR_RESET "\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected),                                    \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected),                                    \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_gt(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) >= (int) (actual)) {                            \
+    if ((i32) (expected) >= (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d <= %d', expected '%d > %d'" CARBON_COLOR_RESET "\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected),                                    \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected),                                    \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
 
 #define carbon_should_be_ge(expected, actual)                           \
   {                                                                     \
-    if ((int) (expected) > (int) (actual)) {                            \
+    if ((i32) (expected) > (i32) (actual)) {                            \
       CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> got '%d < %d', expected '%d >= %d'" CARBON_COLOR_RESET "\n", \
                    __FILE__,                                            \
                    __LINE__,                                            \
-                   (int) (actual),                                      \
-                   (int) (expected),                                    \
-                   (int) (actual),                                      \
-                   (int) (expected));                                   \
+                   (i32) (actual),                                      \
+                   (i32) (expected),                                    \
+                   (i32) (actual),                                      \
+                   (i32) (expected));                                   \
       return CARBON_KO;                                                 \
     }                                                                   \
   }
