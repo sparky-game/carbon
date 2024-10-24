@@ -34,6 +34,10 @@
 #define CARBON_NAME "SPARKY Carbon"
 #define CARBON_VERSION "v0.6-alpha"
 
+#define CARBON_MALLOC(sz)        malloc(sz)
+#define CARBON_REALLOC(p, newsz) realloc(p, newsz)
+#define CARBON_FREE(p)           free(p)
+
 #ifdef __cplusplus
 extern "C" {
 #endif

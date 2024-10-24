@@ -49,8 +49,8 @@ void carbon_test_manager_argparse(int argc, char **argv) {
 void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
 #ifndef CARBON_FEATURE_REBUILD
 #warning Currently the auto-rebuilding feature is disabled. If you want to enable it, be sure to define the `CARBON_FEATURE_REBUILD` macro.
-  (void) bin_file;
-  (void) src_file;
+  CARBON_NOTUSED(bin_file);
+  CARBON_NOTUSED(src_file);
   return;
 #else
   if (strstr(bin_file, ".old")) return;
@@ -170,7 +170,7 @@ Test *carbon_test_manager_alloc(Suite *s) {
   Test *p = 0;
   usz size = sizeof(Test);
   if (!s->tests) {
-    p = malloc(size);
+    p = CARBON_MALLOC(size);
     if (!p) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_alloc :: failed to allocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
       exit(1);
@@ -179,10 +179,10 @@ Test *carbon_test_manager_alloc(Suite *s) {
   else {
     size *= s->n;
     Test *prev_p = s->tests;
-    p = realloc(s->tests, size);
+    p = CARBON_REALLOC(s->tests, size);
     if (!p) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_alloc :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
-      free(prev_p);
+      CARBON_FREE(prev_p);
       exit(1);
     }
   }
@@ -208,7 +208,7 @@ void carbon_test_manager_cleanup(Suite *s) {
     CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_cleanup_s :: Suite `s` has not been initialized" CARBON_COLOR_RESET "\n");
     return;
   }
-  free(s->tests);
+  CARBON_FREE(s->tests);
   carbon_uniquelist_destroy(&s->files);
   *s = (Suite) {0};
   s = 0;
