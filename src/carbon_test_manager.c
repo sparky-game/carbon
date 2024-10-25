@@ -8,7 +8,6 @@
 #include <stdlib.h>
 
 #include <sys/wait.h>
-#include <sys/stat.h>
 
 static Suite test_suite = {0};
 static CmdArgs cmd_args = {0};
@@ -28,7 +27,7 @@ static const char * const version_msg = "%s %s\n"
   "There is NO WARRANTY, to the extent permitted by law.\n\n"
   "Written by Wasym A. Alonso\n";
 
-void carbon_test_manager_argparse(int argc, char **argv) {
+void carbon_test_manager_argparse(i32 argc, char **argv) {
   if (argc == 1) return;
   if (argc == 3 && (!strcmp(argv[1], "-o") || !strcmp(argv[1], "--output"))) {
     cmd_args.output = argv[2];
@@ -47,12 +46,6 @@ void carbon_test_manager_argparse(int argc, char **argv) {
 }
 
 void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
-#ifndef CARBON_FEATURE_REBUILD
-#warning Currently the auto-rebuilding feature is disabled. If you want to enable it, be sure to define the `CARBON_FEATURE_REBUILD` macro.
-  CARBON_NOTUSED(bin_file);
-  CARBON_NOTUSED(src_file);
-  return;
-#else
   if (strstr(bin_file, ".old")) return;
   test_suite.files = carbon_uniquelist_create();
   carbon_uniquelist_push(&test_suite.files, src_file);
@@ -60,21 +53,18 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     carbon_uniquelist_push(&test_suite.files, test_suite.tests[i].filename);
   }
   // 0. Check if needs rebuild (compare timestamps of binary vs source)
-  struct stat statbuf = {0};
-  if (-1 == stat(bin_file, &statbuf)) {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to stat file" CARBON_COLOR_RESET "\n");
+  u8 needs_rebuild = 0;
+  i32 bin_timestamp = carbon_fs_mtime(bin_file);
+  if (!bin_timestamp) {
     carbon_test_manager_cleanup(&test_suite);
     exit(1);
   }
-  int bin_timestamp = statbuf.st_mtime;
-  u8 needs_rebuild = 0;
   for (usz i = 0; i < test_suite.files.size; ++i) {
-    if (-1 == stat(test_suite.files.items[i], &statbuf)) {
-      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to stat file" CARBON_COLOR_RESET "\n");
+    i32 src_timestamp = carbon_fs_mtime(test_suite.files.items[i]);
+    if (!src_timestamp) {
       carbon_test_manager_cleanup(&test_suite);
       exit(1);
     }
-    int src_timestamp = statbuf.st_mtime;
     // NOTE: if even a single source file is fresher than binary file, then it needs rebuild
     if (src_timestamp > bin_timestamp) {
       ++needs_rebuild;
@@ -91,7 +81,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     exit(1);
   }
   // 2. Rebuild binary using `test_suite.files` as args
-  int rebuild_status_code = 0;
+  i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
     CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to fork child process" CARBON_COLOR_RESET "\n");
@@ -159,7 +149,6 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     carbon_test_manager_cleanup(&test_suite);
     exit(1);
   }
-#endif
 }
 
 Suite carbon_test_manager_spawn(void) {
@@ -250,7 +239,7 @@ u8 carbon_test_manager_run_s(Suite *s) {
   junit_testsuite_info.time = clk.elapsed;
   junit_testsuite_info.failures = failed;
   if (failed) {
-    if (!((int) clk.elapsed)) CARBON_ERROR("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
+    if (!((i32) clk.elapsed)) CARBON_ERROR("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
                                            failed,
                                            passed,
                                            total_time_micro);
@@ -261,7 +250,7 @@ u8 carbon_test_manager_run_s(Suite *s) {
     ++status;
   }
   else {
-    if (!((int) clk.elapsed)) CARBON_INFO("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
+    if (!((i32) clk.elapsed)) CARBON_INFO("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
                                           passed,
                                           total_time_micro);
     else CARBON_INFO("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
