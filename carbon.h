@@ -118,6 +118,77 @@ CARBON_API int carbon_main(void);
 #define CARBON_ERROR(msg, ...) fprintf(stderr, msg, ##__VA_ARGS__)
 
 /*
+**  $$========================$$
+**  ||       Assertions       ||
+**  $$========================$$
+*/
+#include <string.h>
+
+#define CARBON_COMPARE(expr, msg, ...)                                  \
+  if ((expr)) {                                                         \
+    CARBON_ERROR(CARBON_COLOR_RED "%s:%d :: FAILED -> " msg CARBON_COLOR_RESET " \n", \
+                 __FILE__, __LINE__, ##__VA_ARGS__);                    \
+    return CARBON_KO;                                                   \
+  }
+
+#define CARBON_COMPARE_OP(T, expected, actual, op, msg, ...)            \
+  CARBON_COMPARE((T) (expected) op (T) (actual), msg, ##__VA_ARGS__)
+
+#define carbon_should_be_true(actual) CARBON_COMPARE(!(actual), "got 'false', expected 'true'")
+
+#define carbon_should_be_false(actual) CARBON_COMPARE(actual, "got 'true', expected 'false'")
+
+#define carbon_should_be(expected, actual)              \
+  CARBON_COMPARE_OP(i32, expected, actual, !=,          \
+                    "got '%d', expected '%d'",          \
+                    (i32) (actual), (i32) (expected))
+
+#define carbon_should_not_be(expected, actual)          \
+  CARBON_COMPARE_OP(i32, expected, actual, ==,          \
+                    "got '%d == %d', expected not to",  \
+                    (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_lt(expected, actual)                           \
+  CARBON_COMPARE_OP(i32, expected, actual, <=,                          \
+                    "got '%d >= %d', expected '%d < %d'",               \
+                    (i32) (actual), (i32) (expected), (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_le(expected, actual)                           \
+  CARBON_COMPARE_OP(i32, expected, actual, <,                           \
+                    "got '%d > %d', expected '%d <= %d'",               \
+                    (i32) (actual), (i32) (expected), (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_gt(expected, actual)                           \
+  CARBON_COMPARE_OP(i32, expected, actual, >=,                          \
+                    "got '%d <= %d', expected '%d > %d'",               \
+                    (i32) (actual), (i32) (expected), (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_ge(expected, actual)                           \
+  CARBON_COMPARE_OP(i32, expected, actual, >,                           \
+                    "got '%d < %d', expected '%d >= %d'",               \
+                    (i32) (actual), (i32) (expected), (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_p(expected, actual)                    \
+  CARBON_COMPARE_OP(void *, expected, actual, !=,               \
+                    "got '%p', expected '%p'",                  \
+                    (void *) (actual), (void *) (expected))
+
+#define carbon_should_not_be_p(expected, actual)                \
+  CARBON_COMPARE_OP(void *, expected, actual, ==,               \
+                    "got '%p == %p', expected not to",          \
+                    (void *) (actual), (void *) (expected))
+
+#define carbon_should_be_s(expected, actual)    \
+  CARBON_COMPARE(strcmp((expected), (actual)),  \
+                 "got '%s', expected '%s'",     \
+                 (actual), (expected))
+
+#define carbon_should_not_be_s(expected, actual)        \
+  CARBON_COMPARE(!strcmp((expected), (actual)),         \
+                 "got '%s', expected '%s'",             \
+                 (actual), (expected))
+
+/*
 **  $$==================$$
 **  ||       Time       ||
 **  $$==================$$
@@ -173,7 +244,9 @@ CARBON_API u8 carbon_uniquelist_contains(UniqueList *ul, const char *s);
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_EXPAND_AND_QUOTE(f), __FILE__)
 #define CARBON_TEST_FQN(ctx_name, unit_name) ctx_name ## _test_ ## unit_name
 #define CARBON_TEST_DECL(ctx_name, unit_name) static u8 CARBON_TEST_FQN(ctx_name, unit_name)(void)
-#define CARBON_TEST_REG_DECL(ctx_name, unit_name) __attribute__((constructor)) static void CARBON_EXPAND_AND_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
+#define CARBON_TEST_REG_DECL(ctx_name, unit_name)                       \
+  __attribute__((constructor)) static void CARBON_EXPAND_AND_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
+
 #define CARBON_TEST(ctx_name, unit_name)                        \
   CARBON_TEST_DECL(ctx_name, unit_name);                        \
   CARBON_TEST_REG_DECL(ctx_name, unit_name) {                   \
@@ -235,7 +308,6 @@ CARBON_API void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *jun
 **  ||       Implementations       ||
 **  $$=============================$$
 */
-#include "src/carbon_should.h"  // TODO: simplify this and integrate it with this file
 #ifdef CARBON_IMPLEMENTATION
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
