@@ -100,7 +100,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     }
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp from child process" CARBON_COLOR_RESET "\n");
-      if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
+      carbon_fs_rename(bin_file_old, bin_file);
       goto defer;
     }
   }
@@ -108,7 +108,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
     CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: errors detected during rebuild" CARBON_COLOR_RESET "\n");
-    if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
+    carbon_fs_rename(bin_file_old, bin_file);
     goto defer;
   }
   CARBON_INFO(CARBON_COLOR_YELLOW "[*] Binary rebuilt successfully (`%s`)" CARBON_COLOR_RESET "\n", bin_file);
@@ -122,7 +122,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   }
   if (-1 == execvp(argv[0], argv)) {
     CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_test_manager_rebuild :: unable to execvp rebuilt binary" CARBON_COLOR_RESET "\n");
-    if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
+    carbon_fs_rename(bin_file_old, bin_file);
     goto defer;
   }
  defer:
