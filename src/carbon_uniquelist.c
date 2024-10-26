@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if _POSIX_C_SOURCE < 199309L
+#if !defined(_WIN32) && _POSIX_C_SOURCE < 199309L
 #warning Using custom implementation of `strdup`. If wanted to use the stdlib one, change to a different C standard
 
 // NOTE: same implementation as in musl (https://git.musl-libc.org/cgit/musl/tree/src/string/strdup.c)
