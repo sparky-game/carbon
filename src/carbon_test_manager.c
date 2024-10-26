@@ -6,7 +6,7 @@
 #endif  // CARBON_IMPLEMENTATION
 
 #include <stdlib.h>
-
+#include <unistd.h>
 #include <sys/wait.h>
 
 static Suite test_suite = {0};
