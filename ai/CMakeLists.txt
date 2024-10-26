@@ -3,12 +3,11 @@ cmake_minimum_required(VERSION 3.20)
 include(FetchContent)
 
 project(
-  carbon/ai
+  testgen
   DESCRIPTION  ""
-  HOMEPAGE_URL "https://github.com/sparky-game/carbon/tree/master/ai"
+  HOMEPAGE_URL ""
   LANGUAGES    CXX
 )
-set(CMAKE_PROJECT_VERSION 0.6-alpha)
 
 set(FETCHCONTENT_QUIET FALSE)
 set(HWY_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
@@ -47,6 +46,6 @@ set_target_properties(
 )
 target_compile_options(sentencepiece-static PRIVATE "-w")
 
-add_executable(testgen testgen.cc)
-target_link_options(testgen PRIVATE "-static")
-target_link_libraries(testgen libgemma)
+add_executable(${CMAKE_PROJECT_NAME} testgen.cc)
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE "-static")
+target_link_libraries(${CMAKE_PROJECT_NAME} libgemma)
