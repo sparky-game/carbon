@@ -14,6 +14,8 @@
 #define CARBON_AI_ABORT_ERROR(err) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, (err))
 #define CARBON_AI_ABORT_USAGE      HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
 
+#define LLM_MODEL_PATH "build/_deps/llm-model-src"
+
 static constexpr auto system_prompt {
   "Strictly follow the following instructions and rules:\n"
   "- Just write the function that has been requested, no main, no examples, no nonsense.\n"
@@ -37,7 +39,7 @@ static constexpr auto request_prompt {
   "Write an extended version of the unit test translation unit that includes additional unit tests that will increase the test coverage of the code under test.\n"
 };
 
-static inline std::string load_file_contents(const std::string &filepath) {
+static std::string load_file_contents(const std::string &filepath) {
   std::ifstream ifs { filepath };
   if (not ifs) throw std::runtime_error { "unable to open file for reading (`" + filepath + "`)" };
   std::stringstream ss;
@@ -45,7 +47,7 @@ static inline std::string load_file_contents(const std::string &filepath) {
   return ss.str();
 }
 
-static inline std::vector<int> tokenize(const gcpp::GemmaTokenizer &tokenizer, const std::string &test_code, const std::string &src_code) {
+static std::vector<int> tokenize(const gcpp::GemmaTokenizer &tokenizer, const std::string &test_code, const std::string &src_code) {
   std::string prompt {
     std::string(system_prompt) + "\n" +
     test_code_prompt + "\n" +
@@ -60,7 +62,7 @@ static inline std::vector<int> tokenize(const gcpp::GemmaTokenizer &tokenizer, c
   return tokens;
 }
 
-static inline void preprocess_output(std::stringstream &ss) {
+static void preprocess_output(std::stringstream &ss) {
   std::string line;
   std::vector<std::string> lines;
   while (std::getline(ss, line)) lines.emplace_back(line);
@@ -71,7 +73,7 @@ static inline void preprocess_output(std::stringstream &ss) {
   }
 }
 
-static inline bool it_builds(const std::stringstream &ss) {
+static bool it_builds(const std::stringstream &ss) {
   std::ofstream ofs { "tmp.cc" };
   if (not ofs) throw std::runtime_error { "unable to open/create file for writing (`./tmp.cc`)" };
   ofs << ss.str();
@@ -84,8 +86,8 @@ static inline bool it_builds(const std::stringstream &ss) {
 
 int main(int argc, char **argv) {
   gcpp::LoaderArgs loader(argc, argv);
-  loader.tokenizer = "build/tokenizer.spm";
-  loader.weights = "build/weights.sbs";
+  loader.tokenizer = LLM_MODEL_PATH "tokenizer.spm";
+  loader.weights = LLM_MODEL_PATH "weights.sbs";
   loader.model_type_str = "7b-it";
   loader.weight_type_str = "sfp";
 
