@@ -79,7 +79,7 @@ git submodule add https://github.com/sparky-game/carbon vendor/carbon
 FetchContent_Declare(
   carbon
   GIT_REPOSITORY "https://github.com/sparky-game/carbon"
-  GIT_TAG        27dfae9d77e415b08bd993345f2bdddec30dfb76
+  GIT_TAG        e2a1fd0c447730ad971c75106b26d7c1ed083664
   GIT_PROGRESS   TRUE
 )
 FetchContent_MakeAvailable(carbon)
