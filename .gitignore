@@ -1,5 +1,6 @@
 *.xml
 *.old
+*.tgz
 carbon
 test/carbon
 
