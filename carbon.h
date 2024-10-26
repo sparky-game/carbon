@@ -32,7 +32,17 @@
 #pragma once
 
 #define CARBON_NAME "SPARKY Carbon"
-#define CARBON_VERSION "v0.7-alpha"
+
+#define CARBON_VERSION_MAJOR 0
+#define CARBON_VERSION_MINOR 7
+// TODO: handle patch version number as well
+// #define CARBON_VERSION_PATCH
+#define CARBON_VERSION_EXTRA alpha
+
+#define CARBON_VERSION                                  \
+  "v" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
+  "-" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_EXTRA)
 
 /*
 **  $$======================$$
