@@ -120,6 +120,7 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 **  ||       Entrypoint       ||
 **  $$========================$$
 */
+#ifndef CARBON_NO_TESTING
 #define main(...)                                       \
   main(int argc, char **argv) {                         \
     carbon_test_manager_argparse(argc, argv);           \
@@ -127,6 +128,7 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
     return carbon_main();                               \
   };                                                    \
   int carbon_main(__VA_ARGS__)
+#endif
 
 CARBON_API int carbon_main(void);
 
