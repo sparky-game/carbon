@@ -13,7 +13,7 @@ void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, con
   if (!out_filename) out_filename = CARBON_JUNIT_XML_OUT_FILENAME;
   FILE *fd = fopen(out_filename, "w");
   if (!fd) {
-    CARBON_ERROR("[ERROR]: carbon_junit_output :: unable to open file (`%s`)\n", out_filename);
+    CARBON_ERROR("carbon_junit_output :: unable to open file (`%s`)", out_filename);
     return;
   }
   time_t t = time(0);

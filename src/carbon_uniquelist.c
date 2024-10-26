@@ -28,7 +28,7 @@ UniqueList carbon_uniquelist_create(void) {
   usz size = ul.capacity * sizeof(char *);
   ul.items = CARBON_MALLOC(size);
   if (!ul.items) {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_create :: failed to allocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
+    CARBON_ERROR("carbon_uniquelist_create :: failed to allocate memory (%zuB)", size);
     exit(1);
   }
   return ul;
@@ -51,14 +51,14 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
     usz size = ul->capacity * sizeof(char *);
     ul->items = CARBON_REALLOC(ul->items, size);
     if (!ul->items) {
-      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_push :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
+      CARBON_ERROR("carbon_uniquelist_push :: failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       exit(1);
     }
   }
   ul->items[ul->size] = strdup(s);
   if (!ul->items[ul->size]) {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_push :: failed to duplicate string" CARBON_COLOR_RESET "\n");
+    CARBON_ERROR("carbon_uniquelist_push :: failed to duplicate string");
     exit(1);
   }
   ++ul->size;
@@ -74,7 +74,7 @@ static int find_idx(UniqueList *ul, const char *s) {
 void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
   int idx = find_idx(ul, s);
   if (idx == -1) {
-    CARBON_INFO("[WARNING]: carbon_uniquelist_pop :: string not present in list. Skipping...");
+    CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?]: carbon_uniquelist_pop :: string `%s` not present in list", s);
     return;
   }
   CARBON_FREE(ul->items[idx]);
@@ -88,7 +88,7 @@ void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
     usz size = ul->capacity * sizeof(char *);
     ul->items = CARBON_REALLOC(ul->items, size);
     if (!ul->items && ul->size > 0) {
-      CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_uniquelist_push :: failed to reallocate memory (%zuB)" CARBON_COLOR_RESET "\n", size);
+      CARBON_ERROR("carbon_uniquelist_push :: failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       exit(1);
     }

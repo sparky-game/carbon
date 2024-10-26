@@ -8,9 +8,9 @@
 #include <sys/stat.h>
 
 u8 carbon_fs_rename(const char *old, const char *new) {
-  CARBON_INFO(CARBON_COLOR_YELLOW "[*] Renaming file %s -> %s" CARBON_COLOR_RESET "\n", old, new);
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", old, new);
   if (-1 == rename(old, new)) {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_fs_rename :: unable to rename %s -> %s" CARBON_COLOR_RESET "\n", old, new);
+    CARBON_ERROR("carbon_fs_rename :: unable to rename %s -> %s", old, new);
     return 0;
   }
   return 1;
@@ -19,7 +19,7 @@ u8 carbon_fs_rename(const char *old, const char *new) {
 i32 carbon_fs_mtime(const char *file) {
   struct stat sb = {0};
   if (-1 == stat(file, &sb)) {
-    CARBON_ERROR("[ERROR]: " CARBON_COLOR_RED "carbon_fs_mtime :: unable to stat file `%s`" CARBON_COLOR_RESET "\n", file);
+    CARBON_ERROR("carbon_fs_mtime :: unable to stat file `%s`", file);
     return 0;
   }
   return sb.st_mtime;
