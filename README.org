@@ -67,15 +67,16 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
 
 * Usage
 
-(...)
+We can use /Carbon/ in our preferred way of managing dependencies or external libraries in our projects. Here are the main options of obtaining the library:
 
+*Git Submodules*:
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
 #+end_src
 
-(...)
-
+*CMake FetchContent*:
 #+begin_src cmake
+include(FetchContent)
 FetchContent_Declare(
   carbon
   GIT_REPOSITORY "https://github.com/sparky-game/carbon"
@@ -85,7 +86,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(carbon)
 #+end_src
 
-(...)
+*Pre-compiled Package*:
+#+begin_src sh
+wget https://github.com/sparky-game/carbon/releases/download/v0.7-alpha/carbon-0.7-linux-amd64.tgz
+tar -xvf carbon-0.7-linux-amd64.tgz
+#+end_src
 
 ** Target code
 
