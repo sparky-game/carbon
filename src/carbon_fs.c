@@ -5,8 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#include <sys/stat.h>
-
 u8 carbon_fs_rename(const char *old, const char *new) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", old, new);
   if (-1 == rename(old, new)) {

@@ -18,12 +18,6 @@ static void clock_setup(void) {
   clock_freq = 1.0 / (f64) freq.QuadPart;
   QueryPerformanceCounter(&start_time);
 }
-#else
-#include <time.h>
-#include <unistd.h>
-#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
-#include <sys/time.h>
-#endif
 #endif
 
 f64 carbon_time_get(void) {

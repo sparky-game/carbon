@@ -5,10 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-
 static Suite test_suite = {0};
 static CmdArgs cmd_args = {0};
 
@@ -29,15 +25,15 @@ static const char * const version_msg = "%s %s\n"
 
 void carbon_test_manager_argparse(i32 argc, char **argv) {
   if (argc == 1) return;
-  if (argc == 3 && (!strcmp(argv[1], "-o") || !strcmp(argv[1], "--output"))) {
+  if (argc == 3 && (!carbon_string_cmp(argv[1], "-o") || !carbon_string_cmp(argv[1], "--output"))) {
     cmd_args.output = argv[2];
     return;
   }
-  if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
+  if (argc == 2 && (!carbon_string_cmp(argv[1], "-h") || !carbon_string_cmp(argv[1], "--help"))) {
     CARBON_INFO_RAW(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME, CARBON_NAME);
     exit(0);
   }
-  if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
+  if (argc == 2 && (!carbon_string_cmp(argv[1], "-v") || !carbon_string_cmp(argv[1], "--version"))) {
     CARBON_INFO_RAW(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
@@ -67,9 +63,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   }
   if (!needs_rebuild) return;
   // 1. Rename `./carbon` -> `./carbon.old`
-  char bin_file_old[128] = {0};
-  strcpy(bin_file_old, bin_file);
-  strcat(bin_file_old, ".old");
+  char *bin_file_old = carbon_string_fmt("%s.old", bin_file);
   if (!carbon_fs_rename(bin_file, bin_file_old)) goto defer;
   // 2. Rebuild binary using `test_suite.files` as args
   i32 rebuild_status_code = 0;
@@ -79,8 +73,9 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
   }
   else if (rebuild_child_pid == 0) {
-    char *argv[test_suite.files.size + 9];
-    memset(argv, 0, (test_suite.files.size + 9) * sizeof(char *));
+    usz argv_size = test_suite.files.size + 7;
+    char *argv[argv_size];
+    memset(argv, 0, argv_size * sizeof(char *));
 #if defined(__GNUC__)
     argv[0] = "gcc";
 #elif defined(__clang__)
@@ -88,15 +83,13 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
 #else
     argv[0] = "cc";
 #endif
-    argv[1] = "-D";
-    argv[2] = "CARBON_FEATURE_REBUILD";
-    argv[3] = "-I";
-    argv[4] = ".";
-    argv[5] = "-fsanitize=address,undefined";
-    argv[6] = "-o";
-    argv[7] = (char *) bin_file;
+    argv[1] = "-I";
+    argv[2] = ".";
+    argv[3] = "-fsanitize=address,undefined";
+    argv[4] = "-o";
+    argv[5] = (char *) bin_file;
     for (usz i = 0; i < test_suite.files.size; ++i) {
-      argv[i + 8] = test_suite.files.items[i];
+      argv[i + 6] = test_suite.files.items[i];
     }
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("carbon_test_manager_rebuild :: unable to execvp from child process");

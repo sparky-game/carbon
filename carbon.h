@@ -44,6 +44,23 @@
 #define CARBON_FREE(p)           free(p)
 
 /*
+**  $$==========================$$
+**  ||       Dependencies       ||
+**  $$==========================$$
+*/
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/wait.h>
+
+/*
 **  $$=========================$$
 **  ||       Definitions       ||
 **  $$=========================$$
@@ -71,9 +88,8 @@
 **  ||       Types       ||
 **  $$===================$$
 */
-#include <stddef.h>
-
 typedef size_t usz;
+typedef uintptr_t uptr;
 typedef unsigned char u8;
 CARBON_STATIC_ASSERT(sizeof(u8)  == 1, "Expected u8 to be 1 byte");
 typedef unsigned int u32;
@@ -107,8 +123,6 @@ CARBON_API int carbon_main(void);
 **  ||       Logging       ||
 **  $$=====================$$
 */
-#include <stdio.h>
-
 #define CARBON_COLOR_RESET   "\033[0m"
 #define CARBON_COLOR_RED     "\033[1;31m"
 #define CARBON_COLOR_GREEN   "\033[1;32m"
@@ -128,8 +142,6 @@ CARBON_API int carbon_main(void);
 **  ||       Assertions       ||
 **  $$========================$$
 */
-#include <string.h>
-
 #define CARBON_COMPARE(expr, msg, ...)                          \
   if ((expr)) {                                                 \
     CARBON_ERROR_ASS("%s:%d :: FAILED -> " msg,                 \
@@ -184,14 +196,14 @@ CARBON_API int carbon_main(void);
                     "got '%p == %p', expected not to",          \
                     (void *) (actual), (void *) (expected))
 
-#define carbon_should_be_s(expected, actual)    \
-  CARBON_COMPARE(strcmp((expected), (actual)),  \
-                 "got '%s', expected '%s'",     \
+#define carbon_should_be_s(expected, actual)                    \
+  CARBON_COMPARE(carbon_string_cmp((expected), (actual)),       \
+                 "got '%s', expected '%s'",                     \
                  (actual), (expected))
 
-#define carbon_should_not_be_s(expected, actual)        \
-  CARBON_COMPARE(!strcmp((expected), (actual)),         \
-                 "got '%s', expected '%s'",             \
+#define carbon_should_not_be_s(expected, actual)                \
+  CARBON_COMPARE(!carbon_string_cmp((expected), (actual)),      \
+                 "got '%s', expected '%s'",                     \
                  (actual), (expected))
 
 /*
@@ -223,6 +235,15 @@ CARBON_API void carbon_clock_stop(Clock *c);
 */
 CARBON_API u8 carbon_fs_rename(const char *old, const char *new);
 CARBON_API i32 carbon_fs_mtime(const char *file);
+
+/*
+**  $$====================$$
+**  ||       String       ||
+**  $$====================$$
+*/
+CARBON_API i32 carbon_string_cmp(const char *s1, const char *s2);
+CARBON_API char *carbon_string_dup(const char *s);
+CARBON_API char *carbon_string_fmt(const char *s, ...);
 
 /*
 **  $$========================$$
@@ -318,6 +339,7 @@ CARBON_API void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *jun
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_fs.c"
+#include "src/carbon_string.c"
 #include "src/carbon_uniquelist.c"
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"

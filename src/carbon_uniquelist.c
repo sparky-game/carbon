@@ -5,21 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#include <stdlib.h>
-#include <string.h>
-
-#if !defined(_WIN32) && _POSIX_C_SOURCE < 199309L
-#warning Using custom implementation of `strdup`. If wanted to use the stdlib one, change to a different C standard
-
-// NOTE: same implementation as in musl (https://git.musl-libc.org/cgit/musl/tree/src/string/strdup.c)
-static char *strdup(const char *s) {
-  usz len = strlen(s);
-  char *data = CARBON_MALLOC(len + 1);
-  if (!data) return 0;
-  return memcpy(data, s, len + 1);
-}
-#endif
-
 UniqueList carbon_uniquelist_create(void) {
   UniqueList ul = {
     .size = 0,
@@ -56,7 +41,7 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
       exit(1);
     }
   }
-  ul->items[ul->size] = strdup(s);
+  ul->items[ul->size] = carbon_string_dup(s);
   if (!ul->items[ul->size]) {
     CARBON_ERROR("carbon_uniquelist_push :: failed to duplicate string");
     exit(1);
@@ -66,7 +51,7 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
 
 static int find_idx(UniqueList *ul, const char *s) {
   for (usz i = 0; i < ul->size; ++i) {
-    if (!strcmp(ul->items[i], s)) return i;
+    if (!carbon_string_cmp(ul->items[i], s)) return i;
   }
   return -1;
 }
@@ -97,7 +82,7 @@ void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
 
 u8 carbon_uniquelist_contains(UniqueList *ul, const char *s) {
   for (usz i = 0; i < ul->size; ++i) {
-    if (!strcmp(ul->items[i], s)) return 1;
+    if (!carbon_string_cmp(ul->items[i], s)) return 1;
   }
   return 0;
 }

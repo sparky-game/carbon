@@ -5,8 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#include <time.h>
-
 #define ISO_8601_FMT "%Y-%m-%dT%H:%M:%S%z"
 
 void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename) {
