@@ -94,20 +94,10 @@ FetchContent_MakeAvailable(carbon)
 
 #pragma once
 
-void inc_int(int *x);
-#+end_src
-
-#+begin_src c
-// x.c
-
-#include "x.h"
-
 void inc_int(int *x) {
   ++(*x);
 }
 #+end_src
-
-(...)
 
 ** Test case
 
@@ -126,8 +116,6 @@ CARBON_TEST(x, inc_int) {
 }
 #+end_src
 
-(...)
-
 ** Entrypoint
 
 #+begin_src c
@@ -141,15 +129,13 @@ int main(void) {
 }
 #+end_src
 
-(...)
+If we define the macro ~CARBON_IMPLEMENTATION~, it makes the library operate in a *header-only* structure: all the internal source code of /Carbon/ is included in that translation unit, i.e. no need to compile and link it separately. Alternatively, one can link with the library's internal source code either compiling it ourselves, or using a pre-compiled package of the [[https://github.com/sparky-game/carbon/releases/latest][latest release available]].
 
 #+begin_src sh
 cc -I vendor/carbon -std=c99 *.c -o carbon
 #+end_src
 
 ** Execution
-
-(...)
 
 #+begin_example
 $ ./carbon -h
@@ -162,8 +148,6 @@ Options:
 Report bugs to: <https://github.com/sparky-game/carbon/issues>
 SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
 #+end_example
-
-(...)
 
 Additionally, it will create a file named ~carbon_results.xml~ with the execution results formatted as JUnit XML.
 
