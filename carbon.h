@@ -58,7 +58,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#ifndef _WIN32
 #include <sys/wait.h>
+#endif
 
 /*
 **  $$=========================$$
