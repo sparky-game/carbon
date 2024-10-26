@@ -1,23 +1,5 @@
-/*
- * BSD Carbon --- A simple C/C++ unit testing framework
- * Copyright (C) 2024 Wasym A. Alonso
- *
- * This file is part of Carbon.
- *
- * Carbon is free software: you can redistribute it and/or modify
- * it under the terms of the BSD 3-Clause "New" or "Revised" License
- * as published by The Regents of the University of California.
- *
- * Carbon is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * BSD 3-Clause "New" or "Revised" License for more details.
- *
- * You should have received a copy of the BSD 3-Clause "New" or
- * "Revised" License along with Carbon.
- * If not, see <https://opensource.org/license/BSD-3-Clause>.
- */
-
+// SPDX-License-Identifier: BSD-3-Clause
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #include <sstream>
 #include <fstream>
@@ -30,7 +12,7 @@
 #include <evals/benchmark_helper.h>
 
 #define CARBON_AI_ABORT_ERROR(err) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, (err))
-#define CARBON_AI_ABORT_USAGE HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
+#define CARBON_AI_ABORT_USAGE      HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
 
 static constexpr auto system_prompt {
   "Strictly follow the following instructions and rules:\n"
