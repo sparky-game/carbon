@@ -12,7 +12,7 @@
 #include <evals/benchmark_helper.h>
 
 #define CARBON_AI_ABORT_ERROR(err) HWY_ABORT("%s:%u :: %s", __FILE__, __LINE__, (err))
-#define CARBON_AI_ABORT_USAGE      HWY_ABORT("usage: %s [-t <N>] --src <FILE> --test <FILE>", argv[0])
+#define CARBON_AI_ABORT_USAGE      HWY_ABORT("usage: %s [-j <N>] -s <SRC_FILE> -t <TEST_FILE>", argv[0])
 
 #define LLM_MODEL_PATH "build/_deps/llm-model-src"
 
@@ -86,8 +86,8 @@ static bool it_builds(const std::stringstream &ss) {
 
 int main(int argc, char **argv) {
   gcpp::LoaderArgs loader(argc, argv);
-  loader.tokenizer = LLM_MODEL_PATH "tokenizer.spm";
-  loader.weights = LLM_MODEL_PATH "weights.sbs";
+  loader.tokenizer = LLM_MODEL_PATH "/tokenizer.spm";
+  loader.weights = LLM_MODEL_PATH "/weights.sbs";
   loader.model_type_str = "7b-it";
   loader.weight_type_str = "sfp";
 
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
 
   gcpp::AppArgs app { argc, argv };
   app.num_threads = 1;
-  if (argc >= 3 and argv[1] == std::string("-t")) app.num_threads = std::atoi(argv[2]);
+  if (argc >= 3 and argv[1] == std::string("-j")) app.num_threads = std::atoi(argv[2]);
   else std::cout << "WARNING: using 1 thread for inference by default.\n" << std::endl;
   hwy::ThreadPool thread_pool(app.num_threads);
   if (app.num_threads > 10) gcpp::PinWorkersToCores(thread_pool);
@@ -108,18 +108,18 @@ int main(int argc, char **argv) {
   std::string src_file, test_file;
   switch (argc) {
   case 5:
-    if (argv[1] != std::string("--src")) CARBON_AI_ABORT_USAGE;
-    if (not std::filesystem::exists(argv[2])) CARBON_AI_ABORT_USAGE;
-    if (argv[3] != std::string("--test")) CARBON_AI_ABORT_USAGE;
-    if (not std::filesystem::exists(argv[4])) CARBON_AI_ABORT_USAGE;
+    if (argv[1] != std::string("-s")          or
+        not std::filesystem::exists(argv[2]) or
+        argv[3] != std::string("-t")          or
+        not std::filesystem::exists(argv[4])) CARBON_AI_ABORT_USAGE;
     src_file = argv[2];
     test_file = argv[4];
     break;
   case 7:
-    if (argv[3] != std::string("--src")) CARBON_AI_ABORT_USAGE;
-    if (not std::filesystem::exists(argv[4])) CARBON_AI_ABORT_USAGE;
-    if (argv[5] != std::string("--test")) CARBON_AI_ABORT_USAGE;
-    if (not std::filesystem::exists(argv[6])) CARBON_AI_ABORT_USAGE;
+    if (argv[3] != std::string("-s")          or
+        not std::filesystem::exists(argv[4]) or
+        argv[5] != std::string("-t")          or
+        not std::filesystem::exists(argv[6])) CARBON_AI_ABORT_USAGE;
     src_file = argv[4];
     test_file = argv[6];
     break;
