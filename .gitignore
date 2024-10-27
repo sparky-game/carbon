@@ -1,6 +1,8 @@
 *.xml
 *.old
 *.tgz
+make
+src/make
 carbon
 test/carbon
 
