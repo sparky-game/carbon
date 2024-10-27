@@ -59,7 +59,7 @@ static int find_idx(UniqueList *ul, const char *s) {
 void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
   int idx = find_idx(ul, s);
   if (idx == -1) {
-    CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?]: carbon_uniquelist_pop :: string `%s` not present in list", s);
+    CARBON_WARNING("carbon_uniquelist_pop :: string `%s` not present in list", s);
     return;
   }
   CARBON_FREE(ul->items[idx]);
