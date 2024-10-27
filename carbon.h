@@ -148,7 +148,7 @@ CARBON_API int carbon_main(void);
 #define CARBON_INFO(msg, ...) CARBON_INFO_RAW(msg "\n", ##__VA_ARGS__)
 #define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " msg, ##__VA_ARGS__)
 #define CARBON_ERROR_RAW(msg, ...) fprintf(stderr, msg, ##__VA_ARGS__)
-#define CARBON_ERROR_PREFIX(prefix, msg, ...) CARBON_ERROR_RAW(prefix CARBON_COLOR_RED "" msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
+#define CARBON_ERROR_PREFIX(prefix, msg, ...) CARBON_ERROR_RAW(CARBON_COLOR_RED prefix "" msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
 #define CARBON_ERROR_ASS(msg, ...) CARBON_ERROR_PREFIX("", msg, ##__VA_ARGS__)
 #define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] ", msg, ##__VA_ARGS__)
 
