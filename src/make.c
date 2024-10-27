@@ -4,10 +4,12 @@
 
 #include <glob.h>
 
-#define WORKDIR                                                 \
-  "carbon-" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)       \
-  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)             \
-  "-linux-amd64"
+#define WORKDIR                                         \
+  "carbon"                                              \
+  "-" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
+  "-" CARBON_TARGET_OS                                  \
+  "-" CARBON_CPU_ARCH
 
 static void rm_first_substr_from_str(char *s, const char *subs) {
   char *pos = strstr(s, subs);

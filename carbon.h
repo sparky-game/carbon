@@ -37,12 +37,20 @@
 #define CARBON_VERSION_MINOR 7
 // TODO: handle patch version number as well
 // #define CARBON_VERSION_PATCH
-#define CARBON_VERSION_EXTRA alpha
+#define CARBON_VERSION_EXTRA "alpha"
 
 #define CARBON_VERSION                                  \
   "v" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
   "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
-  "-" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_EXTRA)
+  "-" CARBON_VERSION_EXTRA
+
+#if defined(__amd64__) || defined(_M_AMD64)
+#define CARBON_CPU_ARCH "amd64"
+#endif
+
+#ifdef __linux__
+#define CARBON_TARGET_OS "linux"
+#endif
 
 /*
 **  $$======================$$
