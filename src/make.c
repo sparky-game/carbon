@@ -52,8 +52,8 @@ static inline void strip_objs(const char *path) {
 
 static void create_static_lib(const char *name) {
   strip_objs(WORKDIR "/*.o");
+  CARBON_INFO("  AR      %s", name);
   if (!system(carbon_string_fmt("ar -rcs %s/%s %s/*.o", WORKDIR, name, WORKDIR))) {
-    CARBON_INFO("  AR      %s", name);
     rm_dash_r(WORKDIR "/*.o");
     return;
   }
@@ -66,9 +66,9 @@ static inline void compress_dir(const char *path) {
 }
 
 static void run_tests(void) {
-  const char *cmd = "clang -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
+  const char *cmd = "clang -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
+  CARBON_INFO("  CCLD    carbon");
   if (!system(cmd)) {
-    CARBON_INFO("  CCLD    carbon");
     call_cmd("./carbon");
     return;
   }
