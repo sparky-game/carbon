@@ -24,16 +24,14 @@ static inline void rm_substr_from_str(char *s, const char *subs) {
 }
 
 static void call_cmd(const char *cmd) {
-  if (!system(cmd)) {
-    CARBON_INFO("+ %s", cmd);
-    return;
-  }
+  CARBON_INFO("+ %s", cmd);
+  if (!system(cmd)) return;
   CARBON_ERROR("Unable to run `%s`", cmd);
   exit(1);
 }
 
 static inline void rm_dash_r(const char *path) {
-  call_cmd(carbon_string_fmt("rm -r %s", path));
+  call_cmd(carbon_string_fmt("rm -rf %s", path));
 }
 
 static inline void cp_dash_r(const char *origin, const char *dest) {
@@ -79,7 +77,25 @@ static inline void compress_dir(const char *path) {
   call_cmd(carbon_string_fmt("tar -zcf %s.tgz %s", path, path));
 }
 
-int main(void) {
+static void run_tests(void) {
+  const char *cmd = "clang -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
+  if (!system(cmd)) {
+    CARBON_INFO("  CCLD    carbon");
+    call_cmd("./carbon");
+    return;
+  }
+  CARBON_ERROR("Errors when compiling the code");
+  exit(1);
+}
+
+int main(int argc, char **argv) {
+  if (argc == 2 && !carbon_string_cmp(argv[1], "clean")) {
+    rm_dash_r("carbon make " WORKDIR ".tgz");
+    return 0;
+  }
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
+  run_tests();
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
   make_dir(WORKDIR);
   build_src_files();
   create_static_lib("libcarbon.a");
@@ -88,5 +104,6 @@ int main(void) {
   cp_dash_r("src/carbon_*.c", WORKDIR "/src");
   compress_dir(WORKDIR);
   rm_dash_r(WORKDIR);
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz");
   return 0;
 }
