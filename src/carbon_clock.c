@@ -5,18 +5,18 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-Clock carbon_clock_start(void) {
-  return (Clock) {
+CBN_Clock carbon_clock_start(void) {
+  return (CBN_Clock) {
     .initial = carbon_time_get(),
     .elapsed = 0
   };
 }
 
-void carbon_clock_update(Clock *c) {
+void carbon_clock_update(CBN_Clock *c) {
   if (!c->initial) return;
   c->elapsed = carbon_time_get() - c->initial;
 }
 
-void carbon_clock_stop(Clock *c) {
+void carbon_clock_stop(CBN_Clock *c) {
   c->initial = 0;
 }

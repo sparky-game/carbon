@@ -9,14 +9,14 @@ static unsigned char test_dummy(void) {
 }
 
 CARBON_TEST(carbon_test_manager, suite_creation) {
-  Suite s = carbon_test_manager_spawn();
+  CBN_Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
   return CARBON_OK;
 }
 
 CARBON_TEST(carbon_test_manager, registration) {
-  Suite s = carbon_test_manager_spawn();
+  CBN_Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
 

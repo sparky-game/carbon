@@ -4,7 +4,7 @@
 #include <carbon.h>
 
 CARBON_TEST(carbon_uniquelist, create_destroy) {
-  UniqueList ul = carbon_uniquelist_create();
+  CBN_UniqueList ul = carbon_uniquelist_create();
   carbon_should_be(0, ul.size);
   carbon_should_be(1, ul.capacity);
   carbon_should_not_be_p(0, ul.items);
@@ -13,7 +13,7 @@ CARBON_TEST(carbon_uniquelist, create_destroy) {
 }
 
 CARBON_TEST(carbon_uniquelist, push_pop_single) {
-  UniqueList ul = carbon_uniquelist_create();
+  CBN_UniqueList ul = carbon_uniquelist_create();
   carbon_uniquelist_push(&ul, "hello");
   carbon_should_be(1, ul.size);
   carbon_should_be_true(carbon_uniquelist_contains(&ul, "hello"));
@@ -27,7 +27,7 @@ CARBON_TEST(carbon_uniquelist, push_pop_single) {
 }
 
 CARBON_TEST(carbon_uniquelist, push_pop_multiple) {
-  UniqueList ul = carbon_uniquelist_create();
+  CBN_UniqueList ul = carbon_uniquelist_create();
   carbon_uniquelist_push(&ul, "hello");
   carbon_uniquelist_push(&ul, "bye");
   carbon_uniquelist_push(&ul, "world");

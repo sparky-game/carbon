@@ -7,7 +7,7 @@
 
 #define ISO_8601_FMT "%Y-%m-%dT%H:%M:%S%z"
 
-void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename) {
+void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestcase *junit_tcs, const char *out_filename) {
   if (!out_filename) out_filename = CARBON_JUNIT_XML_OUT_FILENAME;
   FILE *fd = fopen(out_filename, "w");
   if (!fd) {

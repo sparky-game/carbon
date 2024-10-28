@@ -5,8 +5,8 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-static Suite test_suite = {0};
-static CmdArgs cmd_args = {0};
+static CBN_Suite test_suite = {0};
+static CBN_CmdArgs cmd_args = {0};
 
 static const char * const help_msg = "usage: %s [OPTION]\n"
   "Options:\n"
@@ -123,13 +123,13 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   exit(1);
 }
 
-Suite carbon_test_manager_spawn(void) {
-  return (Suite) {0};
+CBN_Suite carbon_test_manager_spawn(void) {
+  return (CBN_Suite) {0};
 }
 
-Test *carbon_test_manager_alloc(Suite *s) {
-  Test *p = 0;
-  usz size = sizeof(Test);
+CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
+  CBN_Test *p = 0;
+  usz size = sizeof(CBN_Test);
   if (!s->tests) {
     p = CARBON_MALLOC(size);
     if (!p) {
@@ -139,7 +139,7 @@ Test *carbon_test_manager_alloc(Suite *s) {
   }
   else {
     size *= s->n;
-    Test *prev_p = s->tests;
+    CBN_Test *prev_p = s->tests;
     p = CARBON_REALLOC(s->tests, size);
     if (!p) {
       CARBON_ERROR("carbon_test_manager_alloc :: failed to reallocate memory (%zuB)", size);
@@ -150,32 +150,32 @@ Test *carbon_test_manager_alloc(Suite *s) {
   return p;
 }
 
-void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name, char *filename) {
+void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, char *name, char *filename) {
   ++s->n;
   s->tests = carbon_test_manager_alloc(s);
-  s->tests[s->n - 1] = (Test) {
+  s->tests[s->n - 1] = (CBN_Test) {
     .f = test_func,
     .name = name,
     .filename = filename
   };
 }
 
-void carbon_test_manager_register(TestFunc test_func, char *name, char *filename) {
+void carbon_test_manager_register(CBN_TestFunc test_func, char *name, char *filename) {
   carbon_test_manager_register_s(&test_suite, test_func, name, filename);
 }
 
-void carbon_test_manager_cleanup(Suite *s) {
+void carbon_test_manager_cleanup(CBN_Suite *s) {
   if (!s->tests || !s->n) {
     CARBON_ERROR("carbon_test_manager_cleanup_s :: Suite `s` has not been initialized");
     return;
   }
   CARBON_FREE(s->tests);
   carbon_uniquelist_destroy(&s->files);
-  *s = (Suite) {0};
+  *s = (CBN_Suite) {0};
   s = 0;
 }
 
-u8 carbon_test_manager_run_s(Suite *s) {
+u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
   CARBON_INFO("=======================================");
   if (!s->tests || !s->n) {
@@ -186,10 +186,10 @@ u8 carbon_test_manager_run_s(Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
-  JUnitTestsuite junit_testsuite_info = { .tests = s->n };
-  JUnitTestcase junit_testcase_infos[s->n];
-  memset(junit_testcase_infos, 0, s->n * sizeof(JUnitTestcase));
-  Clock clk = carbon_clock_start();
+  CBN_JUnitTestsuite junit_testsuite_info = { .tests = s->n };
+  CBN_JUnitTestcase junit_testcase_infos[s->n];
+  memset(junit_testcase_infos, 0, s->n * sizeof(CBN_JUnitTestcase));
+  CBN_Clock clk = carbon_clock_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 result = s->tests[i].f();
     memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));

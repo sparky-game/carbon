@@ -279,11 +279,11 @@ CARBON_API void carbon_time_sleep(u64 ms);
 typedef struct {
   f64 initial;
   f64 elapsed;
-} Clock;
+} CBN_Clock;
 
-CARBON_API Clock carbon_clock_start(void);
-CARBON_API void carbon_clock_update(Clock *c);
-CARBON_API void carbon_clock_stop(Clock *c);
+CARBON_API CBN_Clock carbon_clock_start(void);
+CARBON_API void carbon_clock_update(CBN_Clock *c);
+CARBON_API void carbon_clock_stop(CBN_Clock *c);
 
 /*
 **  $$========================$$
@@ -316,13 +316,13 @@ typedef struct {
   char **items;
   usz size;
   usz capacity;
-} UniqueList;
+} CBN_UniqueList;
 
-CARBON_API UniqueList carbon_uniquelist_create(void);
-CARBON_API void carbon_uniquelist_destroy(UniqueList *ul);
-CARBON_API void carbon_uniquelist_push(UniqueList *ul, const char *s);
-CARBON_API void carbon_uniquelist_pop(UniqueList *ul, const char *s);
-CARBON_API u8 carbon_uniquelist_contains(UniqueList *ul, const char *s);
+CARBON_API CBN_UniqueList carbon_uniquelist_create(void);
+CARBON_API void carbon_uniquelist_destroy(CBN_UniqueList *ul);
+CARBON_API void carbon_uniquelist_push(CBN_UniqueList *ul, const char *s);
+CARBON_API void carbon_uniquelist_pop(CBN_UniqueList *ul, const char *s);
+CARBON_API u8 carbon_uniquelist_contains(CBN_UniqueList *ul, const char *s);
 
 /*
 **  $$=========================$$
@@ -343,32 +343,32 @@ CARBON_API u8 carbon_uniquelist_contains(UniqueList *ul, const char *s);
   }                                                             \
   CARBON_TEST_DECL(ctx_name, unit_name)
 
-typedef u8 (*TestFunc)(void);
+typedef u8 (*CBN_TestFunc)(void);
 
 typedef struct {
-  TestFunc f;
+  CBN_TestFunc f;
   char *name;
   char *filename;
-} Test;
+} CBN_Test;
 
 typedef struct {
-  Test *tests;
-  size_t n;
-  UniqueList files;
-} Suite;
+  CBN_Test *tests;
+  usz n;
+  CBN_UniqueList files;
+} CBN_Suite;
 
 typedef struct {
   char *output;
-} CmdArgs;
+} CBN_CmdArgs;
 
 CARBON_API void carbon_test_manager_argparse(int argc, char **argv);
 CARBON_API void carbon_test_manager_rebuild(const char *bin_file, const char *src_file);
-CARBON_API Suite carbon_test_manager_spawn(void);
-CARBON_API Test *carbon_test_manager_alloc(Suite *s);
-CARBON_API void carbon_test_manager_cleanup(Suite *s);
-CARBON_API void carbon_test_manager_register_s(Suite *s, TestFunc test_func, char *name, char *filename);
-CARBON_API void carbon_test_manager_register(TestFunc test_func, char *name, char *filename);
-CARBON_API u8 carbon_test_manager_run_s(Suite *s);
+CARBON_API CBN_Suite carbon_test_manager_spawn(void);
+CARBON_API CBN_Test *carbon_test_manager_alloc(CBN_Suite *s);
+CARBON_API void carbon_test_manager_cleanup(CBN_Suite *s);
+CARBON_API void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, char *name, char *filename);
+CARBON_API void carbon_test_manager_register(CBN_TestFunc test_func, char *name, char *filename);
+CARBON_API u8 carbon_test_manager_run_s(CBN_Suite *s);
 CARBON_API u8 carbon_test_manager_run(void);
 
 /*
@@ -383,14 +383,14 @@ typedef struct {
   f64 time;
   usz tests;
   usz failures;
-} JUnitTestsuite;
+} CBN_JUnitTestsuite;
 
 typedef struct {
   char name[CARBON_JUNIT_TESTCASE_NAME_MAX_LEN];
   u8 has_failed;
-} JUnitTestcase;
+} CBN_JUnitTestcase;
 
-CARBON_API void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *junit_tcs, const char *out_filename);
+CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestcase *junit_tcs, const char *out_filename);
 
 /*
 **  $$=============================$$

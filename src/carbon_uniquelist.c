@@ -5,8 +5,8 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-UniqueList carbon_uniquelist_create(void) {
-  UniqueList ul = {
+CBN_UniqueList carbon_uniquelist_create(void) {
+  CBN_UniqueList ul = {
     .size = 0,
     .capacity = 1
   };
@@ -19,16 +19,16 @@ UniqueList carbon_uniquelist_create(void) {
   return ul;
 }
 
-void carbon_uniquelist_destroy(UniqueList *ul) {
+void carbon_uniquelist_destroy(CBN_UniqueList *ul) {
   for (usz i = 0; i < ul->size; ++i) {
     CARBON_FREE(ul->items[i]);
   }
   CARBON_FREE(ul->items);
-  *ul = (UniqueList) {0};
+  *ul = (CBN_UniqueList) {0};
   ul = 0;
 }
 
-void carbon_uniquelist_push(UniqueList *ul, const char *s) {
+void carbon_uniquelist_push(CBN_UniqueList *ul, const char *s) {
   if (carbon_uniquelist_contains(ul, s)) return;
   if (ul->size == ul->capacity) {
     ul->capacity *= 2;
@@ -49,14 +49,14 @@ void carbon_uniquelist_push(UniqueList *ul, const char *s) {
   ++ul->size;
 }
 
-static int find_idx(UniqueList *ul, const char *s) {
+static int find_idx(CBN_UniqueList *ul, const char *s) {
   for (usz i = 0; i < ul->size; ++i) {
     if (!carbon_string_cmp(ul->items[i], s)) return i;
   }
   return -1;
 }
 
-void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
+void carbon_uniquelist_pop(CBN_UniqueList *ul, const char *s) {
   int idx = find_idx(ul, s);
   if (idx == -1) {
     CARBON_WARNING("carbon_uniquelist_pop :: string `%s` not present in list", s);
@@ -80,7 +80,7 @@ void carbon_uniquelist_pop(UniqueList *ul, const char *s) {
   }
 }
 
-u8 carbon_uniquelist_contains(UniqueList *ul, const char *s) {
+u8 carbon_uniquelist_contains(CBN_UniqueList *ul, const char *s) {
   for (usz i = 0; i < ul->size; ++i) {
     if (!carbon_string_cmp(ul->items[i], s)) return 1;
   }
