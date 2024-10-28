@@ -256,6 +256,7 @@ CARBON_API void carbon_clock_stop(Clock *c);
 **  ||       Filesystem       ||
 **  $$========================$$
 */
+CARBON_API u8 carbon_fs_exists(const char *file);
 CARBON_API u8 carbon_fs_rename(const char *old, const char *new);
 CARBON_API i32 carbon_fs_mtime(const char *file);
 

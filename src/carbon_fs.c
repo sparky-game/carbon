@@ -5,6 +5,16 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+u8 carbon_fs_exists(const char *file) {
+#ifdef _WIN32
+  DWORD attrs = GetFileAttributes(file);
+  return attrs != INVALID_FILE_ATTRIBUTES;
+#else
+  if (!access(file, F_OK)) return 1;
+  return 0;
+#endif
+}
+
 u8 carbon_fs_rename(const char *old, const char *new) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", old, new);
   if (-1 == rename(old, new)) {
