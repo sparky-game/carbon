@@ -11,18 +11,6 @@
   "-" CARBON_TARGET_OS                                  \
   "-" CARBON_CPU_ARCH
 
-static void rm_first_substr_from_str(char *s, const char *subs) {
-  char *pos = strstr(s, subs);
-  if (pos) {
-    usz len = strlen(subs);
-    memmove(pos, pos + len, strlen(pos + len) + 1);
-  }
-}
-
-static inline void rm_substr_from_str(char *s, const char *subs) {
-  while (strstr(s, subs)) rm_first_substr_from_str(s, subs);
-}
-
 static void call_cmd(const char *cmd) {
   CARBON_INFO("+ %s", cmd);
   if (!system(cmd)) return;
@@ -47,8 +35,8 @@ static void build_src_files(void) {
   glob("src/carbon_*.c", GLOB_TILDE, 0, &glob_result);
   for (usz i = 0; i < glob_result.gl_pathc; ++i) {
     CARBON_INFO("  CC      %s", glob_result.gl_pathv[i]);
-    rm_substr_from_str(glob_result.gl_pathv[i], "src/");
-    rm_substr_from_str(glob_result.gl_pathv[i], ".c");
+    carbon_string_strip_substr(glob_result.gl_pathv[i], "src/");
+    carbon_string_strip_substr(glob_result.gl_pathv[i], ".c");
     const char *cmd = carbon_string_fmt("clang -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o",
                                         glob_result.gl_pathv[i], WORKDIR, glob_result.gl_pathv[i]);
     if (!system(cmd)) continue;
@@ -90,7 +78,11 @@ static void run_tests(void) {
 
 int main(int argc, char **argv) {
   if (argc == 2 && !carbon_string_cmp(argv[1], "clean")) {
-    rm_dash_r("carbon make " WORKDIR ".tgz");
+    rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
+    return 0;
+  }
+  if (argc == 2 && !carbon_string_cmp(argv[1], "mrproper")) {
+    rm_dash_r("make carbon " WORKDIR " " WORKDIR ".tgz");
     return 0;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");

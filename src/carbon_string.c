@@ -41,3 +41,12 @@ char *carbon_string_fmt(const char *s, ...) {
   if (i >= CARBON_STRING_FMT_MAX_BUFFERS) i = 0;
   return x;
 }
+
+void carbon_string_strip_substr(char *s, const char *sub) {
+  usz len = strlen(sub);
+  if (!len) return;
+  char *p;
+  while ((p = strstr(s, sub))) {
+    memmove(p, p + len, strlen(p + len) + 1);
+  }
+}
