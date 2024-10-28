@@ -312,22 +312,22 @@ CARBON_API char *carbon_string_fmt(const char *s, ...);
 CARBON_API void carbon_string_strip_substr(char *s, const char *sub);
 
 /*
-**  $$==================$$
-**  ||       List       ||
-**  $$==================$$
+**  $$=====================$$
+**  ||       StrList       ||
+**  $$=====================$$
 */
 typedef struct {
   char **items;
   usz size;
   usz capacity;
   u8 unique;
-} CBN_List;
+} CBN_StrList;
 
-CARBON_API CBN_List carbon_list_create(u8 unique);
-CARBON_API void carbon_list_destroy(CBN_List *ul);
-CARBON_API void carbon_list_push(CBN_List *ul, const char *s);
-CARBON_API void carbon_list_pop(CBN_List *ul, const char *s);
-CARBON_API u8 carbon_list_contains(CBN_List *ul, const char *s);
+CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
+CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
+CARBON_API void carbon_strlist_push(CBN_StrList *sl, const char *s);
+CARBON_API void carbon_strlist_pop(CBN_StrList *sl, const char *s);
+CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 
 /*
 **  $$=========================$$
@@ -359,7 +359,7 @@ typedef struct {
 typedef struct {
   CBN_Test *tests;
   usz n;
-  CBN_List files;
+  CBN_StrList files;
 } CBN_Suite;
 
 typedef struct {
@@ -408,7 +408,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 #include "src/carbon_clock.c"
 #include "src/carbon_fs.c"
 #include "src/carbon_string.c"
-#include "src/carbon_list.c"
+#include "src/carbon_strlist.c"
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
 #endif  // CARBON_IMPLEMENTATION
