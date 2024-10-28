@@ -15,7 +15,7 @@ static void call_cmd(const char *cmd) {
   CARBON_INFO("+ %s", cmd);
   if (!system(cmd)) return;
   CARBON_ERROR("Unable to run `%s`", cmd);
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 static inline void rm_dash_r(const char *path) {
@@ -42,7 +42,7 @@ static void build_src_files(void) {
     if (!system(cmd)) continue;
     CARBON_ERROR("Errors when compiling the code");
     rm_dash_r("build");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -58,7 +58,7 @@ static void create_static_lib(const char *name) {
     return;
   }
   CARBON_ERROR("Unable to create static lib `%s`", name);
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 static inline void compress_dir(const char *path) {
@@ -73,17 +73,17 @@ static void run_tests(void) {
     return;
   }
   CARBON_ERROR("Errors when compiling the code");
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 int main(int argc, char **argv) {
   if (argc == 2 && !carbon_string_cmp(argv[1], "clean")) {
     rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
-    return 0;
+    return EXIT_SUCCESS;
   }
   if (argc == 2 && !carbon_string_cmp(argv[1], "mrproper")) {
     rm_dash_r("make carbon " WORKDIR " " WORKDIR ".tgz");
-    return 0;
+    return EXIT_SUCCESS;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
   run_tests();
@@ -97,5 +97,5 @@ int main(int argc, char **argv) {
   compress_dir(WORKDIR);
   rm_dash_r(WORKDIR);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz");
-  return 0;
+  return EXIT_SUCCESS;
 }

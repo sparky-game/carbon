@@ -180,7 +180,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO("=======================================");
   if (!s->tests || !s->n) {
     CARBON_ERROR("carbon_test_manager_run :: `(Suite *) s` has not been initialized");
-    return 1;
+    return EXIT_FAILURE;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
@@ -207,7 +207,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   carbon_clock_update(&clk);
   carbon_clock_stop(&clk);
   u32 total_time_micro = (u32) (clk.elapsed * 1e6);
-  u8 status = 0;
+  u8 status = EXIT_SUCCESS;
   junit_testsuite_info.time = clk.elapsed;
   junit_testsuite_info.failures = failed;
   if (failed) {
@@ -219,7 +219,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
                           failed,
                           passed,
                           clk.elapsed);
-    ++status;
+    status = EXIT_FAILURE;
   }
   else {
     if (!((i32) clk.elapsed)) CARBON_INFO_RAW("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",

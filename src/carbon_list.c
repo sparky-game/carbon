@@ -83,7 +83,7 @@ void carbon_list_pop(CBN_List *ul, const char *s) {
 
 u8 carbon_list_contains(CBN_List *ul, const char *s) {
   for (usz i = 0; i < ul->size; ++i) {
-    if (!carbon_string_cmp(ul->items[i], s)) return 1;
+    if (!carbon_string_cmp(ul->items[i], s)) return true;
   }
-  return 0;
+  return false;
 }

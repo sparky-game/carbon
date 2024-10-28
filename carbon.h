@@ -85,8 +85,12 @@
 **  ||       Definitions       ||
 **  $$=========================$$
 */
-#define CARBON_OK 1
-#define CARBON_KO 0
+#undef true
+#define true 1
+#undef false
+#define false 0
+#define CARBON_OK true
+#define CARBON_KO false
 #define CARBON_QUOTE(x) #x
 #define CARBON_PASTE(x, y) x ## y
 #define CARBON_EXPAND_AND_QUOTE(x) CARBON_QUOTE(x)
