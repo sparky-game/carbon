@@ -111,13 +111,21 @@
 typedef size_t usz;
 typedef uintptr_t uptr;
 typedef unsigned char u8;
-CARBON_STATIC_ASSERT(sizeof(u8)  == 1, "Expected u8 to be 1 byte");
+CARBON_STATIC_ASSERT(sizeof(u8) == 1, "Expected u8 to be 1 byte");
+typedef signed char i8;
+CARBON_STATIC_ASSERT(sizeof(i8) == 1, "Expected i8 to be 1 byte");
+typedef unsigned short u16;
+CARBON_STATIC_ASSERT(sizeof(u16) == 2, "Expected u16 to be 2 bytes");
+typedef signed short i16;
+CARBON_STATIC_ASSERT(sizeof(i16) == 2, "Expected i16 to be 2 bytes");
 typedef unsigned int u32;
 CARBON_STATIC_ASSERT(sizeof(u32) == 4, "Expected u32 to be 4 bytes");
 typedef signed int i32;
 CARBON_STATIC_ASSERT(sizeof(i32) == 4, "Expected i32 to be 4 bytes");
 typedef unsigned long long u64;
 CARBON_STATIC_ASSERT(sizeof(u64) == 8, "Expected u64 to be 8 bytes");
+typedef signed long long i64;
+CARBON_STATIC_ASSERT(sizeof(i64) == 8, "Expected i64 to be 8 bytes");
 typedef float f32;
 CARBON_STATIC_ASSERT(sizeof(f32) == 4, "Expected f32 to be 4 bytes");
 typedef double f64;
@@ -139,6 +147,32 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 #endif
 
 CARBON_API int carbon_main(void);
+
+/*
+**  $$==================$$
+**  ||       Math       ||
+**  $$==================$$
+*/
+#define CARBON_PI 3.14159265358979323846
+#define CARBON_PI_2 (0.5 * CARBON_PI)
+#define CARBON_2PI (2 * CARBON_PI)
+#define CARBON_PI_4 (0.25 * CARBON_PI)
+#define CARBON_4PI (4 * CARBON_PI)
+#define CARBON_1_PI (1 / CARBON_PI)
+#define CARBON_1_2PI (1 / CARBON_2PI)
+#define CARBON_SQRT2 1.41421356237309504880
+#define CARBON_1_SQRT2 (1 / CARBON_SQRT2)
+#define CARBON_SQRT3 1.73205080756887729352
+#define CARBON_1_SQRT3 (1 / CARBON_SQRT3)
+#define CARBON_MIN(x, y) (x < y ? x : y)
+#define CARBON_MAX(x, y) (x > y ? x : y)
+#define CARBON_CLAMP(x, min, max) ((x <= min) ? min : (x >= max) ? max : x)
+#define CARBON_SIGN(x) (!x ? 0 : x < 0 ? -1 : 1)
+#define CARBON_STEP(edge, x) (x < edge ? 0 : 1)
+#define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
+#define CARBON_LERP(a, b, t) (a + (b - a) * t)
+
+CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 
 /*
 **  $$=====================$$
@@ -364,6 +398,7 @@ CARBON_API void carbon_junit_output(JUnitTestsuite *junit_ts, JUnitTestcase *jun
 **  $$=============================$$
 */
 #ifdef CARBON_IMPLEMENTATION
+#include "src/carbon_math.c"
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_fs.c"
