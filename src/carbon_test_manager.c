@@ -43,10 +43,10 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
 
 void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (strstr(bin_file, ".old")) return;
-  test_suite.files = carbon_uniquelist_create();
-  carbon_uniquelist_push(&test_suite.files, src_file);
+  test_suite.files = carbon_list_create();
+  carbon_list_push(&test_suite.files, src_file);
   for (usz i = 0; i < test_suite.n; ++i) {
-    carbon_uniquelist_push(&test_suite.files, test_suite.tests[i].filename);
+    carbon_list_push(&test_suite.files, test_suite.tests[i].filename);
   }
   // 0. Check if needs rebuild (compare timestamps of binary vs source)
   u8 needs_rebuild = 0;
@@ -170,7 +170,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
     return;
   }
   CARBON_FREE(s->tests);
-  carbon_uniquelist_destroy(&s->files);
+  carbon_list_destroy(&s->files);
   *s = (CBN_Suite) {0};
   s = 0;
 }
