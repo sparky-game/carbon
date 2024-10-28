@@ -68,3 +68,11 @@ i32 carbon_fs_mtime(const char *file) {
   }
   return sb.st_mtime;
 }
+
+u8 carbon_fs_remove(const char *file) {
+  if (-1 == remove(file)) {
+    CARBON_ERROR("carbon_fs_remove :: unable to remove file `%s`", file);
+    return 0;
+  }
+  return 1;
+}
