@@ -316,9 +316,10 @@ typedef struct {
   char **items;
   usz size;
   usz capacity;
+  u8 unique;
 } CBN_List;
 
-CARBON_API CBN_List carbon_list_create(void);
+CARBON_API CBN_List carbon_list_create(u8 unique);
 CARBON_API void carbon_list_destroy(CBN_List *ul);
 CARBON_API void carbon_list_push(CBN_List *ul, const char *s);
 CARBON_API void carbon_list_pop(CBN_List *ul, const char *s);

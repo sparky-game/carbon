@@ -5,10 +5,11 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-CBN_List carbon_list_create(void) {
+CBN_List carbon_list_create(u8 unique) {
   CBN_List ul = {
     .size = 0,
-    .capacity = 1
+    .capacity = 1,
+    .unique = unique
   };
   usz size = ul.capacity * sizeof(char *);
   ul.items = CARBON_MALLOC(size);
@@ -29,7 +30,7 @@ void carbon_list_destroy(CBN_List *ul) {
 }
 
 void carbon_list_push(CBN_List *ul, const char *s) {
-  if (carbon_list_contains(ul, s)) return;
+  if (ul->unique && carbon_list_contains(ul, s)) return;
   if (ul->size == ul->capacity) {
     ul->capacity *= 2;
     char **prev_p = ul->items;

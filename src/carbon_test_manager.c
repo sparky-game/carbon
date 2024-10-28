@@ -43,7 +43,7 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
 
 void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (strstr(bin_file, ".old")) return;
-  test_suite.files = carbon_list_create();
+  test_suite.files = carbon_list_create(true);
   carbon_list_push(&test_suite.files, src_file);
   for (usz i = 0; i < test_suite.n; ++i) {
     carbon_list_push(&test_suite.files, test_suite.tests[i].filename);

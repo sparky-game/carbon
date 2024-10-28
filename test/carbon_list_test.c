@@ -4,7 +4,7 @@
 #include <carbon.h>
 
 CARBON_TEST(carbon_list, create_destroy) {
-  CBN_List ul = carbon_list_create();
+  CBN_List ul = carbon_list_create(false);
   carbon_should_be(0, ul.size);
   carbon_should_be(1, ul.capacity);
   carbon_should_not_be_p(0, ul.items);
@@ -13,7 +13,7 @@ CARBON_TEST(carbon_list, create_destroy) {
 }
 
 CARBON_TEST(carbon_list, push_pop_single) {
-  CBN_List ul = carbon_list_create();
+  CBN_List ul = carbon_list_create(false);
   carbon_list_push(&ul, "hello");
   carbon_should_be(1, ul.size);
   carbon_should_be_true(carbon_list_contains(&ul, "hello"));
@@ -27,7 +27,7 @@ CARBON_TEST(carbon_list, push_pop_single) {
 }
 
 CARBON_TEST(carbon_list, push_pop_multiple) {
-  CBN_List ul = carbon_list_create();
+  CBN_List ul = carbon_list_create(false);
   carbon_list_push(&ul, "hello");
   carbon_list_push(&ul, "bye");
   carbon_list_push(&ul, "world");
