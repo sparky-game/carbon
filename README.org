@@ -92,6 +92,13 @@ wget https://github.com/sparky-game/carbon/releases/download/v0.7-alpha/carbon-0
 tar -xvf carbon-0.7-linux-amd64.tgz
 #+end_src
 
+If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage cleaning, compiling and packaging the library.
+
+#+begin_src sh
+cc -std=c99 src/make.c -o make
+./make [clean|mrproper]
+#+end_src
+
 ** Target code
 
 #+begin_src c
