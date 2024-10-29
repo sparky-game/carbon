@@ -26,10 +26,6 @@ static inline void cp_dash_r(const char *origin, const char *dest) {
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
-static inline void make_dir(const char *path) {
-  call_cmd(carbon_string_fmt("mkdir %s", path));
-}
-
 static void build_src_files(void) {
   glob_t glob_result;
   glob("src/carbon_*.c", GLOB_TILDE, 0, &glob_result);
@@ -76,26 +72,56 @@ static void run_tests(void) {
   exit(EXIT_FAILURE);
 }
 
-int main(int argc, char **argv) {
-  if (argc == 2 && !carbon_string_cmp(argv[1], "clean")) {
-    rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
-    return EXIT_SUCCESS;
+static inline void clean(void) {
+  rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
+}
+
+static inline void mrproper(void) {
+  clean();
+  rm_dash_r("make");
+}
+
+static void handle_args(int argc, char **argv) {
+  if (argc != 2) return;
+  if (!carbon_string_cmp(argv[1], "clean")) {
+    clean();
+    exit(EXIT_SUCCESS);
   }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "mrproper")) {
-    rm_dash_r("make carbon " WORKDIR " " WORKDIR ".tgz");
-    return EXIT_SUCCESS;
+  if (!carbon_string_cmp(argv[1], "mrproper")) {
+    mrproper();
+    exit(EXIT_SUCCESS);
   }
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
-  run_tests();
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
-  make_dir(WORKDIR);
+}
+
+static void build(void) {
+  CARBON_INFO("+ mkdir " WORKDIR);
+  if (!carbon_fs_create_directory(WORKDIR)) {
+    clean();
+    exit(EXIT_FAILURE);
+  }
   build_src_files();
   create_static_lib("libcarbon.a");
-  make_dir(WORKDIR "/src");
+}
+
+static void package(void) {
+  CARBON_INFO("+ mkdir " WORKDIR "/src");
+  if (!carbon_fs_create_directory(WORKDIR "/src")) {
+    clean();
+    exit(EXIT_FAILURE);
+  }
   cp_dash_r("COPYING carbon.h", WORKDIR);
   cp_dash_r("src/carbon_*.c", WORKDIR "/src");
   compress_dir(WORKDIR);
   rm_dash_r(WORKDIR);
+}
+
+int main(int argc, char **argv) {
+  handle_args(argc, argv);
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
+  run_tests();
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");  
+  build();
+  package();
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz");
   return EXIT_SUCCESS;
 }
