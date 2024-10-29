@@ -71,6 +71,7 @@
 */
 #define CARBON_MALLOC(sz)        malloc(sz)
 #define CARBON_REALLOC(p, newsz) realloc(p, newsz)
+#define CARBON_CALLOC(n, sz)     calloc(n, sz)
 #define CARBON_FREE(p)           free(p)
 
 /*
@@ -160,7 +161,7 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
     return carbon_main();                               \
   };                                                    \
   int carbon_main(__VA_ARGS__)
-#endif
+#endif  // CARBON_NO_TESTING
 
 CARBON_API int carbon_main(void);
 
@@ -311,7 +312,13 @@ CARBON_API u8 carbon_fs_is_regular_file(const char *file);
 CARBON_API u8 carbon_fs_is_directory(const char *file);
 CARBON_API u8 carbon_fs_rename(const char *old, const char *new);
 CARBON_API i32 carbon_fs_mtime(const char *file);
+CARBON_API void carbon_fs_copy(const char *from, const char *to, u8 recursive);
 CARBON_API u8 carbon_fs_remove(const char *file);
+CARBON_API u8 carbon_fs_remove_all(const char *file);
+CARBON_API u8 carbon_fs_change_directory(const char *path);
+CARBON_API u8 carbon_fs_create_directory(const char *path);
+CARBON_API u8 carbon_fs_create_directories(const char *path);
+CARBON_API char *carbon_fs_get_bin_directory(void);
 
 /*
 **  $$====================$$
