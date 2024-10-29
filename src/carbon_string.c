@@ -18,13 +18,13 @@ i32 carbon_string_cmp(const char *s1, const char *s2) {
 }
 
 char *carbon_string_dup(const char *s) {
-  usz len = strlen(s);
-  char *data = CARBON_MALLOC(len + 1);
+  usz len = strlen(s) + 1;
+  char *data = CARBON_MALLOC(len);
   if (!data) {
-    CARBON_ERROR("carbon_string_dup :: failed to allocate memory (%zuB)", len + 1);
+    CARBON_ERROR("carbon_string_dup :: failed to allocate memory (%zuB)", len);
     return false;
   }
-  return memcpy(data, s, len + 1);
+  return memcpy(data, s, len);
 }
 
 char *carbon_string_fmt(const char *s, ...) {
