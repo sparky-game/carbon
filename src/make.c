@@ -37,7 +37,7 @@ static void build_src_files(void) {
     CARBON_INFO("  CC      %s", glob_result.gl_pathv[i]);
     carbon_string_strip_substr(glob_result.gl_pathv[i], "src/");
     carbon_string_strip_substr(glob_result.gl_pathv[i], ".c");
-    const char *cmd = carbon_string_fmt("clang -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o",
+    const char *cmd = carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o",
                                         glob_result.gl_pathv[i], WORKDIR, glob_result.gl_pathv[i]);
     if (!system(cmd)) continue;
     CARBON_ERROR("Errors when compiling the code");
@@ -66,7 +66,7 @@ static inline void compress_dir(const char *path) {
 }
 
 static void run_tests(void) {
-  const char *cmd = "clang -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
+  const char *cmd = CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
   CARBON_INFO("  CCLD    carbon");
   if (!system(cmd)) {
     call_cmd("./carbon");

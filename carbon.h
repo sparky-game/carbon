@@ -48,8 +48,20 @@
 #define CARBON_CPU_ARCH "amd64"
 #endif
 
-#ifdef __linux__
+#if defined(__linux__)
 #define CARBON_TARGET_OS "linux"
+#elif defined(_WIN32)
+#define CARBON_TARGET_OS "windows"
+#endif
+
+#if defined(__clang__)
+#define CARBON_COMPILER "clang"
+#elif defined(__GNUC__)
+#define CARBON_COMPILER "gcc"
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_COMPILER "cl.exe"
+#else
+#define CARBON_COMPILER "cc"
 #endif
 
 /*
