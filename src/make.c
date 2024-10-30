@@ -15,7 +15,7 @@ static void call_cmd(const char *cmd) {
   CARBON_INFO("+ %s", cmd);
   if (!system(cmd)) return;
   CARBON_ERROR("Unable to run `%s`", cmd);
-  exit(EXIT_FAILURE);
+  exit(1);
 }
 
 static inline void rm_dash_r(const char *path) {
@@ -38,7 +38,7 @@ static void build_src_files(void) {
     if (!system(cmd)) continue;
     CARBON_ERROR("Errors when compiling the code");
     rm_dash_r("build");
-    exit(EXIT_FAILURE);
+    exit(1);
   }
 }
 
@@ -54,7 +54,7 @@ static void create_static_lib(const char *name) {
     return;
   }
   CARBON_ERROR("Unable to create static lib `%s`", name);
-  exit(EXIT_FAILURE);
+  exit(1);
 }
 
 static inline void compress_dir(const char *path) {
@@ -62,14 +62,14 @@ static inline void compress_dir(const char *path) {
 }
 
 static void run_tests(void) {
-  const char *cmd = CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
+  const char *cmd = CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
   CARBON_INFO("  CCLD    carbon");
   if (!system(cmd)) {
     call_cmd("./carbon");
     return;
   }
   CARBON_ERROR("Errors when compiling the code");
-  exit(EXIT_FAILURE);
+  exit(1);
 }
 
 static inline void clean(void) {
@@ -85,11 +85,11 @@ static void handle_args(int argc, char **argv) {
   if (argc != 2) return;
   if (!carbon_string_cmp(argv[1], "clean")) {
     clean();
-    exit(EXIT_SUCCESS);
+    exit(0);
   }
   if (!carbon_string_cmp(argv[1], "mrproper")) {
     mrproper();
-    exit(EXIT_SUCCESS);
+    exit(0);
   }
 }
 
@@ -97,7 +97,7 @@ static void build(void) {
   CARBON_INFO("+ mkdir " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) {
     clean();
-    exit(EXIT_FAILURE);
+    exit(1);
   }
   build_src_files();
   create_static_lib("libcarbon.a");
@@ -107,7 +107,7 @@ static void package(void) {
   CARBON_INFO("+ mkdir " WORKDIR "/src");
   if (!carbon_fs_create_directory(WORKDIR "/src")) {
     clean();
-    exit(EXIT_FAILURE);
+    exit(1);
   }
   cp_dash_r("COPYING carbon.h", WORKDIR);
   cp_dash_r("src/carbon_*.c", WORKDIR "/src");
@@ -116,6 +116,10 @@ static void package(void) {
 }
 
 int main(int argc, char **argv) {
+  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) {
+    CARBON_ERROR("Unable to change CWD to binary's directory");
+    return 1;
+  }
   handle_args(argc, argv);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
   run_tests();
@@ -123,5 +127,5 @@ int main(int argc, char **argv) {
   build();
   package();
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz");
-  return EXIT_SUCCESS;
+  return 0;
 }

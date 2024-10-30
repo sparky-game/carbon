@@ -5,6 +5,12 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+#ifdef _WIN32
+#define CARBON_FS_PATH_MAX_LEN 256
+#else
+#define CARBON_FS_PATH_MAX_LEN 4096
+#endif
+
 u8 carbon_fs_exists(const char *file) {
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
@@ -138,11 +144,67 @@ u8 carbon_fs_create_directories(const char *path) {
 }
 
 char *carbon_fs_get_bin_directory(void) {
-  // TODO: not yet implemented
-  return false;
+  static char dir[CARBON_FS_PATH_MAX_LEN] = {0};
+  memset(dir, 0, CARBON_FS_PATH_MAX_LEN);
+#if defined(_WIN32)
+  usz len = GetModuleFileNameA(0, dir, MAX_PATH);
+  if (len > 0) {
+    for (usz i = len; i >= 0; --i) {
+      if (dir[i] == '\\') {
+        dir[i + 1] = 0;
+        break;
+      }
+    }
+  }
+  else {
+    dir[0] = '.';
+    dir[1] = '\\';
+  }
+#elif defined(__linux__)
+  usz len = readlink("/proc/self/exe", dir, sizeof(dir));
+  if (len > 0) {
+    for (usz i = len; i >= 0; --i) {
+      if (dir[i] == '/') {
+        dir[i + 1] = 0;
+        break;
+      }
+    }
+  }
+  else {
+    dir[0] = '.';
+    dir[1] = '/';
+  }
+#elif defined(__FreeBSD__)
+  usz size = sizeof(dir);
+  i32 mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+  if (!sysctl(mib, 4, dir, &size, 0, 0)) {
+    usz len = strlen(dir);
+    for (usz i = len; i >= 0; --i) {
+      if (dir[i] == '/') {
+        dir[i + 1] = 0;
+        break;
+      }
+    }
+  }
+  else {
+    dir[0] = '.';
+    dir[1] = '/';
+  }
+#elif defined(__APPLE__)
+  usz size = sizeof(dir);
+  if (!_NSGetExecutablePath(dir, &size)) {
+    usz len = strlen(dir);
+    for (usz i = len; i >= 0; --i) {
+      if (dir[i] == '/') {
+        dir[i + 1] = 0;
+        break;
+      }
+    }
+  }
+  else {
+    dir[0] = '.';
+    dir[1] = '/';
+  }
+#endif
+  return dir;
 }
-
-// In Raylib we do: ChangeDirectory(GetApplicationDirectory())
-// In Carbon we do: carbon_fs_change_directory(carbon_fs_get_bin_directory())
-// --------------------------------------------------------------------------------
-// if not -> CARBON_WARNING("unable to change CWD to the binary's directory");
