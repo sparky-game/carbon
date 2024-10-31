@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
+
 #define CARBON_NO_TESTING
 #define CARBON_IMPLEMENTATION
 #include "../carbon.h"
@@ -72,8 +75,23 @@ static void run_tests(void) {
   exit(1);
 }
 
+static void build_examples(void) {
+  glob_t glob_result;
+  glob("examples/*.c", GLOB_TILDE, 0, &glob_result);
+  for (usz i = 0; i < glob_result.gl_pathc; ++i) {
+    CARBON_INFO("  CC      %s", glob_result.gl_pathv[i]);
+    carbon_string_strip_substr(glob_result.gl_pathv[i], ".c");
+    const char *cmd = carbon_string_fmt(CARBON_COMPILER " -std=gnu99 -Wall -Wextra -pipe -O3 %s.c -static -o %s",
+                                        glob_result.gl_pathv[i], glob_result.gl_pathv[i]);
+    if (!system(cmd)) continue;
+    CARBON_ERROR("Errors when compiling the code");
+    exit(1);
+  }
+}
+
 static inline void clean(void) {
   rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
+  call_cmd(carbon_string_fmt("find examples -type f -executable -delete"));
 }
 
 static inline void mrproper(void) {
@@ -123,7 +141,9 @@ int main(int argc, char **argv) {
   handle_args(argc, argv);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
   run_tests();
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");  
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building examples...");
+  build_examples();
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
   build();
   package();
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz");
