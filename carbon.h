@@ -91,7 +91,11 @@
 #include <assert.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#ifndef _WIN32
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <direct.h>
+#else
 #include <sys/wait.h>
 #endif
 
