@@ -200,6 +200,7 @@ CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 */
 CARBON_API char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size);
 CARBON_API u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
+CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 
 /*
 **  $$=====================$$
