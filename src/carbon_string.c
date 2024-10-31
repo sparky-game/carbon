@@ -5,10 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#define ONES ((usz) - 1 / 255)
-#define HIGHS (ONES * (255 / 2 + 1))
-#define HASZERO(x) ((x) - ONES & ~(x) & HIGHS)
-
 #define CARBON_STRING_FMT_MAX_LEN     1024
 #define CARBON_STRING_FMT_MAX_BUFFERS 4
 
