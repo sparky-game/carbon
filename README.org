@@ -153,6 +153,7 @@ cc -I vendor/carbon -std=gnu99 *.c -o carbon
 $ ./carbon -h
 usage: ./carbon [OPTION]
 Options:
+  -n, --no-output  disable JUnit XML test results output
   -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)
   -h, --help       display this help and exit
   -v, --version    output version information and exit
