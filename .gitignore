@@ -2,9 +2,8 @@
 *.old
 *.tgz
 make
-src/make
-carbon
 test/carbon
+examples/*[!.c]
 
 ai/build/
 ai/build/testgen

@@ -65,10 +65,10 @@ static inline void compress_dir(const char *path) {
 }
 
 static void run_tests(void) {
-  const char *cmd = CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o carbon";
-  CARBON_INFO("  CCLD    carbon");
+  const char *cmd = CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o test/carbon";
+  CARBON_INFO("  CCLD    test/carbon");
   if (!system(cmd)) {
-    call_cmd("./carbon");
+    call_cmd("./test/carbon");
     return;
   }
   CARBON_ERROR("Errors when compiling the code");
@@ -79,8 +79,8 @@ static void build_examples(void) {
   glob_t glob_result;
   glob("examples/*.c", GLOB_TILDE, 0, &glob_result);
   for (usz i = 0; i < glob_result.gl_pathc; ++i) {
-    CARBON_INFO("  CC      %s", glob_result.gl_pathv[i]);
     carbon_string_strip_substr(glob_result.gl_pathv[i], ".c");
+    CARBON_INFO("  CCLD    %s", glob_result.gl_pathv[i]);
     const char *cmd = carbon_string_fmt(CARBON_COMPILER " -std=gnu99 -Wall -Wextra -pipe -O3 %s.c -static -o %s",
                                         glob_result.gl_pathv[i], glob_result.gl_pathv[i]);
     if (!system(cmd)) continue;
@@ -90,7 +90,7 @@ static void build_examples(void) {
 }
 
 static inline void clean(void) {
-  rm_dash_r("carbon " WORKDIR " " WORKDIR ".tgz");
+  rm_dash_r("test/carbon " WORKDIR " " WORKDIR ".tgz");
   call_cmd(carbon_string_fmt("find examples -type f -executable -delete"));
 }
 
