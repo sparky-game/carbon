@@ -68,7 +68,7 @@ static void run_tests(void) {
   const char *cmd = CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o test/carbon";
   CARBON_INFO("  CCLD    test/carbon");
   if (!system(cmd)) {
-    call_cmd("./test/carbon");
+    call_cmd("./test/carbon -n");
     return;
   }
   CARBON_ERROR("Errors when compiling the code");

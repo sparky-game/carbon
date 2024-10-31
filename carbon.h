@@ -393,6 +393,7 @@ typedef struct {
 } CBN_Suite;
 
 typedef struct {
+  u8 no_output;
   char *output;
 } CBN_CmdArgs;
 

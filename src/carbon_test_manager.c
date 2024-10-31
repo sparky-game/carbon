@@ -10,6 +10,7 @@ static CBN_CmdArgs cmd_args = {0};
 
 static const char * const help_msg = "usage: %s [OPTION]\n"
   "Options:\n"
+  "  -n, --no-output  disable JUnit XML test results output\n"
   "  -o, --output     output JUnit XML test results to specific file (default: `%s`)\n"
   "  -h, --help       display this help and exit\n"
   "  -v, --version    output version information and exit\n\n"
@@ -25,6 +26,10 @@ static const char * const version_msg = "%s %s\n"
 
 void carbon_test_manager_argparse(i32 argc, char **argv) {
   if (argc == 1) return;
+  if (argc == 2 && (!carbon_string_cmp(argv[1], "-n") || !carbon_string_cmp(argv[1], "--no-output"))) {
+    cmd_args.no_output = true;
+    return;
+  }
   if (argc == 3 && (!carbon_string_cmp(argv[1], "-o") || !carbon_string_cmp(argv[1], "--output"))) {
     cmd_args.output = argv[2];
     return;
@@ -183,7 +188,8 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     return EXIT_FAILURE;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
+  if (cmd_args.no_output) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output disabled");
+  else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
   CBN_JUnitTestsuite junit_testsuite_info = { .tests = s->n };
@@ -192,8 +198,10 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CBN_Clock clk = carbon_clock_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 result = s->tests[i].f();
-    memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
-    strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
+    if (!cmd_args.no_output) {
+      memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
+      strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
+    }
     if (result) {
       CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%zu/%zu) %s :: PASSED", i + 1, s->n, s->tests[i].name);
       ++passed;
@@ -201,7 +209,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     else {
       CARBON_ERROR_ASS("(%zu/%zu) %s :: FAILED", i + 1, s->n, s->tests[i].name);
       ++failed;
-      ++junit_testcase_infos[i].has_failed;
+      if (!cmd_args.no_output) ++junit_testcase_infos[i].has_failed;
     }
   }
   carbon_clock_update(&clk);
@@ -229,7 +237,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
                          passed,
                          clk.elapsed);
   }
-  carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
+  if (!cmd_args.no_output) carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
   carbon_test_manager_cleanup(s);
   return status;
 }
