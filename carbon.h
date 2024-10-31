@@ -73,6 +73,7 @@
 #define CARBON_REALLOC(p, newsz) realloc(p, newsz)
 #define CARBON_CALLOC(n, sz)     calloc(n, sz)
 #define CARBON_FREE(p)           free(p)
+#define CARBON_ASSERT(x)         assert(x)
 
 /*
 **  $$==========================$$
@@ -87,6 +88,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
+#include <assert.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #ifndef _WIN32
@@ -117,7 +119,7 @@
 #ifdef __cplusplus
 #define CARBON_API extern "C"
 #else
-#define CARBON_API
+#define CARBON_API extern
 #endif
 
 /*
@@ -190,6 +192,14 @@ CARBON_API int carbon_main(void);
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
 
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
+
+/*
+**  $$====================$$
+**  ||       Crypto       ||
+**  $$====================$$
+*/
+CARBON_API char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size);
+CARBON_API u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
 
 /*
 **  $$=====================$$
@@ -423,6 +433,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 */
 #ifdef CARBON_IMPLEMENTATION
 #include "src/carbon_math.c"
+#include "src/carbon_crypto.c"
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_fs.c"
