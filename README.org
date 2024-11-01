@@ -72,6 +72,7 @@ We can use /Carbon/ in our preferred way of managing dependencies or external li
 *Git Submodules*:
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
+cd vendor/carbon && git switch -d v0.7-alpha
 #+end_src
 
 *CMake FetchContent*:
