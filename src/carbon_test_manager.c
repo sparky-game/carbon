@@ -81,13 +81,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     usz argv_size = test_suite.files.size + 7;
     char *argv[argv_size];
     memset(argv, 0, argv_size * sizeof(char *));
-#if defined(__GNUC__)
-    argv[0] = "gcc";
-#elif defined(__clang__)
-    argv[0] = "clang";
-#else
-    argv[0] = "cc";
-#endif
+    argv[0] = CARBON_COMPILER;
     argv[1] = "-I";
     argv[2] = ".";
     argv[3] = "-fsanitize=address,undefined";
