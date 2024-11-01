@@ -80,7 +80,7 @@ include(FetchContent)
 FetchContent_Declare(
   carbon
   GIT_REPOSITORY "https://github.com/sparky-game/carbon"
-  GIT_TAG        e2a1fd0c447730ad971c75106b26d7c1ed083664
+  GIT_TAG        v0.7-alpha
   GIT_PROGRESS   TRUE
 )
 FetchContent_MakeAvailable(carbon)
