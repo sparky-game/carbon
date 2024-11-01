@@ -81,6 +81,7 @@
 **  $$==========================$$
 */
 #include <time.h>
+#include <glob.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -334,6 +335,7 @@ CARBON_API u8 carbon_fs_change_directory(const char *path);
 CARBON_API u8 carbon_fs_create_directory(const char *path);
 CARBON_API u8 carbon_fs_create_directories(const char *path);
 CARBON_API char *carbon_fs_get_bin_directory(void);
+CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 
 /*
 **  $$====================$$

@@ -10,6 +10,7 @@
 #else
 #define CARBON_FS_PATH_MAX_LEN 4096
 #endif
+#define CARBON_FS_PATMAT_MAX_STRUCTS 4
 
 u8 carbon_fs_exists(const char *file) {
 #ifdef _WIN32
@@ -207,4 +208,26 @@ char *carbon_fs_get_bin_directory(void) {
   }
 #endif
   return dir;
+}
+
+char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
+  static usz i = 0;
+  static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS] = {0};
+  glob_t *x = &xs[i];
+  memset(x, 0, sizeof(glob_t));
+  switch (glob(pattern, GLOB_TILDE, 0, x)) {
+  case GLOB_NOSPACE:
+    CARBON_ERROR("carbon_fs_pattern_match :: out of memory");
+    return 0;
+  case GLOB_ABORTED:
+    CARBON_ERROR("carbon_fs_pattern_match :: read error");
+    return 0;
+  case GLOB_NOMATCH:
+    CARBON_ERROR("carbon_fs_pattern_match :: no found matches");
+    return 0;
+  }
+  ++i;
+  if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
+  *out_count = x->gl_pathc;
+  return x->gl_pathv;
 }
