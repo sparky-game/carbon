@@ -52,9 +52,9 @@ You can't unit test C, right?
 /Carbon/ is a testing framework that focuses on being lightweight and straightforward, giving the best possible development experience. Whether you work on GNU/Linux, BSDs, Windows or macOS, if you write C/C++ code, /Carbon/ can help you.
 
 #+begin_quote
-Carbon is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License as published by The Regents of the University of California. @@html:<br>@@
-Carbon is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License for more details. @@html:<br>@@
-You should have received a copy of the BSD 3-Clause "New" or "Revised" License along with Carbon. If not, see <https://opensource.org/license/BSD-3-Clause>.
+/Carbon/ is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License as published by The Regents of the University of California. @@html:<br>@@
+/Carbon/ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License for more details. @@html:<br>@@
+You should have received a copy of the BSD 3-Clause "New" or "Revised" License along with /Carbon/. If not, see <https://opensource.org/license/BSD-3-Clause>.
 #+end_quote
 
 * Table of Contents :toc:
