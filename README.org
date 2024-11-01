@@ -51,6 +51,12 @@ You can't unit test C, right?
 
 /Carbon/ is a testing framework that focuses on being lightweight and straightforward, giving the best possible development experience. Whether you work on GNU/Linux, BSDs, Windows or macOS, if you write C/C++ code, /Carbon/ can help you.
 
+#+begin_html
+<img src="assets/run-tests-demo.gif" alt="Demo Carbon running tests">
+#+end_html
+
+/The above example was generated with [[https://github.com/charmbracelet/vhs][VHS]] ([[./assets/run-tests-demo.exs][source code]])/.
+
 #+begin_quote
 /Carbon/ is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License as published by The Regents of the University of California. @@html:<br>@@
 /Carbon/ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License for more details. @@html:<br>@@
