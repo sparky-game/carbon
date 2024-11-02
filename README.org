@@ -20,7 +20,7 @@ You can't unit test C, right?
 #+begin_html
 <p align="center">
 <a href="https://ko-fi.com/iwas_coder">
-<img src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a01d7e459533e0905fd_support_me_on_kofi_badge_red.png" alt="Ko-fi" height=41>
+<img src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a01d7e459533e0905fd_support_me_on_kofi_badge_red.png" alt="Ko-fi" height=60>
 </a>
 <br/>
 <a href="https://www.buymeacoffee.com/iwas.coder">
