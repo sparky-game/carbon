@@ -5,6 +5,13 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
+  for (usz i = 0; i < sl->size; ++i) {
+    if (!carbon_string_cmp(sl->items[i], s)) return i;
+  }
+  return -1;
+}
+
 CBN_StrList carbon_strlist_create(u8 unique) {
   CBN_StrList sl = {
     .size = 0,
@@ -15,12 +22,16 @@ CBN_StrList carbon_strlist_create(u8 unique) {
   sl.items = CARBON_MALLOC(size);
   if (!sl.items) {
     CARBON_ERROR("carbon_strlist_create :: failed to allocate memory (%zuB)", size);
-    exit(EXIT_FAILURE);
+    return (CBN_StrList) {0};
   }
   return sl;
 }
 
 void carbon_strlist_destroy(CBN_StrList *sl) {
+  if (!sl) {
+    CARBON_WARNING("carbon_strlist_destroy :: `sl` is not a valid pointer, skipping destruction");
+    return;
+  }
   for (usz i = 0; i < sl->size; ++i) {
     CARBON_FREE(sl->items[i]);
   }
@@ -30,6 +41,10 @@ void carbon_strlist_destroy(CBN_StrList *sl) {
 }
 
 void carbon_strlist_push(CBN_StrList *sl, const char *s) {
+  if (!sl || !s) {
+    CARBON_ERROR("carbon_strlist_push :: `sl` and `s` must be valid pointers");
+    return;
+  }
   if (sl->unique && carbon_strlist_contains(sl, s)) return;
   if (sl->size == sl->capacity) {
     sl->capacity *= 2;
@@ -39,22 +54,19 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
     if (!sl->items) {
       CARBON_ERROR("carbon_strlist_push :: failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
-      exit(EXIT_FAILURE);
+      return;
     }
   }
   sl->items[sl->size] = carbon_string_dup(s);
   ++sl->size;
 }
 
-static i32 find_idx(CBN_StrList *sl, const char *s) {
-  for (usz i = 0; i < sl->size; ++i) {
-    if (!carbon_string_cmp(sl->items[i], s)) return i;
-  }
-  return -1;
-}
-
 void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
-  i32 idx = find_idx(sl, s);
+  if (!sl || !s) {
+    CARBON_ERROR("carbon_strlist_pop :: `sl` and `s` must be valid pointers");
+    return;
+  }
+  i32 idx = carbon_strlist__find_idx(sl, s);
   if (idx == -1) {
     CARBON_WARNING("carbon_strlist_pop :: string `%s` not present in list", s);
     return;
@@ -72,12 +84,16 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     if (!sl->items && sl->size > 0) {
       CARBON_ERROR("carbon_strlist_pop :: failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
-      exit(EXIT_FAILURE);
+      return;
     }
   }
 }
 
 u8 carbon_strlist_contains(CBN_StrList *sl, const char *s) {
+  if (!sl || !s) {
+    CARBON_ERROR("carbon_strlist_contains :: `sl` and `s` must be valid pointers");
+    return false;
+  }
   for (usz i = 0; i < sl->size; ++i) {
     if (!carbon_string_cmp(sl->items[i], s)) return true;
   }
