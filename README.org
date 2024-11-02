@@ -36,6 +36,8 @@ You can't unit test C, right?
 <br/>
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://api.scorecard.dev/projects/github.com/sparky-game/carbon/badge" alt="OpenSSF Scorecard">
+<br/>
+<img src="https://img.shields.io/badge/Hi-mom!-ff69b4">
 </p>
 #+end_html
 
