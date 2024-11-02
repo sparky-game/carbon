@@ -78,6 +78,7 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
   - [[#entrypoint][Entrypoint]]
   - [[#execution][Execution]]
 - [[#code-coverage][Code coverage]]
+- [[#references][References]]
 
 * Usage
 
@@ -189,3 +190,7 @@ Nevertheless, it's a nice metric to have, and it's important that /Carbon/ suppo
 - The ~*.gcda~ count data files are generated when a program linked with ~-lgcov~ option (contained inside the ~--coverage~ flag) containing object files built with the ~-fprofile-arcs~ option (contained inside the ~--coverage~ flag) is executed. It contains arc transition counts, value profile counts and some summary information.
 
 They shouldn't be accessed manually, but with ~gcov~ itself, using one of its formatting options, e.g. ~--json-format~.
+
+* References
+
+- Benno Rice. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
