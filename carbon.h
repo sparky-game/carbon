@@ -338,6 +338,25 @@ CARBON_API char *carbon_fs_get_bin_directory(void);
 CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 
 /*
+**  $$==================$$
+**  ||       List       ||
+**  $$==================$$
+*/
+#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i) && (i) < (l).size), ((T *) (l).items)[(i)])
+
+typedef struct {
+  void *items;
+  usz capacity;
+  usz stride;
+  usz size;
+} CBN_List;
+
+CARBON_API CBN_List carbon_list_create(usz stride);
+CARBON_API void carbon_list_destroy(CBN_List *l);
+CARBON_API void carbon_list_push(CBN_List *l, void *value);
+CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
+
+/*
 **  $$=====================$$
 **  ||       HashMap       ||
 **  $$=====================$$
@@ -461,6 +480,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_fs.c"
+#include "src/carbon_list.c"
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strlist.c"
