@@ -24,7 +24,7 @@ static inline void rm_dash_r(const char *path) {
 }
 
 static inline void cp_dash_r(const char *origin, const char *dest) {
-  CARBON_INFO("  CP      %s", dest);
+  CARBON_INFO("  CP      %s -> %s", origin, dest);
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
