@@ -3,17 +3,18 @@
 
 Output assets/run-tests-demo.gif
 
-Set Width 1000
-Set Height 850
+Set Width 910
+Set Height 910
 Set Margin 20
 Set MarginFill "#f9a85e"
 Set BorderRadius 10
 Set WindowBar Colorful
-Set FontSize 22
-Set TypingSpeed 75ms
+Set FontFamily "JetbrainsMono Nerd Font"
+Set FontSize 20
+Set TypingSpeed 100ms
 Set Framerate 60
 
 Type "./test/carbon"
 Sleep 500ms
 Enter
-Sleep 5s
+Sleep 10s
