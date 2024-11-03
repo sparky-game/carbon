@@ -177,6 +177,10 @@ CARBON_API int carbon_main(void);
 **  ||       Math       ||
 **  $$==================$$
 */
+#define CARBON_E 2.71828182845904523536
+#define CARBON_E_0_5 1.64872127070012814684
+#define CARBON_E_0_25 1.28402541668774148407
+#define CARBON_E_0_125 1.13314845306682631682
 #define CARBON_PI 3.14159265358979323846
 #define CARBON_PI_2 (0.5 * CARBON_PI)
 #define CARBON_2PI (2 * CARBON_PI)
@@ -196,6 +200,9 @@ CARBON_API int carbon_main(void);
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
 
+CARBON_API f32 carbon_math_exp(f32 x);
+CARBON_API f32 carbon_math_sigmoid(f32 x);
+CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 
 /*
