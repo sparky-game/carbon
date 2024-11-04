@@ -46,7 +46,7 @@ u8 carbon_fs_is_directory(const char *file) {
 #endif
 }
 
-u8 carbon_fs_rename(const char *old, const char *new) {
+u8 carbon_fs_rename(const char *oldie, const char *newie) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", old, new);
   if (-1 == rename(old, new)) {
     CARBON_ERROR("unable to rename %s -> %s", old, new);

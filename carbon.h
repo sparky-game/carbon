@@ -340,7 +340,7 @@ CARBON_API void carbon_clock_stop(CBN_Clock *c);
 CARBON_API u8 carbon_fs_exists(const char *file);
 CARBON_API u8 carbon_fs_is_regular_file(const char *file);
 CARBON_API u8 carbon_fs_is_directory(const char *file);
-CARBON_API u8 carbon_fs_rename(const char *old, const char *new);
+CARBON_API u8 carbon_fs_rename(const char *oldie, const char *newie);
 CARBON_API i32 carbon_fs_mtime(const char *file);
 CARBON_API void carbon_fs_copy(const char *from, const char *to, u8 recursive);
 CARBON_API u8 carbon_fs_remove(const char *file);
