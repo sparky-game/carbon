@@ -8,23 +8,23 @@
 static CBN_Suite test_suite = {0};
 static CBN_CmdArgs cmd_args = {0};
 
-static const char * const help_msg = "usage: %s [OPTION]\n"
-  "Options:\n"
-  "  -n, --no-output  disable JUnit XML test results output\n"
-  "  -o, --output     output JUnit XML test results to specific file (default: `%s`)\n"
-  "  -h, --help       display this help and exit\n"
-  "  -v, --version    output version information and exit\n\n"
-  "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
-  "%s homepage: <https://github.com/sparky-game/carbon>\n";
-
-static const char * const version_msg = "%s %s\n"
-  "Copyright (C) 2024 Wasym A. Alonso\n"
-  "License BSD-3-Clause: <https://opensource.org/license/BSD-3-Clause>.\n"
-  "This is free software: you are free to change and redistribute it.\n"
-  "There is NO WARRANTY, to the extent permitted by law.\n\n"
-  "Written by Wasym A. Alonso\n";
-
 void carbon_test_manager_argparse(i32 argc, char **argv) {
+  static const char * const help_msg = "usage: %s [OPTION]\n"
+    "Options:\n"
+    "  -n, --no-output  disable JUnit XML test results output\n"
+    "  -o, --output     output JUnit XML test results to specific file (default: `%s`)\n"
+    "  -h, --help       display this help and exit\n"
+    "  -v, --version    output version information and exit\n"
+    "\n"
+    "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
+    "%s homepage: <https://github.com/sparky-game/carbon>\n";
+  static const char * const version_msg = "%s %s\n"
+    "Copyright (C) 2024 Wasym A. Alonso\n"
+    "License BSD-3-Clause: <https://opensource.org/license/BSD-3-Clause>.\n"
+    "This is free software: you are free to change and redistribute it.\n"
+    "There is NO WARRANTY, to the extent permitted by law.\n"
+    "\n"
+    "Written by Wasym A. Alonso\n";
   if (argc == 1) return;
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-n") || !carbon_string_cmp(argv[1], "--no-output"))) {
     cmd_args.no_output = true;
