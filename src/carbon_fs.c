@@ -49,7 +49,7 @@ u8 carbon_fs_is_directory(const char *file) {
 u8 carbon_fs_rename(const char *old, const char *new) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", old, new);
   if (-1 == rename(old, new)) {
-    CARBON_ERROR("carbon_fs_rename :: unable to rename %s -> %s", old, new);
+    CARBON_ERROR("unable to rename %s -> %s", old, new);
     return false;
   }
   return true;
@@ -58,7 +58,7 @@ u8 carbon_fs_rename(const char *old, const char *new) {
 i32 carbon_fs_mtime(const char *file) {
   struct stat sb = {0};
   if (-1 == stat(file, &sb)) {
-    CARBON_ERROR("carbon_fs_mtime :: unable to stat file `%s`", file);
+    CARBON_ERROR("unable to stat file `%s`", file);
     return false;
   }
   return sb.st_mtime;
@@ -73,7 +73,7 @@ void carbon_fs_copy(const char *from, const char *to, u8 recursive) {
 
 u8 carbon_fs_remove(const char *file) {
   if (-1 == remove(file)) {
-    CARBON_ERROR("carbon_fs_remove :: unable to remove file `%s`", file);
+    CARBON_ERROR("unable to remove file `%s`", file);
     return false;
   }
   return true;
@@ -92,7 +92,7 @@ u8 carbon_fs_change_directory(const char *path) {
   i8 result = chdir(path);
 #endif
   if (result == -1) {
-    CARBON_ERROR("carbon_fs_change_directory :: unable to change to directory `%s`", path);
+    CARBON_ERROR("unable to change to directory `%s`", path);
     return false;
   }
   return true;
@@ -100,11 +100,11 @@ u8 carbon_fs_change_directory(const char *path) {
 
 u8 carbon_fs_create_directory(const char *path) {
   if (!path || !path[0]) {
-    CARBON_ERROR("carbon_fs_create_directory :: path is invalid");
+    CARBON_ERROR("path is invalid");
     return false;
   }
   if (carbon_fs_is_directory(path)) {
-    CARBON_WARNING("carbon_fs_create_directory :: directory already exists, skipping creation");
+    CARBON_WARNING("directory already exists, skipping creation");
     return true;
   }
 #ifdef _WIN32
@@ -113,7 +113,7 @@ u8 carbon_fs_create_directory(const char *path) {
   i8 result = mkdir(path, 0755);
 #endif
   if (result == -1) {
-    CARBON_ERROR("carbon_fs_create_directory :: unable to create directory `%s`", path);
+    CARBON_ERROR("unable to create directory `%s`", path);
     return false;
   }
   return true;
@@ -121,11 +121,11 @@ u8 carbon_fs_create_directory(const char *path) {
 
 u8 carbon_fs_create_directories(const char *path) {
   if (!path || !path[0]) {
-    CARBON_ERROR("carbon_fs_create_directories :: path is invalid");
+    CARBON_ERROR("path is invalid");
     return false;
   }
   if (carbon_fs_is_directory(path)) {
-    CARBON_WARNING("carbon_fs_create_directories :: directory already exists, skipping creation");
+    CARBON_WARNING("directory already exists, skipping creation");
     return true;
   }
   usz len = strlen(path) + 1;
@@ -217,13 +217,13 @@ char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
   memset(x, 0, sizeof(glob_t));
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
   case GLOB_NOSPACE:
-    CARBON_ERROR("carbon_fs_pattern_match :: out of memory");
+    CARBON_ERROR("out of memory");
     return 0;
   case GLOB_ABORTED:
-    CARBON_ERROR("carbon_fs_pattern_match :: read error");
+    CARBON_ERROR("read error");
     return 0;
   case GLOB_NOMATCH:
-    CARBON_ERROR("carbon_fs_pattern_match :: no found matches");
+    CARBON_ERROR("no found matches");
     return 0;
   }
   ++i;

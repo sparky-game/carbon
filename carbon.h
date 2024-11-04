@@ -235,11 +235,11 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define CARBON_INFO_RAW(msg, ...) printf(msg, ##__VA_ARGS__)
 #define CARBON_INFO_COLOR(color, msg, ...) CARBON_INFO_RAW(color msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
 #define CARBON_INFO(msg, ...) CARBON_INFO_RAW(msg "\n", ##__VA_ARGS__)
-#define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " msg, ##__VA_ARGS__)
+#define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
 #define CARBON_ERROR_RAW(msg, ...) fprintf(stderr, msg, ##__VA_ARGS__)
 #define CARBON_ERROR_PREFIX(prefix, msg, ...) CARBON_ERROR_RAW(CARBON_COLOR_RED prefix "" msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
 #define CARBON_ERROR_ASS(msg, ...) CARBON_ERROR_PREFIX("", msg, ##__VA_ARGS__)
-#define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] ", msg, ##__VA_ARGS__)
+#define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: ", msg, __func__, ##__VA_ARGS__)
 
 /*
 **  $$========================$$

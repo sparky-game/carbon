@@ -21,7 +21,7 @@ CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
   usz size = hm.capacity * hm.stride;
   hm.items = CARBON_MALLOC(size);
   if (!hm.items) {
-    CARBON_ERROR("carbon_hashmap_create :: failed to allocate memory (%zuB)", size);
+    CARBON_ERROR("failed to allocate memory (%zuB)", size);
     return (CBN_HashMap) {0};
   }
   return hm;
@@ -29,7 +29,7 @@ CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
 
 void carbon_hashmap_destroy(CBN_HashMap *hm) {
   if (!hm) {
-    CARBON_WARNING("carbon_hashmap_destroy :: `hm` is not a valid pointer, skipping destruction");
+    CARBON_WARNING("`hm` is not a valid pointer, skipping destruction");
     return;
   }
   CARBON_FREE(hm->items);
@@ -39,7 +39,7 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
 
 void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   if (!hm || !key || !value) {
-    CARBON_ERROR("carbon_hashmap_set :: `hm`, `key` and `value` must be valid pointers");
+    CARBON_ERROR("`hm`, `key` and `value` must be valid pointers");
     return;
   }
   memcpy((void *) ((u8 *) hm->items + (carbon_hashmap__hash(key, hm->capacity) * hm->stride)), value, hm->stride);
@@ -47,7 +47,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
 
 void carbon_hashmap_get(CBN_HashMap *hm, const char *key, void *out_value) {
   if (!hm || !key || !out_value) {
-    CARBON_ERROR("carbon_hashmap_set :: `hm`, `key` and `out_value` must be valid pointers");
+    CARBON_ERROR("`hm`, `key` and `out_value` must be valid pointers");
     return;
   }
   memcpy(out_value, (void *) ((u8 *) hm->items + (carbon_hashmap__hash(key, hm->capacity) * hm->stride)), hm->stride);

@@ -74,7 +74,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
-    CARBON_ERROR("carbon_test_manager_rebuild :: unable to fork child process");
+    CARBON_ERROR("unable to fork child process");
     if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
   }
   else if (rebuild_child_pid == 0) {
@@ -91,7 +91,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
       argv[i + 6] = test_suite.files.items[i];
     }
     if (-1 == execvp(argv[0], argv)) {
-      CARBON_ERROR("carbon_test_manager_rebuild :: unable to execvp from child process");
+      CARBON_ERROR("unable to execvp from child process");
       carbon_fs_rename(bin_file_old, bin_file);
       goto defer;
     }
@@ -99,7 +99,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   // 3. Wait for rebuilding (child process) ends correctly
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
-    CARBON_ERROR("carbon_test_manager_rebuild :: errors detected during rebuild");
+    CARBON_ERROR("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file);
     goto defer;
   }
@@ -113,7 +113,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     argv[2] = cmd_args.output;
   }
   if (-1 == execvp(argv[0], argv)) {
-    CARBON_ERROR("carbon_test_manager_rebuild :: unable to execvp rebuilt binary");
+    CARBON_ERROR("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file);
     goto defer;
   }
@@ -132,7 +132,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   if (!s->tests) {
     p = CARBON_MALLOC(size);
     if (!p) {
-      CARBON_ERROR("carbon_test_manager_alloc :: failed to allocate memory (%zuB)", size);
+      CARBON_ERROR("failed to allocate memory (%zuB)", size);
       exit(1);
     }
   }
@@ -141,7 +141,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
     CBN_Test *prev_p = s->tests;
     p = CARBON_REALLOC(s->tests, size);
     if (!p) {
-      CARBON_ERROR("carbon_test_manager_alloc :: failed to reallocate memory (%zuB)", size);
+      CARBON_ERROR("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       exit(1);
     }
@@ -165,7 +165,7 @@ void carbon_test_manager_register(CBN_TestFunc test_func, char *name, char *file
 
 void carbon_test_manager_cleanup(CBN_Suite *s) {
   if (!s->tests || !s->n) {
-    CARBON_ERROR("carbon_test_manager_cleanup_s :: Suite `s` has not been initialized");
+    CARBON_ERROR("Suite `s` has not been initialized");
     return;
   }
   CARBON_FREE(s->tests);
@@ -178,7 +178,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
   CARBON_INFO("=======================================");
   if (!s->tests || !s->n) {
-    CARBON_ERROR("carbon_test_manager_run :: `(Suite *) s` has not been initialized");
+    CARBON_ERROR("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
