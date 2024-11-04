@@ -73,7 +73,6 @@
 #define CARBON_REALLOC(p, newsz) realloc(p, newsz)
 #define CARBON_CALLOC(n, sz)     calloc(n, sz)
 #define CARBON_FREE(p)           free(p)
-#define CARBON_ASSERT(x)         assert(x)
 
 /*
 **  $$==========================$$
@@ -89,7 +88,6 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
-#include <assert.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #ifdef _WIN32
@@ -171,6 +169,15 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 #endif  // CARBON_NO_TESTING
 
 CARBON_API int carbon_main(void);
+
+/*
+**  $$====================$$
+**  ||       Assert       ||
+**  $$====================$$
+*/
+#define CARBON_ASSERT(x) ((void) ((x) || (carbon_assert_abort(#x, __FILE__, __LINE__, __func__), 0)))
+
+CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line, const char *func);
 
 /*
 **  $$==================$$
@@ -349,7 +356,7 @@ CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 **  ||       List       ||
 **  $$==================$$
 */
-#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i) && (i) < (l).size), ((T *) (l).items)[(i)])
+#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i) && (i) < (l).size && "List index out of bounds"), ((T *) (l).items)[(i)])
 
 typedef struct {
   void *items;
@@ -482,6 +489,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 **  $$=============================$$
 */
 #ifdef CARBON_IMPLEMENTATION
+#include "src/carbon_assert.c"
 #include "src/carbon_math.c"
 #include "src/carbon_crypto.c"
 #include "src/carbon_time.c"
