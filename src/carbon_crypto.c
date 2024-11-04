@@ -14,7 +14,7 @@ char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
   };
   static const u8 modset[] = {0, 2, 1};
-  *out_size = 4 * ((in_size + 2) / 3);
+  *out_size = 4 * ((in_size + 2) / 3) + 1;
   char *out = (char *) CARBON_MALLOC(*out_size);
   if (!out) {
     *out_size = 0;
@@ -30,7 +30,9 @@ char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size
     out[j++] = charset[(t >> 1*6) & 0x3f];
     out[j++] = charset[(t >> 0*6) & 0x3f];
   }
-  for (usz i = 0; i < modset[in_size % 3]; ++i) out[*out_size - i - 1] = '=';
+  for (usz i = 0; i < modset[in_size % 3]; ++i) out[*out_size - i - 2] = '=';
+  out[*out_size - 1] = 0;
+  --(*out_size);
   return out;
 }
 
@@ -51,6 +53,7 @@ u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size) {
     }
     else out_sz += 3;
   }
+  ++out_sz;
   u8 *out = (u8 *) CARBON_MALLOC(out_sz);
   for (usz i = 0; i < out_sz / 3; ++i) {
     u8 A = codeset[in[4*i + 0]];
@@ -75,7 +78,7 @@ u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size) {
     out[out_sz - 2] = (A << 2) | (B >> 4);
     out[out_sz - 1] = (B << 4) | (C >> 2);
   }
-  *out_size = out_sz;
+  *out_size = out_sz - 1;
   return out;
 }
 

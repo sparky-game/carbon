@@ -19,7 +19,6 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "  clean       remove previously created build artifacts\n"
   "  mrproper    same as `clean` plus remove this binary\n"
   "  check       only run tests\n"
-  "  examples    only build examples\n"
   "\n"
   "If not provided any subcommand, it runs the full build pipeline.\n"
   "\n"
@@ -43,13 +42,20 @@ static inline void cp_dash_r(const char *origin, const char *dest) {
 }
 
 static void build_src_files(void) {
-  usz files_count = 0;
-  char **files = carbon_fs_pattern_match("src/carbon_*.c", &files_count);
-  for (usz i = 0; i < files_count; ++i) {
-    CARBON_INFO("  CC      %s", files[i]);
-    carbon_string_strip_substr(files[i], "src/");
-    carbon_string_strip_substr(files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o", files[i], WORKDIR, files[i]));
+  usz c_files_count = 0, cxx_files_count = 0;
+  char **c_files = carbon_fs_pattern_match("src/carbon_*.c", &c_files_count);
+  char **cxx_files = carbon_fs_pattern_match("src/carbon_*.cc", &cxx_files_count);
+  for (usz i = 0; i < c_files_count; ++i) {
+    CARBON_INFO("  CC      %s", c_files[i]);
+    carbon_string_strip_substr(c_files[i], "src/");
+    carbon_string_strip_substr(c_files[i], ".c");
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
+  }
+  for (usz i = 0; i < cxx_files_count; ++i) {
+    CARBON_INFO("  CXX     %s", cxx_files[i]);
+    carbon_string_strip_substr(cxx_files[i], "src/");
+    carbon_string_strip_substr(cxx_files[i], ".cc");
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -pipe -O3 -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
   }
 }
 
@@ -76,24 +82,10 @@ static void run_tests(void) {
   return;
 }
 
-static void build_examples(void) {
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building examples...");
-  usz files_count = 0;
-  char **files = carbon_fs_pattern_match("examples/*.c", &files_count);
-  for (usz i = 0; i < files_count; ++i) {
-    carbon_string_strip_substr(files[i], ".c");
-    CARBON_INFO("  CCLD    %s", files[i]);
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -std=gnu99 -Wall -Wextra -pipe -O3 %s.c -static -o %s", files[i], files[i]));
-  }
-}
-
 static inline void clean(void) {
   rm_dash_r(TESTBIN);
   rm_dash_r(WORKDIR);
   rm_dash_r(WORKDIR ".tgz");
-  const char *delete_cmd = "find examples -type f -executable -delete";
-  CARBON_INFO("+ %s", delete_cmd);
-  call_cmd(carbon_string_fmt(delete_cmd));
 }
 
 static void build(void) {
@@ -113,7 +105,7 @@ static void package(void) {
     exit(1);
   }
   cp_dash_r("COPYING carbon.h", WORKDIR);
-  cp_dash_r("src/carbon_*.c", WORKDIR "/src");
+  cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
   compress_dir(WORKDIR);
   rm_dash_r(WORKDIR);
 }
@@ -123,29 +115,34 @@ int main(int argc, char **argv) {
     CARBON_ERROR("Unable to change CWD to binary's directory");
     return 1;
   }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "help")) {
-    CARBON_INFO_RAW(help_msg, argv[0], CARBON_NAME);
-    return 0;
+  if (argc == 2) {
+    if (!carbon_string_cmp(argv[1], "help")) {
+      CARBON_INFO_RAW(help_msg, argv[0], CARBON_NAME);
+      return 0;
+    }
+    else if (!carbon_string_cmp(argv[1], "clean")) {
+      clean();
+      return 0;
+    }
+    else if (!carbon_string_cmp(argv[1], "mrproper")) {
+      clean();
+      rm_dash_r(argv[0]);
+      return 0;
+    }
+    else if (!carbon_string_cmp(argv[1], "check")) {
+      run_tests();
+      return 0;
+    }
+    else {
+      CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
+      return 1;
+    }
   }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "clean")) {
-    clean();
-    return 0;
-  }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "mrproper")) {
-    clean();
-    rm_dash_r(argv[0]);
-    return 0;
-  }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "check")) {
-    run_tests();
-    return 0;
-  }
-  if (argc == 2 && !carbon_string_cmp(argv[1], "examples")) {
-    build_examples();
-    return 0;
+  else if (argc > 2) {
+    CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
+    return 1;
   }
   run_tests();
-  build_examples();
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
   build();
   package();
