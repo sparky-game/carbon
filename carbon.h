@@ -300,15 +300,15 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
                     "got '%p == %p', expected not to",          \
                     (void *) (actual), (void *) (expected))
 
-#define carbon_should_be_s(expected, actual)                    \
-  CARBON_COMPARE(carbon_string_cmp((expected), (actual)),       \
-                 "got '%s', expected '%s'",                     \
-                 (actual), (expected))
+#define carbon_should_be_s(expected, actual)                            \
+  CARBON_COMPARE(carbon_string_cmp((char *) (expected), (char *) (actual)), \
+                 "got '%s', expected '%s'",                             \
+                 (char *) (actual), (char *) (expected))
 
-#define carbon_should_not_be_s(expected, actual)                \
-  CARBON_COMPARE(!carbon_string_cmp((expected), (actual)),      \
-                 "got '%s', expected '%s'",                     \
-                 (actual), (expected))
+#define carbon_should_not_be_s(expected, actual)                        \
+  CARBON_COMPARE(!carbon_string_cmp((char *) (expected), (char *) (actual)), \
+                 "got '%s', expected '%s'",                             \
+                 (char *) (actual), (char *) (expected))
 
 /*
 **  $$==================$$

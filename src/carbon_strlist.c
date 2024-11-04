@@ -19,7 +19,7 @@ CBN_StrList carbon_strlist_create(u8 unique) {
     .unique = unique
   };
   usz size = sl.capacity * sizeof(char *);
-  sl.items = CARBON_MALLOC(size);
+  sl.items = (char **) CARBON_MALLOC(size);
   if (!sl.items) {
     CARBON_ERROR("failed to allocate memory (%zuB)", size);
     return (CBN_StrList) {0};
@@ -50,7 +50,7 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
     sl->capacity *= 2;
     char **prev_p = sl->items;
     usz size = sl->capacity * sizeof(char *);
-    sl->items = CARBON_REALLOC(sl->items, size);
+    sl->items = (char **) CARBON_REALLOC(sl->items, size);
     if (!sl->items) {
       CARBON_ERROR("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
@@ -80,7 +80,7 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     sl->capacity /= 2;
     char **prev_p = sl->items;
     usz size = sl->capacity * sizeof(char *);
-    sl->items = CARBON_REALLOC(sl->items, size);
+    sl->items = (char **) CARBON_REALLOC(sl->items, size);
     if (!sl->items && sl->size > 0) {
       CARBON_ERROR("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);

@@ -68,11 +68,11 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   }
   if (!needs_rebuild) return;
   // 1. Rename `./carbon` -> `./carbon.old`
-  char *bin_file_old = carbon_string_fmt("%s.old", bin_file);
+  char *bin_file_old; bin_file_old = carbon_string_fmt("%s.old", bin_file);
   if (!carbon_fs_rename(bin_file, bin_file_old)) goto defer;
   // 2. Rebuild binary using `test_suite.files` as args
-  i32 rebuild_status_code = 0;
-  pid_t rebuild_child_pid = fork();
+  i32 rebuild_status_code; rebuild_status_code = 0;
+  pid_t rebuild_child_pid; rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
     CARBON_ERROR("unable to fork child process");
     if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
@@ -81,11 +81,11 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     usz argv_size = test_suite.files.size + 7;
     char *argv[argv_size];
     memset(argv, 0, argv_size * sizeof(char *));
-    argv[0] = CARBON_COMPILER;
-    argv[1] = "-I";
-    argv[2] = ".";
-    argv[3] = "-fsanitize=address,undefined";
-    argv[4] = "-o";
+    argv[0] = (char *) CARBON_COMPILER;
+    argv[1] = (char *) "-I";
+    argv[2] = (char *) ".";
+    argv[3] = (char *) "-fsanitize=address,undefined";
+    argv[4] = (char *) "-o";
     argv[5] = (char *) bin_file;
     for (usz i = 0; i < test_suite.files.size; ++i) {
       argv[i + 6] = test_suite.files.items[i];
@@ -106,10 +106,11 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   CARBON_INFO("=======================================");
   // 4. Replace current binary with new one (execvp)
-  char *argv[4] = {0};
+  char *argv[4];
+  memset(argv, 0, 4 * sizeof(char *));
   argv[0] = (char *) bin_file;
   if (cmd_args.output) {
-    argv[1] = "-o";
+    argv[1] = (char *) "-o";
     argv[2] = cmd_args.output;
   }
   if (-1 == execvp(argv[0], argv)) {
@@ -130,7 +131,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   CBN_Test *p = 0;
   usz size = sizeof(CBN_Test);
   if (!s->tests) {
-    p = CARBON_MALLOC(size);
+    p = (CBN_Test *) CARBON_MALLOC(size);
     if (!p) {
       CARBON_ERROR("failed to allocate memory (%zuB)", size);
       exit(1);
@@ -139,7 +140,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   else {
     size *= s->n;
     CBN_Test *prev_p = s->tests;
-    p = CARBON_REALLOC(s->tests, size);
+    p = (CBN_Test *) CARBON_REALLOC(s->tests, size);
     if (!p) {
       CARBON_ERROR("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
