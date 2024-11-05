@@ -207,10 +207,24 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
 
+typedef union {
+  f32 items[2];
+  struct {
+    union { f32 x, r, s, u; };
+    union { f32 y, g, t, v; };
+  };
+} CBN_Vec2;
+
+CARBON_API f32 carbon_math_abs(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
 CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
+CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
+
+#ifdef __cplusplus
+CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
+#endif
 
 /*
 **  $$====================$$
@@ -264,6 +278,11 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
   CARBON_COMPARE_OP(i32, expected, actual, !=,          \
                     "got '%d', expected '%d'",          \
                     (i32) (actual), (i32) (expected))
+
+#define carbon_should_be_f(expected, actual)                    \
+  CARBON_COMPARE(carbon_math_abs(expected - actual) > 1e-3,     \
+                 "got '%f', expected '%f'",                     \
+                 (f32) (actual), (f32) (expected))
 
 #define carbon_should_not_be(expected, actual)          \
   CARBON_COMPARE_OP(i32, expected, actual, ==,          \
@@ -457,8 +476,8 @@ CARBON_API void carbon_test_manager_rebuild(const char *bin_file, const char *sr
 CARBON_API CBN_Suite carbon_test_manager_spawn(void);
 CARBON_API CBN_Test *carbon_test_manager_alloc(CBN_Suite *s);
 CARBON_API void carbon_test_manager_cleanup(CBN_Suite *s);
-CARBON_API void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, char *name, char *filename);
-CARBON_API void carbon_test_manager_register(CBN_TestFunc test_func, char *name, char *filename);
+CARBON_API void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, const char *name, const char *filename);
+CARBON_API void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, const char *filename);
 CARBON_API u8 carbon_test_manager_run_s(CBN_Suite *s);
 CARBON_API u8 carbon_test_manager_run(void);
 
@@ -491,6 +510,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 #ifdef CARBON_IMPLEMENTATION
 #include "src/carbon_assert.c"
 #include "src/carbon_math.c"
+#include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
@@ -502,3 +522,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
 #endif  // CARBON_IMPLEMENTATION
+
+// Local Variables:
+// mode: c++
+// End:

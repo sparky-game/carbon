@@ -5,6 +5,12 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+f32 carbon_math_abs(f32 x) {
+  union { f32 f; u32 i; } u = {x};
+  u.i &= 0x7fffffff;
+  return u.f;
+}
+
 f32 carbon_math_exp(f32 x) {
   // e^x = 1 / e^(-x)
   u8 negative = x < 0;
@@ -53,4 +59,11 @@ f32 carbon_math_tanh(f32 x) {
 f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
   f32 x = CARBON_CLAMP((t - a) / (b - a), 0, 1);
   return x * x * (3 - 2 * x);
+}
+
+CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
+  return (CBN_Vec2) {
+    .x = u.x + v.x,
+    .y = u.y + v.y
+  };
 }

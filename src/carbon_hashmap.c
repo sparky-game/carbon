@@ -15,14 +15,13 @@ static u64 carbon_hashmap__hash(const char *key, u32 n) {
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
   CBN_HashMap hm = {
+    .items = CARBON_MALLOC(capacity * stride),
     .capacity = capacity,
     .stride = stride
   };
-  usz size = hm.capacity * hm.stride;
-  hm.items = CARBON_MALLOC(size);
   if (!hm.items) {
-    CARBON_ERROR("failed to allocate memory (%zuB)", size);
-    return (CBN_HashMap) {0};
+    CARBON_ERROR("failed to allocate memory (%zuB)", capacity * stride);
+    memset(&hm, 0, sizeof(CBN_HashMap));
   }
   return hm;
 }
@@ -33,7 +32,7 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
     return;
   }
   CARBON_FREE(hm->items);
-  *hm = (CBN_HashMap) {0};
+  memset(hm, 0, sizeof(CBN_HashMap));
   hm = 0;
 }
 

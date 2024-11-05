@@ -49,34 +49,35 @@ static void build_src_files(void) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], "src/");
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -O3 -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], "src/");
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -pipe -O3 -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
   }
-}
-
-static void create_static_lib(void) {
-  CARBON_INFO("  STRIP   " WORKDIR "/*.o");
-  call_cmd(carbon_string_fmt("strip " WORKDIR "/*.o"));
-  CARBON_INFO("  AR      libcarbon.a");
-  call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
-  rm_dash_r(WORKDIR "/*.o");
-}
-
-static inline void compress_dir(const char *path) {
-  CARBON_INFO("  GZIP   %s.tgz", path);
-  call_cmd(carbon_string_fmt("tar -zcf %s.tgz %s", path, path));
 }
 
 static void run_tests(void) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
   static const char *test_cmd = TESTBIN " -n";
-  CARBON_INFO("  CCLD    " TESTBIN);
-  call_cmd(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined test/*.c -o " TESTBIN);
+  usz c_files_count = 0, cxx_files_count = 0;
+  char **c_files = carbon_fs_pattern_match("test/*.c", &c_files_count);
+  char **cxx_files = carbon_fs_pattern_match("test/*.cc", &cxx_files_count);
+  for (usz i = 0; i < c_files_count; ++i) {
+    CARBON_INFO("  CC      %s", c_files[i]);
+    carbon_string_strip_substr(c_files[i], ".c");
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
+  }
+  for (usz i = 0; i < cxx_files_count; ++i) {
+    CARBON_INFO("  CXX     %s", cxx_files[i]);
+    carbon_string_strip_substr(cxx_files[i], ".cc");
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+  }
+  CARBON_INFO("  LD      " TESTBIN);
+  call_cmd("clang++ -fsanitize=address,undefined test/*.o -o " TESTBIN);
+  rm_dash_r("test/*.o");
   CARBON_INFO("+ %s", test_cmd);
   call_cmd(test_cmd);
   return;
@@ -84,6 +85,7 @@ static void run_tests(void) {
 
 static inline void clean(void) {
   rm_dash_r(TESTBIN);
+  rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
   rm_dash_r(WORKDIR ".tgz");
 }
@@ -95,7 +97,9 @@ static void build(void) {
     exit(1);
   }
   build_src_files();
-  create_static_lib();
+  CARBON_INFO("  AR      libcarbon.a");
+  call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
+  rm_dash_r(WORKDIR "/*.o");
 }
 
 static void package(void) {
@@ -106,7 +110,8 @@ static void package(void) {
   }
   cp_dash_r("COPYING carbon.h", WORKDIR);
   cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
-  compress_dir(WORKDIR);
+  CARBON_INFO("  GZIP   " WORKDIR ".tgz");
+  call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
 }
 

@@ -5,8 +5,8 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-static CBN_Suite test_suite = {0};
-static CBN_CmdArgs cmd_args = {0};
+static CBN_Suite test_suite;
+static CBN_CmdArgs cmd_args;
 
 void carbon_test_manager_argparse(i32 argc, char **argv) {
   static const char * const help_msg = "usage: %s [OPTION]\n"
@@ -124,7 +124,9 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
 }
 
 CBN_Suite carbon_test_manager_spawn(void) {
-  return (CBN_Suite) {0};
+  CBN_Suite s;
+  memset(&s, 0, sizeof(CBN_Suite));
+  return s;
 }
 
 CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
@@ -150,17 +152,17 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   return p;
 }
 
-void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, char *name, char *filename) {
+void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, const char *name, const char *filename) {
   ++s->n;
   s->tests = carbon_test_manager_alloc(s);
   s->tests[s->n - 1] = (CBN_Test) {
-    .f = test_func,
-    .name = name,
-    .filename = filename
+    .f        = test_func,
+    .name     = (char *) name,
+    .filename = (char *) filename
   };
 }
 
-void carbon_test_manager_register(CBN_TestFunc test_func, char *name, char *filename) {
+void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, const char *filename) {
   carbon_test_manager_register_s(&test_suite, test_func, name, filename);
 }
 
@@ -171,7 +173,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
   }
   CARBON_FREE(s->tests);
   carbon_strlist_destroy(&s->files);
-  *s = (CBN_Suite) {0};
+  memset(s, 0, sizeof(CBN_Suite));
   s = 0;
 }
 
@@ -187,16 +189,18 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
-  CBN_JUnitTestsuite junit_testsuite_info = { .tests = s->n };
+  CBN_JUnitTestsuite junit_testsuite_info = {
+    .time = 0,
+    .tests = s->n,
+    .failures = 0
+  };
+  // TODO: use CBN_List instead of stack VLA
   CBN_JUnitTestcase junit_testcase_infos[s->n];
   memset(junit_testcase_infos, 0, s->n * sizeof(CBN_JUnitTestcase));
   CBN_Clock clk = carbon_clock_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 result = s->tests[i].f();
-    if (!cmd_args.no_output) {
-      memset(junit_testcase_infos[i].name, 0, sizeof(junit_testcase_infos[i].name));
-      strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
-    }
+    if (!cmd_args.no_output) strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
     if (result) {
       CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%zu/%zu) %s :: PASSED", i + 1, s->n, s->tests[i].name);
       ++passed;
@@ -207,8 +211,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
       if (!cmd_args.no_output) ++junit_testcase_infos[i].has_failed;
     }
   }
-  carbon_clock_update(&clk);
-  carbon_clock_stop(&clk);
+  carbon_clock_update(&clk), carbon_clock_stop(&clk);
   u32 total_time_micro = (u32) (clk.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
   junit_testsuite_info.time = clk.elapsed;

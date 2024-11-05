@@ -7,15 +7,14 @@
 
 CBN_List carbon_list_create(usz stride) {
   CBN_List l = {
+    .items = CARBON_MALLOC(stride),
     .capacity = 1,
     .stride = stride,
     .size = 0
   };
-  usz size = l.capacity * l.stride;
-  l.items = CARBON_MALLOC(size);
   if (!l.items) {
-    CARBON_ERROR("failed to allocate memory (%zuB)", size);
-    return (CBN_List) {0};
+    CARBON_ERROR("failed to allocate memory (%zuB)", stride);
+    memset(&l, 0, sizeof(CBN_List));
   }
   return l;
 }
@@ -26,7 +25,7 @@ void carbon_list_destroy(CBN_List *l) {
     return;
   }
   CARBON_FREE(l->items);
-  *l = (CBN_List) {0};
+  memset(l, 0, sizeof(CBN_List));
   l = 0;
 }
 
