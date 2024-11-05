@@ -227,15 +227,35 @@ typedef union {
   };
 } CBN_Vec2;
 
+typedef union {
+  f32 items[3];
+  struct {
+    union { f32 x, r, s, u; };
+    union { f32 y, g, t, v; };
+    union { f32 z, b, p, w; };
+  };
+} CBN_Vec3;
+
 CARBON_API f32 carbon_math_abs(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
 CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
+CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
+CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
+CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
+CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
+CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
+CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
 
 #ifdef __cplusplus
 CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
+CBN_Vec3 operator+(const CBN_Vec3 &u, const CBN_Vec3 &v);
+CBN_Vec2 operator-(const CBN_Vec2 &u, const CBN_Vec2 &v);
+CBN_Vec3 operator-(const CBN_Vec3 &u, const CBN_Vec3 &v);
+f32 operator*(const CBN_Vec2 &u, const CBN_Vec2 &v);
+f32 operator*(const CBN_Vec3 &u, const CBN_Vec3 &v);
 #endif
 
 /*

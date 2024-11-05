@@ -5,6 +5,11 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+// TODO: replace with own implementation
+CARBON_API f32 expf(f32);
+CARBON_API f32 sinf(f32);
+CARBON_API f32 cosf(f32);
+
 f32 carbon_math_abs(f32 x) {
   union { f32 f; u32 i; } u = {x};
   u.i &= 0x7fffffff;
@@ -47,12 +52,15 @@ f32 carbon_math_exp(f32 x) {
 }
 
 f32 carbon_math_sigmoid(f32 x) {
-  return 1 / (1 + carbon_math_exp(-x));
+  // return 1 / (1 + carbon_math_exp(-x));
+  return 1 / (1 + expf(-x));
 }
 
 f32 carbon_math_tanh(f32 x) {
-  f32 ex = carbon_math_exp(x);
-  f32 enx = carbon_math_exp(-x);
+  // f32 ex = carbon_math_exp(x);
+  f32 ex = expf(x);
+  // f32 enx = carbon_math_exp(-x);
+  f32 enx = expf(-x);
   return (ex - enx) / (ex + enx);
 }
 
@@ -65,5 +73,45 @@ CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
   return (CBN_Vec2) {
     .x = u.x + v.x,
     .y = u.y + v.y
+  };
+}
+
+CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v) {
+  return (CBN_Vec3) {
+    .x = u.x + v.x,
+    .y = u.y + v.y,
+    .z = u.z + v.z
+  };
+}
+
+CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v) {
+  return (CBN_Vec2) {
+    .x = u.x - v.x,
+    .y = u.y - v.y
+  };
+}
+
+CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v) {
+  return (CBN_Vec3) {
+    .x = u.x - v.x,
+    .y = u.y - v.y,
+    .z = u.z - v.z
+  };
+}
+
+f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v) {
+  return (u.x * v.x) + (u.y * v.y);
+}
+
+f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
+  return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
+}
+
+CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
+  f32 rads = angle * (CARBON_PI / 180);
+  f32 c = cosf(rads), s = sinf(rads);
+  return (CBN_Vec2) {
+    .x = (v.x * c) - (v.y * s),
+    .y = (v.x * s) + (v.y * c)
   };
 }
