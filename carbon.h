@@ -312,7 +312,7 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
                     (i32) (actual), (i32) (expected))
 
 #define carbon_should_be_f(expected, actual)                    \
-  CARBON_COMPARE(carbon_math_abs(expected - actual) > 1e-3,     \
+  CARBON_COMPARE(carbon_math_abs(expected - actual) > 1e-6,     \
                  "got '%f', expected '%f'",                     \
                  (f32) (actual), (f32) (expected))
 

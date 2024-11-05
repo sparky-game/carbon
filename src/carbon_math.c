@@ -65,6 +65,7 @@ f32 carbon_math_tanh(f32 x) {
 }
 
 f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
+  CARBON_ASSERT(a < b);
   f32 x = CARBON_CLAMP((t - a) / (b - a), 0, 1);
   return x * x * (3 - 2 * x);
 }

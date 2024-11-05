@@ -11,15 +11,15 @@ CARBON_TEST(carbon_math, abs) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, exp) {
-  // CARBON_INFO("e^0 :: %.2f", carbon_math_exp(0));
-  // CARBON_INFO("e^1 :: %.2f", carbon_math_exp(1));
-  // CARBON_INFO("e^2 :: %.2f", carbon_math_exp(2));
-  return CARBON_KO;
-}
+/* CARBON_TEST(carbon_math, exp) { */
+/*   CARBON_INFO("e^0 :: %.2f", carbon_math_exp(0)); */
+/*   CARBON_INFO("e^1 :: %.2f", carbon_math_exp(1)); */
+/*   CARBON_INFO("e^2 :: %.2f", carbon_math_exp(2)); */
+/*   return CARBON_KO; */
+/* } */
 
 CARBON_TEST(carbon_math, sigmoid) {
-  carbon_should_be_f(0, carbon_math_sigmoid(-7));
+  carbon_should_be_f(0, carbon_math_sigmoid(-14));
   carbon_should_be_f(0.006692, carbon_math_sigmoid(-5));
   carbon_should_be_f(0.047425, carbon_math_sigmoid(-3));
   carbon_should_be_f(0.268941, carbon_math_sigmoid(-1));
@@ -27,16 +27,28 @@ CARBON_TEST(carbon_math, sigmoid) {
   carbon_should_be_f(0.731058, carbon_math_sigmoid(1));
   carbon_should_be_f(0.952574, carbon_math_sigmoid(3));
   carbon_should_be_f(0.993307, carbon_math_sigmoid(5));
-  carbon_should_be_f(1, carbon_math_sigmoid(7));
+  carbon_should_be_f(1, carbon_math_sigmoid(14));
   return CARBON_OK;
 }
 
 CARBON_TEST(carbon_math, tanh) {
-  return CARBON_KO;
+  carbon_should_be_f(-1, carbon_math_tanh(-14));
+  carbon_should_be_f(-0.995054, carbon_math_tanh(-3));
+  carbon_should_be_f(-0.761594, carbon_math_tanh(-1));
+  carbon_should_be_f(0, carbon_math_tanh(0));
+  carbon_should_be_f(0.761594, carbon_math_tanh(1));
+  carbon_should_be_f(0.995054, carbon_math_tanh(3));
+  carbon_should_be_f(1, carbon_math_tanh(14));
+  return CARBON_OK;
 }
 
 CARBON_TEST(carbon_math, smoothstep) {
-  return CARBON_KO;
+  carbon_should_be_f(0, carbon_math_smoothstep(0, 1, 0));
+  carbon_should_be_f(0.028, carbon_math_smoothstep(0, 1, 0.1));
+  carbon_should_be_f(0.5, carbon_math_smoothstep(0, 1, 0.5));
+  carbon_should_be_f(0.784, carbon_math_smoothstep(0, 1, 0.7));
+  carbon_should_be_f(1, carbon_math_smoothstep(0, 1, 1));
+  return CARBON_OK;
 }
 
 CARBON_TEST(carbon_math, vec2_add) {
