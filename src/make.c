@@ -76,7 +76,7 @@ static void run_tests(void) {
     call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
   }
   CARBON_INFO("  LD      " TESTBIN);
-  call_cmd("clang++ -fsanitize=address,undefined test/*.o -o " TESTBIN);
+  call_cmd(CARBON_COMPILER " -fsanitize=address,undefined test/*.o -o " TESTBIN);
   rm_dash_r("test/*.o");
   CARBON_INFO("+ %s", test_cmd);
   call_cmd(test_cmd);
