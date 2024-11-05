@@ -112,8 +112,24 @@ If wanted to build /Carbon/ from source independently (i.e. without defining ~CA
 
 #+begin_src sh
 cc -std=gnu99 src/make.c -o make
-./make [clean|mrproper]
 #+end_src
+
+One built, we can take a look at the available subcommands:
+
+#+begin_example
+$ ./make help
+usage: ./make [SUBCMD]
+Subcommands:
+  help        display this help
+  clean       remove previously created build artifacts
+  mrproper    same as `clean` plus remove this binary
+  check       only run tests
+
+If not provided any subcommand, it runs the full build pipeline.
+
+Report bugs to: <https://github.com/sparky-game/carbon/issues>
+SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
+#+end_example
 
 ** Target code
 
