@@ -54,6 +54,17 @@
 #define CARBON_TARGET_OS "windows"
 #endif
 
+#ifdef __cplusplus
+#if defined(__clang__)
+#define CARBON_COMPILER "clang++"
+#elif defined(__GNUC__)
+#define CARBON_COMPILER "g++"
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_COMPILER "cl.exe"
+#else
+#define CARBON_COMPILER "c++"
+#endif
+#else
 #if defined(__clang__)
 #define CARBON_COMPILER "clang"
 #elif defined(__GNUC__)
@@ -63,6 +74,7 @@
 #else
 #define CARBON_COMPILER "cc"
 #endif
+#endif  // __cplusplus
 
 /*
 **  $$======================$$
