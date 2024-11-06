@@ -108,6 +108,14 @@ f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
   return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
 }
 
+CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v) {
+  return (CBN_Vec3) {
+    .x = (u.y * v.z) - (u.z * v.y),
+    .y = (u.z * v.x) - (u.x * v.z),
+    .z = (u.x * v.y) - (u.y * v.x)
+  };
+}
+
 CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
   f32 rads = angle * (CARBON_PI / 180);
   f32 c = cosf(rads), s = sinf(rads);

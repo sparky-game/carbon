@@ -102,3 +102,13 @@ CARBON_TEST(carbon_math, vec3_dot) {
   carbon_should_be_f(32, carbon_math_vec3_dot(u, v));
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_math, vec3_cross) {
+  CBN_Vec3 u = {{3, -3, 1}};
+  CBN_Vec3 v = {{4, 9, 2}};
+  CBN_Vec3 r = carbon_math_vec3_cross(u, v);
+  carbon_should_be_f(-15, r.x);
+  carbon_should_be_f(-2, r.y);
+  carbon_should_be_f(39, r.z);
+  return CARBON_OK;
+}
