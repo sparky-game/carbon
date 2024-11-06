@@ -16,6 +16,14 @@ f32 carbon_math_abs(f32 x) {
   return u.f;
 }
 
+f32 carbon_math_sqrt(f32 x) {
+  f32 s = x;
+  for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
+    s -= (s*s - x) / (2*s);
+  }
+  return s;
+}
+
 f32 carbon_math_exp(f32 x) {
   // e^x = 1 / e^(-x)
   u8 negative = x < 0;

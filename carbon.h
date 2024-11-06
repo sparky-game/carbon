@@ -237,6 +237,7 @@ typedef union {
 } CBN_Vec3;
 
 CARBON_API f32 carbon_math_abs(f32 x);
+CARBON_API f32 carbon_math_sqrt(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
 CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);

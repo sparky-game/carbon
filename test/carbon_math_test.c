@@ -11,6 +11,12 @@ CARBON_TEST(carbon_math, abs) {
   return CARBON_OK;
 }
 
+CARBON_TEST(carbon_math, sqrt) {
+  carbon_should_be_f(CARBON_SQRT2, carbon_math_sqrt(2));
+  carbon_should_be_f(CARBON_SQRT3, carbon_math_sqrt(3));
+  return CARBON_OK;
+}
+
 /* CARBON_TEST(carbon_math, exp) { */
 /*   CARBON_INFO("e^0 :: %.2f", carbon_math_exp(0)); */
 /*   CARBON_INFO("e^1 :: %.2f", carbon_math_exp(1)); */
