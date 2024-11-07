@@ -211,6 +211,9 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_1_SQRT2 (1 / CARBON_SQRT2)
 #define CARBON_SQRT3 1.73205080756887729352
 #define CARBON_1_SQRT3 (1 / CARBON_SQRT3)
+#define CARBON_I32_MAX 0x7fffffff
+#define CARBON_RAND_MAX CARBON_I32_MAX
+#define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
 #define CARBON_MIN(x, y) (x < y ? x : y)
 #define CARBON_MAX(x, y) (x > y ? x : y)
 #define CARBON_CLAMP(x, min, max) ((x <= min) ? min : (x >= max) ? max : x)
@@ -218,6 +221,8 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_STEP(edge, x) (x < edge ? 0 : 1)
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
+#define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
+#define CARBON_ROW_AT(i, j) (i).items[(j)]
 
 typedef union {
   f32 items[2];
@@ -236,6 +241,20 @@ typedef union {
   };
 } CBN_Vec3;
 
+typedef struct {
+  f32 *items;
+  usz rows;
+  usz cols;
+} CBN_Matrix;
+
+typedef struct {
+  f32 *items;
+  usz cols;
+} CBN_Row;
+
+CARBON_API void carbon_math_srand(u64 seed);
+CARBON_API int carbon_math_rand(void);
+CARBON_API f32 carbon_math_randf(void);
 CARBON_API f32 carbon_math_abs(f32 x);
 CARBON_API f32 carbon_math_sqrt(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
@@ -250,6 +269,19 @@ CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
+CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
+CARBON_API void carbon_math_mat_fill(CBN_Matrix m, f32 x);
+CARBON_API void carbon_math_mat_rand(CBN_Matrix m, f32 min, f32 max);
+CARBON_API CBN_Row carbon_math_mat_row(CBN_Matrix m, usz row);
+CARBON_API void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src);
+CARBON_API void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m);
+CARBON_API void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b);
+CARBON_API CBN_Row carbon_math_row_create(usz cols);
+CARBON_API CBN_Matrix carbon_math_row_to_mat(CBN_Row r);
+CARBON_API CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);
+CARBON_API void carbon_math_row_fill(CBN_Row r, f32 x);
+CARBON_API void carbon_math_row_rand(CBN_Row r, f32 min, f32 max);
+CARBON_API void carbon_math_row_copy(CBN_Row dst, CBN_Row src);
 
 #ifdef __cplusplus
 CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
