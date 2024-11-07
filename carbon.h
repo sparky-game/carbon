@@ -500,6 +500,27 @@ CARBON_API void carbon_strlist_pop(CBN_StrList *sl, const char *s);
 CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 
 /*
+**  $$=======================$$
+**  ||       NeuralNet       ||
+**  $$=======================$$
+*/
+#define CARBON_NN_IN(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[0])
+#define CARBON_NN_OUT(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[(nn).arch_count - 1])
+
+typedef struct {
+  usz *arch;
+  usz arch_count;
+  CBN_Matrix *ws;
+  CBN_Row *bs;
+  CBN_Row *as;
+} CBN_NeuralNet;
+
+CARBON_API CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count);
+CARBON_API void carbon_nn_fill(CBN_NeuralNet nn, f32 x);
+CARBON_API void carbon_nn_zero(CBN_NeuralNet nn);
+CARBON_API void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
+
+/*
 **  $$=========================$$
 **  ||       TestManager       ||
 **  $$=========================$$
@@ -585,6 +606,7 @@ CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestc
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strlist.c"
+#include "src/carbon_nn.c"
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
 #endif  // CARBON_IMPLEMENTATION
