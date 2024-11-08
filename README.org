@@ -210,3 +210,5 @@ They shouldn't be accessed manually, but with ~gcov~ itself, using one of its fo
 * References
 
 - Benno Rice. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
+- Alexey Kutepov. (2023). /tsoding/nn.h: Simple stb-style header-only library for Neural Networks/ [Code]. GitHub. <https://github.com/tsoding/nn.h>
+- Alexey Kutepov. (2024). /tsoding/nob.h: Next generation of the NoBuild idea/ [Code]. GitHub. <https://github.com/tsoding/nob.h>
