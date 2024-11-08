@@ -150,7 +150,7 @@ char *carbon_fs_get_bin_directory(void) {
 #if defined(_WIN32)
   usz len = GetModuleFileNameA(0, dir, MAX_PATH);
   if (len > 0) {
-    for (usz i = len; i >= 0; --i) {
+    for (usz i = len;; --i) {
       if (dir[i] == '\\') {
         dir[i + 1] = 0;
         break;
@@ -164,7 +164,7 @@ char *carbon_fs_get_bin_directory(void) {
 #elif defined(__linux__)
   usz len = readlink("/proc/self/exe", dir, sizeof(dir));
   if (len > 0) {
-    for (usz i = len; i >= 0; --i) {
+    for (usz i = len;; --i) {
       if (dir[i] == '/') {
         dir[i + 1] = 0;
         break;
@@ -180,7 +180,7 @@ char *carbon_fs_get_bin_directory(void) {
   i32 mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
   if (!sysctl(mib, 4, dir, &size, 0, 0)) {
     usz len = strlen(dir);
-    for (usz i = len; i >= 0; --i) {
+    for (usz i = len;; --i) {
       if (dir[i] == '/') {
         dir[i + 1] = 0;
         break;
@@ -195,7 +195,7 @@ char *carbon_fs_get_bin_directory(void) {
   usz size = sizeof(dir);
   if (!_NSGetExecutablePath(dir, &size)) {
     usz len = strlen(dir);
-    for (usz i = len; i >= 0; --i) {
+    for (usz i = len;; --i) {
       if (dir[i] == '/') {
         dir[i + 1] = 0;
         break;
