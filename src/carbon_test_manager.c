@@ -189,33 +189,29 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
-  CBN_JUnitTestsuite junit_testsuite_info = {
-    .time = 0,
-    .tests = s->n,
-    .failures = 0
-  };
-  // TODO: use CBN_List instead of stack VLA
-  CBN_JUnitTestcase junit_testcase_infos[s->n];
-  memset(junit_testcase_infos, 0, s->n * sizeof(CBN_JUnitTestcase));
+  CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
   CBN_Clock clk = carbon_clock_start();
   for (usz i = 0; i < s->n; ++i) {
-    u8 result = s->tests[i].f();
-    if (!cmd_args.no_output) strncpy(junit_testcase_infos[i].name, s->tests[i].name, sizeof(junit_testcase_infos[i].name) - 1);
-    if (result) {
+    u8 has_passed = s->tests[i].f();
+    if (has_passed) {
       CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%zu/%zu) %s :: PASSED", i + 1, s->n, s->tests[i].name);
       ++passed;
     }
     else {
       CARBON_ERROR_ASS("(%zu/%zu) %s :: FAILED", i + 1, s->n, s->tests[i].name);
       ++failed;
-      if (!cmd_args.no_output) ++junit_testcase_infos[i].has_failed;
+    }
+    if (!cmd_args.no_output) {
+      CBN_JUnitTestcase tjc = {
+        .name = s->tests[i].name,
+        .has_failed = !has_passed
+      };
+      carbon_list_push(&junit_testcase_infos, &tjc);
     }
   }
   carbon_clock_update(&clk), carbon_clock_stop(&clk);
   u32 total_time_micro = (u32) (clk.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
-  junit_testsuite_info.time = clk.elapsed;
-  junit_testsuite_info.failures = failed;
   if (failed) {
     if (!((i32) clk.elapsed)) CARBON_ERROR_RAW("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
                                                failed,
@@ -235,7 +231,8 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
                          passed,
                          clk.elapsed);
   }
-  if (!cmd_args.no_output) carbon_junit_output(&junit_testsuite_info, junit_testcase_infos, cmd_args.output);
+  if (!cmd_args.no_output) carbon_junit_output(junit_testcase_infos, cmd_args.output, failed, clk.elapsed);
+  carbon_list_destroy(&junit_testcase_infos);
   carbon_test_manager_cleanup(s);
   return status;
 }

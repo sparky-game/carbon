@@ -573,21 +573,14 @@ CARBON_API u8 carbon_test_manager_run(void);
 **  ||       JUnit       ||
 **  $$===================$$
 */
-#define CARBON_JUNIT_XML_OUT_FILENAME      "carbon_results.xml"
-#define CARBON_JUNIT_TESTCASE_NAME_MAX_LEN 512
+#define CARBON_JUNIT_XML_OUT_FILENAME "carbon_results.xml"
 
 typedef struct {
-  f64 time;
-  usz tests;
-  usz failures;
-} CBN_JUnitTestsuite;
-
-typedef struct {
-  char name[CARBON_JUNIT_TESTCASE_NAME_MAX_LEN];
+  char *name;
   u8 has_failed;
 } CBN_JUnitTestcase;
 
-CARBON_API void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestcase *junit_tcs, const char *out_filename);
+CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, const usz failed, const f64 runtime);
 
 /*
 **  $$=============================$$

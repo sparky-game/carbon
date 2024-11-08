@@ -7,7 +7,7 @@
 
 #define ISO_8601_FMT "%Y-%m-%dT%H:%M:%S%z"
 
-void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestcase *junit_tcs, const char *out_filename) {
+void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, const usz failed, const f64 runtime) {
   if (!out_filename) out_filename = CARBON_JUNIT_XML_OUT_FILENAME;
   FILE *fd = fopen(out_filename, "w");
   if (!fd) {
@@ -18,14 +18,14 @@ void carbon_junit_output(CBN_JUnitTestsuite *junit_ts, CBN_JUnitTestcase *junit_
   struct tm *tm_info = localtime(&t);
   char timestamp[30];
   strftime(timestamp, sizeof(timestamp), ISO_8601_FMT, tm_info);
-  fprintf(fd, "<testsuite timestamp=\"%s\" time=\"%.6f\" tests=\"%zu\" failures=\"%zu\">\n", timestamp, junit_ts->time, junit_ts->tests, junit_ts->failures);
-  for (usz i = 0; i < junit_ts->tests; ++i) {
-    if (junit_tcs[i].has_failed) {
-      fprintf(fd, "  <testcase name=\"%s\">\n", junit_tcs[i].name);
+  fprintf(fd, "<testsuite timestamp=\"%s\" time=\"%.6f\" tests=\"%zu\" failures=\"%zu\">\n", timestamp, runtime, junit_tcs.size, failed);
+  for (usz i = 0; i < junit_tcs.size; ++i) {
+    if (carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).has_failed) {
+      fprintf(fd, "  <testcase name=\"%s\">\n", carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).name);
       fprintf(fd, "    <failure />\n");
       fprintf(fd, "  </testcase>\n");
     }
-    else fprintf(fd, "  <testcase name=\"%s\" />\n", junit_tcs[i].name);
+    else fprintf(fd, "  <testcase name=\"%s\" />\n", carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).name);
   }
   fprintf(fd, "</testsuite>");
   fclose(fd);
