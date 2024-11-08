@@ -67,17 +67,19 @@ You can't unit test C, right?
 
 * Table of Contents :toc:
 - [[#usage][Usage]]
+  - [[#get-the-code][Get the code]]
   - [[#target-code][Target code]]
   - [[#test-case][Test case]]
   - [[#entrypoint][Entrypoint]]
-  - [[#execution][Execution]]
 - [[#code-coverage][Code coverage]]
 - [[#licensing][Licensing]]
 - [[#references][References]]
 
 * Usage
 
-We can use /Carbon/ in our preferred way of managing dependencies or external libraries in our projects. Here are the main options of obtaining the library:
+** Get the code
+
+We can get /Carbon/ in our preferred way of managing dependencies or external libraries in our projects. Here are the main options of obtaining the library:
 
 *Git Submodules:*
 #+begin_src sh
@@ -103,13 +105,13 @@ wget https://github.com/sparky-game/carbon/releases/download/v0.7-alpha/carbon-0
 tar -xvf carbon-0.7-linux-amd64.tgz
 #+end_src
 
-If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage cleaning, compiling and packaging the library.
+If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library.
 
 #+begin_src sh
 cc -std=gnu99 src/make.c -static -o make
 #+end_src
 
-One built, we can take a look at the available subcommands:
+Once built, we can take a look at the available subcommands:
 
 #+begin_example
 $ ./make help
@@ -174,7 +176,7 @@ If we define the macro ~CARBON_IMPLEMENTATION~, it makes the library operate in 
 cc -I vendor/carbon -std=gnu99 *.c -o carbon
 #+end_src
 
-** Execution
+Once built, we can take a look at the available options:
 
 #+begin_example
 $ ./carbon -h
@@ -188,8 +190,6 @@ Options:
 Report bugs to: <https://github.com/sparky-game/carbon/issues>
 SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
 #+end_example
-
-Additionally, it will create a file named ~carbon_results.xml~ with the execution results formatted as JUnit XML.
 
 * Code coverage
 
