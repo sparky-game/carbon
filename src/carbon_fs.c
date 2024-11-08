@@ -212,22 +212,55 @@ char *carbon_fs_get_bin_directory(void) {
 
 char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
   static usz i = 0;
+#ifdef _WIN32
+  static usz counts[CARBON_FS_PATMAT_MAX_STRUCTS];
+  static char *results[CARBON_FS_PATMAT_MAX_STRUCTS][MAX_PATH];
+  HANDLE h_find;
+  WIN32_FIND_DATA find_data;
+  for (usz j = 0; j < counts[i]; ++j) free(results[i][j]);
+  counts[i] = 0;
+  h_find = FindFirstFile(pattern, &find_data);
+  if (h_find == INVALID_HANDLE_VALUE) {
+    CARBON_ERROR("no found matches");
+    *out_count = 0;
+    return 0;
+  }
+  do {
+    if (counts[i] < MAX_PATH) {
+      results[i][counts[i]] = carbon_string_dup(find_data.cFileName);
+      ++counts[i];
+    }
+    else {
+      CARBON_ERROR("too many matches");
+      break;
+    }
+  } while (FindNextFile(h_find, &find_data));
+  FindClose(h_find);
+  *out_count = counts[i];
+  ++i;
+  if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
+  return results[i];
+#else
   static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS];
   glob_t *x = &xs[i];
   memset(x, 0, sizeof(glob_t));
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
   case GLOB_NOSPACE:
     CARBON_ERROR("out of memory");
+    *out_count = 0;
     return 0;
   case GLOB_ABORTED:
     CARBON_ERROR("read error");
+    *out_count = 0;
     return 0;
   case GLOB_NOMATCH:
     CARBON_ERROR("no found matches");
+    *out_count = 0;
     return 0;
   }
   ++i;
   if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
   *out_count = x->gl_pathc;
   return x->gl_pathv;
+#endif
 }
