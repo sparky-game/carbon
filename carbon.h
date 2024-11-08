@@ -126,7 +126,7 @@
 #define CARBON_EXPAND_AND_QUOTE(x) CARBON_QUOTE(x)
 #define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
 #define CARBON_NOTUSED(v) (void)(v)
-#if defined(__GNUC__) || defined(__clang__)
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #define CARBON_STATIC_ASSERT _Static_assert
 #else
 #define CARBON_STATIC_ASSERT static_assert

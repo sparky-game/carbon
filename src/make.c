@@ -55,7 +55,7 @@ static void build_src_files(void) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], "src/");
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++11 -Wall -Wextra -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
   }
 }
 
@@ -73,14 +73,13 @@ static void run_tests(void) {
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++98 -Wall -Wextra -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++11 -Wall -Wextra -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
   }
   CARBON_INFO("  LD      " TESTBIN);
   call_cmd("clang++ -fsanitize=address,undefined test/*.o -o " TESTBIN);
   rm_dash_r("test/*.o");
   CARBON_INFO("+ %s", test_cmd);
   call_cmd(test_cmd);
-  return;
 }
 
 static inline void clean(void) {
