@@ -208,7 +208,7 @@ Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 /Carbon/ is free and open-source sofware (FOSS) and available under 2 licenses, when using it choose whichever you prefer.
 
-*BSD 3-Clause "New" or "Revised" License (~COPYING.BSD~):*
+*BSD 3-Clause "New" or "Revised" License (* ~COPYING.BSD~ *):*
 
 #+begin_quote
 /Carbon/ is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License (~BSD-3-Clause~) as published by The Regents of the University of California. @@html:<br>@@
@@ -216,7 +216,7 @@ Copyright (C) Wasym A. Alonso. All Rights Reserved.
 You should have received a copy of the BSD 3-Clause "New" or "Revised" License (~BSD-3-Clause~) along with /Carbon/. If not, see <https://opensource.org/license/BSD-3-Clause>.
 #+end_quote
 
-*GNU General Public License v3.0 only (~COPYING.GPL~):*
+*GNU General Public License v3.0 only (* ~COPYING.GPL~ *):*
 
 #+begin_quote
 /Carbon/ is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3.0 only (~GPL-3.0-only~) as published by the Free Software Foundation (FSF). @@html:<br>@@
