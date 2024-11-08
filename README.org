@@ -206,7 +206,7 @@ They shouldn't be accessed manually, but with ~gcov~ itself, using one of its fo
 
 Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-/Carbon/ is free abd open-source sofware (FOSS) and available under 2 licenses, when using it choose whichever you prefer.
+/Carbon/ is free and open-source sofware (FOSS) and available under 2 licenses, when using it choose whichever you prefer.
 
 *BSD 3-Clause "New" or "Revised" License (~COPYING.BSD~):*
 
