@@ -65,12 +65,6 @@ You can't unit test C, right?
 </p>
 #+end_html
 
-#+begin_quote
-/Carbon/ is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License as published by The Regents of the University of California. @@html:<br>@@
-/Carbon/ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License for more details. @@html:<br>@@
-You should have received a copy of the BSD 3-Clause "New" or "Revised" License along with /Carbon/. If not, see <https://opensource.org/license/BSD-3-Clause>.
-#+end_quote
-
 * Table of Contents :toc:
 - [[#usage][Usage]]
   - [[#target-code][Target code]]
@@ -78,19 +72,20 @@ You should have received a copy of the BSD 3-Clause "New" or "Revised" License a
   - [[#entrypoint][Entrypoint]]
   - [[#execution][Execution]]
 - [[#code-coverage][Code coverage]]
+- [[#licensing][Licensing]]
 - [[#references][References]]
 
 * Usage
 
 We can use /Carbon/ in our preferred way of managing dependencies or external libraries in our projects. Here are the main options of obtaining the library:
 
-*Git Submodules*:
+*Git Submodules:*
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
 cd vendor/carbon && git switch -d v0.7-alpha
 #+end_src
 
-*CMake FetchContent*:
+*CMake FetchContent:*
 #+begin_src cmake
 include(FetchContent)
 FetchContent_Declare(
@@ -102,7 +97,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(carbon)
 #+end_src
 
-*Pre-compiled Package*:
+*Pre-compiled Package:*
 #+begin_src sh
 wget https://github.com/sparky-game/carbon/releases/download/v0.7-alpha/carbon-0.7-linux-amd64.tgz
 tar -xvf carbon-0.7-linux-amd64.tgz
@@ -206,6 +201,28 @@ Nevertheless, it's a nice metric to have, and it's important that /Carbon/ suppo
 - The ~*.gcda~ count data files are generated when a program linked with ~-lgcov~ option (contained inside the ~--coverage~ flag) containing object files built with the ~-fprofile-arcs~ option (contained inside the ~--coverage~ flag) is executed. It contains arc transition counts, value profile counts and some summary information.
 
 They shouldn't be accessed manually, but with ~gcov~ itself, using one of its formatting options, e.g. ~--json-format~.
+
+* Licensing
+
+Copyright (C) Wasym A. Alonso. All Rights Reserved.
+
+/Carbon/ is free abd open-source sofware (FOSS) and available under 2 licenses, when using it choose whichever you prefer.
+
+*BSD 3-Clause "New" or "Revised" License (~COPYING.BSD~):*
+
+#+begin_quote
+/Carbon/ is free software: you can redistribute it and/or modify it under the terms of the BSD 3-Clause "New" or "Revised" License (~BSD-3-Clause~) as published by The Regents of the University of California. @@html:<br>@@
+/Carbon/ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause "New" or "Revised" License (~BSD-3-Clause~) for more details. @@html:<br>@@
+You should have received a copy of the BSD 3-Clause "New" or "Revised" License (~BSD-3-Clause~) along with /Carbon/. If not, see <https://opensource.org/license/BSD-3-Clause>.
+#+end_quote
+
+*GNU General Public License v3.0 only (~COPYING.GPL~):*
+
+#+begin_quote
+/Carbon/ is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3.0 only (~GPL-3.0-only~) as published by the Free Software Foundation (FSF). @@html:<br>@@
+/Carbon/ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License v3.0 only (~GPL-3.0-only~) for more details. @@html:<br>@@
+You should have received a copy of the GNU General Public License v3.0 only (~GPL-3.0-only~) along with /Carbon/. If not, see <https://www.gnu.org/licenses/gpl-3.0>.
+#+end_quote
 
 * References
 
