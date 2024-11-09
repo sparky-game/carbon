@@ -136,6 +136,7 @@
 #else
 #define CARBON_API extern
 #endif
+#define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
 
 /*
 **  $$===================$$
