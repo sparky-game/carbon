@@ -18,13 +18,31 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
     CARBON_ERROR("failed to allocate memory");
     memset(&nn, 0, sizeof(CBN_NeuralNet));
   }
-  nn.as[0] = carbon_math_row_create(arch[0]);
-  for (usz i = 1; i < arch_count; ++i) {
-    nn.ws[i - 1] = carbon_math_mat_create(nn.as[i - 1].cols, arch[i]);
-    nn.bs[i - 1] = carbon_math_row_create(arch[i]);
-    nn.as[i]     = carbon_math_row_create(arch[i]);
+  nn.as[0] = carbon_math_row_create(nn.arch[0]);
+  for (usz i = 1; i < nn.arch_count; ++i) {
+    nn.ws[i - 1] = carbon_math_mat_create(nn.as[i - 1].cols, nn.arch[i]);
+    nn.bs[i - 1] = carbon_math_row_create(nn.arch[i]);
+    nn.as[i]     = carbon_math_row_create(nn.arch[i]);
   }
   return nn;
+}
+
+void carbon_nn_destroy(CBN_NeuralNet *nn) {
+  if (!nn) {
+    CARBON_WARNING("`nn` is not a valid pointer, skipping destruction");
+    return;
+  }
+  carbon_math_row_destroy(&nn->as[0]);
+  for (usz i = 1; i < nn->arch_count; ++i) {
+    carbon_math_mat_destroy(&nn->ws[i - 1]);
+    carbon_math_row_destroy(&nn->bs[i - 1]);
+    carbon_math_row_destroy(&nn->as[i]);
+  }
+  CARBON_FREE(nn->ws);
+  CARBON_FREE(nn->bs);
+  CARBON_FREE(nn->as);
+  memset(nn, 0, sizeof(CBN_NeuralNet));
+  nn = 0;
 }
 
 void carbon_nn_fill(CBN_NeuralNet nn, f32 x) {

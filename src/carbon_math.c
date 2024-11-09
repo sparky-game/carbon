@@ -161,6 +161,16 @@ CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
   return m;
 }
 
+void carbon_math_mat_destroy(CBN_Matrix *m) {
+  if (!m) {
+    CARBON_WARNING("`m` is not a valid pointer, skipping destruction");
+    return;
+  }
+  CARBON_FREE(m->items);
+  memset(m, 0, sizeof(CBN_Matrix));
+  m = 0;
+}
+
 void carbon_math_mat_fill(CBN_Matrix m, f32 x) {
   for (usz i = 0; i < m.rows; ++i) {
     for (usz j = 0; j < m.cols; ++j) {
@@ -241,6 +251,16 @@ void carbon_math_mat_print(CBN_Matrix m, const char *name) {
 
 CBN_Row carbon_math_row_create(usz cols) {
   return carbon_math_mat_row(carbon_math_mat_create(1, cols), 0);
+}
+
+void carbon_math_row_destroy(CBN_Row *r) {
+  if (!r) {
+    CARBON_WARNING("`r` is not a valid pointer, skipping destruction");
+    return;
+  }
+  CARBON_FREE(r->items);
+  memset(r, 0, sizeof(CBN_Row));
+  r = 0;
 }
 
 CBN_Matrix carbon_math_row_to_mat(CBN_Row r) {

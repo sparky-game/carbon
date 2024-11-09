@@ -273,6 +273,7 @@ CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
+CARBON_API void carbon_math_mat_destroy(CBN_Matrix *m);
 CARBON_API void carbon_math_mat_fill(CBN_Matrix m, f32 x);
 CARBON_API void carbon_math_mat_rand(CBN_Matrix m, f32 min, f32 max);
 CARBON_API CBN_Row carbon_math_mat_row(CBN_Matrix m, usz row);
@@ -282,6 +283,7 @@ CARBON_API void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b);
 CARBON_API void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32));
 CARBON_API void carbon_math_mat_print(CBN_Matrix m, const char *name);
 CARBON_API CBN_Row carbon_math_row_create(usz cols);
+CARBON_API void carbon_math_row_destroy(CBN_Row *r);
 CARBON_API CBN_Matrix carbon_math_row_to_mat(CBN_Row r);
 CARBON_API CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);
 CARBON_API void carbon_math_row_fill(CBN_Row r, f32 x);
@@ -524,6 +526,7 @@ typedef struct {
 } CBN_NeuralNet;
 
 CARBON_API CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count);
+CARBON_API void carbon_nn_destroy(CBN_NeuralNet *nn);
 CARBON_API void carbon_nn_fill(CBN_NeuralNet nn, f32 x);
 CARBON_API void carbon_nn_zero(CBN_NeuralNet nn);
 CARBON_API void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
