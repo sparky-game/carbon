@@ -219,6 +219,14 @@ void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b) {
   }
 }
 
+void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32)) {
+  for (usz i = 0; i < m.rows; ++i) {
+    for (usz j = 0; j < m.cols; ++j) {
+      CARBON_MAT_AT(m, i, j) = f(CARBON_MAT_AT(m, i, j));
+    }
+  }
+}
+
 CBN_Row carbon_math_row_create(usz cols) {
   return carbon_math_mat_row(carbon_math_mat_create(1, cols), 0);
 }
