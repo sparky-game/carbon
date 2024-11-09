@@ -64,7 +64,7 @@ f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m) {
     CBN_Row y = carbon_math_row_slice(row, CARBON_NN_IN(nn).cols, CARBON_NN_OUT(nn).cols);
     carbon_math_row_copy(CARBON_NN_IN(nn), x);
     carbon_nn_forward(nn);
-    for (usz j = 0; j < y.cols; ++i) {
+    for (usz j = 0; j < y.cols; ++j) {
       f32 d = CARBON_ROW_AT(CARBON_NN_OUT(nn), j) - CARBON_ROW_AT(y, j);
       c += d * d;
     }
