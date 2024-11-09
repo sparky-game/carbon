@@ -224,6 +224,7 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
 #define CARBON_ROW_AT(i, j) (i).items[(j)]
+#define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
 
 typedef union {
   f32 items[2];
@@ -278,6 +279,7 @@ CARBON_API void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src);
 CARBON_API void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m);
 CARBON_API void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b);
 CARBON_API void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32));
+CARBON_API void carbon_math_mat_print(CBN_Matrix m, const char *name);
 CARBON_API CBN_Row carbon_math_row_create(usz cols);
 CARBON_API CBN_Matrix carbon_math_row_to_mat(CBN_Row r);
 CARBON_API CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);

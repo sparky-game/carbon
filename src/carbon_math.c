@@ -227,6 +227,18 @@ void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32)) {
   }
 }
 
+void carbon_math_mat_print(CBN_Matrix m, const char *name) {
+  CARBON_INFO("%s = [", name);
+  for (usz i = 0; i < m.rows; ++i) {
+    CARBON_INFO_RAW("  ");
+    for (usz j = 0; j < m.cols; ++j) {
+      CARBON_INFO_RAW("%f ", CARBON_MAT_AT(m, i, j));
+    }
+    CARBON_INFO();
+  }
+  CARBON_INFO("];");
+}
+
 CBN_Row carbon_math_row_create(usz cols) {
   return carbon_math_mat_row(carbon_math_mat_create(1, cols), 0);
 }
