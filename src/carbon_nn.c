@@ -21,7 +21,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
   return nn;
 }
 
-CARBON_API void carbon_nn_fill(CBN_NeuralNet nn, f32 x) {
+void carbon_nn_fill(CBN_NeuralNet nn, f32 x) {
   for (usz i = 0; i < nn.arch_count - 1; ++i) {
     carbon_math_mat_fill(nn.ws[i], x);
     carbon_math_row_fill(nn.bs[i], x);
@@ -30,11 +30,11 @@ CARBON_API void carbon_nn_fill(CBN_NeuralNet nn, f32 x) {
   carbon_math_row_fill(nn.as[nn.arch_count - 1], x);
 }
 
-CARBON_API void carbon_nn_zero(CBN_NeuralNet nn) {
+void carbon_nn_zero(CBN_NeuralNet nn) {
   carbon_nn_fill(nn, 0);
 }
 
-CARBON_API void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max) {
+void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max) {
   for (usz i = 0; i < nn.arch_count - 1; ++i) {
     carbon_math_mat_rand(nn.ws[i], min, max);
     carbon_math_row_rand(nn.bs[i], min, max);
