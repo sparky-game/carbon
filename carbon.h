@@ -225,6 +225,7 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
 #define CARBON_ROW_AT(i, j) (i).items[(j)]
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
+#define CARBON_ROW_PRINT(r) carbon_math_row_print(r, #r)
 
 typedef union {
   f32 items[2];
@@ -286,6 +287,7 @@ CARBON_API CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);
 CARBON_API void carbon_math_row_fill(CBN_Row r, f32 x);
 CARBON_API void carbon_math_row_rand(CBN_Row r, f32 min, f32 max);
 CARBON_API void carbon_math_row_copy(CBN_Row dst, CBN_Row src);
+CARBON_API void carbon_math_row_print(CBN_Row r, const char *name);
 
 #ifdef __cplusplus
 CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
@@ -511,6 +513,7 @@ CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 #define CARBON_NN_IN(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[0])
 #define CARBON_NN_OUT(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[(nn).arch_count - 1])
 #define CARBON_NN_SIGMOID_DX(x) ((x) * (1 - (x)))
+#define CARBON_NN_PRINT(nn) carbon_nn_print(nn, #nn)
 
 typedef struct {
   usz *arch;
@@ -529,6 +532,7 @@ CARBON_API void carbon_nn_forward(CBN_NeuralNet nn);
 CARBON_API f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m);
 CARBON_API CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m);
 CARBON_API void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr);
+CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
 
 /*
 **  $$=========================$$

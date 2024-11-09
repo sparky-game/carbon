@@ -271,3 +271,7 @@ void carbon_math_row_rand(CBN_Row r, f32 min, f32 max) {
 void carbon_math_row_copy(CBN_Row dst, CBN_Row src) {
   carbon_math_mat_copy(carbon_math_row_to_mat(dst), carbon_math_row_to_mat(src));
 }
+
+void carbon_math_row_print(CBN_Row r, const char *name) {
+  carbon_math_mat_print(carbon_math_row_to_mat(r), name);
+}
