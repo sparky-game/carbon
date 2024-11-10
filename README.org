@@ -84,7 +84,7 @@ We can get /Carbon/ in our preferred way of managing dependencies or external li
 *Git Submodules:*
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
-cd vendor/carbon && git switch -d v0.7-alpha
+cd vendor/carbon && git switch -d v0.8-alpha
 #+end_src
 
 *CMake FetchContent:*
@@ -93,7 +93,7 @@ include(FetchContent)
 FetchContent_Declare(
   carbon
   GIT_REPOSITORY "https://github.com/sparky-game/carbon"
-  GIT_TAG        v0.7-alpha
+  GIT_TAG        v0.8-alpha
   GIT_PROGRESS   TRUE
 )
 FetchContent_MakeAvailable(carbon)
@@ -101,8 +101,8 @@ FetchContent_MakeAvailable(carbon)
 
 *Pre-compiled Package:*
 #+begin_src sh
-wget https://github.com/sparky-game/carbon/releases/download/v0.7-alpha/carbon-0.7-linux-amd64.tgz
-tar -xvf carbon-0.7-linux-amd64.tgz
+wget https://github.com/sparky-game/carbon/releases/download/v0.8-alpha/carbon-0.8-linux-amd64.tgz
+tar -xvf carbon-0.8-linux-amd64.tgz
 #+end_src
 
 If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library.
