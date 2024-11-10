@@ -333,9 +333,9 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: ", msg, __func__, ##__VA_ARGS__)
 
 /*
-**  $$========================$$
-**  ||       Assertions       ||
-**  $$========================$$
+**  $$====================$$
+**  ||       Should       ||
+**  $$====================$$
 */
 #define CARBON_COMPARE(expr, msg, ...)                          \
   if ((expr)) {                                                 \
