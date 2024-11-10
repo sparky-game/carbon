@@ -79,9 +79,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
   }
   else if (rebuild_child_pid == 0) {
-    usz argv_size = test_suite.files.size + 7;
-    char *argv[argv_size];
-    memset(argv, 0, argv_size * sizeof(char *));
+    char *argv[128];
+    memset(argv, 0, 128 * sizeof(char *));
     argv[0] = (char *) CARBON_COMPILER;
     argv[1] = (char *) "-I";
     argv[2] = (char *) ".";
