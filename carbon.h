@@ -34,7 +34,7 @@
 #define CARBON_NAME "SPARKY Carbon"
 
 #define CARBON_VERSION_MAJOR 0
-#define CARBON_VERSION_MINOR 7
+#define CARBON_VERSION_MINOR 8
 // TODO: handle patch version number as well
 // #define CARBON_VERSION_PATCH
 #define CARBON_VERSION_EXTRA "alpha"
