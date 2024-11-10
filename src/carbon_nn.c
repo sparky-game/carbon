@@ -147,6 +147,14 @@ void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr) {
   }
 }
 
+void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr) {
+  for (usz i = 0; i < iters; ++i) {
+    CBN_NeuralNet g = carbon_nn_backprop(nn, train);
+    carbon_nn_learn(nn, g, lr);
+    carbon_nn_destroy(&g);
+  }
+}
+
 void carbon_nn_print(CBN_NeuralNet nn, const char *name) {
   CARBON_INFO("%s = [", name);
   for (usz i = 0; i < nn.arch_count - 1; ++i) {

@@ -538,6 +538,7 @@ CARBON_API void carbon_nn_forward(CBN_NeuralNet nn);
 CARBON_API f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m);
 CARBON_API CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m);
 CARBON_API void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr);
+CARBON_API void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr);
 CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
 
 /*
