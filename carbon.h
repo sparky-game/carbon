@@ -222,8 +222,10 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_STEP(edge, x) (x < edge ? 0 : 1)
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) (a + (b - a) * t)
+// TODO: somehow perform bounds checking `CARBON_ASSERT(0 <= (i) && (i) < (m).rows && 0 <= (j) && (j) < (m).cols && "Matrix index out of bounds")`
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
-#define CARBON_ROW_AT(i, j) (i).items[(j)]
+// TODO: somehow perform bounds checking `CARBON_ASSERT(0 <= (i) && (i) < (r).cols && "Row index out of bounds")`
+#define CARBON_ROW_AT(r, i) (r).items[(i)]
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
 #define CARBON_ROW_PRINT(r) carbon_math_row_print(r, #r)
 
@@ -259,6 +261,7 @@ CARBON_API void carbon_math_srand(u64 seed);
 CARBON_API int carbon_math_rand(void);
 CARBON_API f32 carbon_math_randf(void);
 CARBON_API f32 carbon_math_abs(f32 x);
+CARBON_API f32 carbon_math_round(f32 x);
 CARBON_API f32 carbon_math_sqrt(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
 CARBON_API f32 carbon_math_sigmoid(f32 x);

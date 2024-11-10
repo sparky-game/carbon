@@ -31,6 +31,10 @@ f32 carbon_math_abs(f32 x) {
   return u.f;
 }
 
+f32 carbon_math_round(f32 x) {
+  return x >= 0 ? (i32) (x + 0.5) : (i32) (x - 0.5);
+}
+
 f32 carbon_math_sqrt(f32 x) {
   f32 s = x;
   for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
