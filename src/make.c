@@ -109,7 +109,7 @@ static void package(void) {
   }
   cp_dash_r("COPYING.BSD COPYING.GPL carbon.h", WORKDIR);
   cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
-  CARBON_INFO("  GZIP   " WORKDIR ".tgz");
+  CARBON_INFO("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
 }
