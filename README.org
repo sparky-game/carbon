@@ -108,7 +108,7 @@ tar -xvf carbon-0.8-linux-amd64.tgz
 If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library.
 
 #+begin_src sh
-cc -std=gnu99 -Wall -Wextra -pipe -Os src/make.c -static -s -o make
+cc -std=c99 -Wall -Wextra -pipe -Os src/make.c -static -s -o make
 #+end_src
 
 Once built, we can take a look at the available subcommands:
@@ -173,7 +173,7 @@ int main(void) {
 If we define the macro ~CARBON_IMPLEMENTATION~, it makes the library operate in a *header-only* structure: all the internal source code of /Carbon/ is included in that translation unit, i.e. no need to compile and link it separately. Alternatively, one can link with the library's internal source code either compiling it ourselves, or using a pre-compiled package of the [[https://github.com/sparky-game/carbon/releases/latest][latest release available]].
 
 #+begin_src sh
-cc -I vendor/carbon -std=gnu99 *.c -o carbon
+cc -I vendor/carbon -std=c99 -Wall -Wextra -pipe -Os *.c -o carbon
 #+end_src
 
 Once built, we can take a look at the available options:

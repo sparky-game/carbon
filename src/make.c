@@ -49,7 +49,7 @@ static void build_src_files(void) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], "src/");
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
@@ -68,7 +68,7 @@ static void run_tests(void) {
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=gnu99 -Wall -Wextra -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
