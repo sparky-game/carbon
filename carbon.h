@@ -144,6 +144,7 @@
 **  $$===================$$
 */
 typedef size_t usz;
+typedef ssize_t isz;
 typedef uintptr_t uptr;
 typedef unsigned char u8;
 CARBON_STATIC_ASSERT(sizeof(u8) == 1, "Expected u8 to be 1 byte");
