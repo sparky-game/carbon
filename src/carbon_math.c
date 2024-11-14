@@ -7,8 +7,6 @@
 
 // TODO: replace with own implementation
 CARBON_API f32 expf(f32);
-CARBON_API f32 sinf(f32);
-CARBON_API f32 cosf(f32);
 
 static u64 cbn_math_rand_seed;
 
@@ -97,6 +95,29 @@ f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
   return x * x * (3 - 2 * x);
 }
 
+i8 carbon_math_cmp(f32 x, f32 y) {
+  f32 eps = 1e-6;
+  if ((x - eps) < y)      return -1;
+  else if ((x + eps) > y) return  1;
+  else return 0;
+}
+
+f32 carbon_math_sin(f32 x) {
+  return carbon_math_cos(x - CARBON_PI_2);
+}
+
+f32 carbon_math_cos(f32 x) {
+  if (x < 0) x = -x;
+  if (0 <= carbon_math_cmp(x, CARBON_2PI)) {
+    do { x -= CARBON_2PI; } while (0 <= carbon_math_cmp(x, CARBON_2PI));
+  }
+  if ((0 <= carbon_math_cmp(x, CARBON_PI)) && (-1 == carbon_math_cmp(x, CARBON_2PI))) {
+    x -= CARBON_PI;
+    return ((-1)*(1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))))));
+  }
+  return 1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))));
+}
+
 CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
   return (CBN_Vec2) {
     .x = u.x + v.x,
@@ -145,7 +166,7 @@ CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v) {
 
 CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
   f32 rads = angle * (CARBON_PI / 180);
-  f32 c = cosf(rads), s = sinf(rads);
+  f32 c = carbon_math_cos(rads), s = carbon_math_sin(rads);
   return (CBN_Vec2) {
     .x = (v.x * c) - (v.y * s),
     .y = (v.x * s) + (v.y * c)
