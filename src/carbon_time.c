@@ -45,7 +45,6 @@ void carbon_time_sleep(u64 ms) {
   ts.tv_nsec = (ms % (u64) 1e3) * 1e6;
   nanosleep(&ts, 0);
 #else
-#warning The compiled implementation of `carbon_time_sleep` uses only second-level resolution. To get a high precision implementation, change to a different C standard
   sleep(ms / 1e3);
 #endif
 }
