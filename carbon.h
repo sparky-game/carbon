@@ -455,7 +455,7 @@ CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 **  ||       List       ||
 **  $$==================$$
 */
-#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i) && (i) < (l).size && "List index out of bounds"), ((T *) (l).items)[(i)])
+#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), ((T *) (l).items)[(i)])
 
 typedef struct {
   void *items;
