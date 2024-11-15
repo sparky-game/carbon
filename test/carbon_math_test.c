@@ -175,3 +175,12 @@ CARBON_TEST(carbon_math, vec3_cross) {
   carbon_should_be_f(39, r.z);
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_math, rect_contains_point) {
+  CBN_Rect r = {0, 0, 10, 5};
+  CBN_Vec2 p1 = {{8, 3}};
+  CBN_Vec2 p2 = {{3, 8}};
+  carbon_should_be_true(carbon_math_rect_contains_point(r, p1));
+  carbon_should_be_false(carbon_math_rect_contains_point(r, p2));
+  return CARBON_OK;
+}
