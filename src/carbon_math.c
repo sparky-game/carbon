@@ -5,9 +5,6 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-// TODO: replace with own implementation
-CARBON_API f32 expf(f32);
-
 static u64 carbon_math__rand_seed;
 
 void carbon_math_srand(u64 seed) {
@@ -33,6 +30,50 @@ f32 carbon_math_round(f32 x) {
   return x >= 0 ? (i32) (x + 0.5) : (i32) (x - 0.5);
 }
 
+f32 carbon_math_floor(f32 x) {
+  union { f32 f; u32 i; } u = {x};
+  i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
+  u32 m;
+  if (e >= 23) return x;
+  if (e >= 0) {
+    m = 0x007fffff >> e;
+    if (0 == (u.i & m)) return x;
+    volatile f32 __tmp = x + 0x1p120f;
+    CARBON_NOTUSED(__tmp);
+    if (u.i >> 31) u.i += m;
+    u.i &= ~m;
+  }
+  else {
+    volatile f32 __tmp = x + 0x1p120f;
+    CARBON_NOTUSED(__tmp);
+    if (0 == u.i >> 31) u.i = 0;
+    else if (u.i << 1) u.f = -1;
+  }
+  return u.f;
+}
+
+f32 carbon_math_ceil(f32 x) {
+  union { f32 f; u32 i; } u = {x};
+  i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
+  u32 m;
+  if (e >= 23) return x;
+  if (e >= 0) {
+    m = 0x007fffff >> e;
+    if (0 == (u.i & m)) return x;
+    volatile f32 __tmp = x + 0x1p120f;
+    CARBON_NOTUSED(__tmp);
+    if (0 == u.i >> 31) u.i += m;
+    u.i &= ~m;
+  }
+  else {
+    volatile f32 __tmp = x + 0x1p120f;
+    CARBON_NOTUSED(__tmp);
+    if (u.i >> 31) u.f = -0;
+    else if (u.i << 1) u.f = 1;
+  }
+  return u.f;
+}
+
 f32 carbon_math_sqrt(f32 x) {
   f32 s = x;
   for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
@@ -41,48 +82,46 @@ f32 carbon_math_sqrt(f32 x) {
   return s;
 }
 
+f32 carbon_math_exp2(f32 x) {
+  __attribute__((aligned(16))) static const f32 p[] = {
+    1.535336188319500e-4,
+    1.339887440266574e-3,
+    9.618437357674640e-3,
+    5.550332471162809e-2,
+    2.402264791363012e-1,
+    6.931472028550421e-1,
+    1
+  };
+  f32 ipart, fpart;
+  union { f32 f; u32 u; i32 i; } epart;
+  ipart = carbon_math_floor(x + 0.5);
+  fpart = x - ipart;
+  epart.i = (((i32) ipart) + 127) << 23;
+  x =             p[0];
+  x = x * fpart + p[1];
+  x = x * fpart + p[2];
+  x = x * fpart + p[3];
+  x = x * fpart + p[4];
+  x = x * fpart + p[5];
+  x = x * fpart + p[6];
+  return epart.f * x;
+}
+
 f32 carbon_math_exp(f32 x) {
-  // e^x = 1 / e^(-x)
-  u8 negative = x < 0;
-  if (negative) x = -x;
-  // e^x = (e^(x/2))^2
-  while (x > 1) {
-    x /= 2;
-    negative = false;
-  }
-  // Precomputed values
-  f32 result = 1;
-  if (x >= 0.5f) {
-    result *= CARBON_E_0_5;
-    x -= 0.5f;
-  }
-  if (x >= 0.25f) {
-    result *= CARBON_E_0_25;
-    x -= 0.25f;
-  }
-  if (x >= 0.125f) {
-    result *= CARBON_E_0_125;
-    x -= 0.125f;
-  }
-  // Taylor series
-  f32 sum = 1;
-  f32 term = 1;
-  for (usz i = 0; i <= 10; ++i) {
-    term *= x / i;
-    sum += term;
-    if (term < 1e-7) break;
-  }
-  result *= sum;
-  return negative ? 1 / result : result;
+  return carbon_math_exp2(CARBON_LOG2_E * x);
+}
+
+f32 carbon_math_exp10(f32 x) {
+  return carbon_math_exp2(CARBON_LOG2_10 * x);
 }
 
 f32 carbon_math_sigmoid(f32 x) {
-  return 1 / (1 + /*carbon_math_exp*/expf(-x));
+  return 1 / (1 + carbon_math_exp(-x));
 }
 
 f32 carbon_math_tanh(f32 x) {
-  f32 ex = /*carbon_math_exp*/expf(x);
-  f32 enx = /*carbon_math_exp*/expf(-x);
+  f32 ex = carbon_math_exp(x);
+  f32 enx = carbon_math_exp(-x);
   return (ex - enx) / (ex + enx);
 }
 

@@ -213,6 +213,8 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_1_SQRT2 (1 / CARBON_SQRT2)
 #define CARBON_SQRT3 1.73205080756887729352
 #define CARBON_1_SQRT3 (1 / CARBON_SQRT3)
+#define CARBON_LOG2_E (1.4426950408889634074)
+#define CARBON_LOG2_10 (3.32192809488736234789)
 #define CARBON_I32_MAX 0x7fffffff
 #define CARBON_RAND_MAX CARBON_I32_MAX
 #define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
@@ -263,8 +265,12 @@ CARBON_API int carbon_math_rand(void);
 CARBON_API f32 carbon_math_randf(void);
 CARBON_API f32 carbon_math_abs(f32 x);
 CARBON_API f32 carbon_math_round(f32 x);
+CARBON_API f32 carbon_math_floor(f32 x);
+CARBON_API f32 carbon_math_ceil(f32 x);
 CARBON_API f32 carbon_math_sqrt(f32 x);
+CARBON_API f32 carbon_math_exp2(f32 x);
 CARBON_API f32 carbon_math_exp(f32 x);
+CARBON_API f32 carbon_math_exp10(f32 x);
 CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
