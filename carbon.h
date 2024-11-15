@@ -546,6 +546,14 @@ CARBON_API void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32
 CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
 
 /*
+**  $$=======================$$
+**  ||       Windowing       ||
+**  $$=======================$$
+*/
+CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
+CARBON_API void carbon_win_close(void);
+
+/*
 **  $$=========================$$
 **  ||       TestManager       ||
 **  $$=========================$$
@@ -625,6 +633,9 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_string.c"
 #include "src/carbon_strlist.c"
 #include "src/carbon_nn.c"
+#ifdef CARBON_USE_WINDOWING
+#include "src/carbon_win_xlib.c"
+#endif  // CARBON_USE_WINDOWING
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
 #endif  // CARBON_IMPLEMENTATION
