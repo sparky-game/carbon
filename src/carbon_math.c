@@ -24,33 +24,21 @@ f32 carbon_math_randf(void) {
 }
 
 f32 carbon_math_abs(f32 x) {
-#if __has_builtin(__builtin_fabsf)
-  return __builtin_fabsf(x);
-#else
   union { f32 f; u32 i; } u = {x};
   u.i &= CARBON_I32_MAX;
   return u.f;
-#endif
 }
 
 f32 carbon_math_round(f32 x) {
-#if __has_builtin(__builtin_roundf)
-  return __builtin_roundf(x);
-#else
   return x >= 0 ? (i32) (x + 0.5) : (i32) (x - 0.5);
-#endif
 }
 
 f32 carbon_math_sqrt(f32 x) {
-#if __has_builtin(__builtin_sqrtf)
-  return __builtin_sqrtf(x);
-#else
   f32 s = x;
   for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
     s -= (s*s - x) / (2*s);
   }
   return s;
-#endif
 }
 
 f32 carbon_math_exp(f32 x) {
@@ -93,13 +81,9 @@ f32 carbon_math_sigmoid(f32 x) {
 }
 
 f32 carbon_math_tanh(f32 x) {
-#if __has_builtin(__builtin_tanhf)
-  return __builtin_tanhf(x);
-#else
   f32 ex = /*carbon_math_exp*/expf(x);
   f32 enx = /*carbon_math_exp*/expf(-x);
   return (ex - enx) / (ex + enx);
-#endif
 }
 
 f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
@@ -116,17 +100,10 @@ i8 carbon_math_cmp(f32 x, f32 y) {
 }
 
 f32 carbon_math_sin(f32 x) {
-#if __has_builtin(__builtin_sinf)
-  return __builtin_sinf(x);
-#else
   return carbon_math_cos(x - CARBON_PI_2);
-#endif
 }
 
 f32 carbon_math_cos(f32 x) {
-#if __has_builtin(__builtin_cosf)
-  return __builtin_cosf(x);
-#else
   if (x < 0) x = -x;
   if (0 <= carbon_math_cmp(x, CARBON_2PI)) {
     do { x -= CARBON_2PI; } while (0 <= carbon_math_cmp(x, CARBON_2PI));
@@ -136,7 +113,6 @@ f32 carbon_math_cos(f32 x) {
     return ((-1)*(1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))))));
   }
   return 1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))));
-#endif
 }
 
 CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
