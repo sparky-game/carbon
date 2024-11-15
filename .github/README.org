@@ -3,7 +3,7 @@
 # Logo & Title
 #+begin_html
 <h1 align="center">
-<img src="assets/logo.png" alt="Carbon Logo">
+<img src="../assets/logo.png" alt="Carbon Logo">
 <br/>
 Carbon
 </h1>
@@ -60,9 +60,9 @@ You can't unit test C, right?
 
 #+begin_html
 <p align="center">
-<img src="assets/run-tests-demo.gif" alt="Demo Carbon running tests" width=600>
+<img src="../assets/run-tests-demo.gif" alt="Demo Carbon running tests" width=600>
 <br/>
-<i>The above example was generated with <a href="https://github.com/charmbracelet/vhs">VHS</a> (<a href="./assets/run-tests-demo.exs">source code</a>).</i>
+<i>The above example was generated with <a href="https://github.com/charmbracelet/vhs">VHS</a> (<a href="../assets/run-tests-demo.exs">source code</a>).</i>
 </p>
 #+end_html
 
