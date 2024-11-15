@@ -162,7 +162,7 @@ char *carbon_fs_get_bin_directory(void) {
     dir[1] = '\\';
   }
 #elif defined(__linux__)
-  CARBON_API isz readlink(const char *, char *, usz);
+  extern isz readlink(const char *, char *, usz);
   usz len = readlink("/proc/self/exe", dir, sizeof(dir));
   if (len > 0) {
     for (usz i = len;; --i) {
