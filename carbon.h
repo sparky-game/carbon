@@ -31,50 +31,27 @@
 
 #pragma once
 
-#define CARBON_NAME "SPARKY Carbon"
-
 #define CARBON_VERSION_MAJOR 0
 #define CARBON_VERSION_MINOR 8
 // TODO: handle patch version number as well
 // #define CARBON_VERSION_PATCH
 #define CARBON_VERSION_EXTRA "alpha"
 
-#define CARBON_VERSION                                  \
-  "v" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
-  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
-  "-" CARBON_VERSION_EXTRA
-
-#if defined(__amd64__) || defined(_M_AMD64)
-#define CARBON_CPU_ARCH "amd64"
-#endif
-
-#if defined(__linux__)
-#define CARBON_TARGET_OS "linux"
-#elif defined(_WIN32)
-#define CARBON_TARGET_OS "windows"
-#endif
-
-#ifdef __cplusplus
-#if defined(__clang__)
-#define CARBON_COMPILER "clang++"
-#elif defined(__GNUC__)
-#define CARBON_COMPILER "g++"
-#elif defined(_WIN32) && defined(_MSC_VER)
-#define CARBON_COMPILER "cl.exe"
-#else
-#define CARBON_COMPILER "c++"
-#endif
-#else
-#if defined(__clang__)
-#define CARBON_COMPILER "clang"
-#elif defined(__GNUC__)
-#define CARBON_COMPILER "gcc"
-#elif defined(_WIN32) && defined(_MSC_VER)
-#define CARBON_COMPILER "cl.exe"
-#else
-#define CARBON_COMPILER "cc"
-#endif
-#endif  // __cplusplus
+/*
+ *  Available compile-time options:
+ *    - CARBON_IMPLEMENTATION -> Include function definitions in the translation unit
+ *                               that this macro has been defined. It's important that
+ *                               this macro is ONLY defined ONCE in the entire codebase
+ *                               of your program, to avoid multiple symbol definitions
+ *                               linker errors.
+ *    - CARBON_NO_TESTING -----> By default, Carbon behaves as a test suite entrypoint.
+ *                               If wanted to not redefine the `main` function, and
+ *                               just act as a standard program (using Carbon as a
+ *                               libc extension or add-on), define this macro EACH time
+ *                               you include this header file.
+ *    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
+ *                               and make GUI applications [WIP].
+ */
 
 /*
 **  $$======================$$
@@ -126,17 +103,58 @@
 #define CARBON_EXPAND_AND_QUOTE(x) CARBON_QUOTE(x)
 #define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
 #define CARBON_NOTUSED(x) (void)(x)
-#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
-#define CARBON_STATIC_ASSERT _Static_assert
-#else
-#define CARBON_STATIC_ASSERT static_assert
-#endif
+#define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
+
 #ifdef __cplusplus
 #define CARBON_API extern "C"
 #else
 #define CARBON_API extern
 #endif
-#define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
+
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
+#define CARBON_STATIC_ASSERT _Static_assert
+#else
+#define CARBON_STATIC_ASSERT static_assert
+#endif
+
+#define CARBON_NAME "SPARKY Carbon"
+
+#define CARBON_VERSION                                  \
+  "v" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
+  "-" CARBON_VERSION_EXTRA
+
+#if defined(__amd64__) || defined(_M_AMD64)
+#define CARBON_CPU_ARCH "amd64"
+#endif
+
+#if defined(__linux__)
+#define CARBON_TARGET_OS "linux"
+#elif defined(_WIN32)
+#define CARBON_TARGET_OS "windows"
+#endif
+
+#ifdef __cplusplus
+#if defined(__clang__)
+#define CARBON_COMPILER "clang++"
+#elif defined(__GNUC__)
+#define CARBON_COMPILER "g++"
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_COMPILER "cl.exe"
+#else
+#define CARBON_COMPILER "c++"
+#endif
+#else
+#if defined(__clang__)
+#define CARBON_COMPILER "clang"
+#elif defined(__GNUC__)
+#define CARBON_COMPILER "gcc"
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_COMPILER "cl.exe"
+#else
+#define CARBON_COMPILER "cc"
+#endif
+#endif
 
 /*
 **  $$===================$$
