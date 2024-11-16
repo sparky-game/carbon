@@ -111,6 +111,17 @@
 #define CARBON_API extern
 #endif
 
+#if defined(__GNUC__) || defined(__clang__)
+#define CARBON_INLINE __attribute__((always_inline)) static inline
+#define CARBON_NOINLINE __attribute__((noinline))
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_INLINE __forceinline
+#define CARBON_NOINLINE __declspec(noinline)
+#else
+#define CARBON_INLINE static inline
+#define CARBON_NOINLINE
+#endif
+
 #if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #define CARBON_STATIC_ASSERT _Static_assert
 #else
