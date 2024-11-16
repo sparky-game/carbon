@@ -8,6 +8,11 @@
 static CBN_Suite test_suite;
 static CBN_CmdArgs cmd_args;
 
+CARBON_INLINE void carbon_test_manager__cleanup_and_exit(void) {
+  carbon_test_manager_cleanup(&test_suite);
+  exit(1);
+}
+
 void carbon_test_manager_argparse(i32 argc, char **argv) {
   static const char * const help_msg = "usage: %s [OPTION]\n"
     "Options:\n"
@@ -55,28 +60,28 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     carbon_strlist_push(&test_suite.files, test_suite.tests[i].filename);
   }
   // 0. Check if needs rebuild (compare timestamps of binary vs source)
-  u8 needs_rebuild = 0;
+  u8 needs_rebuild = false;
   i32 bin_timestamp = carbon_fs_mtime(bin_file);
-  if (!bin_timestamp) goto defer;
+  if (!bin_timestamp) carbon_test_manager__cleanup_and_exit();
   for (usz i = 0; i < test_suite.files.size; ++i) {
     i32 src_timestamp = carbon_fs_mtime(test_suite.files.items[i]);
-    if (!src_timestamp) goto defer;
+    if (!src_timestamp) carbon_test_manager__cleanup_and_exit();
     // NOTE: if even a single source file is fresher than binary file, then it needs rebuild
     if (src_timestamp > bin_timestamp) {
-      ++needs_rebuild;
+      needs_rebuild = true;
       break;
     }
   }
   if (!needs_rebuild) return;
   // 1. Rename `./carbon` -> `./carbon.old`
-  char *bin_file_old; bin_file_old = carbon_string_fmt("%s.old", bin_file);
-  if (!carbon_fs_rename(bin_file, bin_file_old)) goto defer;
+  char *bin_file_old = carbon_string_fmt("%s.old", bin_file);
+  if (!carbon_fs_rename(bin_file, bin_file_old)) carbon_test_manager__cleanup_and_exit();
   // 2. Rebuild binary using `test_suite.files` as args
-  i32 rebuild_status_code; rebuild_status_code = 0;
-  pid_t rebuild_child_pid; rebuild_child_pid = fork();
+  i32 rebuild_status_code = 0;
+  pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
     CARBON_ERROR("unable to fork child process");
-    if (!carbon_fs_rename(bin_file_old, bin_file)) goto defer;
+    if (!carbon_fs_rename(bin_file_old, bin_file)) carbon_test_manager__cleanup_and_exit();
   }
   else if (rebuild_child_pid == 0) {
     char *argv[128];
@@ -93,7 +98,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
       carbon_fs_rename(bin_file_old, bin_file);
-      goto defer;
+      carbon_test_manager__cleanup_and_exit();
     }
   }
   // 3. Wait for rebuilding (child process) ends correctly
@@ -101,7 +106,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (rebuild_status_code != 0) {
     CARBON_ERROR("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file);
-    goto defer;
+    carbon_test_manager__cleanup_and_exit();
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   CARBON_INFO("=======================================");
@@ -116,11 +121,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (-1 == execvp(argv[0], argv)) {
     CARBON_ERROR("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file);
-    goto defer;
+    carbon_test_manager__cleanup_and_exit();
   }
- defer:
-  carbon_test_manager_cleanup(&test_suite);
-  exit(1);
 }
 
 CBN_Suite carbon_test_manager_spawn(void) {
