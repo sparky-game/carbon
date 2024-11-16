@@ -38,20 +38,20 @@
 #define CARBON_VERSION_EXTRA "alpha"
 
 /*
- *  Available compile-time options:
- *    - CARBON_IMPLEMENTATION -> Include function definitions in the translation unit
- *                               that this macro has been defined. It's important that
- *                               this macro is ONLY defined ONCE in the entire codebase
- *                               of your program, to avoid multiple symbol definitions
- *                               linker errors.
- *    - CARBON_NO_TESTING -----> By default, Carbon behaves as a test suite entrypoint.
- *                               If wanted to not redefine the `main` function, and
- *                               just act as a standard program (using Carbon as a
- *                               libc extension or add-on), define this macro EACH time
- *                               you include this header file.
- *    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
- *                               and make GUI applications [WIP].
- */
+**  Available compile-time options:
+**    - CARBON_IMPLEMENTATION -> Include function definitions in the translation unit
+**                               that this macro has been defined. It's important that
+**                               this macro is ONLY defined ONCE in the entire codebase
+**                               of your program, to avoid multiple symbol definitions
+**                               linker errors.
+**    - CARBON_NO_TESTING -----> By default, Carbon behaves as a test suite entrypoint.
+**                               If wanted to not redefine the `main` function, and
+**                               just act as a standard program (using Carbon as a
+**                               libc extension or add-on), define this macro EACH time
+**                               you include this header file.
+**    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
+**                               and make GUI applications [WIP].
+*/
 
 /*
 **  $$======================$$
