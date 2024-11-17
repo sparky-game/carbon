@@ -579,6 +579,8 @@ CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
 **  ||       StrList       ||
 **  $$=====================$$
 */
+#define carbon_strlist_at(sl, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
+
 typedef struct {
   char **items;
   usz size;
