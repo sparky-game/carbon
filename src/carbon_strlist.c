@@ -26,6 +26,18 @@ CBN_StrList carbon_strlist_create(u8 unique) {
   return sl;
 }
 
+CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, char c) {
+  CBN_StrList sl = carbon_strlist_create(false);
+  char *s_copy = carbon_string_dup(s);
+  char *sub = strtok(s_copy, &c);
+  while (sub) {
+    carbon_strlist_push(&sl, sub);
+    sub = strtok(0, &c);
+  }
+  CARBON_FREE(s_copy);
+  return sl;
+}
+
 void carbon_strlist_destroy(CBN_StrList *sl) {
   if (!sl) {
     CARBON_WARNING("`sl` is not a valid pointer, skipping destruction");
