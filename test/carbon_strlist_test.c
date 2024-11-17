@@ -48,9 +48,10 @@ CARBON_TEST(carbon_strlist, push_pop_multiple) {
 CARBON_TEST(carbon_strlist, split_cstr) {
   const char *s = "apple,banana,orange";
   CBN_StrList s_splitted = carbon_strlist_from_splitted_cstr(s, ',');
-  for (usz i = 0; i < s_splitted.size; ++i) {
-    CARBON_INFO("Sub-string %zu -> %s", i + 1, s_splitted.items[i]);
-  }
+  carbon_should_be(3, s_splitted.size);
+  carbon_should_be_s("apple", carbon_strlist_at(s_splitted, 0));
+  carbon_should_be_s("banana", carbon_strlist_at(s_splitted, 1));
+  carbon_should_be_s("orange", carbon_strlist_at(s_splitted, 2));
   carbon_strlist_destroy(&s_splitted);
   return CARBON_OK;
 }
