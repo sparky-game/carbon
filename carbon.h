@@ -69,6 +69,7 @@
 **  $$==========================$$
 */
 #include <time.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -538,6 +539,42 @@ CARBON_API char *carbon_string_fmt(const char *s, ...);
 CARBON_API void carbon_string_strip_substr(char *s, const char *sub);
 
 /*
+**  $$========================$$
+**  ||       StrBuilder       ||
+**  $$========================$$
+*/
+typedef struct {
+  char *items;
+  usz size;
+  usz capacity;
+} CBN_StrBuilder;
+
+CARBON_API void carbon_strbuilder_add_buf(CBN_StrBuilder *sb, const char *data, usz size);
+CARBON_API void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s);
+CARBON_API void carbon_strbuilder_add_null(CBN_StrBuilder *sb);
+CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
+
+/*
+**  $$=====================$$
+**  ||       StrView       ||
+**  $$=====================$$
+*/
+typedef struct {
+  const char *data;
+  usz size;
+} CBN_StrView;
+
+CARBON_API CBN_StrView carbon_strview_from_buf(const char *data, usz size);
+CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
+CARBON_API char *carbon_strview_to_cstr(CBN_StrView sv);
+CARBON_API CBN_StrView carbon_strview_from_strbuilder(CBN_StrBuilder *sb);
+CARBON_API CBN_StrView carbon_strview_trim_left(CBN_StrView sv);
+CARBON_API CBN_StrView carbon_strview_trim_right(CBN_StrView sv);
+CARBON_API CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
+CARBON_API CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
+CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
+
+/*
 **  $$=====================$$
 **  ||       StrList       ||
 **  $$=====================$$
@@ -672,6 +709,8 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_list.c"
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
+#include "src/carbon_strbuilder.c"
+#include "src/carbon_strview.c"
 #include "src/carbon_strlist.c"
 #include "src/carbon_nn.c"
 #ifdef CARBON_USE_WINDOWING
