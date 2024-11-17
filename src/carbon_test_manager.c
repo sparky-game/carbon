@@ -5,11 +5,11 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-static CBN_Suite test_suite;
-static CBN_CmdArgs cmd_args;
+static CBN_Suite carbon_test_manager__test_suite;
+static CBN_CmdArgs carbon_test_manager__cmd_args;
 
 CARBON_INLINE void carbon_test_manager__cleanup_and_exit(void) {
-  carbon_test_manager_cleanup(&test_suite);
+  carbon_test_manager_cleanup(&carbon_test_manager__test_suite);
   exit(1);
 }
 
@@ -33,11 +33,11 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
     "Written by Wasym A. Alonso\n";
   if (argc == 1) return;
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-n") || !carbon_string_cmp(argv[1], "--no-output"))) {
-    cmd_args.no_output = true;
+    carbon_test_manager__cmd_args.no_output = true;
     return;
   }
   if (argc == 3 && (!carbon_string_cmp(argv[1], "-o") || !carbon_string_cmp(argv[1], "--output"))) {
-    cmd_args.output = argv[2];
+    carbon_test_manager__cmd_args.output = argv[2];
     return;
   }
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-h") || !carbon_string_cmp(argv[1], "--help"))) {
@@ -54,17 +54,17 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
 
 void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   if (strstr(bin_file, ".old")) return;
-  test_suite.files = carbon_strlist_create(true);
-  carbon_strlist_push(&test_suite.files, src_file);
-  for (usz i = 0; i < test_suite.n; ++i) {
-    carbon_strlist_push(&test_suite.files, test_suite.tests[i].filename);
+  carbon_test_manager__test_suite.files = carbon_strlist_create(true);
+  carbon_strlist_push(&carbon_test_manager__test_suite.files, src_file);
+  for (usz i = 0; i < carbon_test_manager__test_suite.n; ++i) {
+    carbon_strlist_push(&carbon_test_manager__test_suite.files, carbon_test_manager__test_suite.tests[i].filename);
   }
   // 0. Check if needs rebuild (compare timestamps of binary vs source)
   u8 needs_rebuild = false;
   i32 bin_timestamp = carbon_fs_mtime(bin_file);
   if (!bin_timestamp) carbon_test_manager__cleanup_and_exit();
-  for (usz i = 0; i < test_suite.files.size; ++i) {
-    i32 src_timestamp = carbon_fs_mtime(test_suite.files.items[i]);
+  for (usz i = 0; i < carbon_test_manager__test_suite.files.size; ++i) {
+    i32 src_timestamp = carbon_fs_mtime(carbon_test_manager__test_suite.files.items[i]);
     if (!src_timestamp) carbon_test_manager__cleanup_and_exit();
     // NOTE: if even a single source file is fresher than binary file, then it needs rebuild
     if (src_timestamp > bin_timestamp) {
@@ -76,7 +76,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   // 1. Rename `./carbon` -> `./carbon.old`
   char *bin_file_old = carbon_string_fmt("%s.old", bin_file);
   if (!carbon_fs_rename(bin_file, bin_file_old)) carbon_test_manager__cleanup_and_exit();
-  // 2. Rebuild binary using `test_suite.files` as args
+  // 2. Rebuild binary using `carbon_test_manager__test_suite.files` as args
   i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
@@ -92,8 +92,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     argv[3] = (char *) "-fsanitize=address,undefined";
     argv[4] = (char *) "-o";
     argv[5] = (char *) bin_file;
-    for (usz i = 0; i < test_suite.files.size; ++i) {
-      argv[i + 6] = test_suite.files.items[i];
+    for (usz i = 0; i < carbon_test_manager__test_suite.files.size; ++i) {
+      argv[i + 6] = carbon_test_manager__test_suite.files.items[i];
     }
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
@@ -114,9 +114,9 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   char *argv[4];
   memset(argv, 0, 4 * sizeof(char *));
   argv[0] = (char *) bin_file;
-  if (cmd_args.output) {
+  if (carbon_test_manager__cmd_args.output) {
     argv[1] = (char *) "-o";
-    argv[2] = cmd_args.output;
+    argv[2] = carbon_test_manager__cmd_args.output;
   }
   if (-1 == execvp(argv[0], argv)) {
     CARBON_ERROR("unable to execvp rebuilt binary");
@@ -165,7 +165,7 @@ void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, const 
 }
 
 void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, const char *filename) {
-  carbon_test_manager_register_s(&test_suite, test_func, name, filename);
+  carbon_test_manager_register_s(&carbon_test_manager__test_suite, test_func, name, filename);
 }
 
 void carbon_test_manager_cleanup(CBN_Suite *s) {
@@ -187,8 +187,8 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     return EXIT_FAILURE;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
-  if (cmd_args.no_output) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output disabled");
-  else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
+  if (carbon_test_manager__cmd_args.no_output) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output disabled");
+  else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
@@ -203,7 +203,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
       CARBON_ERROR_ASS("(%zu/%zu) %s :: FAILED", i + 1, s->n, s->tests[i].name);
       ++failed;
     }
-    if (!cmd_args.no_output) {
+    if (!carbon_test_manager__cmd_args.no_output) {
       CBN_JUnitTestcase tjc = {
         .name = s->tests[i].name,
         .has_failed = !has_passed
@@ -233,12 +233,12 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
                          passed,
                          clk.elapsed);
   }
-  if (!cmd_args.no_output) carbon_junit_output(junit_testcase_infos, cmd_args.output, failed, clk.elapsed);
+  if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, clk.elapsed);
   carbon_list_destroy(&junit_testcase_infos);
   carbon_test_manager_cleanup(s);
   return status;
 }
 
 u8 carbon_test_manager_run(void) {
-  return carbon_test_manager_run_s(&test_suite);
+  return carbon_test_manager_run_s(&carbon_test_manager__test_suite);
 }
