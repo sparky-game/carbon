@@ -13,6 +13,9 @@
   "-" CARBON_TARGET_OS                                  \
   "-" CARBON_CPU_ARCH
 
+#define C_STD   "-std=c99"
+#define CXX_STD "-std=c++11"
+
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
@@ -49,13 +52,13 @@ static void build_src_files(void) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], "src/");
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . " C_STD " -Wall -Wextra -Wswitch-enum -fPIC -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], "src/");
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++11 -Wall -Wextra -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . " CXX_STD " -Wall -Wextra -Wswitch-enum -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
   }
 }
 
@@ -68,15 +71,15 @@ static void run_tests(void) {
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c99 -Wall -Wextra -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . " C_STD " -Wall -Wextra -Wswitch-enum -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . -std=c++11 -Wall -Wextra -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_COMPILER " -I . " CXX_STD " -Wall -Wextra -Wswitch-enum -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
   }
   CARBON_INFO("  LD      " TESTBIN);
-  call_cmd("clang++ -fsanitize=address,undefined test/*.o -o " TESTBIN);
+  call_cmd(CARBON_CXX_COMPILER " -fsanitize=address,undefined test/*.o -o " TESTBIN);
   rm_dash_r("test/*.o");
   CARBON_INFO("+ %s", test_cmd);
   call_cmd(test_cmd);

@@ -159,12 +159,15 @@
 #else
 #if defined(__clang__)
 #define CARBON_COMPILER "clang"
+#define CARBON_CXX_COMPILER "clang++"
 #elif defined(__GNUC__)
 #define CARBON_COMPILER "gcc"
+#define CARBON_CXX_COMPILER "g++"
 #elif defined(_WIN32) && defined(_MSC_VER)
 #define CARBON_COMPILER "cl.exe"
 #else
 #define CARBON_COMPILER "cc"
+#define CARBON_CXX_COMPILER "c++"
 #endif
 #endif
 
