@@ -478,25 +478,6 @@ CARBON_API void carbon_clock_update(CBN_Clock *c);
 CARBON_API void carbon_clock_stop(CBN_Clock *c);
 
 /*
-**  $$========================$$
-**  ||       Filesystem       ||
-**  $$========================$$
-*/
-CARBON_API u8 carbon_fs_exists(const char *file);
-CARBON_API u8 carbon_fs_is_regular_file(const char *file);
-CARBON_API u8 carbon_fs_is_directory(const char *file);
-CARBON_API u8 carbon_fs_rename(const char *oldie, const char *newie);
-CARBON_API i32 carbon_fs_mtime(const char *file);
-CARBON_API void carbon_fs_copy(const char *from, const char *to, u8 recursive);
-CARBON_API u8 carbon_fs_remove(const char *file);
-CARBON_API u8 carbon_fs_remove_all(const char *file);
-CARBON_API u8 carbon_fs_change_directory(const char *path);
-CARBON_API u8 carbon_fs_create_directory(const char *path);
-CARBON_API u8 carbon_fs_create_directories(const char *path);
-CARBON_API char *carbon_fs_get_bin_directory(void);
-CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
-
-/*
 **  $$==================$$
 **  ||       List       ||
 **  $$==================$$
@@ -597,6 +578,27 @@ CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
 CARBON_API void carbon_strlist_push(CBN_StrList *sl, const char *s);
 CARBON_API void carbon_strlist_pop(CBN_StrList *sl, const char *s);
 CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
+
+/*
+**  $$========================$$
+**  ||       Filesystem       ||
+**  $$========================$$
+*/
+CARBON_API u8 carbon_fs_exists(const char *file);
+CARBON_API u8 carbon_fs_is_regular_file(const char *file);
+CARBON_API u8 carbon_fs_is_directory(const char *file);
+CARBON_API u8 carbon_fs_rename(const char *oldie, const char *newie);
+CARBON_API i32 carbon_fs_mtime(const char *file);
+CARBON_API void carbon_fs_copy(const char *from, const char *to, u8 recursive);
+CARBON_API u8 carbon_fs_remove(const char *file);
+CARBON_API u8 carbon_fs_remove_all(const char *file);
+CARBON_API u8 carbon_fs_change_directory(const char *path);
+CARBON_API u8 carbon_fs_create_directory(const char *path);
+CARBON_API u8 carbon_fs_create_directories(const char *path);
+CARBON_API char *carbon_fs_get_bin_directory(void);
+CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
+CARBON_API u32 carbon_fs_get_file_size(const char *file);
+CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 
 /*
 **  $$=======================$$
@@ -711,13 +713,13 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_crypto.c"
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
-#include "src/carbon_fs.c"
 #include "src/carbon_list.c"
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strbuilder.c"
 #include "src/carbon_strview.c"
 #include "src/carbon_strlist.c"
+#include "src/carbon_fs.c"
 #include "src/carbon_nn.c"
 #ifdef CARBON_USE_WINDOWING
 #include "src/carbon_win_xlib.c"

@@ -265,3 +265,53 @@ char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
   return x->gl_pathv;
 #endif
 }
+
+u32 carbon_fs_get_file_size(const char *file) {
+  FILE *fd = fopen(file, "rb");
+  if (!fd) {
+    CARBON_ERROR("unable to open file (`%s`)", file);
+    return 0;
+  }
+  if (-1 == fseek(fd, 0, SEEK_END)) {
+    CARBON_ERROR("unable to set file's pointer to EOF (`%s`)", file);
+    return 0;
+  }
+  i32 size = ftell(fd);
+  if (size == -1) {
+    CARBON_ERROR("unable to get value of file's pointer (`%s`)", file);
+    return 0;
+  }
+  fclose(fd);
+  return size;
+}
+
+u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
+  u32 n = carbon_fs_get_file_size(file);
+  FILE *fd = fopen(file, "rb");
+  if (!fd) {
+    CARBON_ERROR("unable to open file (`%s`)", file);
+    return false;
+  }
+  usz count = sb->size + n;
+  if (count > sb->capacity) {
+    char *prev_p = sb->items;
+    sb->items = (char *) CARBON_REALLOC(sb->items, count);
+    if (!sb->items && sb->size > 0) {
+      CARBON_ERROR("failed to reallocate memory (%zuB)", count);
+      CARBON_FREE(prev_p);
+      return false;
+    }
+    sb->capacity = count;
+  }
+  if (1 != fread(sb->items + sb->size, n, 1, fd)) {
+    CARBON_ERROR("failed to read 1 item of %dB (`%s`)", n, file);
+    return false;
+  }
+  if (ferror(fd)) {
+    CARBON_ERROR("unable to read file's contents (`%s`)", file);
+    return false;
+  }
+  sb->size = count;
+  fclose(fd);
+  return true;
+}
