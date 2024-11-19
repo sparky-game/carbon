@@ -50,6 +50,35 @@ CARBON_TEST(carbon_math, sqrt) {
   return CARBON_OK;
 }
 
+CARBON_TEST(carbon_math, fmod) {
+  carbon_should_be_f(0, carbon_math_fmod(1, 1));
+  carbon_should_be_f(0, carbon_math_fmod(2, 1));
+  carbon_should_be_f(0, carbon_math_fmod(4, 1));
+  carbon_should_be_f(0, carbon_math_fmod(8, 1));
+  carbon_should_be_f(1, carbon_math_fmod(1, 2));
+  carbon_should_be_f(1, carbon_math_fmod(1, 4));
+  carbon_should_be_f(1, carbon_math_fmod(1, 8));
+  carbon_should_be_f(1.2, carbon_math_fmod(1.2, 99));
+  carbon_should_be_f(6.9, carbon_math_fmod(6.9, -8.3));
+  carbon_should_be_f(3.1, carbon_math_fmod(6.9, -3.8));
+  carbon_should_be_f(0.699997, carbon_math_fmod(69.1, 3.8));
+  return CARBON_OK;
+}
+
+CARBON_TEST(carbon_math, pow) {
+  carbon_should_be_f(0, carbon_math_pow(0, 1));
+  carbon_should_be_f(0, carbon_math_pow(0, 69));
+  carbon_should_be_f(1, carbon_math_pow(-69, 0));
+  carbon_should_be_f(1, carbon_math_pow(-1, 0));
+  carbon_should_be_f(1, carbon_math_pow(0, 0));
+  carbon_should_be_f(1, carbon_math_pow(1, 0));
+  carbon_should_be_f(1, carbon_math_pow(69, 0));
+  carbon_should_be_f(16384, carbon_math_pow(4, 7));
+  carbon_should_be_f(CARBON_SQRT2, carbon_math_pow(2, 0.5));
+  carbon_should_be_f(19.350426, carbon_math_pow(1.456, 7.886));
+  return CARBON_OK;
+}
+
 CARBON_TEST(carbon_math, exp2) {
   carbon_should_be_f(0.125, carbon_math_exp2(-3));
   carbon_should_be_f(0.25, carbon_math_exp2(-2));
