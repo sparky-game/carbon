@@ -491,6 +491,7 @@ CARBON_API void carbon_clock_stop(CBN_Clock *c);
 **  $$==================$$
 */
 #define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), ((T *) (l).items)[(i)])
+#define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
 typedef struct {
   void *items;
@@ -572,6 +573,7 @@ CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
 **  $$=====================$$
 */
 #define carbon_strlist_at(sl, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
+#define carbon_strlist_foreach(sl) for (struct { usz i; CBN_StrView sv; } it = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; it.i < (sl).size; ++it.i, it.i < (sl).size ? it.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, it.i)) : it.sv)
 
 typedef struct {
   char **items;

@@ -19,13 +19,13 @@ void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, con
   char timestamp[30];
   strftime(timestamp, sizeof(timestamp), ISO_8601_FMT, tm_info);
   fprintf(fd, "<testsuite timestamp=\"%s\" time=\"%.6f\" tests=\"%zu\" failures=\"%zu\">\n", timestamp, runtime, junit_tcs.size, failed);
-  for (usz i = 0; i < junit_tcs.size; ++i) {
-    if (carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).has_failed) {
-      fprintf(fd, "  <testcase name=\"%s\">\n", carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).name);
+  carbon_list_foreach(CBN_JUnitTestcase, junit_tcs) {
+    if (it.var.has_failed) {
+      fprintf(fd, "  <testcase name=\"%s\">\n", it.var.name);
       fprintf(fd, "    <failure />\n");
       fprintf(fd, "  </testcase>\n");
     }
-    else fprintf(fd, "  <testcase name=\"%s\" />\n", carbon_list_at(CBN_JUnitTestcase, junit_tcs, i).name);
+    else fprintf(fd, "  <testcase name=\"%s\" />\n", it.var.name);
   }
   fprintf(fd, "</testsuite>");
   fclose(fd);

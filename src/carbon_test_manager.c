@@ -63,8 +63,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   u8 needs_rebuild = false;
   i32 bin_timestamp = carbon_fs_mtime(bin_file);
   if (!bin_timestamp) carbon_test_manager__cleanup_and_exit();
-  for (usz i = 0; i < carbon_test_manager__test_suite.files.size; ++i) {
-    i32 src_timestamp = carbon_fs_mtime(carbon_test_manager__test_suite.files.items[i]);
+  carbon_strlist_foreach(carbon_test_manager__test_suite.files) {
+    i32 src_timestamp = carbon_fs_mtime(carbon_strview_to_cstr(it.sv));
     if (!src_timestamp) carbon_test_manager__cleanup_and_exit();
     // NOTE: if even a single source file is fresher than binary file, then it needs rebuild
     if (src_timestamp > bin_timestamp) {
@@ -92,8 +92,8 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     argv[3] = (char *) "-fsanitize=address,undefined";
     argv[4] = (char *) "-o";
     argv[5] = (char *) bin_file;
-    for (usz i = 0; i < carbon_test_manager__test_suite.files.size; ++i) {
-      argv[i + 6] = carbon_test_manager__test_suite.files.items[i];
+    carbon_strlist_foreach(carbon_test_manager__test_suite.files) {
+      argv[it.i + 6] = carbon_strview_to_cstr(it.sv);
     }
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
