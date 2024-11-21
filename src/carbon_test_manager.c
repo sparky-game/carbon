@@ -48,7 +48,7 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
     CARBON_INFO_RAW(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
-  CARBON_ERROR("unrecognized option\nTry '%s --help' for more information.", argv[0]);
+  CARBON_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
   exit(1);
 }
 
