@@ -45,7 +45,5 @@ void carbon_string_strip_substr(char *s, const char *sub) {
   usz len = strlen(sub);
   if (!len) return;
   char *p;
-  while ((p = strstr(s, sub))) {
-    memmove(p, p + len, strlen(p + len) + 1);
-  }
+  while ((p = strstr(s, sub))) memmove(p, p + len, strlen(p + len) + 1);
 }
