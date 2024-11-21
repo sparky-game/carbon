@@ -14,10 +14,7 @@ void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, con
     CARBON_ERROR("unable to open file (`%s`)", out_filename);
     return;
   }
-  time_t t = time(0);
-  struct tm *tm_info = localtime(&t);
-  char timestamp[30];
-  strftime(timestamp, sizeof(timestamp), ISO_8601_FMT, tm_info);
+  const char *timestamp = carbon_time_get_iso8601();
   fprintf(fd, "<testsuite timestamp=\"%s\" time=\"%.6f\" tests=\"%zu\" failures=\"%zu\">\n", timestamp, runtime, junit_tcs.size, failed);
   carbon_list_foreach(CBN_JUnitTestcase, junit_tcs) {
     if (it.var.has_failed) {

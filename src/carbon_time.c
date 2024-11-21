@@ -5,21 +5,20 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#ifdef _WIN32
-static f64 clock_freq;
-static LARGE_INTEGER start_time;
-
-static void clock_setup(void) {
-  LARGE_INTEGER freq;
-  QueryPerformanceFrequency(&freq);
-  clock_freq = 1.0 / (f64) freq.QuadPart;
-  QueryPerformanceCounter(&start_time);
-}
-#endif
+#define CARBON_TIME_GET_ISO8601_FMT         "%Y-%m-%dT%H:%M:%S%z"
+#define CARBON_TIME_GET_ISO8601_MAX_LEN     30
+#define CARBON_TIME_GET_ISO8601_MAX_BUFFERS 4
 
 f64 carbon_time_get(void) {
 #ifdef _WIN32
-  if (!clock_freq) clock_setup();
+  static f64 clock_freq;
+  static LARGE_INTEGER start_time;
+  if (!clock_freq) {
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+    clock_freq = 1.0 / (f64) freq.QuadPart;
+    QueryPerformanceCounter(&start_time);
+  }
   LARGE_INTEGER now;
   QueryPerformanceCounter(&now);
   return (f64) now.QuadPart * clock_freq;
@@ -34,6 +33,18 @@ f64 carbon_time_get(void) {
 #else
 #error `carbon_time_get` not implemented for this platform
 #endif
+}
+
+char *carbon_time_get_iso8601(void) {
+  static usz i = 0;
+  static char ts[CARBON_TIME_GET_ISO8601_MAX_BUFFERS][CARBON_TIME_GET_ISO8601_MAX_LEN];
+  char *t = ts[i];
+  time_t now = time(0);
+  struct tm *now_info = localtime(&now);
+  strftime(t, CARBON_TIME_GET_ISO8601_MAX_LEN, CARBON_TIME_GET_ISO8601_FMT, now_info);
+  ++i;
+  if (i >= CARBON_TIME_GET_ISO8601_MAX_BUFFERS) i = 0;
+  return t;
 }
 
 void carbon_time_sleep(u64 ms) {
