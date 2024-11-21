@@ -5,6 +5,12 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+#define STBI_MALLOC  CARBON_MALLOC
+#define STBI_REALLOC CARBON_REALLOC
+#define STBI_FREE    CARBON_FREE
+#define STB_IMAGE_IMPLEMENTATION
+#include "../vendor/stb_image/stb_image.h"
+
 #ifdef _WIN32
 #define CARBON_FS_PATH_MAX_LEN 256
 #else
@@ -314,4 +320,30 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   sb->size = count;
   fclose(fd);
   return true;
+}
+
+CBN_List carbon_fs_read_img_from_file(const char *file) {
+  usz width = 0, height = 0, channels = 0;
+  f32 *pixels = stbi_loadf(file, (i32 *) &width, (i32 *) &height, (i32 *) &channels, 0);
+  CBN_List mats = carbon_list_create(sizeof(CBN_Matrix));
+  for (usz c = 0; c < channels; ++c) {
+    f32 *ptr = pixels + c;
+    CBN_Matrix m = carbon_math_mat_create(height, width);
+    for (usz i = 0; i < m.rows; ++i) {
+      for (usz j = 0; j < m.cols; ++j) {
+        CARBON_MAT_AT(m, i, j) = *ptr;
+        ptr += channels;
+      }
+    }
+    carbon_list_push(&mats, &m);
+  }
+  CARBON_FREE(pixels);
+  return mats;
+}
+
+void carbon_fs_destroy_img(CBN_List *img) {
+  carbon_list_foreach(CBN_Matrix, *img) {
+    carbon_math_mat_destroy(&it.var);
+  }
+  carbon_list_destroy(img);
 }

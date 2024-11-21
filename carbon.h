@@ -485,7 +485,7 @@ CARBON_API void carbon_clock_stop(CBN_Clock *c);
 **  ||       List       ||
 **  $$==================$$
 */
-#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), ((T *) (l).items)[(i)])
+#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), CARBON_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), ((T *) (l).items)[(i)])
 #define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
 typedef struct {
@@ -604,6 +604,8 @@ CARBON_API char *carbon_fs_get_bin_directory(void);
 CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
+CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
+CARBON_API void carbon_fs_destroy_img(CBN_List *img);
 
 /*
 **  $$=======================$$
