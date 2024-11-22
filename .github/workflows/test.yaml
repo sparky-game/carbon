@@ -7,6 +7,7 @@ on:
       - '.github/workflows/test.yaml'
       - 'src/**'
       - 'test/**'
+      - 'vendor/**'
       - 'carbon.h'
   pull_request:
     branches: [master]
