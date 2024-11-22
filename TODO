@@ -24,6 +24,8 @@ Implement image saving from a matrix of floats (`CBN_Matrix`):
 - Using `nothings/stb/stb_image_write.h` header-only library.
 - `i32 stbi_write_*(const char *file, i32 w, i32 h, i32 c, const void *data, ...)`
 
+Also ship the Carbon library as a shared object, not only a static one.
+
 Implement motion detection algorithm:
 - Given 2 imgs, return bool whether movement is detected going
   from one img to the other.
