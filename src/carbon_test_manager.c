@@ -81,7 +81,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
     CARBON_ERROR("unable to fork child process");
-    if (!carbon_fs_rename(bin_file_old, bin_file)) carbon_test_manager__cleanup_and_exit();
+    carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   else if (rebuild_child_pid == 0) {
     char *argv[128];
@@ -97,16 +97,14 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     }
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
-      carbon_fs_rename(bin_file_old, bin_file);
-      carbon_test_manager__cleanup_and_exit();
+      carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
     }
   }
   // 3. Wait for rebuilding (child process) ends correctly
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
     CARBON_ERROR("errors detected during rebuild");
-    carbon_fs_rename(bin_file_old, bin_file);
-    carbon_test_manager__cleanup_and_exit();
+    carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   CARBON_INFO("=======================================");
@@ -120,8 +118,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   }
   if (-1 == execvp(argv[0], argv)) {
     CARBON_ERROR("unable to execvp rebuilt binary");
-    carbon_fs_rename(bin_file_old, bin_file);
-    carbon_test_manager__cleanup_and_exit();
+    carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
 }
 
