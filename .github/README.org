@@ -69,9 +69,7 @@ You can't unit test C, right?
 * Table of Contents :toc:
 - [[#usage][Usage]]
   - [[#get-the-code][Get the code]]
-  - [[#target-code][Target code]]
-  - [[#test-case][Test case]]
-  - [[#entrypoint][Entrypoint]]
+  - [[#example][Example]]
 - [[#code-coverage][Code coverage]]
 - [[#licensing][Licensing]]
 - [[#references][References]]
@@ -134,42 +132,25 @@ Report bugs to: <https://github.com/sparky-game/carbon/issues>
 SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
 #+end_example
 
-** Target code
+** Example
 
 #+begin_src c
-// x.h
+// example.c
 
-#pragma once
+#define CARBON_IMPLEMENTATION
+#include <carbon.h>
 
 void inc_int(int *x) {
   ++(*x);
 }
-#+end_src
 
-** Test case
-
-#+begin_src c
-// x_test.c
-
-#include <carbon.h>
-#include "x.h"
-
-CARBON_TEST(x, inc_int) {
+CARBON_TEST(example, increment_integer) {
   int a = 1, b = 0;
   carbon_should_not_be(a, b);
   inc_int(&b);
   carbon_should_be(a, b);
   return CARBON_OK;
 }
-#+end_src
-
-** Entrypoint
-
-#+begin_src c
-// carbon.c
-
-#define CARBON_IMPLEMENTATION
-#include <carbon.h>
 
 int main(void) {
   return CARBON_RUN_ALL();
@@ -177,14 +158,14 @@ int main(void) {
 #+end_src
 
 #+begin_src sh
-cc -I vendor/carbon *.c -o carbon
+cc -I vendor/carbon example.c -o example
 #+end_src
 
 Once built, we can take a look at the available options:
 
 #+begin_example
-$ ./carbon -h
-usage: ./carbon [OPTION]
+$ ./example -h
+usage: ./example [OPTION]
 Options:
   -n, --no-output  disable JUnit XML test results output
   -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)
