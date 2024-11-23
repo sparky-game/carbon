@@ -10,7 +10,5 @@ contact:
     family-names: Atieh Alonso
     email: wasymatieh01@gmail.com
 abstract: "A simple, lightweight, straightforward C/C++ unit testing framework written in pure C."
-license:
-  - BSD-3-Clause
-  - GPL-3.0-only
+license: AGPL-3.0-only
 repository-code: "https://github.com/sparky-game/carbon"
