@@ -663,6 +663,8 @@ CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
 */
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
 CARBON_API void carbon_win_close(void);
+CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
+CARBON_API u8 carbon_win_shouldclose(void);
 
 /*
 **  $$=========================$$

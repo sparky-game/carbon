@@ -75,7 +75,7 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
                                      CWBackPixel | CWBorderPixel | CWBackingStore,
                                      &carbon_win__window_attrs);
   XStoreName(carbon_win__display, carbon_win__window, title);
-  // XSelectInput(carbon_win__display, carbon_win__window, KeyPressMask | KeyReleaseMask);
+  XSelectInput(carbon_win__display, carbon_win__window, KeyPressMask | KeyReleaseMask);
   carbon_win__window_szhints.flags = PPosition | PMinSize | PMaxSize;
   carbon_win__window_szhints.x = 0;
   carbon_win__window_szhints.y = 0;
@@ -92,10 +92,8 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
                                   CopyFromParent,
                                   carbon_win__depth,
                                   ZPixmap,
-                                  0,
-                                  0,
-                                  width,
-                                  height,
+                                  0, 0,
+                                  width, height,
                                   32,
                                   width * carbon_win__out_pitch);
   carbon_win__viewport_width = width;
@@ -107,6 +105,37 @@ void carbon_win_close(void) {
   XDestroyImage(carbon_win__ximg);
   XDestroyWindow(carbon_win__display, carbon_win__window);
   XCloseDisplay(carbon_win__display);
+}
+
+void carbon_win_update(CBN_DrawCanvas dc) {
+  carbon_win__ximg->data = (char *) dc.pixels;
+  XPutImage(carbon_win__display,
+            carbon_win__window,
+            carbon_win__window_gc,
+            carbon_win__ximg,
+            0, 0, 0, 0,
+            carbon_win__viewport_width,
+            carbon_win__viewport_height);
+  XFlush(carbon_win__display);
+}
+
+u8 carbon_win_shouldclose(void) {
+  if (XPending(carbon_win__display)) {
+    XEvent event;
+    XNextEvent(carbon_win__display, &event);
+    if (event.type == KeyPress || event.type == KeyRelease) {
+      KeySym ks = XLookupKeysym(&event.xkey, 0);
+      if (event.type == KeyPress) {
+        // TODO: callback to keypress user-defined func
+        // NOTE: 0xff is FUNCTION_KEY and 0x1b is ESCAPE_KEY
+        if ((ks >> 8) == 0xff && (ks & 0xff) == 0x1b) return true;
+      }
+      else {
+        // TODO: callback to keyrelease user-defined func
+      }
+    }
+  }
+  return false;
 }
 
 #endif  // defined(__linux__) || defined(__FreeBSD__)
