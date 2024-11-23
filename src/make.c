@@ -45,7 +45,46 @@ static inline void cp_dash_r(const char *origin, const char *dest) {
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
-static inline void clean(void) {
+static void rebuild_myself(const char **host_argv) {
+  const char *bin = host_argv[0];
+#ifdef CARBON_MAKE_ALREADY_REBUILT
+  if (carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(bin)) return;
+#endif
+  i32 rebuild_status_code = 0;
+  pid_t rebuild_child_pid = fork();
+  if (rebuild_child_pid == -1) {
+    CARBON_ERROR("unable to fork child process");
+    exit(1);
+  }
+  else if (rebuild_child_pid == 0) {
+    char *argv[] = {
+      CARBON_C_COMPILER,
+      C_STD,
+      "-DCARBON_MAKE_ALREADY_REBUILT",
+      "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
+      "-fPIE", "-pipe", "-Os",
+      __FILE__,
+      "-static",
+      "-o", (char *) bin,
+      0
+    };
+    if (-1 == execvp(argv[0], argv)) {
+      CARBON_ERROR("unable to execvp from child process");
+      exit(1);
+    }
+  }
+  else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
+  if (rebuild_status_code != 0) {
+    CARBON_ERROR("errors detected during rebuild");
+    exit(1);
+  }
+  if (-1 == execvp(bin, (char **) host_argv)) {
+    CARBON_ERROR("unable to execvp rebuilt binary");
+    exit(1);
+  }
+}
+
+static void clean(void) {
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
@@ -120,6 +159,7 @@ int main(int argc, char **argv) {
     CARBON_ERROR("Unable to change CWD to binary's directory");
     return 1;
   }
+  rebuild_myself((const char **) argv);
   if (argc > 2) {
     CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
     return 1;
