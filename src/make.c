@@ -60,12 +60,12 @@ static void run_tests(void) {
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
   }
   CARBON_INFO("  LD      " TESTBIN);
   call_cmd(CARBON_CXX_COMPILER " -fPIE -fsanitize=address,undefined test/*.o -o " TESTBIN);
@@ -97,6 +97,8 @@ static void build(void) {
   }
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
+  CARBON_INFO("  LD      libcarbon.so");
+  call_cmd(CARBON_C_COMPILER " -pipe -Os -shared " WORKDIR "/*.o -o " WORKDIR "/libcarbon.so");
   rm_dash_r(WORKDIR "/*.o");
 }
 
@@ -116,6 +118,10 @@ static void package(void) {
 int main(int argc, char **argv) {
   if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) {
     CARBON_ERROR("Unable to change CWD to binary's directory");
+    return 1;
+  }
+  if (argc > 2) {
+    CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
     return 1;
   }
   if (argc == 2) {
@@ -140,10 +146,6 @@ int main(int argc, char **argv) {
       CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
       return 1;
     }
-  }
-  else if (argc > 2) {
-    CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
-    return 1;
   }
   run_tests();
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
