@@ -639,6 +639,24 @@ CARBON_API void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32
 CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
 
 /*
+**  $$========================$$
+**  ||       DrawCanvas       ||
+**  $$========================$$
+*/
+#define CARBON_DRAWCANVAS_AT(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
+
+typedef struct {
+  u32 *pixels;
+  usz width;
+  usz height;
+  usz stride;
+} CBN_DrawCanvas;
+
+CARBON_API CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
+CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
+CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
+
+/*
 **  $$=======================$$
 **  ||       Windowing       ||
 **  $$=======================$$
@@ -728,6 +746,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_strlist.c"
 #include "src/carbon_fs.c"
 #include "src/carbon_nn.c"
+#include "src/carbon_drawcanvas.c"
 #ifdef CARBON_USE_WINDOWING
 #include "src/carbon_win_xlib.c"
 #endif  // CARBON_USE_WINDOWING
