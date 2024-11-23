@@ -78,38 +78,43 @@ You can't unit test C, right?
 
 * Usage
 
+/Carbon/ can operate in both *header-only* and *externally-linked* (static or dynamic) modes, it's just a matter of defining the ~CARBON_IMPLEMENTATION~ macro *ONCE* in our codebase.
+
 ** Get the code
 
 We can get /Carbon/ in our preferred way of managing dependencies or external libraries in our projects. Here are the main options of obtaining the library:
 
 *Git Submodules:*
+
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
-cd vendor/carbon && git switch -d v0.8-alpha
 #+end_src
 
 *CMake FetchContent:*
+
 #+begin_src cmake
 include(FetchContent)
 FetchContent_Declare(
   carbon
   GIT_REPOSITORY "https://github.com/sparky-game/carbon"
-  GIT_TAG        v0.8-alpha
+  GIT_TAG        [...]
   GIT_PROGRESS   TRUE
 )
 FetchContent_MakeAvailable(carbon)
 #+end_src
 
 *Pre-compiled Package:*
-#+begin_src sh
-wget https://github.com/sparky-game/carbon/releases/download/v0.8-alpha/carbon-0.8-linux-amd64.tgz
-tar -xvf carbon-0.8-linux-amd64.tgz
-#+end_src
+
+You might want to take a look to the [[https://github.com/sparky-game/carbon/releases/latest][latest release available]] and download the appropriate pre-compiled package for your CPU's architecture and OS.
+
+*Build from source:*
 
 If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library.
 
+This custom build system can rebuild itself properly (using our preferred compilation flags), which means that you'll only need to bootstrap it once:
+
 #+begin_src sh
-cc -std=c99 -Wall -Wextra -pipe -Os src/make.c -static -s -o make
+cc src/make.c -o make
 #+end_src
 
 Once built, we can take a look at the available subcommands:
@@ -171,10 +176,8 @@ int main(void) {
 }
 #+end_src
 
-If we define the macro ~CARBON_IMPLEMENTATION~, it makes the library operate in a *header-only* structure: all the internal source code of /Carbon/ is included in that translation unit, i.e. no need to compile and link it separately. Alternatively, one can link with the library's internal source code either compiling it ourselves, or using a pre-compiled package of the [[https://github.com/sparky-game/carbon/releases/latest][latest release available]].
-
 #+begin_src sh
-cc -I vendor/carbon -std=c99 -Wall -Wextra -pipe -Os *.c -o carbon
+cc -I vendor/carbon *.c -o carbon
 #+end_src
 
 Once built, we can take a look at the available options:

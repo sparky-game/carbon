@@ -8,5 +8,5 @@ straightforward, giving the best possible development experience. Whether you
 work on GNU/Linux, BSDs, Windows or macOS, if you write C/C++ code, Carbon can
 help you.
 
-$  cc -std=c99 -Wall -Wextra -pipe -Os src/make.c -static -s -o make
+$  cc src/make.c -o make
 $  ./make help
