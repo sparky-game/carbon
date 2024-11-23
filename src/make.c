@@ -65,6 +65,7 @@ static void rebuild_myself(const char **host_argv) {
       "-fPIE", "-pipe", "-Os",
       __FILE__,
       "-static",
+      "-Wl,-z,now", "-Wl,-z,relro",
       "-o", (char *) bin,
       0
     };
@@ -107,7 +108,7 @@ static void run_tests(void) {
     call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
   }
   CARBON_INFO("  LD      " TESTBIN);
-  call_cmd(CARBON_CXX_COMPILER " -fPIE -fsanitize=address,undefined test/*.o -o " TESTBIN);
+  call_cmd(CARBON_CXX_COMPILER " -fPIE -fsanitize=address,undefined test/*.o -Wl,-z,now -Wl,-z,relro -o " TESTBIN);
   rm_dash_r("test/*.o");
   CARBON_INFO("+ " TESTBIN " -n");
   call_cmd(TESTBIN " -n");
@@ -137,7 +138,7 @@ static void build(void) {
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
   CARBON_INFO("  LD      libcarbon.so");
-  call_cmd(CARBON_C_COMPILER " -pipe -Os -shared " WORKDIR "/*.o -o " WORKDIR "/libcarbon.so");
+  call_cmd(CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared -Wl,-z,now -Wl,-z,relro -o " WORKDIR "/libcarbon.so");
   rm_dash_r(WORKDIR "/*.o");
 }
 
