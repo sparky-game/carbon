@@ -101,18 +101,30 @@ static void run_tests(void) {
   usz c_files_count = 0, cxx_files_count = 0;
   char **c_files = carbon_fs_pattern_match("test/*.c", &c_files_count);
   char **cxx_files = carbon_fs_pattern_match("test/*.cc", &cxx_files_count);
+  CBN_StrBuilder cmd = {0};
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -fsanitize=address,undefined -c %s.c -o %s.o", c_files[i], c_files[i]));
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC ");
+#ifndef __APPLE__
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#endif
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", c_files[i], c_files[i]));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
   }
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -fsanitize=address,undefined -c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC ");
+#ifndef __APPLE__
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#endif
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
   }
   CARBON_INFO("  LD      " TESTBIN);
-  CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -fPIE -fsanitize=address,undefined test/*.o ");
 #ifndef __APPLE__
   carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
