@@ -31,5 +31,10 @@ void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
 }
 
 void carbon_strbuilder_free(CBN_StrBuilder *sb) {
+  if (!sb) {
+    CARBON_WARNING("`sb` is not a valid pointer, skipping free");
+    return;
+  }
   CARBON_FREE(sb->items);
+  memset(sb, 0, sizeof(CBN_StrBuilder));
 }
