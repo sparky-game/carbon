@@ -141,12 +141,18 @@
 
 #if defined(__amd64__) || defined(_M_AMD64)
 #define CARBON_CPU_ARCH "amd64"
+#else
+#error CPU architecture is not supported
 #endif
 
 #if defined(__linux__)
 #define CARBON_TARGET_OS "linux"
+#elif defined(__APPLE__)
+#define CARBON_TARGET_OS "macos"
 #elif defined(_WIN32)
 #define CARBON_TARGET_OS "windows"
+#else
+#error Target OS is not supported
 #endif
 
 #if defined(__clang__)
