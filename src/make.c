@@ -69,6 +69,7 @@ static void rebuild_myself(const char **host_argv) {
       "-o", (char *) bin,
       0
     };
+    CARBON_INFO("  CCLD    %s", bin);
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
       exit(1);
@@ -79,6 +80,7 @@ static void rebuild_myself(const char **host_argv) {
     CARBON_ERROR("errors detected during rebuild");
     exit(1);
   }
+  CARBON_INFO("  EXEC    %s", bin);
   if (-1 == execvp(bin, (char **) host_argv)) {
     CARBON_ERROR("unable to execvp rebuilt binary");
     exit(1);
@@ -148,7 +150,7 @@ static void package(void) {
     clean();
     exit(1);
   }
-  cp_dash_r("COPYING.BSD COPYING.GPL carbon.h", WORKDIR);
+  cp_dash_r("COPYING carbon.h", WORKDIR);
   cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
   CARBON_INFO("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
