@@ -79,10 +79,13 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#ifdef _WIN32
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>
 #include <windows.h>
+#elif defined(__APPLE__)
+#include <glob.h>
+#include <mach-o/dyld.h>
 #else
 #include <glob.h>
 #include <sys/wait.h>

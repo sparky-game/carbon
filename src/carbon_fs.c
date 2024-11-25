@@ -200,7 +200,7 @@ char *carbon_fs_get_bin_directory(void) {
   }
 #elif defined(__APPLE__)
   usz size = sizeof(dir);
-  if (!_NSGetExecutablePath(dir, &size)) {
+  if (!_NSGetExecutablePath(dir, (u32 *) &size)) {
     usz len = strlen(dir);
     for (usz i = len;; --i) {
       if (dir[i] == '/') {
