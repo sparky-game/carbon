@@ -5,7 +5,7 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-static u64 carbon_hashmap__hash(const char *key, u32 n) {
+CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
   u64 hash = 0;
   for (const u8 *p = (const u8 *) key; *p; ++p) {
     hash = (hash * 97) + *p;
