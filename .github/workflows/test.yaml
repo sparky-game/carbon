@@ -38,7 +38,7 @@ jobs:
           languages: c-cpp
       - name: test
         run: |
-          clang -std=c99 -Wall -Wextra -pipe -Os src/make.c -static -s -o make
+          clang src/make.c -o make
           ./make check
       - name: analyze
         uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
