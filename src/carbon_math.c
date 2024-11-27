@@ -75,6 +75,8 @@ f32 carbon_math_ceil(f32 x) {
 }
 
 f32 carbon_math_sqrt(f32 x) {
+  if (x == 2) return CARBON_SQRT2;
+  if (x == 3) return CARBON_SQRT3;
   f32 s = x;
   for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
     s -= (s*s - x) / (2*s);
