@@ -129,6 +129,7 @@ Subcommands:
   check       only run tests
 
 If not provided any subcommand, it runs the full build pipeline.
+If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.
 
 Report bugs to: <https://github.com/sparky-game/carbon/issues>
 SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
