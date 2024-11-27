@@ -668,6 +668,7 @@ typedef struct {
 CARBON_API CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
 CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
 CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
+CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
 
 /*
 **  $$=======================$$
