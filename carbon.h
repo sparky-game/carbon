@@ -256,7 +256,7 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
 #define CARBON_MIN(x, y) (x < y ? x : y)
 #define CARBON_MAX(x, y) (x > y ? x : y)
-#define CARBON_CLAMP(x, min, max) ((x <= min) ? min : (x >= max) ? max : x)
+#define CARBON_CLAMP(x, min, max) ((x < min) ? min : (x > max) ? max : x)
 #define CARBON_SIGN(x) (!x ? 0 : x < 0 ? -1 : 1)
 #define CARBON_STEP(edge, x) (x < edge ? 0 : 1)
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
