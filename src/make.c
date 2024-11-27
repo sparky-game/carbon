@@ -17,6 +17,12 @@
 #define CXX_STD "-std=c++11"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format"
 
+#ifdef CARBON_MAKE_USE_SANITIZERS
+#define SANITIZERS "-fsanitize=address,undefined"
+#else
+#define SANITIZERS
+#endif
+
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
@@ -25,6 +31,7 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "  check       only run tests\n"
   "\n"
   "If not provided any subcommand, it runs the full build pipeline.\n"
+  "If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.\n"
   "\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
   "%s homepage: <https://github.com/sparky-game/carbon>\n";
@@ -61,6 +68,9 @@ static void rebuild_myself(const char **host_argv) {
       CARBON_C_COMPILER,
       C_STD,
       "-DCARBON_MAKE_ALREADY_REBUILT",
+#ifdef CARBON_MAKE_USE_SANITIZERS
+      "-DCARBON_MAKE_USE_SANITIZERS",
+#endif
       "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
       "-fPIE", "-pipe", "-Os",
       __FILE__,
@@ -106,9 +116,7 @@ static void run_tests(void) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC ");
-#ifndef __APPLE__
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, SANITIZERS " ");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", c_files[i], c_files[i]));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
@@ -117,15 +125,13 @@ static void run_tests(void) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC ");
-#ifndef __APPLE__
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, SANITIZERS " ");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
   CARBON_INFO("  LD      " TESTBIN);
-  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -fPIE -fsanitize=address,undefined test/*.o ");
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -fPIE " SANITIZERS " test/*.o ");
 #ifndef __APPLE__
   carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
 #endif
@@ -190,6 +196,9 @@ int main(int argc, char **argv) {
     CARBON_ERROR("Unable to change CWD to binary's directory");
     return 1;
   }
+#ifdef CARBON_MAKE_USE_SANITIZERS
+  CARBON_WARNING("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
+#endif
   rebuild_myself((const char **) argv);
   if (argc > 2) {
     CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
