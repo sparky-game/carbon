@@ -256,6 +256,37 @@ f32 carbon_math_cos(f32 x) {
   return 1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))));
 }
 
+f32 carbon_math_asin(f32 x) {
+  f32 ys, yc, y = 0;
+  for (;;) {
+    ys = carbon_math_sin(y);
+    yc = carbon_math_cos(y);
+    if (-CARBON_PI_2 > y || y > CARBON_PI_2) y = carbon_math_fmod(y, CARBON_PI);
+    if (ys + CARBON_F32_EPS >= x && ys - CARBON_F32_EPS <= x) break;
+    y = y - (ys - x) / yc;
+  }
+  return y;
+}
+
+f32 carbon_math_atan(f32 x) {
+  return carbon_math_asin(x / carbon_math_sqrt(x * x + 1));
+}
+
+f32 carbon_math_atan2(f32 y, f32 x) {
+  f32 r, phi, y_abs = carbon_math_abs(y) + 1e-10;
+  if (x < 0) {
+    r = (x + y_abs) / (y_abs - x);
+    phi = 0.75 * CARBON_PI;
+  }
+  else {
+    r = (x - y_abs) / (x + y_abs);
+    phi = CARBON_PI_4;
+  }
+  phi += (0.1963 * r * r - 0.9817) * r;
+  if (y < 0) return -phi;
+  else return phi;
+}
+
 CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
   return (CBN_Vec2) {
     .x = u.x + v.x,

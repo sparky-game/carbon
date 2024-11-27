@@ -143,6 +143,19 @@ CARBON_TEST(carbon_math, smoothstep) {
   return CARBON_OK;
 }
 
+CARBON_TEST(carbon_math, asin) {
+  carbon_should_be_f(-1.119769, carbon_math_asin(-0.90));
+  carbon_should_be_f(-0.848062, carbon_math_asin(-0.75));
+  carbon_should_be_f(-0.523599, carbon_math_asin(-0.5));
+  carbon_should_be_f(-0.252680, carbon_math_asin(-0.25));
+  carbon_should_be_f(0, carbon_math_asin(0));
+  carbon_should_be_f(0.252680, carbon_math_asin(0.25));
+  carbon_should_be_f(0.523599, carbon_math_asin(0.5));
+  carbon_should_be_f(0.848062, carbon_math_asin(0.75));
+  carbon_should_be_f(1.119769, carbon_math_asin(0.90));
+  return CARBON_OK;
+}
+
 CARBON_TEST(carbon_math, vec2_add) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};

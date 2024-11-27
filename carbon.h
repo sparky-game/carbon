@@ -254,6 +254,7 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_I32_MAX 0x7fffffff
 #define CARBON_RAND_MAX CARBON_I32_MAX
 #define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
+#define CARBON_F32_EPS 1.1920928955078125e-07
 #define CARBON_MIN(x, y) (x < y ? x : y)
 #define CARBON_MAX(x, y) (x > y ? x : y)
 #define CARBON_CLAMP(x, min, max) ((x < min) ? min : (x > max) ? max : x)
@@ -326,6 +327,9 @@ CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
 CARBON_API f32 carbon_math_sin(f32 x);
 CARBON_API f32 carbon_math_cos(f32 x);
+CARBON_API f32 carbon_math_asin(f32 x);
+CARBON_API f32 carbon_math_atan(f32 x);
+CARBON_API f32 carbon_math_atan2(f32 y, f32 x);
 CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
