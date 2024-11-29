@@ -226,3 +226,13 @@ CARBON_TEST(carbon_math, rect_contains_point) {
   carbon_should_be_false(carbon_math_rect_contains_point(r, p2));
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_math, rect_detect_collision) {
+  CBN_Rect r1 = {0, 5, 5, 5}, r2 = {4, 10, 5, 5};
+  carbon_should_be_false(carbon_math_rect_detect_collision(r1, r2));
+  carbon_should_be_false(carbon_math_rect_detect_collision(r2, r1));
+  CBN_Rect r3 = {0, 5, 5, 5}, r4 = {4, 9, 5, 5};
+  carbon_should_be_true(carbon_math_rect_detect_collision(r3, r4));
+  carbon_should_be_true(carbon_math_rect_detect_collision(r4, r3));
+  return CARBON_OK;
+}

@@ -340,6 +340,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
 CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
+CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
 CARBON_API void carbon_math_mat_destroy(CBN_Matrix *m);
 CARBON_API void carbon_math_mat_fill(CBN_Matrix m, f32 x);

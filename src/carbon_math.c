@@ -351,6 +351,10 @@ u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p) {
   return (p.x >= r.x && p.x <= r.x + r.w) && (p.y >= r.y && p.y <= r.y + r.h);
 }
 
+u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2) {
+  return (r1.x < r2.x + r2.w) && (r2.x < r1.x + r1.w) && (r1.y < r2.y + r2.h) && (r2.y < r1.y + r1.h);
+}
+
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
   CBN_Matrix m = {
     .items = (f32 *) CARBON_MALLOC(rows * cols * sizeof(f32)),
