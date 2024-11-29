@@ -26,13 +26,13 @@ CBN_StrList carbon_strlist_create(u8 unique) {
   return sl;
 }
 
-CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, char c) {
+CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) {
   CBN_StrList sl = carbon_strlist_create(false);
   char *s_copy = carbon_string_dup(s);
-  char *sub = strtok(s_copy, &c);
+  char *sub = strtok(s_copy, delim);
   while (sub) {
     carbon_strlist_push(&sl, sub);
-    sub = strtok(0, &c);
+    sub = strtok(0, delim);
   }
   CARBON_FREE(s_copy);
   return sl;

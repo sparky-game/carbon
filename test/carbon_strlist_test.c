@@ -47,7 +47,7 @@ CARBON_TEST(carbon_strlist, push_pop_multiple) {
 
 CARBON_TEST(carbon_strlist, split_cstr) {
   const char *s = "apple,banana,orange";
-  CBN_StrList s_splitted = carbon_strlist_from_splitted_cstr(s, ',');
+  CBN_StrList s_splitted = carbon_strlist_from_splitted_cstr(s, ",");
   carbon_should_be(3, s_splitted.size);
   carbon_should_be_s("apple", carbon_strlist_at(s_splitted, 0));
   carbon_should_be_s("banana", carbon_strlist_at(s_splitted, 1));
