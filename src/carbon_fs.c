@@ -8,6 +8,7 @@
 #define STBI_MALLOC  CARBON_MALLOC
 #define STBI_REALLOC CARBON_REALLOC
 #define STBI_FREE    CARBON_FREE
+#define STBI_ASSERT  CARBON_ASSERT
 #define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb_image/stb_image.h"
 
