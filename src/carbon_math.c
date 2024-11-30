@@ -87,7 +87,9 @@ f32 carbon_math_sqrt(f32 x) {
 f32 carbon_math_fmod(f32 x, f32 y) {
   if (y == 0) CARBON_ASSERT(0 && "division by 0 is not defined");
   if (x != x || y != y) return x;
-  return x - (i32) (x / y) * y;
+  f32 r = x - (i32) (x / y) * y;
+  if ((r < 0 && y > 0) || (r > 0 && y < 0)) r += y;
+  return r;
 }
 
 f32 carbon_math_pow(f32 x, f32 y) {
