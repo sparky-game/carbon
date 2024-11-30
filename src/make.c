@@ -17,12 +17,6 @@
 #define CXX_STD "-std=c++11"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format"
 
-#ifdef CARBON_MAKE_USE_SANITIZERS
-#define SANITIZERS "-fsanitize=address,undefined"
-#else
-#define SANITIZERS
-#endif
-
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
@@ -75,8 +69,7 @@ static void rebuild_myself(const char **host_argv) {
       "-fPIE", "-pipe", "-Os",
       __FILE__,
 #ifndef __APPLE__
-      "-static",
-      "-Wl,-z,now", "-Wl,-z,relro",
+      "-static", "-Wl,-z,now", "-Wl,-z,relro",
 #endif
       "-o", (char *) bin,
       0
@@ -115,8 +108,12 @@ static void run_tests(void) {
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], ".c");
-    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC ");
-    carbon_strbuilder_add_cstr(&cmd, SANITIZERS " ");
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", c_files[i], c_files[i]));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
@@ -124,16 +121,26 @@ static void run_tests(void) {
   for (usz i = 0; i < cxx_files_count; ++i) {
     CARBON_INFO("  CXX     %s", cxx_files[i]);
     carbon_string_strip_substr(cxx_files[i], ".cc");
-    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC ");
-    carbon_strbuilder_add_cstr(&cmd, SANITIZERS " ");
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
   CARBON_INFO("  LD      " TESTBIN);
-  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -fPIE " SANITIZERS " test/*.o ");
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#else
+  carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+  carbon_strbuilder_add_cstr(&cmd, "test/*.o ");
 #ifndef __APPLE__
-  carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
+  carbon_strbuilder_add_cstr(&cmd, "-static -Wl,-z,now -Wl,-z,relro ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, "-o " TESTBIN);
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
