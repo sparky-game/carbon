@@ -620,6 +620,7 @@ CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
+CARBON_API f32 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
 CARBON_API void carbon_fs_destroy_img(CBN_List *img);
 
 /*

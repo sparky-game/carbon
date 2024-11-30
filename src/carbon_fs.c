@@ -324,7 +324,7 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
 
 CBN_List carbon_fs_read_img_from_file(const char *file) {
   usz width = 0, height = 0, channels = 0;
-  f32 *pixels = stbi_loadf(file, (i32 *) &width, (i32 *) &height, (i32 *) &channels, 0);
+  f32 *pixels = carbon_fs_read_img_from_file_linearly(file, &width, &height, &channels);
   CBN_List mats = carbon_list_create(sizeof(CBN_Matrix));
   for (usz c = 0; c < channels; ++c) {
     f32 *ptr = pixels + c;
@@ -339,6 +339,10 @@ CBN_List carbon_fs_read_img_from_file(const char *file) {
   }
   CARBON_FREE(pixels);
   return mats;
+}
+
+f32 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs) {
+  return stbi_loadf(file, (i32 *) out_width, (i32 *) out_height, (i32 *) out_chs, 0);
 }
 
 void carbon_fs_destroy_img(CBN_List *img) {
