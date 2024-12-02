@@ -136,8 +136,7 @@ u8 carbon_fs_create_directories(const char *path) {
     return true;
   }
   usz len = strlen(path) + 1;
-  char *pathcpy = (char *) CARBON_CALLOC(len, sizeof(char));
-  memcpy(pathcpy, path, len);
+  char *pathcpy = carbon_string_dup(path);
   for (usz i = 0; i < len && pathcpy[i]; ++i) {
     if (pathcpy[i] == ':') ++i;
     else if (pathcpy[i] == '\\' || pathcpy[i] == '/') {
