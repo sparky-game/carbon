@@ -593,8 +593,6 @@ STBIDEF int   stbi_zlib_decode_noheader_buffer(char *obuffer, int olen, const ch
 /* #if !defined(STBI_NO_LINEAR) || !defined(STBI_NO_HDR) */
 /* #include <math.h>  // ldexp, pow */
 /* #endif */
-extern f32 carbon_math_ldexp2(f32, i32);
-extern f32 carbon_math_pow(f32, f32);
 
 #ifndef STBI_NO_STDIO
 #include <stdio.h>
