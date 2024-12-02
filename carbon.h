@@ -606,6 +606,13 @@ CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 **  ||       Filesystem       ||
 **  $$========================$$
 */
+typedef enum {
+  CBN_FILE_FORMAT_PNG,
+  CBN_FILE_FORMAT_BMP,
+  CBN_FILE_FORMAT_TGA,
+  CBN_FILE_FORMAT_JPG,
+} CBN_FileFormat;
+
 CARBON_API u8 carbon_fs_exists(const char *file);
 CARBON_API u8 carbon_fs_is_regular_file(const char *file);
 CARBON_API u8 carbon_fs_is_directory(const char *file);
@@ -622,7 +629,11 @@ CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
-CARBON_API f32 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
+CARBON_API u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
+CARBON_API CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs);
+CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
+CARBON_API u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
+CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
 CARBON_API void carbon_fs_destroy_img(CBN_List *img);
 
 /*

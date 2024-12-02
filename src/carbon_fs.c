@@ -118,6 +118,7 @@ u8 carbon_fs_create_directory(const char *path) {
     return false;
   }
   if (carbon_fs_is_directory(path)) {
+    // NOTE: is this warning useful or is it kinda lame?
     CARBON_WARNING("directory already exists, skipping creation");
     return true;
   }
@@ -330,26 +331,78 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
 }
 
 CBN_List carbon_fs_read_img_from_file(const char *file) {
-  usz width = 0, height = 0, channels = 0;
-  f32 *pixels = carbon_fs_read_img_from_file_linearly(file, &width, &height, &channels);
-  CBN_List mats = carbon_list_create(sizeof(CBN_Matrix));
-  for (usz c = 0; c < channels; ++c) {
-    f32 *ptr = pixels + c;
-    CBN_Matrix m = carbon_math_mat_create(height, width);
-    for (usz i = 0; i < m.rows; ++i) {
-      for (usz j = 0; j < m.cols; ++j) {
-        CARBON_MAT_AT(m, i, j) = *ptr;
-        ptr += channels;
-      }
-    }
-    carbon_list_push(&mats, &m);
-  }
+  usz width = 0, height = 0, chs = 0;
+  u8 *pixels = carbon_fs_read_img_from_file_linearly(file, &width, &height, &chs);
+  CBN_List img = carbon_fs_img_tensorize(pixels, width, height, chs);
   CARBON_FREE(pixels);
-  return mats;
+  return img;
 }
 
-f32 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs) {
-  return stbi_loadf(file, (i32 *) out_width, (i32 *) out_height, (i32 *) out_chs, 0);
+u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs) {
+  return stbi_load(file, (i32 *) out_width, (i32 *) out_height, (i32 *) out_chs, 0);
+}
+
+CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs) {
+  CBN_List img = carbon_list_create(sizeof(CBN_Matrix));
+  for (usz c = 0; c < chs; ++c) {
+    u8 *ptr = pixels + c;
+    CBN_Matrix ch = carbon_math_mat_create(height, width);
+    for (usz i = 0; i < ch.rows; ++i) {
+      for (usz j = 0; j < ch.cols; ++j) {
+        CARBON_MAT_AT(ch, i, j) = *ptr;
+        ptr += chs;
+      }
+    }
+    carbon_list_push(&img, &ch);
+  }
+  return img;
+}
+
+u8 *carbon_fs_img_linearize(CBN_List *img) {
+  CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
+  usz n_pixels = first_ch.rows * first_ch.cols;
+  u8 *pixels = (u8 *) CARBON_MALLOC(img->size * n_pixels * sizeof(u8));
+  usz i = 0, j = 0;
+  for (usz k = 0; k < n_pixels; ++k) {
+    carbon_list_foreach(CBN_Matrix, *img) {
+      pixels[(k * img->size) + it.i] = (u8) CARBON_MAT_AT(it.var, i, j);
+    }
+    ++j;
+    if (j == first_ch.cols) j = 0, ++i;
+  }
+  return pixels;
+}
+
+u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file) {
+  CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
+  u8 *pixels = carbon_fs_img_linearize(img);
+  u8 result = carbon_fs_write_img_to_file_linearly(pixels, fmt, first_ch.cols, first_ch.rows, img->size, file);
+  CARBON_FREE(pixels);
+  return result;
+}
+
+u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file) {
+  i32 result = 0;
+  switch (fmt) {
+  case CBN_FILE_FORMAT_PNG:
+    result = stbi_write_png(file, width, height, chs, pixels, width * chs);
+    break;
+  case CBN_FILE_FORMAT_BMP:
+    result = stbi_write_bmp(file, width, height, chs, pixels);
+    break;
+  case CBN_FILE_FORMAT_TGA:
+    result = stbi_write_tga(file, width, height, chs, pixels);
+    break;
+  case CBN_FILE_FORMAT_JPG:
+    // TODO: customize the quality value [1, 100] with a macro (maybe `CARBON_FS_WRITE_IMG_JPG_QUALITY`)
+    result = stbi_write_jpg(file, width, height, chs, pixels, 90);
+    break;
+  default:
+    CARBON_ASSERT(0 && "unreachable");
+  }
+  if (!result) CARBON_ERROR("unable to write pixels to file (`%s`)", file);
+  // NOTE: maybe just `return result;` is fine?
+  return result ? true : false;
 }
 
 void carbon_fs_destroy_img(CBN_List *img) {
