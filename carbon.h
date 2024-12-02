@@ -321,6 +321,7 @@ CARBON_API f32 carbon_math_ldexp(f32 x, i32 exp);
 CARBON_API f32 carbon_math_log10(f32 x);
 CARBON_API f32 carbon_math_exp10(f32 x);
 CARBON_API f32 carbon_math_ldexp10(f32 x, i32 exp);
+CARBON_API f32 carbon_math_frexp(f32 x, i32 *exp);
 CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);

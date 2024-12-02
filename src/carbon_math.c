@@ -219,6 +219,24 @@ f32 carbon_math_ldexp10(f32 x, i32 exp) {
   return x * (carbon_math_exp10(exp));
 }
 
+f32 carbon_math_frexp(f32 x, i32 *exp) {
+  union { f64 d; u64 i; } y = {x};
+  i32 ee = y.i >> 52 & 0x7ff;
+  if (!ee) {
+    if (x) {
+      x = carbon_math_frexp(x * 0x1p64, exp);
+      *exp -= 64;
+    }
+    else *exp = 0;
+    return x;
+  }
+  else if (ee == 0x7ff) return x;
+  *exp = ee - 0x3fe;
+  y.i &= 0x800fffffffffffffULL;
+  y.i |= 0x3fe0000000000000ULL;
+  return y.d;
+}
+
 f32 carbon_math_sigmoid(f32 x) {
   return 1 / (1 + carbon_math_exp(-x));
 }

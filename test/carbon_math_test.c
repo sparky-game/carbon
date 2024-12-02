@@ -113,6 +113,15 @@ CARBON_TEST(carbon_math, exp10) {
   return CARBON_OK;
 }
 
+CARBON_TEST(carbon_math, frexp) {
+  i32 exp;
+  carbon_should_be_f(0.625, carbon_math_frexp(2560, &exp));
+  carbon_should_be(12, exp);
+  carbon_should_be_f(-0.5, carbon_math_frexp(-4, &exp));
+  carbon_should_be(3, exp);
+  return CARBON_OK;
+}
+
 CARBON_TEST(carbon_math, sigmoid) {
   carbon_should_be_f(0, carbon_math_sigmoid(-14));
   carbon_should_be_f(0.006692, carbon_math_sigmoid(-5));
