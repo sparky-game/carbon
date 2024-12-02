@@ -12,6 +12,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb_image/stb_image.h"
 
+#define STBIW_MALLOC  CARBON_MALLOC
+#define STBIW_REALLOC CARBON_REALLOC
+#define STBIW_FREE    CARBON_FREE
+#define STBIW_ASSERT  CARBON_ASSERT
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../vendor/stb_image_write/stb_image_write.h"
+
 #ifdef _WIN32
 #define CARBON_FS_PATH_MAX_LEN 256
 #else

@@ -46,6 +46,18 @@ static inline void cp_dash_r(const char *origin, const char *dest) {
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
+static void clean(void) {
+  rm_dash_r(TESTBIN);
+  rm_dash_r("test/*.o");
+  rm_dash_r(WORKDIR);
+  rm_dash_r(WORKDIR ".tgz");
+}
+
+static void exit_gracefully(void) {
+  clean();
+  exit(1);
+}
+
 static void rebuild_myself(const char **host_argv) {
   const char *bin = host_argv[0];
 #ifdef CARBON_MAKE_ALREADY_REBUILT
@@ -71,10 +83,9 @@ static void rebuild_myself(const char **host_argv) {
 #ifndef __APPLE__
       "-static", "-Wl,-z,now", "-Wl,-z,relro",
 #endif
-      "-o", (char *) bin,
-      0
+      "-o", (char *) bin, 0
     };
-    CARBON_INFO("  CCLD    %s", bin);
+    CARBON_INFO("  CCLD    %s", __FILE__);
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
       exit(1);
@@ -90,13 +101,6 @@ static void rebuild_myself(const char **host_argv) {
     CARBON_ERROR("unable to execvp rebuilt binary");
     exit(1);
   }
-}
-
-static void clean(void) {
-  rm_dash_r(TESTBIN);
-  rm_dash_r("test/*.o");
-  rm_dash_r(WORKDIR);
-  rm_dash_r(WORKDIR ".tgz");
 }
 
 static void run_tests(void) {
@@ -152,10 +156,7 @@ static void run_tests(void) {
 
 static void build(void) {
   CARBON_INFO("  MKDIR   " WORKDIR);
-  if (!carbon_fs_create_directory(WORKDIR)) {
-    clean();
-    exit(1);
-  }
+  if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
   usz c_files_count = 0, cxx_files_count = 0;
   char **c_files = carbon_fs_pattern_match("src/carbon_*.c", &c_files_count);
   char **cxx_files = carbon_fs_pattern_match("src/carbon_*.cc", &cxx_files_count);
@@ -186,13 +187,20 @@ static void build(void) {
 }
 
 static void package(void) {
-  CARBON_INFO("  MKDIR   " WORKDIR "/src");
-  if (!carbon_fs_create_directory(WORKDIR "/src")) {
-    clean();
-    exit(1);
-  }
   cp_dash_r("COPYING carbon.h", WORKDIR);
+  // `src`
+  CARBON_INFO("  MKDIR   " WORKDIR "/src");
+  if (!carbon_fs_create_directory(WORKDIR "/src")) exit_gracefully();
   cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
+  // `vendor/stb_image`
+  CARBON_INFO("  MKDIR   " WORKDIR "/vendor/stb_image");
+  if (!carbon_fs_create_directories(WORKDIR "/vendor/stb_image")) exit_gracefully();
+  cp_dash_r("vendor/stb_image/*", WORKDIR "/vendor/stb_image");
+  // `vendor/stb_image_write`
+  CARBON_INFO("  MKDIR   " WORKDIR "/vendor/stb_image_write");
+  if (!carbon_fs_create_directories(WORKDIR "/vendor/stb_image_write")) exit_gracefully();
+  cp_dash_r("vendor/stb_image_write/*", WORKDIR "/vendor/stb_image_write");
+  // Create archive
   CARBON_INFO("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
