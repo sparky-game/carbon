@@ -218,3 +218,4 @@ For more details and to acquire a copy of the *Carbon RLE*, please visit <...>.
 - Daniel Holden. (2021, April 16). /orangeduck/Cello: Higher level programming in C/ [Code]. GitHub. <https://github.com/orangeduck/Cello>
 - Sean Barrett. (2015, June 7). /Advice for Writing Small Programs in C/ [Video]. YouTube. <https://www.youtube.com/watch?v=eAhWIO1Ra6M>
 - Charm. (2024, November 8). /charmbracelet/vhs: Your CLI home video recorder 📼/ [Code]. GitHub. <https://github.com/charmbracelet/vhs>
+- Alshahwan, N., Chheda, J., Finegenova, A., Gokkaya, B., Harman, M., Harper, I., Marginean, A., Sengupta, S., Wang, E. (2024, February 14). /Automated Unit Test Improvement using Large Language Models at Meta/ [Paper]. arXiv, Cornell University. <https://doi.org/10.48550/arXiv.2402.09171>
