@@ -197,19 +197,22 @@ static void build(void) {
 
 static void package(void) {
   cp_dash_r("COPYING carbon.h", WORKDIR);
-  // `src`
-  CARBON_INFO("  MKDIR   " WORKDIR "/src");
-  if (!carbon_fs_create_directory(WORKDIR "/src")) exit_gracefully();
-  cp_dash_r("src/carbon_*", WORKDIR "/src");
-  // `vendor/stb_image`
-  CARBON_INFO("  MKDIR   " WORKDIR "/vendor/stb_image");
-  if (!carbon_fs_create_directories(WORKDIR "/vendor/stb_image")) exit_gracefully();
-  cp_dash_r("vendor/stb_image/*", WORKDIR "/vendor/stb_image");
-  // `vendor/stb_image_write`
-  CARBON_INFO("  MKDIR   " WORKDIR "/vendor/stb_image_write");
-  if (!carbon_fs_create_directories(WORKDIR "/vendor/stb_image_write")) exit_gracefully();
-  cp_dash_r("vendor/stb_image_write/*", WORKDIR "/vendor/stb_image_write");
-  // Create archive
+#undef dir
+#define dir "src"
+  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  if (!carbon_fs_create_directory(WORKDIR "/" dir)) exit_gracefully();
+  cp_dash_r(dir "/carbon_*", WORKDIR "/" dir);
+#undef dir
+#define dir "vendor/stb_image"
+  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
+  cp_dash_r(dir "/*", WORKDIR "/" dir);
+#undef dir
+#define dir "vendor/stb_image_write"
+  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
+  cp_dash_r(dir "/*", WORKDIR "/" dir);
+#undef dir
   CARBON_INFO("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
