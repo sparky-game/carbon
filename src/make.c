@@ -157,9 +157,10 @@ static void run_tests(void) {
 static void build(void) {
   CARBON_INFO("  MKDIR   " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
-  usz c_files_count = 0, cxx_files_count = 0;
-  char **c_files = carbon_fs_pattern_match("src/carbon_*.c", &c_files_count);
-  char **cxx_files = carbon_fs_pattern_match("src/carbon_*.cc", &cxx_files_count);
+  usz c_files_count = 0, cxx_files_count = 0, objc_files_count = 0;
+  char **c_files    = carbon_fs_pattern_match("src/carbon_*.c", &c_files_count);
+  char **cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc", &cxx_files_count);
+  char **objc_files = carbon_fs_pattern_match("src/carbon_*.m", &objc_files_count);
   for (usz i = 0; i < c_files_count; ++i) {
     CARBON_INFO("  CC      %s", c_files[i]);
     carbon_string_strip_substr(c_files[i], "src/");
@@ -172,12 +173,20 @@ static void build(void) {
     carbon_string_strip_substr(cxx_files[i], ".cc");
     call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
   }
+  for (usz i = 0; i < objc_files_count; ++i) {
+    CARBON_INFO("  OBJC    %s", objc_files[i]);
+    carbon_string_strip_substr(objc_files[i], "src/");
+    carbon_string_strip_substr(objc_files[i], ".m");
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", objc_files[i], WORKDIR, objc_files[i]));
+  }
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
   CARBON_INFO("  LD      libcarbon.so");
   CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared ");
-#ifndef __APPLE__
+#ifdef __APPLE__
+  carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa ");
+#else
   carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.so");
@@ -191,7 +200,7 @@ static void package(void) {
   // `src`
   CARBON_INFO("  MKDIR   " WORKDIR "/src");
   if (!carbon_fs_create_directory(WORKDIR "/src")) exit_gracefully();
-  cp_dash_r("src/carbon_*.c src/carbon_*.cc", WORKDIR "/src");
+  cp_dash_r("src/carbon_*", WORKDIR "/src");
   // `vendor/stb_image`
   CARBON_INFO("  MKDIR   " WORKDIR "/vendor/stb_image");
   if (!carbon_fs_create_directories(WORKDIR "/vendor/stb_image")) exit_gracefully();
