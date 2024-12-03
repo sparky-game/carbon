@@ -225,8 +225,10 @@ char *carbon_fs_get_bin_directory(void) {
   return dir;
 }
 
-char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
+CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   static usz i = 0;
+  CBN_PatternMatchedFiles out;
+  memset(&out, 0, sizeof(CBN_PatternMatchedFiles));
 #ifdef _WIN32
   static usz counts[CARBON_FS_PATMAT_MAX_STRUCTS];
   static char *results[CARBON_FS_PATMAT_MAX_STRUCTS][MAX_PATH];
@@ -237,8 +239,7 @@ char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
   h_find = FindFirstFile(pattern, &find_data);
   if (h_find == INVALID_HANDLE_VALUE) {
     CARBON_ERROR("no found matches");
-    *out_count = 0;
-    return 0;
+    return out;
   }
   do {
     if (counts[i] < MAX_PATH) {
@@ -251,10 +252,11 @@ char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
     }
   } while (FindNextFile(h_find, &find_data));
   FindClose(h_find);
-  *out_count = counts[i];
+  out.count = counts[i];
   ++i;
   if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
-  return results[i];
+  out.files = results[i];
+  return out;
 #else
   static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS];
   glob_t *x = &xs[i];
@@ -262,21 +264,19 @@ char **carbon_fs_pattern_match(const char *pattern, usz *out_count) {
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
   case GLOB_NOSPACE:
     CARBON_ERROR("out of memory");
-    *out_count = 0;
-    return 0;
+    return out;
   case GLOB_ABORTED:
     CARBON_ERROR("read error");
-    *out_count = 0;
-    return 0;
+    return out;
   case GLOB_NOMATCH:
     CARBON_ERROR("no found matches");
-    *out_count = 0;
-    return 0;
+    return out;
   }
   ++i;
   if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
-  *out_count = x->gl_pathc;
-  return x->gl_pathv;
+  out.count = x->gl_pathc;
+  out.files = x->gl_pathv;
+  return out;
 #endif
 }
 

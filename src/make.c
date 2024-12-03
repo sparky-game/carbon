@@ -105,33 +105,32 @@ static void rebuild_myself(const char **host_argv) {
 
 static void run_tests(void) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
-  usz c_files_count = 0, cxx_files_count = 0;
-  char **c_files = carbon_fs_pattern_match("test/*.c", &c_files_count);
-  char **cxx_files = carbon_fs_pattern_match("test/*.cc", &cxx_files_count);
+  CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
+  CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
   CBN_StrBuilder cmd = {0};
-  for (usz i = 0; i < c_files_count; ++i) {
-    CARBON_INFO("  CC      %s", c_files[i]);
-    carbon_string_strip_substr(c_files[i], ".c");
+  carbon_fs_pattern_match_foreach(c_files) {
+    CARBON_INFO("  CC      %s", it.f);
+    carbon_string_strip_substr(it.f, ".c");
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
     carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", c_files[i], c_files[i]));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-  for (usz i = 0; i < cxx_files_count; ++i) {
-    CARBON_INFO("  CXX     %s", cxx_files[i]);
-    carbon_string_strip_substr(cxx_files[i], ".cc");
+  carbon_fs_pattern_match_foreach(cxx_files) {
+    CARBON_INFO("  CXX     %s", it.f);
+    carbon_string_strip_substr(it.f, ".cc");
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
     carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", cxx_files[i], cxx_files[i]));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -157,27 +156,26 @@ static void run_tests(void) {
 static void build(void) {
   CARBON_INFO("  MKDIR   " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
-  usz c_files_count = 0, cxx_files_count = 0, objc_files_count = 0;
-  char **c_files    = carbon_fs_pattern_match("src/carbon_*.c", &c_files_count);
-  char **cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc", &cxx_files_count);
-  char **objc_files = carbon_fs_pattern_match("src/carbon_*.m", &objc_files_count);
-  for (usz i = 0; i < c_files_count; ++i) {
-    CARBON_INFO("  CC      %s", c_files[i]);
-    carbon_string_strip_substr(c_files[i], "src/");
-    carbon_string_strip_substr(c_files[i], ".c");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.c -o %s/%s.o", c_files[i], WORKDIR, c_files[i]));
+  CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
+  CBN_PatternMatchedFiles cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc");
+  CBN_PatternMatchedFiles objc_files = carbon_fs_pattern_match("src/carbon_*.m");
+  carbon_fs_pattern_match_foreach(c_files) {
+    CARBON_INFO("  CC      %s", it.f);
+    carbon_string_strip_substr(it.f, "src/");
+    carbon_string_strip_substr(it.f, ".c");
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.c -o %s/%s.o", it.f, WORKDIR, it.f));
   }
-  for (usz i = 0; i < cxx_files_count; ++i) {
-    CARBON_INFO("  CXX     %s", cxx_files[i]);
-    carbon_string_strip_substr(cxx_files[i], "src/");
-    carbon_string_strip_substr(cxx_files[i], ".cc");
-    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", cxx_files[i], WORKDIR, cxx_files[i]));
+  carbon_fs_pattern_match_foreach(cxx_files) {
+    CARBON_INFO("  CXX     %s", it.f);
+    carbon_string_strip_substr(it.f, "src/");
+    carbon_string_strip_substr(it.f, ".cc");
+    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", it.f, WORKDIR, it.f));
   }
-  for (usz i = 0; i < objc_files_count; ++i) {
-    CARBON_INFO("  OBJC    %s", objc_files[i]);
-    carbon_string_strip_substr(objc_files[i], "src/");
-    carbon_string_strip_substr(objc_files[i], ".m");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . -x objective-c " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", objc_files[i], WORKDIR, objc_files[i]));
+  carbon_fs_pattern_match_foreach(objc_files) {
+    CARBON_INFO("  OBJC    %s", it.f);
+    carbon_string_strip_substr(it.f, "src/");
+    carbon_string_strip_substr(it.f, ".m");
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . -x objective-c " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");

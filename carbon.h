@@ -606,12 +606,19 @@ CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 **  ||       Filesystem       ||
 **  $$========================$$
 */
+#define carbon_fs_pattern_match_foreach(pmf) for (struct { usz i; char *f; } it = {0, (pmf).files[0]}; it.i < (pmf).count; ++it.i, it.i < (pmf).count ? it.f = (pmf).files[it.i] : it.f)
+
 typedef enum {
   CBN_FILE_FORMAT_PNG,
   CBN_FILE_FORMAT_BMP,
   CBN_FILE_FORMAT_TGA,
   CBN_FILE_FORMAT_JPG,
 } CBN_FileFormat;
+
+typedef struct {
+  char **files;
+  usz count;
+} CBN_PatternMatchedFiles;
 
 CARBON_API u8 carbon_fs_exists(const char *file);
 CARBON_API u8 carbon_fs_is_regular_file(const char *file);
@@ -625,7 +632,7 @@ CARBON_API u8 carbon_fs_change_directory(const char *path);
 CARBON_API u8 carbon_fs_create_directory(const char *path);
 CARBON_API u8 carbon_fs_create_directories(const char *path);
 CARBON_API char *carbon_fs_get_bin_directory(void);
-CARBON_API char **carbon_fs_pattern_match(const char *pattern, usz *out_count);
+CARBON_API CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
