@@ -781,6 +781,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_drawcanvas.c"
 #ifdef CARBON_USE_WINDOWING
 #include "src/carbon_win_xlib.c"
+#include "src/carbon_win_macos.m"
 #endif  // CARBON_USE_WINDOWING
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
