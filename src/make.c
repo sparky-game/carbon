@@ -177,7 +177,7 @@ static void build(void) {
     CARBON_INFO("  OBJC    %s", objc_files[i]);
     carbon_string_strip_substr(objc_files[i], "src/");
     carbon_string_strip_substr(objc_files[i], ".m");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", objc_files[i], WORKDIR, objc_files[i]));
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . -x objective-c " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", objc_files[i], WORKDIR, objc_files[i]));
   }
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
