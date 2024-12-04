@@ -213,7 +213,7 @@ If you prefer to release your game or application under a different, more commer
 - *Version compatibility:* Each RLE applies to a specific branch or major version of /Carbon/ (e.g. ~v1.y~), enabling you to update the library to a more up-to-date version with the same RLE.
 - *Professional support:* You also gain access to more advanced support regarding the library, as well as a private channel to make high-priority requests such as bug fixes or security vulnerabilities.
 
-For more details and to acquire a copy of the *Carbon RLE*, please visit <...>.
+For more details and to acquire a copy of the *Carbon RLE*, please visit <https://carbonlib.org>.
 
 * References
 
