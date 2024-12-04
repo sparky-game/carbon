@@ -192,11 +192,11 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   for (usz i = 0; i < s->n; ++i) {
     u8 has_passed = s->tests[i].f();
     if (has_passed) {
-      CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%zu/%zu) %s :: PASSED", i + 1, s->n, s->tests[i].name);
+      CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%.2zu/%.2zu) PASSED :: %s", i + 1, s->n, s->tests[i].name);
       ++passed;
     }
     else {
-      CARBON_ERROR_ASS("(%zu/%zu) %s :: FAILED", i + 1, s->n, s->tests[i].name);
+      CARBON_ERROR_ASS("(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
       ++failed;
     }
     if (!carbon_test_manager__cmd_args.no_output) {
