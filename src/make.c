@@ -142,7 +142,7 @@ static void run_tests(void) {
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, "test/*.o ");
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(CARBON_MAKE_USE_SANITIZERS)
   carbon_strbuilder_add_cstr(&cmd, "-static -Wl,-z,now -Wl,-z,relro ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, "-o " TESTBIN);
@@ -175,7 +175,7 @@ static void build(void) {
     CARBON_INFO("  OBJC    %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
     carbon_string_strip_substr(it.f, ".m");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . -x objective-c " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", it.f, WORKDIR, it.f));
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   CARBON_INFO("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
