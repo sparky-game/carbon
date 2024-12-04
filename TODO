@@ -1,37 +1,26 @@
 TODOs
 =====
 
-Change licensing model:
-- Carbon needs to be licensed under 1 license, not dual licensing.
-- The license it suits it more i think is the `AGPL-3.0-only`.
-- We'll need to design a system where a GPL Exception can be bought,
-  so we allow to use this library in a propietary project for a fee.
-- Every GPL Exception is 1-use-only, meaning it only can be used in
-  one project. If you want to use Carbon in 10 different projects,
-  each one needs a separate copy of the GPL Exception.
-- The GPL Exception we need to create can be called `Carbon Runtime Library Exception`
-  or `Carbon RLE` for short.
-- We need to think what'll be the price of the RLE will be (e.g. $99.99).
-  Also, each RLE would be valid forever, but only for the major version you bought it for.
-  For instance, you'll get access to all minor versions and patches created for that major version
-  (e.g. Carbon RLE for 1.Y branch of the library).
+Buy and configure the domain for the product's website: `carbonlib.org`.
 
-Implement image loading to a matrix of floats (`CBN_Matrix`):
-- Using `nothings/stb/stb_image.h` header-only library.
-- `f32 *stbi_loadf(const char *file, i32 *x, i32 *y, i32 *c, i32 channels)`
+Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
+- Tsoding's video on it: <https://www.youtube.com/watch?v=mpqaQIrVgew>.
+- Tsoding's repository: <https://github.com/tsoding/flag.h>.
+
+Take a look at this: <https://en.cppreference.com/w/cpp/preprocessor/replace>.
+
+Take a look at this: <https://santhoshkris.medium.com/threading-macros-in-clojure-eb08faf85f80>.
 
 Implement image saving from a matrix of floats (`CBN_Matrix`):
 - Using `nothings/stb/stb_image_write.h` header-only library.
 - `i32 stbi_write_*(const char *file, i32 w, i32 h, i32 c, const void *data, ...)`
-
-Also ship the Carbon library as a shared object, not only a static one.
 
 Implement motion detection algorithm:
 - Given 2 imgs, return bool whether movement is detected going
   from one img to the other.
 - `u8 motion_detection(const u8 *first, const u8 *second)`
 
-Create `CARBON_BOUND_CHECK` macro, which allows disabling bounds
+Create `CARBON_NO_BOUND_CHECKS` macro, which allows disabling bounds
 checking on all relevant operations.
 
 Implement CNN (Convolutional Neural Network):
