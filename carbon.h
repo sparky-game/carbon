@@ -158,15 +158,20 @@
 #if defined(__clang__)
 #define CARBON_C_COMPILER "clang"
 #define CARBON_CXX_COMPILER "clang++"
+#define CARBON_COMPILER_VERSION __VERSION__
 #elif defined(__GNUC__)
 #define CARBON_C_COMPILER "gcc"
 #define CARBON_CXX_COMPILER "g++"
+#define CARBON_COMPILER_VERSION __VERSION__
 #elif defined(_WIN32) && defined(_MSC_VER)
 #define CARBON_C_COMPILER "cl.exe"
 #define CARBON_CXX_COMPILER "cl.exe"
+#define CARBON_COMPILER_VERSION _MSC_FULL_VER
 #else
+#warning Unrecognized compiler, using defaults.
 #define CARBON_C_COMPILER "cc"
 #define CARBON_CXX_COMPILER "c++"
+#define CARBON_COMPILER_VERSION __VERSION__
 #endif
 #ifdef __cplusplus
 #define CARBON_COMPILER CARBON_CXX_COMPILER

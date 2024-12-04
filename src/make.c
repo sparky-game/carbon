@@ -221,10 +221,13 @@ int main(int argc, char **argv) {
     CARBON_ERROR("Unable to change CWD to binary's directory");
     return 1;
   }
+  rebuild_myself((const char **) argv);
+#ifdef CARBON_MAKE_ALREADY_REBUILT
+  CARBON_WARNING(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
+#endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
   CARBON_WARNING("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
-  rebuild_myself((const char **) argv);
   if (argc > 2) {
     CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
     return 1;

@@ -185,6 +185,8 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
   if (carbon_test_manager__cmd_args.no_output) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output disabled");
   else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
+  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
   CARBON_INFO("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
