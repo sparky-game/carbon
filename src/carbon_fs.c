@@ -318,7 +318,7 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
     sb->capacity = count;
   }
   if (1 != fread(sb->items + sb->size, n, 1, fd)) {
-    CARBON_ERROR("failed to read 1 item of %dB (`%s`)", n, file);
+    CARBON_ERROR("failed to read 1 item of %uB (`%s`)", n, file);
     return false;
   }
   if (ferror(fd)) {
