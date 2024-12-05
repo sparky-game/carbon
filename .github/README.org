@@ -51,6 +51,7 @@ You can't unit test C, right?
 <p align="center">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
+<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">
 </p>
 #+end_html
 
