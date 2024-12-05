@@ -11,7 +11,7 @@ void carbon_math_srand(u64 seed) {
   carbon_math__rand_seed = seed - 1;
 }
 
-int carbon_math_rand(void) {
+i32 carbon_math_rand(void) {
   carbon_math__rand_seed = CARBON_PCG_RAND_MAGIC * carbon_math__rand_seed + 1;
   return carbon_math__rand_seed >> 33;
 }
