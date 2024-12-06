@@ -3,6 +3,12 @@ TODOs
 
 Buy and configure the domain for the product's website: `carbonlib.org`.
 
+Implement string interpolation ("%$") in our custom logging macros/funcs (`CARBON_INFO`, `CARBON_WARNING`, `CARBON_ERROR`):
+- This solves the issue where the format specifier is not the same as the type of the argument;
+  e.g. `CARBON_INFO("%d", carbon_time_snowflake_get());` instead of `CARBON_INFO("%lld", carbon_time_snowflake_get());`.
+- With this, you'll only need to do `CARBON_INFO("%$", carbon_time_snowflake_get());`, and that's it.
+- Take a look at this: <https://github.com/orangeduck/Cello/blob/61ee5c3d9bca98fd68af575e9704f5f02533ae26/src/Show.c#L246>.
+
 Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
 - Tsoding's video on it: <https://www.youtube.com/watch?v=mpqaQIrVgew>.
 - Tsoding's repository: <https://github.com/tsoding/flag.h>.
@@ -10,10 +16,6 @@ Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
 Take a look at this: <https://en.cppreference.com/w/cpp/preprocessor/replace>.
 
 Take a look at this: <https://santhoshkris.medium.com/threading-macros-in-clojure-eb08faf85f80>.
-
-Implement image saving from a matrix of floats (`CBN_Matrix`):
-- Using `nothings/stb/stb_image_write.h` header-only library.
-- `i32 stbi_write_*(const char *file, i32 w, i32 h, i32 c, const void *data, ...)`
 
 Implement motion detection algorithm:
 - Given 2 imgs, return bool whether movement is detected going
@@ -36,7 +38,7 @@ Custom arena/linear memory allocator:
 - `carbon_mem_arena_alloc`
 - `carbon_mem_arena_free`
 
-Implement:
+Implement hashing functions:
 - `carbon_crypto_md5`
 - `carbon_crypto_sha1`
 - `carbon_crypto_sha256`
