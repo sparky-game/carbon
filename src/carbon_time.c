@@ -59,3 +59,28 @@ void carbon_time_sleep(u64 ms) {
   sleep(ms / 1e3);
 #endif
 }
+
+u64 carbon_time_snowflake_get(void) {
+  u64 timestamp = (u64) carbon_time_get() & ((1ULL << 42) - 1);
+  carbon_math_mt19937_64_srand(timestamp);
+  u64 random = carbon_math_mt19937_64_rand() % (1ULL << 22);
+  /*
+  ** [1][TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT][RRRRRRRRRRRRRRRRRRRRRR]
+  **  ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~
+  **  |                                           ^                       ^
+  **  |                                           |                       |------- 22-bit random number at pos. [21..0]
+  **  |                                           |
+  **  |                                           |------- 42-bit Timestamp at pos. [62..22]
+  **  |
+  **  |------- Unused Most-Significant-Bit (MSB) set to 1 at pos. 63
+  **                               (1ULL << 60 == 2^60 == 19 digits)
+  */
+  return (1ULL << 60) | (timestamp << 22) | random;
+}
+
+CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake) {
+  return (CBN_SnowflakeComponents) {
+    .timestamp = ((snowflake >> 22) & ((1ULL << 42) - 1)) & ((1ULL << 32) - 1),
+    .random    = snowflake & ((1ULL << 22) - 1)
+  };
+}

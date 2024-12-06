@@ -491,9 +491,16 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 **  ||       Time       ||
 **  $$==================$$
 */
+typedef struct {
+  u64 timestamp;
+  u64 random;
+} CBN_SnowflakeComponents;
+
 CARBON_API f64 carbon_time_get(void);
 CARBON_API char *carbon_time_get_iso8601(void);
 CARBON_API void carbon_time_sleep(u64 ms);
+CARBON_API u64 carbon_time_snowflake_get(void);
+CARBON_API CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake);
 
 /*
 **  $$===================$$
