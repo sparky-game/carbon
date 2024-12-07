@@ -29,11 +29,15 @@ CBN_StrList carbon_strlist_create(u8 unique) {
 CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) {
   CBN_StrList sl = carbon_strlist_create(false);
   char *s_copy = carbon_string_dup(s);
-  char *sub = strtok(s_copy, delim);
-  while (sub) {
-    carbon_strlist_push(&sl, sub);
-    sub = strtok(0, delim);
+  usz delim_len = strlen(delim);
+  char *start = s_copy;
+  char *found;
+  while ((found = strstr(start, delim))) {
+    *found = 0;
+    carbon_strlist_push(&sl, start);
+    start = found + delim_len;
   }
+  if (*start) carbon_strlist_push(&sl, start);
   CARBON_FREE(s_copy);
   return sl;
 }
