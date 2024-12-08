@@ -561,6 +561,7 @@ CARBON_API i32 carbon_string_cmp(const char *s1, const char *s2);
 CARBON_API char *carbon_string_dup(const char *s);
 CARBON_API char *carbon_string_fmt(const char *s, ...);
 CARBON_API void carbon_string_strip_substr(char *s, const char *sub);
+CARBON_API u8 carbon_string_ends_with_substr(const char *s, const char *sub);
 
 /*
 **  $$========================$$

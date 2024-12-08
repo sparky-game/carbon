@@ -47,3 +47,8 @@ void carbon_string_strip_substr(char *s, const char *sub) {
   char *p;
   while ((p = strstr(s, sub))) memmove(p, p + len, strlen(p + len) + 1);
 }
+
+u8 carbon_string_ends_with_substr(const char *s, const char *sub) {
+  usz s_len = strlen(s), sub_len = strlen(sub);
+  return (s_len >= sub_len) && (!carbon_string_cmp(s + (s_len - sub_len), sub));
+}
