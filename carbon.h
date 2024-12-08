@@ -108,6 +108,14 @@
 #define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
 #define CARBON_NOTUSED(x) (void)(x)
 #define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
+#define CARBON_TYPE_OF(x) __typeof__(x)
+
+#ifdef __cplusplus
+#include <type_traits>
+#define CARBON_TYPE_IS_SAME(T, U) std::is_same<T, U>::value
+#else
+#define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
+#endif
 
 #ifdef __cplusplus
 #define CARBON_API extern "C"
@@ -397,15 +405,49 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define CARBON_COLOR_YELLOW  "\033[1;33m"
 #define CARBON_COLOR_MAGENTA "\033[1;35m"
 #define CARBON_COLOR_CYAN    "\033[1;36m"
-#define CARBON_INFO_RAW(msg, ...) printf(msg, ##__VA_ARGS__)
-#define CARBON_INFO(msg, ...) CARBON_INFO_RAW(msg "\n", ##__VA_ARGS__)
+
+#define CARBON_INFO_RAW(msg, ...) carbon_print(msg, ##__VA_ARGS__)
+#define CARBON_INFO(msg, ...) carbon_println(msg, ##__VA_ARGS__)
 #define CARBON_INFO_COLOR(color, msg, ...) CARBON_INFO(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define CARBON_INFO_FQDN(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
 #define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
-#define CARBON_ERROR_RAW(msg, ...) fprintf(stderr, msg, ##__VA_ARGS__)
+
+#define CARBON_ERROR_RAW(msg, ...) carbon_eprint(msg, ##__VA_ARGS__)
 #define CARBON_ERROR_PREFIX(prefix, msg, ...) CARBON_ERROR_RAW(CARBON_COLOR_RED prefix "" msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
 #define CARBON_ERROR_ASS(msg, ...) CARBON_ERROR_PREFIX("", msg, ##__VA_ARGS__)
 #define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: ", msg, __func__, ##__VA_ARGS__)
+
+#define carbon_log__var_to_spec(x)                                      \
+  (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u8)           ? "%hhu"      \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i8)           ? "%hhd"      \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u16)          ? "%hu"       \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i16)          ? "%hd"       \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u32)          ? "%u"        \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i32)          ? "%d"        \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u64)          ? "%llu"      \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i64)          ? "%lld"      \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f32)          ? "%f"        \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f64)          ? "%lf"       \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char)         ? "%c"        \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char *)       ? "%s"        \
+   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
+   : "<'Stuff' At %p>")
+
+#define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), &x}
+
+#define carbon_print(msg, ...) carbon_log_print(stdout, msg, ##__VA_ARGS__)
+#define carbon_eprint(msg, ...) carbon_log_print(stderr, msg, ##__VA_ARGS__)
+#define carbon_println(msg, ...) carbon_print(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
+#define carbon_eprintln(msg, ...) carbon_eprint(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
+
+typedef struct {
+  const char *spec;
+  void *var;
+} CBN_Log_BoxedVar;
+
+CARBON_API void carbon_log_print(FILE *stream, const char *fmt, ...);
 
 /*
 **  $$====================$$
@@ -795,6 +837,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_math.c"
 #include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"
+#include "src/carbon_log.c"
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_list.c"

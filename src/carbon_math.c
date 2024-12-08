@@ -509,15 +509,15 @@ void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32)) {
 }
 
 void carbon_math_mat_print(CBN_Matrix m, const char *name) {
-  CARBON_INFO("%s = [", name);
+  carbon_println("%s = [", name);
   for (usz i = 0; i < m.rows; ++i) {
-    CARBON_INFO_RAW("  ");
+    carbon_print("  ");
     for (usz j = 0; j < m.cols; ++j) {
-      CARBON_INFO_RAW("%f ", CARBON_MAT_AT(m, i, j));
+      carbon_print("%f ", CARBON_MAT_AT(m, i, j));
     }
-    CARBON_INFO();
+    carbon_println("");
   }
-  CARBON_INFO("];");
+  carbon_println("];");
 }
 
 CBN_Row carbon_math_row_create(usz cols) {
