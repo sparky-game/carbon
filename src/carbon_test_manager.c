@@ -40,11 +40,11 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
     return;
   }
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-h") || !carbon_string_cmp(argv[1], "--help"))) {
-    CARBON_INFO_RAW(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME, CARBON_NAME);
+    carbon_print(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME, CARBON_NAME);
     exit(0);
   }
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-v") || !carbon_string_cmp(argv[1], "--version"))) {
-    CARBON_INFO_RAW(version_msg, CARBON_NAME, CARBON_VERSION);
+    carbon_print(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
   CARBON_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
@@ -106,7 +106,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
-  CARBON_INFO("=======================================");
+  carbon_println("=======================================");
   // 4. Replace current binary with new one (execvp)
   char *argv[4];
   memset(argv, 0, 4 * sizeof(char *));
@@ -177,7 +177,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
 
 u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
-  CARBON_INFO("=======================================");
+  carbon_println("=======================================");
   if (!s->tests || !s->n) {
     CARBON_ERROR("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
@@ -187,7 +187,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
-  CARBON_INFO("=======================================");
+  carbon_println("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
   CBN_Clock clk = carbon_clock_start();
@@ -224,12 +224,12 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) clk.elapsed)) CARBON_INFO_RAW("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
-                                              passed,
-                                              total_time_micro);
-    else CARBON_INFO_RAW("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
-                         passed,
-                         clk.elapsed);
+    if (!((i32) clk.elapsed)) carbon_print("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
+                                           passed,
+                                           total_time_micro);
+    else carbon_print("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
+                      passed,
+                      clk.elapsed);
   }
   if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, clk.elapsed);
   carbon_list_destroy(&junit_testcase_infos);

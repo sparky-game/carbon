@@ -156,10 +156,10 @@ void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr) {
 }
 
 void carbon_nn_print(CBN_NeuralNet nn, const char *name) {
-  CARBON_INFO("%s = [", name);
+  carbon_println("%s = [", name);
   for (usz i = 0; i < nn.arch_count - 1; ++i) {
     carbon_math_mat_print(nn.ws[i], carbon_string_fmt("ws%zu", i));
     carbon_math_row_print(nn.bs[i], carbon_string_fmt("bs%zu", i));
   }
-  CARBON_INFO("];");
+  carbon_println("];");
 }

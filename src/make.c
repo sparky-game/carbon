@@ -37,12 +37,12 @@ static inline void call_cmd(const char *cmd) {
 }
 
 static inline void rm_dash_r(const char *path) {
-  CARBON_INFO("  RM      %s", path);
+  carbon_println("  RM      %s", path);
   call_cmd(carbon_string_fmt("rm -rf %s", path));
 }
 
 static inline void cp_dash_r(const char *origin, const char *dest) {
-  CARBON_INFO("  CP      %s -> %s", origin, dest);
+  carbon_println("  CP      %s -> %s", origin, dest);
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
@@ -85,7 +85,7 @@ static void rebuild_myself(const char **host_argv) {
 #endif
       "-o", (char *) bin, 0
     };
-    CARBON_INFO("  CCLD    %s", __FILE__);
+    carbon_println("  CCLD    %s", __FILE__);
     if (-1 == execvp(argv[0], argv)) {
       CARBON_ERROR("unable to execvp from child process");
       exit(1);
@@ -96,7 +96,7 @@ static void rebuild_myself(const char **host_argv) {
     CARBON_ERROR("errors detected during rebuild");
     exit(1);
   }
-  CARBON_INFO("  EXEC    %s", bin);
+  carbon_println("  EXEC    %s", bin);
   if (-1 == execvp(bin, (char **) host_argv)) {
     CARBON_ERROR("unable to execvp rebuilt binary");
     exit(1);
@@ -109,7 +109,7 @@ static void run_tests(void) {
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
   CBN_StrBuilder cmd = {0};
   carbon_fs_pattern_match_foreach(c_files) {
-    CARBON_INFO("  CC      %s", it.f);
+    carbon_println("  CC      %s", it.f);
     carbon_string_strip_substr(it.f, ".c");
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -122,7 +122,7 @@ static void run_tests(void) {
     carbon_strbuilder_free(&cmd);
   }
   carbon_fs_pattern_match_foreach(cxx_files) {
-    CARBON_INFO("  CXX     %s", it.f);
+    carbon_println("  CXX     %s", it.f);
     carbon_string_strip_substr(it.f, ".cc");
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -134,7 +134,7 @@ static void run_tests(void) {
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-  CARBON_INFO("  LD      " TESTBIN);
+  carbon_println("  LD      " TESTBIN);
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
   carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
@@ -149,37 +149,37 @@ static void run_tests(void) {
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r("test/*.o");
-  CARBON_INFO("+ " TESTBIN " -n");
+  carbon_println("+ " TESTBIN " -n");
   call_cmd(TESTBIN " -n");
 }
 
 static void build(void) {
-  CARBON_INFO("  MKDIR   " WORKDIR);
+  carbon_println("  MKDIR   " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
   CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
   CBN_PatternMatchedFiles cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc");
   CBN_PatternMatchedFiles objc_files = carbon_fs_pattern_match("src/carbon_*.m");
   carbon_fs_pattern_match_foreach(c_files) {
-    CARBON_INFO("  CC      %s", it.f);
+    carbon_println("  CC      %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
     carbon_string_strip_substr(it.f, ".c");
     call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.c -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   carbon_fs_pattern_match_foreach(cxx_files) {
-    CARBON_INFO("  CXX     %s", it.f);
+    carbon_println("  CXX     %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
     carbon_string_strip_substr(it.f, ".cc");
     call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   carbon_fs_pattern_match_foreach(objc_files) {
-    CARBON_INFO("  OBJC    %s", it.f);
+    carbon_println("  OBJC    %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
     carbon_string_strip_substr(it.f, ".m");
     call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", it.f, WORKDIR, it.f));
   }
-  CARBON_INFO("  AR      libcarbon.a");
+  carbon_println("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
-  CARBON_INFO("  LD      libcarbon.so");
+  carbon_println("  LD      libcarbon.so");
   CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared ");
 #ifdef __APPLE__
@@ -197,21 +197,21 @@ static void package(void) {
   cp_dash_r("COPYING carbon.h", WORKDIR);
 #undef dir
 #define dir "src"
-  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  carbon_println("  MKDIR   " WORKDIR "/" dir);
   if (!carbon_fs_create_directory(WORKDIR "/" dir)) exit_gracefully();
   cp_dash_r(dir "/carbon_*", WORKDIR "/" dir);
 #undef dir
 #define dir "vendor/stb_image"
-  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  carbon_println("  MKDIR   " WORKDIR "/" dir);
   if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
   cp_dash_r(dir "/*", WORKDIR "/" dir);
 #undef dir
 #define dir "vendor/stb_image_write"
-  CARBON_INFO("  MKDIR   " WORKDIR "/" dir);
+  carbon_println("  MKDIR   " WORKDIR "/" dir);
   if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
   cp_dash_r(dir "/*", WORKDIR "/" dir);
 #undef dir
-  CARBON_INFO("  GZIP    " WORKDIR ".tgz");
+  carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
 }
@@ -234,7 +234,7 @@ int main(int argc, char **argv) {
   }
   if (argc == 2) {
     if (!carbon_string_cmp(argv[1], "help")) {
-      CARBON_INFO_RAW(help_msg, argv[0], CARBON_NAME);
+      carbon_print(help_msg, argv[0], CARBON_NAME);
       return 0;
     }
     else if (!carbon_string_cmp(argv[1], "clean")) {

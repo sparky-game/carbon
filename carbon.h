@@ -406,9 +406,7 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define CARBON_COLOR_MAGENTA "\033[1;35m"
 #define CARBON_COLOR_CYAN    "\033[1;36m"
 
-#define CARBON_INFO_RAW(msg, ...) carbon_print(msg, ##__VA_ARGS__)
-#define CARBON_INFO(msg, ...) carbon_println(msg, ##__VA_ARGS__)
-#define CARBON_INFO_COLOR(color, msg, ...) CARBON_INFO(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define CARBON_INFO_COLOR(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define CARBON_INFO_FQDN(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
 #define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
 
