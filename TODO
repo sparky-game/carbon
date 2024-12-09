@@ -3,12 +3,6 @@ TODOs
 
 Buy and configure the domain for the product's website: `carbonlib.org`.
 
-Implement string interpolation ("%$") in our custom logging macros/funcs (`CARBON_INFO`, `CARBON_WARNING`, `CARBON_ERROR`):
-- This solves the issue where the format specifier is not the same as the type of the argument;
-  e.g. `CARBON_INFO("%d", carbon_time_snowflake_get());` instead of `CARBON_INFO("%lld", carbon_time_snowflake_get());`.
-- With this, you'll only need to do `CARBON_INFO("%$", carbon_time_snowflake_get());`, and that's it.
-- Take a look at this: <https://github.com/orangeduck/Cello/blob/61ee5c3d9bca98fd68af575e9704f5f02533ae26/src/Show.c#L246>.
-
 Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
 - Tsoding's video on it: <https://www.youtube.com/watch?v=mpqaQIrVgew>.
 - Tsoding's repository: <https://github.com/tsoding/flag.h>.
@@ -52,6 +46,10 @@ Research:
 - Key-agreement protocol (e.g. DH, ECDH)
 
 Add russian alternatives to all functions (in cyrillic script).
+- carbon == углерод
+- implementation == выполнение
+- test == тест
+- tests == тесты
 
 ;; Local Variables:
 ;; mode: text
