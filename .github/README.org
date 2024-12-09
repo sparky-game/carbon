@@ -34,6 +34,7 @@ You can't unit test C, right?
 <p align="center">
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=blue" alt="License">
 <img src="https://img.shields.io/badge/C-99-blue" alt="C Standard">
+<img src="https://img.shields.io/badge/C++-11-blue" alt="C++ Standard">
 <img src="https://img.shields.io/github/repo-size/sparky-game/carbon?color=blue" alt="Size">
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Release">
 <img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
