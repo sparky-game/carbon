@@ -21,14 +21,15 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
     [carbon_win__app setActivationPolicy:NSApplicationActivationPolicyRegular];
     // Create the window
     NSRect frame = NSMakeRect(0, 0, width, height);
-    carbon_win__window = [[NSWindow alloc] initWithContentRect:frame
-                                                     styleMask:(NSWindowStyleMaskTitled   |
-                                                                NSWindowStyleMaskClosable |
-                                                                NSWindowStyleMaskResizable)
-                                                       backing:NSBackingStoreBuffered
-                                                         defer:NO];
-    NSString *title = [NSString stringWithUTF8String:title];
-    [carbon_win__window setTitle:title];
+    carbon_win__window = [[NSWindow alloc]
+                           initWithContentRect:frame
+                                     styleMask:(NSWindowStyleMaskTitled   |
+                                                NSWindowStyleMaskClosable |
+                                                NSWindowStyleMaskResizable)
+                                       backing:NSBackingStoreBuffered
+                                         defer:NO];
+    NSString *win_title = [NSString stringWithUTF8String:title];
+    [carbon_win__window setTitle:win_title];
     [carbon_win__window makeKeyAndOrderFront:nil];
     // Add a custom view for drawing
     carbon_win__view = [[NSView alloc] initWithFrame:frame];
@@ -36,10 +37,11 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
     // Track if the window is requested to close
     carbon_win__should_close = NO;
     // Setup window close notification
-    [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification
-                                                      object:carbon_win__window
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) { carbon_win__should_close = YES; }];
+    [[NSNotificationCenter defaultCenter]
+      addObserverForName:NSWindowWillCloseNotification
+                  object:carbon_win__window
+                   queue:nil
+              usingBlock:^(__unused NSNotification *note) { carbon_win__should_close = YES; }];
     [carbon_win__app finishLaunching];
   }
 }
