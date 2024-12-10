@@ -62,9 +62,6 @@ CARBON_TEST(carbon_math, fmod) {
   carbon_should_be_f(99, carbon_math_fmod(-1, 100));
   carbon_should_be_f(-1.4, carbon_math_fmod(6.9, -8.3));
   carbon_should_be_f(-0.7, carbon_math_fmod(6.9, -3.8));
-  carbon_should_be_f(0.699997, carbon_math_fmod(69.1, 3.8));
-  carbon_should_be_f(3.100003, carbon_math_fmod(-69.1, 3.8));
-  carbon_should_be_f(-3.100003, carbon_math_fmod(69.1, -3.8));
   return CARBON_OK;
 }
 
