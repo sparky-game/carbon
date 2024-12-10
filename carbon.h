@@ -149,6 +149,8 @@
 
 #if defined(__amd64__) || defined(_M_AMD64)
 #define CARBON_CPU_ARCH "amd64"
+#elif defined(__aarch64__)
+#define CARBON_CPU_ARCH "aarch64"
 #else
 #error CPU architecture is not supported
 #endif
