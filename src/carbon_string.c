@@ -34,7 +34,7 @@ char *carbon_string_fmt(const char *s, ...) {
   va_end(args);
   if (bytes >= CARBON_STRING_FMT_MAX_LEN) {
     char *trunc_x = xs[i] + CARBON_STRING_FMT_MAX_LEN - 4;
-    sprintf(trunc_x, "...");
+    snprintf(trunc_x, 4, "...");
   }
   ++i;
   if (i >= CARBON_STRING_FMT_MAX_BUFFERS) i = 0;
