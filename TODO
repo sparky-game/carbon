@@ -1,6 +1,14 @@
 TODOs
 =====
 
+Logging functions (API):
+- `carbon_log_info`, `carbon_log_warn`, `carbon_log_error`.
+- `carbon_log(CARBON_LOG_INFO, ...)`, `carbon_log(CARBON_LOG_WARN, ...)`, `carbon_log(CARBON_LOG_ERROR, ...)`.
+- They're going to be macros that use the `carbon_println` macro to print the logs, using the already established format:
+  - INFO level:  {YELLOW}  -> "[*] __FILE__:__LINE__ (__func__) :: %$"
+  - WARN level:  {MAGENTA} -> "[?] __FILE__:__LINE__ (__func__) :: %$"
+  - ERROR level:     {RED} -> "[!] __FILE__:__LINE__ (__func__) :: %$"
+
 Buy and configure the domain for the product's website: `carbonlib.org`.
 
 Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
