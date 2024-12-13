@@ -15,7 +15,7 @@ CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
   CBN_HashMap hm = {
-    .items = CARBON_MALLOC(capacity * stride),
+    .items = CARBON_CALLOC(capacity, stride),
     .capacity = capacity,
     .stride = stride
   };
