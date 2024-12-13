@@ -1,6 +1,13 @@
 TODOs
 =====
 
+Investigate and consider implementing a second version for `carbon_fs_read_entire_file` function, using `mmap` instead of `fread`.
+
+Introduce these functions for completeness:
+- `u8 carbon_string_starts_with_substr(const char *s, const char *sub)`.
+- `u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView prefix)`.
+- `u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView suffix)`.
+
 Logging functions (API):
 - `carbon_log_info`, `carbon_log_warn`, `carbon_log_error`.
 - `carbon_log(CARBON_LOG_INFO, ...)`, `carbon_log(CARBON_LOG_WARN, ...)`, `carbon_log(CARBON_LOG_ERROR, ...)`.
