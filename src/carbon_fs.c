@@ -63,7 +63,7 @@ u8 carbon_fs_is_directory(const char *file) {
 u8 carbon_fs_rename(const char *oldie, const char *newie) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Renaming file %s -> %s", oldie, newie);
   if (-1 == rename(oldie, newie)) {
-    CARBON_ERROR("unable to rename %s -> %s", oldie, newie);
+    carbon_log_error("unable to rename %s -> %s", oldie, newie);
     return false;
   }
   return true;
@@ -72,7 +72,7 @@ u8 carbon_fs_rename(const char *oldie, const char *newie) {
 i32 carbon_fs_mtime(const char *file) {
   struct stat sb;
   if (-1 == stat(file, &sb)) {
-    CARBON_ERROR("unable to stat file `%s`", file);
+    carbon_log_error("unable to stat file `%s`", file);
     return false;
   }
   return sb.st_mtime;
@@ -87,7 +87,7 @@ void carbon_fs_copy(const char *from, const char *to, u8 recursive) {
 
 u8 carbon_fs_remove(const char *file) {
   if (-1 == remove(file)) {
-    CARBON_ERROR("unable to remove file `%s`", file);
+    carbon_log_error("unable to remove file `%s`", file);
     return false;
   }
   return true;
@@ -106,7 +106,7 @@ u8 carbon_fs_change_directory(const char *path) {
   i8 result = chdir(path);
 #endif
   if (result == -1) {
-    CARBON_ERROR("unable to change to directory `%s`", path);
+    carbon_log_error("unable to change to directory `%s`", path);
     return false;
   }
   return true;
@@ -114,12 +114,12 @@ u8 carbon_fs_change_directory(const char *path) {
 
 u8 carbon_fs_create_directory(const char *path) {
   if (!path || !path[0]) {
-    CARBON_ERROR("path is invalid");
+    carbon_log_error("path is invalid");
     return false;
   }
   if (carbon_fs_is_directory(path)) {
     // NOTE: is this warning useful or is it kinda lame?
-    CARBON_WARNING("directory already exists, skipping creation");
+    carbon_log_warn("directory already exists, skipping creation");
     return true;
   }
 #ifdef _WIN32
@@ -128,7 +128,7 @@ u8 carbon_fs_create_directory(const char *path) {
   i8 result = mkdir(path, 0755);
 #endif
   if (result == -1) {
-    CARBON_ERROR("unable to create directory `%s`", path);
+    carbon_log_error("unable to create directory `%s`", path);
     return false;
   }
   return true;
@@ -136,11 +136,12 @@ u8 carbon_fs_create_directory(const char *path) {
 
 u8 carbon_fs_create_directories(const char *path) {
   if (!path || !path[0]) {
-    CARBON_ERROR("path is invalid");
+    carbon_log_error("path is invalid");
     return false;
   }
   if (carbon_fs_is_directory(path)) {
-    CARBON_WARNING("directory already exists, skipping creation");
+    // NOTE: is this warning useful or is it kinda lame?
+    carbon_log_warn("directory already exists, skipping creation");
     return true;
   }
   usz len = strlen(path) + 1;
@@ -238,7 +239,7 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   counts[i] = 0;
   h_find = FindFirstFile(pattern, &find_data);
   if (h_find == INVALID_HANDLE_VALUE) {
-    CARBON_ERROR("no found matches");
+    carbon_log_error("no found matches");
     return out;
   }
   do {
@@ -247,7 +248,7 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
       ++counts[i];
     }
     else {
-      CARBON_ERROR("too many matches");
+      carbon_log_error("too many matches");
       break;
     }
   } while (FindNextFile(h_find, &find_data));
@@ -263,13 +264,13 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   memset(x, 0, sizeof(glob_t));
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
   case GLOB_NOSPACE:
-    CARBON_ERROR("out of memory");
+    carbon_log_error("out of memory");
     return out;
   case GLOB_ABORTED:
-    CARBON_ERROR("read error");
+    carbon_log_error("read error");
     return out;
   case GLOB_NOMATCH:
-    CARBON_ERROR("no found matches");
+    carbon_log_error("no found matches");
     return out;
   }
   ++i;
@@ -283,16 +284,16 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
 u32 carbon_fs_get_file_size(const char *file) {
   FILE *fd = fopen(file, "rb");
   if (!fd) {
-    CARBON_ERROR("unable to open file (`%s`)", file);
+    carbon_log_error("unable to open file (`%s`)", file);
     return 0;
   }
   if (-1 == fseek(fd, 0, SEEK_END)) {
-    CARBON_ERROR("unable to set file's pointer to EOF (`%s`)", file);
+    carbon_log_error("unable to set file's pointer to EOF (`%s`)", file);
     return 0;
   }
   i32 size = ftell(fd);
   if (size == -1) {
-    CARBON_ERROR("unable to get value of file's pointer (`%s`)", file);
+    carbon_log_error("unable to get value of file's pointer (`%s`)", file);
     return 0;
   }
   fclose(fd);
@@ -303,7 +304,7 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   u32 n = carbon_fs_get_file_size(file);
   FILE *fd = fopen(file, "rb");
   if (!fd) {
-    CARBON_ERROR("unable to open file (`%s`)", file);
+    carbon_log_error("unable to open file (`%s`)", file);
     return false;
   }
   usz count = sb->size + n;
@@ -311,18 +312,18 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
     char *prev_p = sb->items;
     sb->items = (char *) CARBON_REALLOC(sb->items, count);
     if (!sb->items && sb->size > 0) {
-      CARBON_ERROR("failed to reallocate memory (%zuB)", count);
+      carbon_log_error("failed to reallocate memory (%zuB)", count);
       CARBON_FREE(prev_p);
       return false;
     }
     sb->capacity = count;
   }
   if (1 != fread(sb->items + sb->size, n, 1, fd)) {
-    CARBON_ERROR("failed to read 1 item of %uB (`%s`)", n, file);
+    carbon_log_error("failed to read 1 item of %uB (`%s`)", n, file);
     return false;
   }
   if (ferror(fd)) {
-    CARBON_ERROR("unable to read file's contents (`%s`)", file);
+    carbon_log_error("unable to read file's contents (`%s`)", file);
     return false;
   }
   sb->size = count;
@@ -400,7 +401,7 @@ u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz widt
   default:
     CARBON_ASSERT(0 && "unreachable");
   }
-  if (!result) CARBON_ERROR("unable to write pixels to file (`%s`)", file);
+  if (!result) carbon_log_error("unable to write pixels to file (`%s`)", file);
   // NOTE: maybe just `return result;` is fine?
   return result ? true : false;
 }

@@ -13,7 +13,7 @@ CBN_List carbon_list_create(usz stride) {
     .size = 0
   };
   if (!l.items) {
-    CARBON_ERROR("failed to allocate memory (%zuB)", stride);
+    carbon_log_error("failed to allocate memory (%zuB)", stride);
     memset(&l, 0, sizeof(CBN_List));
   }
   return l;
@@ -21,7 +21,7 @@ CBN_List carbon_list_create(usz stride) {
 
 void carbon_list_destroy(CBN_List *l) {
   if (!l) {
-    CARBON_WARNING("`l` is not a valid pointer, skipping destruction");
+    carbon_log_warn("`l` is not a valid pointer, skipping destruction");
     return;
   }
   CARBON_FREE(l->items);
@@ -31,7 +31,7 @@ void carbon_list_destroy(CBN_List *l) {
 
 void carbon_list_push(CBN_List *l, void *value) {
   if (!l || !value) {
-    CARBON_ERROR("`l` and `value` must be valid pointers");
+    carbon_log_error("`l` and `value` must be valid pointers");
     return;
   }
   if (l->size == l->capacity) {
@@ -40,7 +40,7 @@ void carbon_list_push(CBN_List *l, void *value) {
     usz size = l->capacity * l->stride;
     l->items = CARBON_REALLOC(l->items, size);
     if (!l->items) {
-      CARBON_ERROR("failed to reallocate memory (%zuB)", size);
+      carbon_log_error("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       return;
     }
@@ -51,11 +51,11 @@ void carbon_list_push(CBN_List *l, void *value) {
 
 void carbon_list_pop(CBN_List *l, void *out_value) {
   if (!l || !out_value) {
-    CARBON_ERROR("`l` and `out_value` must be valid pointers");
+    carbon_log_error("`l` and `out_value` must be valid pointers");
     return;
   }
   if (!l->size) {
-    CARBON_WARNING("list is empty");
+    carbon_log_warn("list is empty");
     return;
   }
   memcpy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
@@ -66,7 +66,7 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
     usz size = l->capacity * l->stride;
     l->items = CARBON_REALLOC(l->items, size);
     if (!l->items && l->size > 0) {
-      CARBON_ERROR("failed to reallocate memory (%zuB)", size);
+      carbon_log_error("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       return;
     }

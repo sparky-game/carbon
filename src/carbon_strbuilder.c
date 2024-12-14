@@ -13,7 +13,7 @@ void carbon_strbuilder_add_buf(CBN_StrBuilder *sb, const char *data, usz size) {
     usz sz = sb->capacity * sizeof(char);
     sb->items = (char *) CARBON_REALLOC(sb->items, sz);
     if (!sb->items && sb->size > 0) {
-      CARBON_ERROR("failed to reallocate memory (%zuB)", sz);
+      carbon_log_error("failed to reallocate memory (%zuB)", sz);
       CARBON_FREE(prev_p);
       return;
     }
@@ -32,7 +32,7 @@ void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
 
 void carbon_strbuilder_free(CBN_StrBuilder *sb) {
   if (!sb) {
-    CARBON_WARNING("`sb` is not a valid pointer, skipping free");
+    carbon_log_warn("`sb` is not a valid pointer, skipping free");
     return;
   }
   CARBON_FREE(sb->items);

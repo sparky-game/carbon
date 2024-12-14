@@ -17,7 +17,7 @@ char *carbon_string_dup(const char *s) {
   usz len = strlen(s) + 1;
   char *data = (char *) CARBON_MALLOC(len);
   if (!data) {
-    CARBON_ERROR("failed to allocate memory (%zuB)", len);
+    carbon_log_error("failed to allocate memory (%zuB)", len);
     return false;
   }
   return (char *) memcpy(data, s, len);

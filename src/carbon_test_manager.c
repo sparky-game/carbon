@@ -47,7 +47,7 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
     carbon_print(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
-  CARBON_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
+  carbon_log_error("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
   exit(1);
 }
 
@@ -79,7 +79,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
-    CARBON_ERROR("unable to fork child process");
+    carbon_log_error("unable to fork child process");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   else if (rebuild_child_pid == 0) {
@@ -95,14 +95,14 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
       argv[it.i + 6] = carbon_strview_to_cstr(it.sv);
     }
     if (-1 == execvp(argv[0], argv)) {
-      CARBON_ERROR("unable to execvp from child process");
+      carbon_log_error("unable to execvp from child process");
       carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
     }
   }
   // 3. Wait for rebuilding (child process) ends correctly
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
-    CARBON_ERROR("errors detected during rebuild");
+    carbon_log_error("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
@@ -116,7 +116,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
     argv[2] = carbon_test_manager__cmd_args.output;
   }
   if (-1 == execvp(argv[0], argv)) {
-    CARBON_ERROR("unable to execvp rebuilt binary");
+    carbon_log_error("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
 }
@@ -133,7 +133,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   if (!s->tests) {
     p = (CBN_Test *) CARBON_MALLOC(size);
     if (!p) {
-      CARBON_ERROR("failed to allocate memory (%zuB)", size);
+      carbon_log_error("failed to allocate memory (%zuB)", size);
       exit(1);
     }
   }
@@ -142,7 +142,7 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
     CBN_Test *prev_p = s->tests;
     p = (CBN_Test *) CARBON_REALLOC(s->tests, size);
     if (!p) {
-      CARBON_ERROR("failed to reallocate memory (%zuB)", size);
+      carbon_log_error("failed to reallocate memory (%zuB)", size);
       CARBON_FREE(prev_p);
       exit(1);
     }
@@ -166,7 +166,7 @@ void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, cons
 
 void carbon_test_manager_cleanup(CBN_Suite *s) {
   if (!s->tests || !s->n) {
-    CARBON_ERROR("Suite `s` has not been initialized");
+    carbon_log_error("Suite `s` has not been initialized");
     return;
   }
   CARBON_FREE(s->tests);
@@ -179,7 +179,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   CARBON_INFO_COLOR(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
   carbon_println("=======================================");
   if (!s->tests || !s->n) {
-    CARBON_ERROR("`(Suite *) s` has not been initialized");
+    carbon_log_error("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
   }
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
@@ -213,23 +213,23 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   u32 total_time_micro = (u32) (clk.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
   if (failed) {
-    if (!((i32) clk.elapsed)) CARBON_ERROR_RAW("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
-                                               failed,
-                                               passed,
-                                               total_time_micro);
-    else CARBON_ERROR_RAW("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
-                          failed,
-                          passed,
-                          clk.elapsed);
+    if (!((i32) clk.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+                                              failed,
+                                              passed,
+                                              total_time_micro);
+    else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
+                         failed,
+                         passed,
+                         clk.elapsed);
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) clk.elapsed)) carbon_print("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========\n",
-                                           passed,
-                                           total_time_micro);
-    else carbon_print("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========\n",
-                      passed,
-                      clk.elapsed);
+    if (!((i32) clk.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+                                             passed,
+                                             total_time_micro);
+    else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
+                        passed,
+                        clk.elapsed);
   }
   if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, clk.elapsed);
   carbon_list_destroy(&junit_testcase_infos);

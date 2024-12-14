@@ -34,7 +34,7 @@ static i32 carbon_win__viewport_height;
 void carbon_win_open(u16 width, u16 height, const char *title) {
   carbon_win__display = XOpenDisplay(0);
   if (!carbon_win__display) {
-    CARBON_ERROR("unable to connect to X server");
+    carbon_log_error("unable to connect to X server");
     return;
   }
   carbon_win__screen = DefaultScreen(carbon_win__display);
@@ -49,7 +49,7 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
   XFree(carbon_win__pixmap_fmts);
   // TODO: perform color depth conversions
   if (32 != carbon_win__converter_depth) {
-    CARBON_ERROR("no 32bpp display available");
+    carbon_log_error("no 32bpp display available");
     XCloseDisplay(carbon_win__display);
     return;
   }

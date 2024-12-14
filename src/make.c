@@ -32,7 +32,7 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
 
 static inline void call_cmd(const char *cmd) {
   if (!system(cmd)) return;
-  CARBON_ERROR("Unable to run `%s`", cmd);
+  carbon_log_error("Unable to run `%s`", cmd);
   exit(1);
 }
 
@@ -66,7 +66,7 @@ static void rebuild_myself(const char **host_argv) {
   i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
-    CARBON_ERROR("unable to fork child process");
+    carbon_log_error("unable to fork child process");
     exit(1);
   }
   else if (rebuild_child_pid == 0) {
@@ -87,18 +87,18 @@ static void rebuild_myself(const char **host_argv) {
     };
     carbon_println("  CCLD    %s", __FILE__);
     if (-1 == execvp(argv[0], argv)) {
-      CARBON_ERROR("unable to execvp from child process");
+      carbon_log_error("unable to execvp from child process");
       exit(1);
     }
   }
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
-    CARBON_ERROR("errors detected during rebuild");
+    carbon_log_error("errors detected during rebuild");
     exit(1);
   }
   carbon_println("  EXEC    %s", bin);
   if (-1 == execvp(bin, (char **) host_argv)) {
-    CARBON_ERROR("unable to execvp rebuilt binary");
+    carbon_log_error("unable to execvp rebuilt binary");
     exit(1);
   }
 }
@@ -218,18 +218,18 @@ static void package(void) {
 
 int main(int argc, char **argv) {
   if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) {
-    CARBON_ERROR("Unable to change CWD to binary's directory");
+    carbon_log_error("Unable to change CWD to binary's directory");
     return 1;
   }
   rebuild_myself((const char **) argv);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
-  CARBON_WARNING(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
+  carbon_log_warn(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
-  CARBON_WARNING("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
+  carbon_log_warn("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
   if (argc > 2) {
-    CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
+    carbon_log_error("unrecognized option\nTry '%s help' for more information.", argv[0]);
     return 1;
   }
   if (argc == 2) {
@@ -251,7 +251,7 @@ int main(int argc, char **argv) {
       return 0;
     }
     else {
-      CARBON_ERROR("unrecognized option\nTry '%s help' for more information.", argv[0]);
+      carbon_log_error("unrecognized option\nTry '%s help' for more information.", argv[0]);
       return 1;
     }
   }

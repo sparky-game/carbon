@@ -15,7 +15,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
     .as = (CBN_Row *) CARBON_MALLOC(arch_count * sizeof(CBN_Row))
   };
   if (!nn.ws || !nn.bs || !nn.as) {
-    CARBON_ERROR("failed to allocate memory");
+    carbon_log_error("failed to allocate memory");
     memset(&nn, 0, sizeof(CBN_NeuralNet));
   }
   nn.as[0] = carbon_math_row_create(nn.arch[0]);
@@ -29,7 +29,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
 
 void carbon_nn_destroy(CBN_NeuralNet *nn) {
   if (!nn) {
-    CARBON_WARNING("`nn` is not a valid pointer, skipping destruction");
+    carbon_log_warn("`nn` is not a valid pointer, skipping destruction");
     return;
   }
   carbon_math_row_destroy(&nn->as[0]);

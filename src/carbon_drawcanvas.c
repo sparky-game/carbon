@@ -13,7 +13,7 @@ CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
     .stride = width
   };
   if (!dc.pixels) {
-    CARBON_ERROR("failed to allocate memory (%zuB)", width * height * sizeof(u32));
+    carbon_log_error("failed to allocate memory (%zuB)", width * height * sizeof(u32));
     memset(&dc, 0, sizeof(CBN_DrawCanvas));
   }
   return dc;
@@ -21,7 +21,7 @@ CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
 
 void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
   if (!dc) {
-    CARBON_WARNING("`dc` is not a valid pointer, skipping destruction");
+    carbon_log_warn("`dc` is not a valid pointer, skipping destruction");
     return;
   }
   CARBON_FREE(dc->pixels);

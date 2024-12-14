@@ -408,14 +408,13 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define CARBON_COLOR_MAGENTA "\033[1;35m"
 #define CARBON_COLOR_CYAN    "\033[1;36m"
 
-#define CARBON_INFO_COLOR(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define CARBON_INFO_FQDN(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
-#define CARBON_WARNING(msg, ...) CARBON_INFO_COLOR(CARBON_COLOR_MAGENTA, "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg, __func__, ##__VA_ARGS__)
+#define carbon_log_info(msg, ...) carbon_println(CARBON_COLOR_YELLOW "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg CARBON_COLOR_RESET, __func__, ##__VA_ARGS__)
+#define carbon_log_warn(msg, ...) carbon_println(CARBON_COLOR_MAGENTA "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg CARBON_COLOR_RESET, __func__, ##__VA_ARGS__)
+#define carbon_log_error(msg, ...) carbon_eprintln(CARBON_COLOR_RED "[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: " msg CARBON_COLOR_RESET, __func__, ##__VA_ARGS__)
 
-#define CARBON_ERROR_RAW(msg, ...) carbon_eprint(msg, ##__VA_ARGS__)
-#define CARBON_ERROR_PREFIX(prefix, msg, ...) CARBON_ERROR_RAW(CARBON_COLOR_RED prefix "" msg CARBON_COLOR_RESET "\n", ##__VA_ARGS__)
-#define CARBON_ERROR_ASS(msg, ...) CARBON_ERROR_PREFIX("", msg, ##__VA_ARGS__)
-#define CARBON_ERROR(msg, ...) CARBON_ERROR_PREFIX("[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " (%s) :: ", msg, __func__, ##__VA_ARGS__)
+// TODO: these funcs should be deprecated
+#define CARBON_INFO_COLOR(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define CARBON_ERROR_ASS(msg, ...) carbon_eprintln(CARBON_COLOR_RED msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 
 #define carbon_log__var_to_spec(x)                                      \
   (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
