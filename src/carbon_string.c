@@ -52,3 +52,11 @@ u8 carbon_string_ends_with_substr(const char *s, const char *sub) {
   usz s_len = strlen(s), sub_len = strlen(sub);
   return (s_len >= sub_len) && (!carbon_string_cmp(s + (s_len - sub_len), sub));
 }
+
+u8 carbon_string_is_number(const char *s) {
+  usz len = strlen(s);
+  for (usz i = 0; i < len; ++i) {
+    if (!isdigit(s[i])) return false;
+  }
+  return true;
+}
