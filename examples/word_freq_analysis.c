@@ -11,10 +11,23 @@ static inline i32 compare_point_freqs(const void *a, const void *b) {
   return (i32) ((Point *) b)->freq - (i32) ((Point *) a)->freq;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+  // CLI Arguments
+  if (argc < 2) {
+    carbon_log_error("usage: %$ [FILE]", $(argv[0]));
+    return 1;
+  }
+  if (!carbon_fs_is_regular_file(argv[1])) {
+    carbon_log_error("argument (`%$`) needs to be a regular file", $(argv[1]));
+    return 1;
+  }
+
   // Read file
   CBN_StrBuilder sb = {0};
-  if (!carbon_fs_read_entire_file(&sb, "assets/shakespeare.txt")) return 1;
+  if (!carbon_fs_read_entire_file(&sb, argv[1])) {
+    carbon_log_error("file (`%$`) could not be read", $(argv[1]));
+    return 1;
+  }
 
   // Analyze
   CBN_HashMap hist = carbon_hashmap_create(1024*1024, sizeof(usz));
