@@ -66,6 +66,21 @@ CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c) {
   return new_sv;
 }
 
+CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv) {
+  usz i = 0;
+  while (i < sv->size && !isspace(sv->data[i])) ++i;
+  CBN_StrView new_sv = carbon_strview_from_buf(sv->data, i);
+  if (i < sv->size) {
+    sv->size -= i + 1;
+    sv->data += i + 1;
+  }
+  else {
+    sv->size -= i;
+    sv->data += i;
+  }
+  return new_sv;
+}
+
 u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y) {
   if (x.size != y.size) return false;
   return 0 == memcmp(x.data, y.data, x.size);
