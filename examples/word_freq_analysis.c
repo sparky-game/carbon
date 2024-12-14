@@ -16,12 +16,16 @@ static inline i32 compare_point_freqs(const void *a, const void *b) {
 
 int main(int argc, char **argv) {
   // CLI Arguments
-  if (argc < 2) {
-    carbon_log_error("usage: %$ [FILE]", $(argv[0]));
+  if (argc < 3) {
+    carbon_log_error("usage: %$ [FILE] [N_TOP_WORDS]", $(argv[0]));
     return 1;
   }
   if (!carbon_fs_is_regular_file(argv[1])) {
-    carbon_log_error("argument (`%$`) needs to be a regular file", $(argv[1]));
+    carbon_log_error("FILE (`%$`) needs to be a regular file", $(argv[1]));
+    return 1;
+  }
+  if (!carbon_string_is_number(argv[2])) {
+    carbon_log_error("N_TOP_WORDS (`%$`) needs to be a number", $(argv[2]));
     return 1;
   }
 
@@ -55,11 +59,12 @@ int main(int argc, char **argv) {
   qsort(points, keys.size, sizeof(Point), compare_point_freqs);
 
   // Print most frequent tokens
-  usz top_max = 10;
-  carbon_println("Top %$ tokens:", $(top_max));
-  for (usz i = 0; i < top_max; ++i) {
+  usz n_top_words = atoi(argv[2]);
+  CARBON_ASSERT(n_top_words <= keys.size && "N_TOP_WORDS is too big");
+  carbon_println("Top %$ tokens:", $(n_top_words));
+  for (usz i = 0; i < n_top_words; ++i) {
     const char *token = carbon_strview_to_cstr(points[i].token);
-    carbon_println("  - [%$] `%$` (freq = %$)", $(i), $(token), $(points[i].freq));
+    carbon_println("  - `%$` (freq = %$)", $(token), $(points[i].freq));
   }
 
   // Cleanup
