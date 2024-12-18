@@ -16,23 +16,26 @@ static inline i32 compare_point_freqs(const void *a, const void *b) {
 
 int main(int argc, char **argv) {
   // CLI Arguments
-  if (argc < 3) {
-    carbon_log_error("usage: %$ [FILE] [N_TOP_WORDS]", $(argv[0]));
+  const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
+  if (argc < 2) {
+    carbon_log_error("usage: %$ [FILE] [N_TOP_WORDS]", $(program_name));
     return 1;
   }
-  if (!carbon_fs_is_regular_file(argv[1])) {
-    carbon_log_error("FILE (`%$`) needs to be a regular file", $(argv[1]));
+  const char *file = CARBON_SHIFT_ARGS(argc, argv);
+  if (!carbon_fs_is_regular_file(file)) {
+    carbon_log_error("FILE (`%$`) needs to be a regular file", $(file));
     return 1;
   }
-  if (!carbon_string_is_number(argv[2])) {
-    carbon_log_error("N_TOP_WORDS (`%$`) needs to be a number", $(argv[2]));
+  const char *n_top_words = CARBON_SHIFT_ARGS(argc, argv);
+  if (!carbon_string_is_number(n_top_words)) {
+    carbon_log_error("N_TOP_WORDS (`%$`) needs to be a number", $(n_top_words));
     return 1;
   }
 
   // Read file
   CBN_StrBuilder sb = {0};
-  if (!carbon_fs_read_entire_file(&sb, argv[1])) {
-    carbon_log_error("file (`%$`) could not be read", $(argv[1]));
+  if (!carbon_fs_read_entire_file(&sb, file)) {
+    carbon_log_error("file (`%$`) could not be read", $(file));
     return 1;
   }
 
@@ -59,10 +62,10 @@ int main(int argc, char **argv) {
   qsort(points, keys.size, sizeof(Point), compare_point_freqs);
 
   // Print most frequent tokens
-  usz n_top_words = atoi(argv[2]);
-  CARBON_ASSERT(n_top_words <= keys.size && "N_TOP_WORDS is too big");
-  carbon_println("Top %$ tokens:", $(n_top_words));
-  for (usz i = 0; i < n_top_words; ++i) {
+  usz n_top_words_num = atoi(n_top_words);
+  CARBON_ASSERT(n_top_words_num <= keys.size && "N_TOP_WORDS is too big");
+  carbon_println("Top %$ tokens:", $(n_top_words_num));
+  for (usz i = 0; i < n_top_words_num; ++i) {
     const char *token = carbon_strview_to_cstr(points[i].token);
     carbon_println("  - `%$` (freq = %$)", $(token), $(points[i].freq));
   }
