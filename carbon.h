@@ -108,7 +108,9 @@
 #define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
 #define CARBON_NOTUSED(x) (void)(x)
 #define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
+#define CARBON_ARRAY_SHIFT(xs, xs_sz) (CARBON_ASSERT((xs_sz) > 0), --(xs_sz), *(xs)++)
 #define CARBON_TYPE_OF(x) __typeof__(x)
+#define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
 #ifdef __cplusplus
 #include <type_traits>
