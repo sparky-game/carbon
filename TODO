@@ -8,31 +8,22 @@ Introduce these functions for completeness:
 - `u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView prefix)`.
 - `u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView suffix)`.
 
-Logging functions (API):
-- `carbon_log_info`, `carbon_log_warn`, `carbon_log_error`.
-- `carbon_log(CARBON_LOG_INFO, ...)`, `carbon_log(CARBON_LOG_WARN, ...)`, `carbon_log(CARBON_LOG_ERROR, ...)`.
-- They're going to be macros that use the `carbon_println` macro to print the logs, using the already established format:
-  - INFO level:  {YELLOW}  -> "[*] __FILE__:__LINE__ (__func__) :: %$"
-  - WARN level:  {MAGENTA} -> "[?] __FILE__:__LINE__ (__func__) :: %$"
-  - ERROR level:     {RED} -> "[!] __FILE__:__LINE__ (__func__) :: %$"
-
 Buy and configure the domain for the product's website: `carbonlib.org`.
 
 Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
 - Tsoding's video on it: <https://www.youtube.com/watch?v=mpqaQIrVgew>.
 - Tsoding's repository: <https://github.com/tsoding/flag.h>.
 
-Take a look at this: <https://en.cppreference.com/w/cpp/preprocessor/replace>.
-
-Take a look at this: <https://santhoshkris.medium.com/threading-macros-in-clojure-eb08faf85f80>.
+Take a look at this:
+- <https://en.cppreference.com/w/cpp/preprocessor/replace>.
+- <https://santhoshkris.medium.com/threading-macros-in-clojure-eb08faf85f80>.
 
 Implement motion detection algorithm:
 - Given 2 imgs, return bool whether movement is detected going
   from one img to the other.
 - `u8 motion_detection(const u8 *first, const u8 *second)`
 
-Create `CARBON_NO_BOUND_CHECKS` macro, which allows disabling bounds
-checking on all relevant operations.
+Create `CARBON_NO_BOUND_CHECKS` macro, which allows disabling bounds checking on all relevant operations.
 
 Implement CNN (Convolutional Neural Network):
 - `carbon_cnn_*` module
