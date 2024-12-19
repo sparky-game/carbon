@@ -16,27 +16,21 @@ static BOOL carbon_win__should_close;
 
 void carbon_win_open(u16 width, u16 height, const char *title) {
   @autoreleasepool {
-    // Initialize the shared application instance
     carbon_win__app = [NSApplication sharedApplication];
     [carbon_win__app setActivationPolicy:NSApplicationActivationPolicyRegular];
-    // Create the window
     NSRect frame = NSMakeRect(0, 0, width, height);
     carbon_win__window = [[NSWindow alloc]
                            initWithContentRect:frame
-                                     styleMask:(NSWindowStyleMaskTitled   |
-                                                NSWindowStyleMaskClosable |
-                                                NSWindowStyleMaskResizable)
+                                     styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable)
                                        backing:NSBackingStoreBuffered
                                          defer:NO];
     NSString *win_title = [NSString stringWithUTF8String:title];
     [carbon_win__window setTitle:win_title];
     [carbon_win__window makeKeyAndOrderFront:nil];
-    // Add a custom view for drawing
     carbon_win__view = [[NSView alloc] initWithFrame:frame];
     [carbon_win__window setContentView:carbon_win__view];
-    // Track if the window is requested to close
+    [carbon_win__app activateIgnoringOtherApps:YES];
     carbon_win__should_close = NO;
-    // Setup window close notification
     [[NSNotificationCenter defaultCenter]
       addObserverForName:NSWindowWillCloseNotification
                   object:carbon_win__window
@@ -71,7 +65,7 @@ void carbon_win_update(CBN_DrawCanvas dc) {
                                                      isPlanar:NO
                                                colorSpaceName:NSDeviceRGBColorSpace
                                                  bitmapFormat:NSBitmapFormatAlphaFirst
-                                                  bytesPerRow:(i32) dc.stride
+                                                  bytesPerRow:(i32) dc.stride * 4
                                                  bitsPerPixel:32];
     NSImage *image = [[NSImage alloc] init];
     [image addRepresentation:image_repr];
@@ -83,6 +77,17 @@ void carbon_win_update(CBN_DrawCanvas dc) {
 }
 
 u8 carbon_win_shouldclose(void) {
+  @autoreleasepool {
+    NSEvent *event;
+    while ((event = [carbon_win__app
+                      nextEventMatchingMask:NSEventMaskAny
+                                  untilDate:nil
+                                     inMode:NSDefaultRunLoopMode
+                                    dequeue:YES])) {
+      [carbon_win__app sendEvent:event];
+      [carbon_win__app updateWindows];
+    }
+  }
   return carbon_win__should_close;
 }
 
