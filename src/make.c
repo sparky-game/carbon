@@ -104,7 +104,7 @@ static void rebuild_myself(const char **host_argv) {
 }
 
 static void run_tests(void) {
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Running tests...");
+  carbon_log_info("Running tests...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
   CBN_StrBuilder cmd = {0};
@@ -154,6 +154,7 @@ static void run_tests(void) {
 }
 
 static void build(void) {
+  carbon_log_info("Building...");
   carbon_println("  MKDIR   " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
   CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
@@ -194,6 +195,7 @@ static void build(void) {
 }
 
 static void package(void) {
+  carbon_log_info("Packaging...");
   cp_dash_r("COPYING carbon.h", WORKDIR);
 #undef dir
 #define dir "src"
@@ -256,9 +258,8 @@ int main(int argc, char **argv) {
     }
   }
   run_tests();
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Building and packaging...");
   build();
   package();
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output: " WORKDIR ".tgz is ready");
+  carbon_log_info(WORKDIR ".tgz is ready");
   return 0;
 }
