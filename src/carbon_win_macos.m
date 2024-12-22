@@ -18,7 +18,10 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
   @autoreleasepool {
     carbon_win__app = [NSApplication sharedApplication];
     [carbon_win__app setActivationPolicy:NSApplicationActivationPolicyRegular];
-    NSRect frame = NSMakeRect(0, 0, width, height);
+    NSRect frame = NSMakeRect(([NSScreen mainScreen].frame.size.width / 2) - (width / 2),
+                              ([NSScreen mainScreen].frame.size.height / 2) - (height / 2),
+                              width,
+                              height);
     carbon_win__window = [[NSWindow alloc]
                            initWithContentRect:frame
                                      styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable)
@@ -53,7 +56,8 @@ void carbon_win_close(void) {
 
 void carbon_win_update(CBN_DrawCanvas dc) {
   @autoreleasepool {
-    if (!carbon_win__view) return;
+    if (!carbon_win__view) CARBON_ASSERT(0 && "Window is not properly initialized");
+    if (!dc.pixels) CARBON_ASSERT(0 && "DrawCanvas has no valid pixel array");
     // Lock and use the provided draw canvas to update the window
     NSBitmapImageRep *image_repr = [[NSBitmapImageRep alloc]
                                      initWithBitmapDataPlanes:(u8 **) &dc.pixels
