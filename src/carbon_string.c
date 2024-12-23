@@ -13,6 +13,13 @@ i32 carbon_string_cmp(const char *s1, const char *s2) {
   return *(u8 *)s1 - *(u8 *)s2;
 }
 
+i32 carbon_string_cmp_n(const char *s1, const char *s2, usz size) {
+  const u8 *l = (u8 *) s1, *r = (u8 *) s2;
+  if (!size--) return 0;
+  for (; *l && *r && size && *l == *r; ++l, ++r, --size);
+  return *l - *r;
+}
+
 char *carbon_string_dup(const char *s) {
   usz len = strlen(s) + 1;
   char *data = (char *) CARBON_MALLOC(len);
@@ -46,6 +53,10 @@ void carbon_string_strip_substr(char *s, const char *sub) {
   if (!len) return;
   char *p;
   while ((p = strstr(s, sub))) memmove(p, p + len, strlen(p + len) + 1);
+}
+
+u8 carbon_string_starts_with_substr(const char *s, const char *sub) {
+  return carbon_string_cmp_n(s, sub, strlen(sub)) ? false : true;
 }
 
 u8 carbon_string_ends_with_substr(const char *s, const char *sub) {
