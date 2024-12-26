@@ -117,11 +117,7 @@ u8 carbon_fs_create_directory(const char *path) {
     carbon_log_error("path is invalid");
     return false;
   }
-  if (carbon_fs_is_directory(path)) {
-    // NOTE: is this warning useful or is it kinda lame?
-    carbon_log_warn("directory already exists, skipping creation");
-    return true;
-  }
+  if (carbon_fs_is_directory(path)) return true;
 #ifdef _WIN32
   i8 result = _mkdir(path);
 #else
@@ -139,11 +135,7 @@ u8 carbon_fs_create_directories(const char *path) {
     carbon_log_error("path is invalid");
     return false;
   }
-  if (carbon_fs_is_directory(path)) {
-    // NOTE: is this warning useful or is it kinda lame?
-    carbon_log_warn("directory already exists, skipping creation");
-    return true;
-  }
+  if (carbon_fs_is_directory(path)) return true;
   usz len = strlen(path) + 1;
   char *pathcpy = carbon_string_dup(path);
   for (usz i = 0; i < len && pathcpy[i]; ++i) {
