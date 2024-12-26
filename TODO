@@ -1,11 +1,15 @@
 TODOs
 =====
 
-Investigate and consider implementing a second version for `carbon_fs_read_entire_file` function, using `mmap` instead of `fread`.
+Implement basic TCP socket API (in header, after the FS):
+- `i32 carbon_socket_tcp_create(void);`
+- `void carbon_socket_tcp_bind(i32 fd, ...);`
+- `void carbon_socket_tcp_listen(i32 fd);`
+- `void carbon_socket_tcp_connect(int fd, ...)`
 
-Introduce these functions for completeness:
-- `u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView prefix)`.
-- `u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView suffix)`.
+Investigate and consider implementing a Promise async API to do work (like in JS).
+
+Investigate and consider implementing a second version for `carbon_fs_read_entire_file` function, using `mmap` instead of `fread`.
 
 Buy and configure the domain for the product's website: `carbonlib.org`.
 
