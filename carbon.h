@@ -645,6 +645,8 @@ CARBON_API CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
 CARBON_API CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
 CARBON_API CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
 CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
+CARBON_API u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
+CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 
 /*
 **  $$=====================$$

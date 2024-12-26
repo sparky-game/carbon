@@ -85,3 +85,13 @@ u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y) {
   if (x.size != y.size) return false;
   return 0 == memcmp(x.data, y.data, x.size);
 }
+
+u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub) {
+  if (sub.size > sv.size) return false;
+  return memcmp(sv.data, sub.data, sub.size) ? false : true;
+}
+
+u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub) {
+  if (sub.size > sv.size) return false;
+  return memcmp(sv.data + (sv.size - sub.size), sub.data, sub.size) ? false : true;
+}
