@@ -59,6 +59,9 @@ Add russian alternatives to all functions (in cyrillic script).
 - implementation == выполнение
 - test == тест
 - tests == тесты
+- print == печать
+- println == печать_линия
+- foreach == для_каждого
 
 ;; Local Variables:
 ;; mode: text
