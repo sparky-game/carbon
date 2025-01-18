@@ -71,3 +71,9 @@ u8 carbon_string_is_number(const char *s) {
   }
   return true;
 }
+
+u8 carbon_string_has_char(const char *s, char c) {
+  const char *c_ptr = strchr(s, c);
+  if (!c_ptr) return false;
+  return true;
+}
