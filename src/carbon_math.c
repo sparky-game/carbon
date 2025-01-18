@@ -24,6 +24,10 @@ i32 carbon_math_rand(void) {
   return carbon_math__rand_seed >> 33;
 }
 
+i32 carbon_math_rand_between(i32 min, i32 max) {
+  return carbon_math_rand() % (max + 1 - min) + min;
+}
+
 f32 carbon_math_randf(void) {
   return (f32) carbon_math_rand() / (f32) CARBON_RAND_MAX;
 }
