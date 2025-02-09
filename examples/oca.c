@@ -6,7 +6,7 @@
 #include "../carbon.h"
 
 static const char *instructions =
-  "/*-------------------------------------------------------------------------------------------."
+  "/*-------------------------------------------------------------------------------------------.\n"
   "| Al empezar, el q̃ saca tres y seis, se pone al num. 26. y si es quatro y cinco, al num. 53. |\n"
   "| El q̃ da en una oca, vuela hasta no dar en otra.                                            |\n"
   "| En el 6. paga, y se pasa al 12.                                                            |\n"
