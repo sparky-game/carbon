@@ -1,6 +1,15 @@
 TODOs
 =====
 
+Implement basic coroutine API and implementation:
+- `void carbon_coroutine_go(void (*f)(void *), void *arg);`
+- `usz carbon_coroutine_id(void);`
+- `void carbon_coroutine_yield(void);`
+- `usz carbon_coroutine_alive(void);`
+- `void carbon_coroutine_sleep_sock_read(i32 fd);`
+- `void carbon_coroutine_sleep_sock_write(i32 fd);`
+- `void carbon_coroutine_wakeup(usz id);`
+
 Implement basic TCP socket API (in header, after the FS):
 - `i32 carbon_socket_tcp_create(void);`
 - `void carbon_socket_tcp_bind(i32 fd, ...);`
