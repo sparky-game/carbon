@@ -99,6 +99,10 @@ git submodule add https://github.com/sparky-game/carbon vendor/carbon
 
 *CMake FetchContent:*
 
+#+begin_html
+<p><img src="https://cdn.frankerfacez.com/emote/381875/1">&nbsp;&nbsp;<i>&mdash;&nbsp;&nbsp;Мои соболезнования.</i></p>
+#+end_html
+
 #+begin_src cmake
 include(FetchContent)
 FetchContent_Declare(
