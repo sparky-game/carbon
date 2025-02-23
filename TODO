@@ -16,6 +16,10 @@ Implement basic TCP socket API (in header, after the FS):
 - `void carbon_socket_tcp_listen(i32 fd);`
 - `void carbon_socket_tcp_connect(int fd, ...)`
 
+Implement WebSocket API and implementation:
+- RFC 6455 <https://datatracker.ietf.org/doc/html/rfc6455>
+- Tsoding's repository: <https://github.com/tsoding/cws>
+
 Investigate and consider implementing a Promise async API to do work (like in JS).
 
 Investigate and consider implementing a second version for `carbon_fs_read_entire_file` function, using `mmap` instead of `fread`.
