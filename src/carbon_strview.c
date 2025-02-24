@@ -16,7 +16,7 @@ CBN_StrView carbon_strview_from_buf(const char *data, usz size) {
 }
 
 CBN_StrView carbon_strview_from_cstr(const char *s) {
-  return carbon_strview_from_buf(s, strlen(s));
+  return carbon_strview_from_buf(s, carbon_string_len(s));
 }
 
 char *carbon_strview_to_cstr(CBN_StrView sv) {
@@ -24,7 +24,7 @@ char *carbon_strview_to_cstr(CBN_StrView sv) {
   static char xs[CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS][CARBON_STRVIEW_TO_CSTR_MAX_LEN];
   char *x = xs[i];
   memset(x, 0, CARBON_STRVIEW_TO_CSTR_MAX_LEN);
-  memcpy(x, sv.data, sv.size);
+  carbon_memory_copy(x, sv.data, sv.size);
   x[sv.size] = 0;
   ++i;
   if (i >= CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS) i = 0;

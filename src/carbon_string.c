@@ -8,6 +8,12 @@
 #define CARBON_STRING_FMT_MAX_LEN     1024
 #define CARBON_STRING_FMT_MAX_BUFFERS 4
 
+usz carbon_string_len(const char *s) {
+  usz n = 0;
+  while (*s++) ++n;
+  return n;
+}
+
 i32 carbon_string_cmp(const char *s1, const char *s2) {
   for (; *s1 == *s2 && *s1; ++s1, ++s2);
   return *(u8 *)s1 - *(u8 *)s2;
@@ -21,13 +27,13 @@ i32 carbon_string_cmp_n(const char *s1, const char *s2, usz size) {
 }
 
 char *carbon_string_dup(const char *s) {
-  usz len = strlen(s) + 1;
+  usz len = carbon_string_len(s) + 1;
   char *data = (char *) CARBON_MALLOC(len);
   if (!data) {
     carbon_log_error("failed to allocate memory (%zuB)", len);
     return false;
   }
-  return (char *) memcpy(data, s, len);
+  return (char *) carbon_memory_copy(data, s, len);
 }
 
 char *carbon_string_fmt(const char *s, ...) {
@@ -49,23 +55,23 @@ char *carbon_string_fmt(const char *s, ...) {
 }
 
 void carbon_string_strip_substr(char *s, const char *sub) {
-  usz len = strlen(sub);
+  usz len = carbon_string_len(sub);
   if (!len) return;
   char *p;
-  while ((p = strstr(s, sub))) memmove(p, p + len, strlen(p + len) + 1);
+  while ((p = strstr(s, sub))) memmove(p, p + len, carbon_string_len(p + len) + 1);
 }
 
 u8 carbon_string_starts_with_substr(const char *s, const char *sub) {
-  return carbon_string_cmp_n(s, sub, strlen(sub)) ? false : true;
+  return carbon_string_cmp_n(s, sub, carbon_string_len(sub)) ? false : true;
 }
 
 u8 carbon_string_ends_with_substr(const char *s, const char *sub) {
-  usz s_len = strlen(s), sub_len = strlen(sub);
+  usz s_len = carbon_string_len(s), sub_len = carbon_string_len(sub);
   return (s_len >= sub_len) && (!carbon_string_cmp(s + (s_len - sub_len), sub));
 }
 
 u8 carbon_string_is_number(const char *s) {
-  usz len = strlen(s);
+  usz len = carbon_string_len(s);
   for (usz i = 0; i < len; ++i) {
     if (!isdigit(s[i])) return false;
   }

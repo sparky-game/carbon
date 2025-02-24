@@ -136,7 +136,7 @@ u8 carbon_fs_create_directories(const char *path) {
     return false;
   }
   if (carbon_fs_is_directory(path)) return true;
-  usz len = strlen(path) + 1;
+  usz len = carbon_string_len(path) + 1;
   char *pathcpy = carbon_string_dup(path);
   for (usz i = 0; i < len && pathcpy[i]; ++i) {
     if (pathcpy[i] == ':') ++i;
@@ -187,7 +187,7 @@ char *carbon_fs_get_bin_directory(void) {
   usz size = sizeof(dir);
   i32 mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
   if (!sysctl(mib, 4, dir, &size, 0, 0)) {
-    usz len = strlen(dir);
+    usz len = carbon_string_len(dir);
     for (usz i = len;; --i) {
       if (dir[i] == '/') {
         dir[i + 1] = 0;
@@ -202,7 +202,7 @@ char *carbon_fs_get_bin_directory(void) {
 #elif defined(__APPLE__)
   usz size = sizeof(dir);
   if (!_NSGetExecutablePath(dir, (u32 *) &size)) {
-    usz len = strlen(dir);
+    usz len = carbon_string_len(dir);
     for (usz i = len;; --i) {
       if (dir[i] == '/') {
         dir[i + 1] = 0;

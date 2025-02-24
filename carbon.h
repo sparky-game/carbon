@@ -247,6 +247,13 @@ CARBON_API int carbon_main(void);
 CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line, const char *func);
 
 /*
+**  $$====================$$
+**  ||       Memory       ||
+**  $$====================$$
+*/
+CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
+
+/*
 **  $$==================$$
 **  ||       Math       ||
 **  $$==================$$
@@ -601,6 +608,7 @@ CARBON_API void carbon_hashmap_get(CBN_HashMap *hm, const char *key, void *out_v
 **  ||       String       ||
 **  $$====================$$
 */
+CARBON_API usz carbon_string_len(const char *s);
 CARBON_API i32 carbon_string_cmp(const char *s1, const char *s2);
 CARBON_API i32 carbon_string_cmp_n(const char *s1, const char *s2, usz size);
 CARBON_API char *carbon_string_dup(const char *s);
@@ -843,6 +851,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 */
 #ifdef CARBON_IMPLEMENTATION
 #include "src/carbon_assert.c"
+#include "src/carbon_memory.c"
 #include "src/carbon_math.c"
 #include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"

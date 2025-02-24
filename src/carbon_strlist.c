@@ -29,7 +29,7 @@ CBN_StrList carbon_strlist_create(u8 unique) {
 CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) {
   CBN_StrList sl = carbon_strlist_create(false);
   char *s_copy = carbon_string_dup(s);
-  usz delim_len = strlen(delim);
+  usz delim_len = carbon_string_len(delim);
   char *start = s_copy;
   char *found;
   while ((found = strstr(start, delim))) {

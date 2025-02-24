@@ -45,7 +45,7 @@ void carbon_list_push(CBN_List *l, void *value) {
       return;
     }
   }
-  memcpy((void *) ((u64) l->items + (l->size * l->stride)), value, l->stride);
+  carbon_memory_copy((void *) ((u64) l->items + (l->size * l->stride)), value, l->stride);
   ++l->size;
 }
 
@@ -58,7 +58,7 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
     carbon_log_warn("list is empty");
     return;
   }
-  memcpy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
+  carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
   --l->size;
   if (l->size > 0 && l->size < l->capacity / 4) {
     l->capacity /= 2;

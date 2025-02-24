@@ -18,12 +18,12 @@ void carbon_strbuilder_add_buf(CBN_StrBuilder *sb, const char *data, usz size) {
       return;
     }
   }
-  memcpy(sb->items + sb->size, data, size * sizeof(char));
+  carbon_memory_copy(sb->items + sb->size, data, size * sizeof(char));
   sb->size += size;
 }
 
 void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s) {
-  carbon_strbuilder_add_buf(sb, s, strlen(s));
+  carbon_strbuilder_add_buf(sb, s, carbon_string_len(s));
 }
 
 void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
