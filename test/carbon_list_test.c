@@ -39,3 +39,16 @@ CARBON_TEST(carbon_list, pop_element) {
   carbon_list_destroy(&l);
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_list, find_element) {
+  CBN_List l = carbon_list_create(sizeof(i32));
+  i32 i = 1, j = 7, k = 3;
+  carbon_list_push(&l, &i);
+  carbon_list_push(&l, &j);
+  carbon_should_be(2, l.size);
+  carbon_should_be(0, carbon_list_find(&l, &i));
+  carbon_should_be(1, carbon_list_find(&l, &j));
+  carbon_should_be(-1, carbon_list_find(&l, &k));
+  carbon_list_destroy(&l);
+  return CARBON_OK;
+}

@@ -586,6 +586,7 @@ CARBON_API CBN_List carbon_list_create(usz stride);
 CARBON_API void carbon_list_destroy(CBN_List *l);
 CARBON_API void carbon_list_push(CBN_List *l, void *value);
 CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
+CARBON_API isz carbon_list_find(CBN_List *l, const void *value);
 
 /*
 **  $$=====================$$

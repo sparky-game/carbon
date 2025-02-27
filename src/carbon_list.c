@@ -72,3 +72,15 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
     }
   }
 }
+
+isz carbon_list_find(CBN_List *l, const void *value) {
+  if (!l || !value) {
+    carbon_log_error("`l` and `value` must be valid pointers");
+    return -1;
+  }
+  for (usz i = 0; i < l->size; ++i) {
+    void *curr = (void *) ((u64) l->items + (i * l->stride));
+    if (!memcmp(curr, value, l->stride)) return i;
+  }
+  return -1;
+}
