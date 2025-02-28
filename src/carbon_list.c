@@ -84,3 +84,31 @@ isz carbon_list_find(CBN_List *l, const void *value) {
   }
   return -1;
 }
+
+void carbon_list_remove(CBN_List *l, usz idx) {
+  if (!l) {
+    carbon_log_error("`l` must be a valid pointer");
+    return;
+  }
+  if (idx >= l->size) {
+    carbon_log_error("idx out of bounds (size: %$, idx: %$)", $(l->size), $(idx));
+    return;
+  }
+  if (idx < l->size - 1) {
+    void *dst = (void *) ((u64) l->items + (idx * l->stride));
+    void *src = (void *) ((u64) l->items + ((idx + 1) * l->stride));
+    memmove(dst, src, (l->size - idx - 1) * l->stride);
+  }
+  --l->size;
+  if (l->size > 0 && l->size < l->capacity / 4) {
+    l->capacity /= 2;
+    void *prev_p = l->items;
+    usz size = l->capacity * l->stride;
+    l->items = CARBON_REALLOC(l->items, size);
+    if (!l->items && l->size > 0) {
+      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CARBON_FREE(prev_p);
+      return;
+    }
+  }
+}

@@ -52,3 +52,24 @@ CARBON_TEST(carbon_list, find_element) {
   carbon_list_destroy(&l);
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_list, remove_element) {
+  CBN_List l = carbon_list_create(sizeof(i32));
+  i32 i = 1, j = 7, k = 3;
+  carbon_list_push(&l, &i);
+  carbon_list_push(&l, &j);
+  carbon_list_push(&l, &k);
+  carbon_should_be(3, l.size);
+  carbon_should_be(i, carbon_list_at(i32, l, 0));
+  carbon_should_be(j, carbon_list_at(i32, l, 1));
+  carbon_should_be(k, carbon_list_at(i32, l, 2));
+  carbon_list_remove(&l, 0);
+  carbon_should_be(2, l.size);
+  carbon_should_be(j, carbon_list_at(i32, l, 0));
+  carbon_should_be(k, carbon_list_at(i32, l, 1));
+  carbon_list_remove(&l, 1);
+  carbon_should_be(1, l.size);
+  carbon_should_be(j, carbon_list_at(i32, l, 0));
+  carbon_list_destroy(&l);
+  return CARBON_OK;
+}
