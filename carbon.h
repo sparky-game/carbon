@@ -49,6 +49,8 @@
 **                               just act as a standard program (using Carbon as a
 **                               libc extension or add-on), define this macro EACH time
 **                               you include this header file.
+**    - CARBON_USE_COROUTINES -> Enable extra functionality to work with coroutines and
+**                               do async work in a lightweight way [WIP].
 **    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
 **                               and make GUI applications [WIP].
 */
@@ -85,10 +87,14 @@
 #include <windows.h>
 #elif defined(__APPLE__)
 #include <glob.h>
+#include <poll.h>
+#include <sys/mman.h>
 #include <mach-o/dyld.h>
 #else
 #include <glob.h>
+#include <poll.h>
 #include <sys/wait.h>
+#include <sys/mman.h>
 #endif
 
 /*
@@ -252,6 +258,32 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 **  $$====================$$
 */
 CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
+
+/*
+**  $$=======================$$
+**  ||       Coroutine       ||
+**  $$=======================$$
+*/
+typedef struct {
+  void *rsp;   // Stack pointer
+  void *rsbp;  // Stack base pointer
+} CBN_Coroutine_CTX;
+
+typedef enum {
+  CBN_COROUTINE_SLEEP_MODE_NONE,
+  CBN_COROUTINE_SLEEP_MODE_READ,
+  CBN_COROUTINE_SLEEP_MODE_WRITE
+} CBN_Coroutine_SleepMode;
+
+CARBON_API void carbon_coroutine_init(void);
+CARBON_API void carbon_coroutine_shutdown(void);
+CARBON_API usz carbon_coroutine_id(void);
+CARBON_API usz carbon_coroutine_alive(void);
+CARBON_API void carbon_coroutine_go(void (*f)(void *), void *arg);
+CARBON_API void carbon_coroutine_yield(void);
+CARBON_API void carbon_coroutine_sleep_read(i32 fd);
+CARBON_API void carbon_coroutine_sleep_write(i32 fd);
+CARBON_API void carbon_coroutine_wakeup(usz id);
 
 /*
 **  $$==================$$
@@ -855,6 +887,9 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #ifdef CARBON_IMPLEMENTATION
 #include "src/carbon_assert.c"
 #include "src/carbon_memory.c"
+#ifdef CARBON_USE_COROUTINES
+#include "src/carbon_coroutine.c"
+#endif  // CARBON_USE_COROUTINES
 #include "src/carbon_math.c"
 #include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"
