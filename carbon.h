@@ -56,16 +56,6 @@
 */
 
 /*
-**  $$======================$$
-**  ||       Settings       ||
-**  $$======================$$
-*/
-#define CARBON_MALLOC(sz)        malloc(sz)
-#define CARBON_REALLOC(p, newsz) realloc(p, newsz)
-#define CARBON_CALLOC(n, sz)     calloc(n, sz)
-#define CARBON_FREE(p)           free(p)
-
-/*
 **  $$==========================$$
 **  ||       Dependencies       ||
 **  $$==========================$$
@@ -258,6 +248,11 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 **  ||       Memory       ||
 **  $$====================$$
 */
+#define CARBON_MALLOC(sz)        malloc(sz)
+#define CARBON_REALLOC(p, newsz) realloc(p, newsz)
+#define CARBON_CALLOC(n, sz)     calloc(n, sz)
+#define CARBON_FREE(p)           free(p)
+
 CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
 
 /*
