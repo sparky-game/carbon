@@ -151,6 +151,7 @@ SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
 #+begin_src c
 // example.c
 
+#define CARBON_TESTING_ENTRY
 #define CARBON_IMPLEMENTATION
 #include <carbon.h>
 

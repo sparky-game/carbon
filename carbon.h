@@ -44,11 +44,10 @@
 **                               this macro is ONLY defined ONCE in the entire codebase
 **                               of your program, to avoid multiple symbol definitions
 **                               linker errors.
-**    - CARBON_NO_TESTING -----> By default, Carbon behaves as a test suite entrypoint.
-**                               If wanted to not redefine the `main` function, and
-**                               just act as a standard program (using Carbon as a
-**                               libc extension or add-on), define this macro EACH time
-**                               you include this header file.
+**    - CARBON_TESTING_ENTRY --> Redefines the `main` function, thus making it behave
+**                               as a test suite entrypoint. It's only relevant to
+**                               define it in the translation unit where we're defining
+**                               the `main` function.
 **    - CARBON_USE_COROUTINES -> Enable extra functionality to work with coroutines and
 **                               do async work in a lightweight way [WIP].
 **    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
@@ -222,7 +221,7 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 **  ||       Entrypoint       ||
 **  $$========================$$
 */
-#ifndef CARBON_NO_TESTING
+#ifdef CARBON_TESTING_ENTRY
 #define main(...)                                       \
   main(int argc, char **argv) {                         \
     carbon_test_manager_argparse(argc, argv);           \
@@ -230,7 +229,7 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
     return carbon_main();                               \
   };                                                    \
   int carbon_main(__VA_ARGS__)
-#endif  // CARBON_NO_TESTING
+#endif  // CARBON_TESTING_ENTRY
 
 CARBON_API int carbon_main(void);
 

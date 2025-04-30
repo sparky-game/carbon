@@ -1,4 +1,3 @@
-#define CARBON_NO_TESTING
 #define CARBON_USE_WINDOWING
 #define CARBON_IMPLEMENTATION
 #include "../carbon.h"
