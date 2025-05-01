@@ -10,15 +10,15 @@ int main(void) {
   usz size = 250;
   CBN_Vec2 center = {{width/2, height/2}};
   CBN_Vec2 v1 = {{center.x, center.y - (size / CARBON_SQRT3)}};
-  CBN_Vec2 v2 = {{center.x - (size / 2), center.y + (size / (2 * CARBON_SQRT3))}};
-  CBN_Vec2 v3 = {{center.x + (size / 2), center.y + (size / (2 * CARBON_SQRT3))}};
+  CBN_Vec2 v2 = {{center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
+  CBN_Vec2 v3 = {{center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
   while (!carbon_win_shouldclose()) {
-    carbon_drawcanvas_fill(canvas, 0xff181818);
+    carbon_drawcanvas_fill(canvas, 0x181818ff);
     carbon_drawcanvas_triangle(canvas,
                                carbon_math_vec2_rotate_around_pivot(v1, angle, center),
                                carbon_math_vec2_rotate_around_pivot(v2, angle, center),
                                carbon_math_vec2_rotate_around_pivot(v3, angle, center),
-                               0xffffdd33);
+                               0xffdd33ff);
     angle += 1e-1;
     carbon_win_update(canvas);
   }

@@ -260,6 +260,7 @@ int main() {
 
 #define RGFW_HEADER
 
+#ifndef RGFW_NO_TYPES
 #include <stddef.h>
 #if !defined(u8)
 	#ifdef RGFW_USE_INT /* optional for any system that might not have stdint.h */
@@ -285,6 +286,7 @@ int main() {
 	#endif
 	#define u8 u8
 #endif
+#endif  // RGFW_NO_TYPES
 
 #if !defined(RGFW_bool) /* RGFW bool type */
 	typedef u32 RGFW_bool;

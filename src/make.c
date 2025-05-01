@@ -158,7 +158,6 @@ static void build(void) {
   if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
   CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
   CBN_PatternMatchedFiles cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc");
-  CBN_PatternMatchedFiles objc_files = carbon_fs_pattern_match("src/carbon_*.m");
   carbon_fs_pattern_match_foreach(c_files) {
     carbon_println("  CC      %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
@@ -171,19 +170,13 @@ static void build(void) {
     carbon_string_strip_substr(it.f, ".cc");
     call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", it.f, WORKDIR, it.f));
   }
-  carbon_fs_pattern_match_foreach(objc_files) {
-    carbon_println("  OBJC    %s", it.f);
-    carbon_string_strip_substr(it.f, "src/");
-    carbon_string_strip_substr(it.f, ".m");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.m -o %s/%s.o", it.f, WORKDIR, it.f));
-  }
   carbon_println("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
   carbon_println("  LD      libcarbon.so");
   CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared ");
 #ifdef __APPLE__
-  carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa ");
+  carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
 #else
   carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
 #endif

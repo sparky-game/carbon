@@ -49,9 +49,9 @@
 **                               define it in the translation unit where we're defining
 **                               the `main` function.
 **    - CARBON_USE_COROUTINES -> Enable extra functionality to work with coroutines and
-**                               do async work in a lightweight way [WIP].
+**                               do async work in a lightweight way.
 **    - CARBON_USE_WINDOWING --> Enable extra functionality to work with native windows
-**                               and make GUI applications [WIP].
+**                               and make GUI applications.
 */
 
 /*
@@ -901,8 +901,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_nn.c"
 #include "src/carbon_drawcanvas.c"
 #ifdef CARBON_USE_WINDOWING
-#include "src/carbon_win_xlib.c"
-#include "src/carbon_win_macos.m"
+#include "src/carbon_win.c"
 #endif  // CARBON_USE_WINDOWING
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"

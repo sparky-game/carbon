@@ -1,6 +1,8 @@
 TODOs
 =====
 
+Think about user resizing the window. Then the DrawCanvas must be dynamically resizable.
+
 Implement file dialogs API using tinyfd <https://sourceforge.net/projects/tinyfiledialogs>.
 
 Implement basic TCP socket API (in header, after the FS):
