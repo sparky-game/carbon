@@ -46,12 +46,12 @@ The ultimate high-level library for C/C++ written in pure C (C99)
 #+begin_quote
 ~Carbon~ has been a dream so far, we haven't found a single bug to date and it's super easy to work with. ¯\_(ツ)_/¯
 
-~ Every ~Carbon~ user ever
+~ *ECUE* (Every /Carbon/ User Ever)
 #+end_quote
 
 ~Carbon~ is the ultimate *tiny* and *easy to use* high-level library for C/C++ written in *pure C (C99)*. @@html:<br>@@
 It even can be used to test any piece of C/C++ code; thus, working as a full-fledged *testing suite*. @@html:<br>@@
-If you'd like to make a contribution, you can check the project's [[https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[https://github.com/sparky-game/carbon/blob/master/SECURITY.md][instructions]] and our [[https://github.com/sparky-game/carbon/blob/master/CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with ~Carbon~, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
+If you'd like to make a contribution, you can check the project's [[https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[https://github.com/sparky-game/carbon/blob/master/SECURITY.md][instructions]] and our [[https://github.com/sparky-game/carbon/blob/master/CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
 
 -----
 
