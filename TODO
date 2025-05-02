@@ -1,6 +1,25 @@
 TODOs
 =====
 
+Implement regex system:
+
+- Reference: <https://github.com/kokke/tiny-regex-c>.
+
+```
+typedef struct {
+  // ...
+} CBN_Regex;
+
+typedef struct {
+  isz idx;  // If invalid, must have value of `-1`
+  usz len;  // If invalid, must have value of `0`
+} CBN_RegexMatch;
+```
+
+- `CBN_Regex carbon_regex_compile(const char *pattern);`
+- `CBN_RegexMatch carbon_regex_match(CBN_Regex regex, const char *text);`
+- `CBN_RegexMatch carbon_regex_compile_and_match(const char *pattern, const char *text);`
+
 Think about user resizing the window. Then the DrawCanvas must be dynamically resizable.
 
 Implement file dialogs API using tinyfd <https://sourceforge.net/projects/tinyfiledialogs>.
