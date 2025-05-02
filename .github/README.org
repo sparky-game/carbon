@@ -12,21 +12,8 @@ Carbon
 # Subtitle
 #+begin_html
 <h4 align="center">
-You can't unit test C, right?
+The ultimate high-level library for C/C++ written in pure C (C99)
 </h4>
-#+end_html
-
-# Repository marketing badges
-#+begin_html
-<p align="center">
-<a href="https://ko-fi.com/iwas_coder">
-<img src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a01d7e459533e0905fd_support_me_on_kofi_badge_red.png" alt="Ko-fi" height=60>
-</a>
-<br/>
-<a href="https://www.buymeacoffee.com/iwas.coder">
-<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height=41>
-</a>
-</p>
 #+end_html
 
 # Repository info badges
@@ -56,9 +43,24 @@ You can't unit test C, right?
 </p>
 #+end_html
 
-/Carbon/ helps you write better C/C++ tests. 🙂
+#+begin_quote
+~Carbon~ has been a dream so far, we haven't found a single bug to date and it's super easy to work with. ¯\_(ツ)_/¯
 
-/Carbon/ is a testing library and framework that focuses on being lightweight and straightforward, giving the best possible development experience. Whether you work on GNU/Linux, BSDs, Windows or macOS, if you write C/C++ code, /Carbon/ can help you.
+~ Every ~Carbon~ user ever
+#+end_quote
+
+~Carbon~ is the ultimate *high-level* library for C/C++ written in *pure C (C99)*: it's tiny, easy to use and it can be employed to make any kind of application, from CLI utilities to graphics-heavy games and GUI programs. @@html:<br>@@
+It even can be used to test itself, as well as any other piece of C code; thus, working as a full-fledged testing suite. Cool, isn't it? @@html:<br>@@
+If you'd like to make a contribution, you can check the project's [[https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[https://github.com/sparky-game/carbon/blob/master/SECURITY.md][instructions]] and our [[https://github.com/sparky-game/carbon/blob/master/CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with ~Carbon~, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
+
+-----
+
+Do you want to *keep up with changes* or do you have a *question* that doesn't require you to open an issue? @@html:<br>@@
+Join the [[https://github.com/sparky-game/carbon/discussions][GitHub Discussions]] forum, meet other users like you. The more we are, the better for everyone. @@html:<br>@@
+There you can ask questions, exchange ideas, share some of your work, make polls, stay up to date with new updates and announcements of the library, and much more.
+
+Do you want to support ~Carbon~? Consider becoming a [[https://github.com/sponsors/iWas-Coder][sponsor]], or making a donation via [[https://ko-fi.com/iwas_coder][Ko-fi]] or [[https://buymeacoffee.com/iwas.coder][Buy Me a Coffee]].
+Many thanks to *all of you* who are reading this; I hope it'll be useful and it'll make you *enjoy programming* a little bit more.
 
 #+begin_html
 <p align="center">
