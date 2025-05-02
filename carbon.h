@@ -319,6 +319,9 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_ROW_AT(r, i) (r).items[(i)]
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
 #define CARBON_ROW_PRINT(r) carbon_math_row_print(r, #r)
+#define CARBON_VEC2(x, y)       (CBN_Vec2){{(f32)(x), (f32)(y)}}
+#define CARBON_VEC3(x, y, z)    (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
+#define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
 
 typedef union {
   f32 items[2];
