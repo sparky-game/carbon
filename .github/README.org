@@ -66,13 +66,13 @@ Many thanks to *all of you* who are reading this; I hope it'll be useful and it'
 <p align="center">
 <img src="../assets/run-tests-demo.gif" alt="Demo Carbon running tests" width=600>
 <br/>
-<i>The above example was generated with <a href="https://github.com/charmbracelet/vhs">VHS</a> (<a href="../assets/run-tests-demo.exs">source code</a>).</i>
+<i>The above example was generated with <a href="https://github.com/charmbracelet/vhs">VHS</a> (<a href="../assets/run-tests-demo.tape">source code</a>).</i>
 </p>
 #+end_html
 
 #+begin_quote
 [!WARNING]
-/Carbon/ is currently in an *alpha* quality stage, and is not production-ready yet.
+~Carbon~ is currently in an *alpha* quality stage, and is not production-ready yet.
 #+end_quote
 
 * Table of Contents :toc:
