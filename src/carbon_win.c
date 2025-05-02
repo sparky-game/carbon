@@ -5,8 +5,9 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#define RGFW_ALLOC CARBON_MALLOC
-#define RGFW_FREE  CARBON_FREE
+#define RGFW_ALLOC  CARBON_MALLOC
+#define RGFW_FREE   CARBON_FREE
+#define RGFW_ASSERT CARBON_ASSERT
 #define RGFW_NO_TYPES
 // TODO: Support other rendering methods (e.g. Vulkan, Metal, DirectX, OpenGL).
 #define RGFW_BUFFER  // i.e. CPU software rendering
