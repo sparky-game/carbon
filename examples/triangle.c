@@ -3,12 +3,11 @@
 #include "../carbon.h"
 
 int main(void) {
-  usz width = 640, height = 360;
-  CBN_DrawCanvas canvas = carbon_drawcanvas_create(width, height);
-  carbon_win_open(width, height, "Triangle");
+  CBN_DrawCanvas canvas = carbon_drawcanvas_create(640, 360);
+  carbon_win_open(canvas.width, canvas.height, "Triangle");
   f32 angle = 0;
   usz size = 250;
-  CBN_Vec2 center = {{width/2, height/2}};
+  CBN_Vec2 center = {{canvas.width / 2, canvas.height / 2}};
   CBN_Vec2 v1 = {{center.x, center.y - (size / CARBON_SQRT3)}};
   CBN_Vec2 v2 = {{center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
   CBN_Vec2 v3 = {{center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
