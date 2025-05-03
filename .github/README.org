@@ -1,19 +1,10 @@
 #+AUTHOR: Wasym A. Alonso
 
-# Logo & Title
+# Cover
 #+begin_html
-<h1 align="center">
-<img src="../assets/logo.png" alt="Carbon Logo">
-<br/>
-Carbon
-</h1>
-#+end_html
-
-# Subtitle
-#+begin_html
-<h4 align="center">
-The ultimate high-level library for C/C++ written in pure C (C99)
-</h4>
+<p align="center">
+<img src="../assets/cover.png" alt="Carbon Cover">
+</p>
 #+end_html
 
 # Badges
