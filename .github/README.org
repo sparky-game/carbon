@@ -16,7 +16,7 @@ The ultimate high-level library for C/C++ written in pure C (C99)
 </h4>
 #+end_html
 
-# Repository info badges
+# Badges
 #+begin_html
 <p align="center">
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=blue" alt="License">
@@ -25,18 +25,12 @@ The ultimate high-level library for C/C++ written in pure C (C99)
 <img src="https://img.shields.io/github/repo-size/sparky-game/carbon?color=blue" alt="Size">
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Release">
 <img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
+<img src="https://img.shields.io/badge/Hello-World!-blue">
+<img src="https://img.shields.io/badge/Привет-Мир!-blue">
 <br/>
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://api.scorecard.dev/projects/github.com/sparky-game/carbon/badge" alt="OpenSSF Scorecard">
 <br/>
-<img src="https://img.shields.io/badge/Hello-World!-ff69b4">
-<img src="https://img.shields.io/badge/Привет-Мир!-ff69b4">
-</p>
-#+end_html
-
-# Repository CI badges
-#+begin_html
-<p align="center">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">
