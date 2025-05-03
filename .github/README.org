@@ -21,7 +21,6 @@
 <br/>
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://api.scorecard.dev/projects/github.com/sparky-game/carbon/badge" alt="OpenSSF Scorecard">
-<br/>
 <img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">
