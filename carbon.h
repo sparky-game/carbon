@@ -814,6 +814,8 @@ CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz
 */
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
 CARBON_API void carbon_win_close(void);
+CARBON_API void carbon_win_set_max_fps(u32 fps);
+CARBON_API f64 carbon_win_get_deltatime(void);
 CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
 CARBON_API u8 carbon_win_shouldclose(void);
 

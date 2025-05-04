@@ -15,6 +15,7 @@
 #include "../vendor/RGFW/RGFW.h"
 
 static RGFW_window *carbon_win__handle;
+static u32 carbon_win__max_fps;
 
 void carbon_win_open(u16 width, u16 height, const char *title) {
   RGFW_area screen_size = RGFW_getScreenSize();
@@ -34,6 +35,23 @@ void carbon_win_close(void) {
   carbon_log_info("Window closed successfully");
 }
 
+void carbon_win_set_max_fps(u32 fps) {
+  carbon_win__max_fps = fps;
+}
+
+f64 carbon_win_get_deltatime(void) {
+  static f64 last_frame_time;
+  static u8 is_first_time = true;
+  if (is_first_time) {
+    last_frame_time = carbon_time_get();
+    is_first_time = false;
+  }
+  f64 curr_frame_time = carbon_time_get();
+  f64 dt = curr_frame_time - last_frame_time;
+  last_frame_time = curr_frame_time;
+  return dt;
+}
+
 void carbon_win_update(CBN_DrawCanvas dc) {
   for (usz j = 0; j < dc.height; ++j) {
     for (usz i = 0; i < dc.width; ++i) {
@@ -50,9 +68,15 @@ void carbon_win_update(CBN_DrawCanvas dc) {
     }
   }
   RGFW_window_swapBuffers(carbon_win__handle);
+  RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
 
 u8 carbon_win_shouldclose(void) {
+  static u8 is_first_time = true;
+  if (is_first_time) {
+    carbon_log_info("Window max FPS set to %$", $(carbon_win__max_fps));
+    is_first_time = false;
+  }
   RGFW_window_checkEvent(carbon_win__handle);
   return RGFW_window_shouldClose(carbon_win__handle);
 }
