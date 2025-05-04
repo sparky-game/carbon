@@ -5,6 +5,8 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+#define CARBON_DRAWCANVAS__AA_RES 2
+
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
   CBN_DrawCanvas dc = {
     .pixels = (u32 *) CARBON_MALLOC(width * height * sizeof(u32)),
@@ -66,6 +68,24 @@ CARBON_INLINE u8 carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v
           (CARBON_SIGN(u3)  == CARBON_SIGN(*det) || u3  == 0));
 }
 
+CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
+  u32 r1 = (*c1 >> 24) & 0xff;
+  u32 g1 = (*c1 >> 16) & 0xff;
+  u32 b1 = (*c1 >> 8)  & 0xff;
+  u32 a1 = (*c1 >> 0)  & 0xff;
+  u32 r2 = (c2 >> 24) & 0xff;
+  u32 g2 = (c2 >> 16) & 0xff;
+  u32 b2 = (c2 >> 8)  & 0xff;
+  u32 a2 = (c2 >> 0)  & 0xff;
+  r1 = (r1 * (255 - a2) + r2*a2) / 255;
+  r1 = CARBON_CLAMP(r1, 0, 255);
+  g1 = (g1 * (255 - a2) + g2*a2) / 255;
+  b1 = CARBON_CLAMP(g1, 0, 255);
+  b1 = (b1 * (255 - a2) + b2*a2) / 255;
+  b1 = CARBON_CLAMP(b1, 0, 255);
+  *c1 = ((r1 & 0xff) << 24) | ((g1 & 0xff) << 16) | ((b1 & 0xff) << 8) | ((a1 & 0xff) << 0);
+}
+
 void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
   usz lx, hx, ly, hy;
   if (!carbon_drawcanvas__triangle_norm(dc, v1, v2, v3, &lx, &hx, &ly, &hy)) return;
@@ -103,7 +123,29 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
   if (!carbon_drawcanvas__rect_normalize(dc, r, &x1, &x2, &y1, &y2)) return;
   for (i32 i = x1; i <= x2; ++i) {
     for (i32 j = y1; j <= y2; ++j) {
-      CARBON_DRAWCANVAS_AT(dc, i, j) = color;
+      carbon_drawcanvas__alpha_blending(&CARBON_DRAWCANVAS_AT(dc, i, j), color);
+    }
+  }
+}
+
+void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color) {
+  i32 x1, x2, y1, y2;
+  i32 r = radius + CARBON_SIGN(radius);
+  if (!carbon_drawcanvas__rect_normalize(dc, CARBON_RECT(center.x - r, center.y - r, 2*r, 2*r), &x1, &x2, &y1, &y2)) return;
+  for (i32 j = y1; j <= y2; ++j) {
+    for (i32 i = x1; i <= x2; ++i) {
+      i64 n = 0;
+      for (i64 sx = 0; sx < CARBON_DRAWCANVAS__AA_RES; ++sx) {
+        for (i64 sy = 0; sy < CARBON_DRAWCANVAS__AA_RES; ++sy) {
+          i64 res = CARBON_DRAWCANVAS__AA_RES + 1;
+          i64 dx = (i * res * 2) + 2 + (sx * 2) - (res * center.x * 2) - res;
+          i64 dy = (j * res * 2) + 2 + (sy * 2) - (res * center.y * 2) - res;
+          if (dx*dx + dy*dy <= (i64) (res*res * radius*radius * 4)) ++n;
+        }
+      }
+      u32 aa_alpha = ((color >> 0) & 0xff) * (n / CARBON_DRAWCANVAS__AA_RES / CARBON_DRAWCANVAS__AA_RES);
+      u32 aa_color = (color & 0xffffff00) | (aa_alpha << 0);
+      carbon_drawcanvas__alpha_blending(&CARBON_DRAWCANVAS_AT(dc, i, j), aa_color);
     }
   }
 }
