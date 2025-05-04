@@ -77,3 +77,33 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
     }
   }
 }
+
+CARBON_INLINE u8 carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
+  if (!r.w || !r.h) return false;
+  i32 ox1 = r.x;
+  i32 oy1 = r.y;
+  i32 ox2 = ox1 + CARBON_SIGN(r.w) * (carbon_math_abs(r.w) - 1);
+  if (ox1 > ox2) CARBON_SWAP(i32, ox1, ox2);
+  i32 oy2 = oy1 + CARBON_SIGN(r.h) * (carbon_math_abs(r.h) - 1);
+  if (oy1 > oy2) CARBON_SWAP(i32, oy1, oy2);
+  if (ox1 >= (i32) dc.width || ox2 < 0 || oy1 >= (i32) dc.height || oy2 < 0) return false;
+  *x1 = ox1;
+  if (*x1 < 0) *x1 = 0;
+  *x2 = ox2;
+  if (*x2 >= (i32) dc.width) *x2 = dc.width - 1;
+  *y1 = oy1;
+  if (*y1 < 0) *y1 = 0;
+  *y2 = oy2;
+  if (*y2 >= (i32) dc.height) *y2 = dc.height - 1;
+  return true;
+}
+
+void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
+  i32 x1, x2, y1, y2;
+  if (!carbon_drawcanvas__rect_normalize(dc, r, &x1, &x2, &y1, &y2)) return;
+  for (i32 i = x1; i <= x2; ++i) {
+    for (i32 j = y1; j <= y2; ++j) {
+      CARBON_DRAWCANVAS_AT(dc, i, j) = color;
+    }
+  }
+}
