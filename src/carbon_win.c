@@ -53,19 +53,16 @@ f64 carbon_win_get_deltatime(void) {
 }
 
 void carbon_win_update(CBN_DrawCanvas dc) {
-  for (usz j = 0; j < dc.height; ++j) {
-    for (usz i = 0; i < dc.width; ++i) {
-      u32 color = dc.pixels[j * dc.width + i];
-      u8 r = (color >> 24) & 0xff;
-      u8 g = (color >> 16) & 0xff;
-      u8 b = (color >> 8)  & 0xff;
-      u8 a = (color >> 0)  & 0xff;
-      u32 idx = (j * dc.width + i) * 4;
-      carbon_win__handle->buffer[idx + 0] = r;
-      carbon_win__handle->buffer[idx + 1] = g;
-      carbon_win__handle->buffer[idx + 2] = b;
-      carbon_win__handle->buffer[idx + 3] = a;
-    }
+  for (usz i = 0; i < dc.width * dc.height; ++i) {
+    u32 color = dc.pixels[i];
+    u8 r = (color >> 24) & 0xff;
+    u8 g = (color >> 16) & 0xff;
+    u8 b = (color >> 8)  & 0xff;
+    u8 a = (color >> 0)  & 0xff;
+    carbon_win__handle->buffer[i * 4 + 0] = r;
+    carbon_win__handle->buffer[i * 4 + 1] = g;
+    carbon_win__handle->buffer[i * 4 + 2] = b;
+    carbon_win__handle->buffer[i * 4 + 3] = a;
   }
   RGFW_window_swapBuffers(carbon_win__handle);
   RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
