@@ -411,8 +411,8 @@ CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
 }
 
 CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot) {
-  CBN_Vec2 r = carbon_math_vec2_rotate((CBN_Vec2){{v.x - pivot.x, v.y - pivot.y}}, angle);
-  return (CBN_Vec2) {{r.x + pivot.x, r.y + pivot.y}};
+  CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC2(v.x - pivot.x, v.y - pivot.y), angle);
+  return CARBON_VEC2(r.x + pivot.x, r.y + pivot.y);
 }
 
 u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p) {
