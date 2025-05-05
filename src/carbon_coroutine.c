@@ -109,7 +109,7 @@ static CBN_List carbon_coroutine__asleep;  // CBN_List<usz>
 static CBN_List carbon_coroutine__polls;  // CBN_List<struct pollfd>
 
 __attribute__((naked)) void carbon_coroutine_restore_ctx(void *rsp) {
-  __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS ::: "memory");
+  __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
 
 void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd) {
@@ -285,15 +285,15 @@ void carbon_coroutine_go(void (*f)(void *), void *arg) {
 }
 
 __attribute__((naked)) void carbon_coroutine_yield(void) {
-  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_NONE ::: "memory");
+  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_NONE);
 }
 
 __attribute__((naked)) void carbon_coroutine_sleep_read(i32 fd) {
-  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_READ ::: "memory");
+  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_READ);
 }
 
 __attribute__((naked)) void carbon_coroutine_sleep_write(i32 fd) {
-  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_WRITE ::: "memory");
+  __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_WRITE);
 }
 
 void carbon_coroutine_wakeup(usz id) {
