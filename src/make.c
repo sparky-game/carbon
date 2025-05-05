@@ -14,7 +14,7 @@
 
 #define C_STD   "-std=c99"
 #define CXX_STD "-std=c++11"
-#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format"
+#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types"
 
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
