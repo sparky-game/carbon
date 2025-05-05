@@ -751,6 +751,19 @@ CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
 CARBON_API u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
 CARBON_API CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs);
 CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
+
+/**
+ * @brief Converts a linear buffer of 32-bit RGBA pixels to a linear buffer of 8-bit per channel RGBA bytes.
+ *
+ * This function allocates memory in the heap using `CARBON_MALLOC`; thus, it's important to keep in mind the
+ * lifetime of that allocation and free it accordingly using `CARBON_FREE`.
+ *
+ * @param pixels The pointer to the 32-bit RGBA linear buffer of pixels.
+ * @param width The width of the image.
+ * @param height The height of the image.
+ * @return The pointer to the newly allocated linear buffer of 8-bit per channel RGBA bytes.
+ */
+CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
 CARBON_API u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
 CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
 CARBON_API void carbon_fs_destroy_img(CBN_List *img);
