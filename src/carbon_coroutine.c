@@ -108,7 +108,7 @@ static CBN_List carbon_coroutine__ctxs;    // CBN_List<CBN_Coroutine_CTX>
 static CBN_List carbon_coroutine__asleep;  // CBN_List<usz>
 static CBN_List carbon_coroutine__polls;  // CBN_List<struct pollfd>
 
-CARBON_INLINE __attribute__((naked)) void carbon_coroutine_restore_ctx(void *rsp) {
+__attribute__((naked)) void carbon_coroutine_restore_ctx(void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS ::: "memory");
 }
 
