@@ -327,6 +327,36 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_VEC3(x, y, z)    (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
 #define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
 
+/**
+ * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
+ */
+#define CARBON_VEC2_ZERO CARBON_VEC2(0, 0)
+
+/**
+ * @brief Defines an inline 2D vector which represents -X direction.
+ */
+#define CARBON_VEC2_LEFT CARBON_VEC2(-1, 0)
+
+/**
+ * @brief Defines an inline 2D vector which represents +X direction.
+ */
+#define CARBON_VEC2_RIGHT CARBON_VEC2(1, 0)
+
+/**
+ * @brief Defines an inline 2D vector which represents -Y direction.
+ */
+#define CARBON_VEC2_DOWN CARBON_VEC2(0, -1)
+
+/**
+ * @brief Defines an inline 2D vector which represents +Y direction.
+ */
+#define CARBON_VEC2_UP CARBON_VEC2(0, 1)
+
+/**
+ * @brief Defines an inline 2D vector whose 2 elements are equal to one.
+ */
+#define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
+
 typedef union {
   f32 items[2];
   struct {
