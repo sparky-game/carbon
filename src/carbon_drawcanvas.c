@@ -73,17 +73,19 @@ CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
   u32 g1 = (*c1 >> 16) & 0xff;
   u32 b1 = (*c1 >> 8)  & 0xff;
   u32 a1 = (*c1 >> 0)  & 0xff;
-  u32 r2 = (c2 >> 24) & 0xff;
-  u32 g2 = (c2 >> 16) & 0xff;
-  u32 b2 = (c2 >> 8)  & 0xff;
-  u32 a2 = (c2 >> 0)  & 0xff;
-  r1 = (r1 * (255 - a2) + r2*a2) / 255;
-  r1 = CARBON_CLAMP(r1, 0, 255);
-  g1 = (g1 * (255 - a2) + g2*a2) / 255;
-  g1 = CARBON_CLAMP(g1, 0, 255);
-  b1 = (b1 * (255 - a2) + b2*a2) / 255;
-  b1 = CARBON_CLAMP(b1, 0, 255);
-  *c1 = ((r1 & 0xff) << 24) | ((g1 & 0xff) << 16) | ((b1 & 0xff) << 8) | ((a1 & 0xff) << 0);
+  u32 r2 = (c2  >> 24) & 0xff;
+  u32 g2 = (c2  >> 16) & 0xff;
+  u32 b2 = (c2  >> 8)  & 0xff;
+  u32 a2 = (c2  >> 0)  & 0xff;
+  u32 r = (r1 * (255 - a2) + r2*a2) / 255;
+  r = CARBON_CLAMP(r, 0, 255);
+  u32 g = (g1 * (255 - a2) + g2*a2) / 255;
+  g = CARBON_CLAMP(g, 0, 255);
+  u32 b = (b1 * (255 - a2) + b2*a2) / 255;
+  b = CARBON_CLAMP(b, 0, 255);
+  u32 a = (a1 * (255 - a2) + a2*255) / 255;
+  a = CARBON_CLAMP(a, 0, 255);
+  *c1 = ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | ((a & 0xff) << 0);
 }
 
 void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
