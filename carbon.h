@@ -364,7 +364,16 @@ typedef union CBN_Vec2 {
     union { f32 y, g, t, v; };
   };
 #ifdef __cplusplus
+  /**
+   * @brief carbon_math_vec2_rotate
+   * @param angle The rotation to apply (in degrees).
+   * @return The rotated 2D vector.
+   */
   CBN_Vec2 Rotate(f32 angle) const;
+  /**
+   * @brief carbon_math_vec2_to_cstr
+   * @return The serialized 2D vector as `(X, Y)`.
+   */
   const char *ToString(void) const;
 #endif
 } CBN_Vec2;
@@ -432,6 +441,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
+CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Scales the 2D vector by the specified scalar value.
@@ -441,8 +451,6 @@ CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
  */
 CARBON_API CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
 
-CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
-
 /**
  * @brief Rotates the 2D vector by the specified rotation value (in degrees).
  * @param v The 2D vector.
@@ -451,6 +459,13 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
  */
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
 
+/**
+ * @brief Rotates the 2D vector around a given pivot point by the specified rotation value (in degrees).
+ * @param v The 2D vector.
+ * @param angle The rotation to apply (in degrees).
+ * @param pivot The pivot point around which to rotate the 2D vector.
+ * @return The rotated 2D vector.
+ */
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
 
 /**
