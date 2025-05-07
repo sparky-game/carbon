@@ -4,7 +4,9 @@
 *.tgz
 make
 test/carbon
-examples/*[!.c]
+examples/*
+!examples/*.c
+!examples/*.cc
 
 ai/build/
 ai/build/testgen
