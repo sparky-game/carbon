@@ -39,15 +39,23 @@
 
 /*
 **  Available compile-time options:
-**    - CARBON_IMPLEMENTATION -> Include function definitions in the translation unit
-**                               that this macro has been defined. It's important that
-**                               this macro is ONLY defined ONCE in the entire codebase
-**                               of your program, to avoid multiple symbol definitions
-**                               linker errors.
-**    - CARBON_TESTING_ENTRY --> Redefines the `main` function, thus making it behave
-**                               as a test suite entrypoint. It's only relevant to
-**                               define it in the translation unit where we're defining
-**                               the `main` function.
+**
+**    - CARBON_TESTING_ENTRY ------------> Redefines the `main` function, thus making it behave
+**                                         as a test suite entrypoint. It's only relevant to
+**                                         define it in the translation unit where we're defining
+**                                         the `main` function.
+**
+**    - CARBON_IMPLEMENTATION -----------> Include function definitions in the translation unit
+**                                         that this macro has been defined. It's important that
+**                                         this macro is ONLY defined ONCE in the entire codebase
+**                                         of your program, to avoid multiple symbol definitions
+**                                         linker errors.
+**
+**    - CARBON_IMPLEMENTATION_WINDOWING -> Appart from what `CARBON_IMPLEMENTATION` includes, this
+**                                         macro includes windowing-related function definitions.
+**                                         As well, it's important that this macro is ONLY defined
+**                                         ONCE in the entire codebase of your program, to avoid
+**                                         multiple symbol definitions linker errors.
 */
 
 /*
@@ -996,7 +1004,9 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_fs.c"
 #include "src/carbon_nn.c"
 #include "src/carbon_drawcanvas.c"
+#ifdef CARBON_IMPLEMENTATION_WINDOWING
 #include "src/carbon_win.c"
+#endif  // CARBON_IMPLEMENTATION_WINDOWING
 #include "src/carbon_test_manager.c"
 #include "src/carbon_junit.c"
 #endif  // CARBON_IMPLEMENTATION
