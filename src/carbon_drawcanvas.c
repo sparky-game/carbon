@@ -80,7 +80,7 @@ CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
   r1 = (r1 * (255 - a2) + r2*a2) / 255;
   r1 = CARBON_CLAMP(r1, 0, 255);
   g1 = (g1 * (255 - a2) + g2*a2) / 255;
-  b1 = CARBON_CLAMP(g1, 0, 255);
+  g1 = CARBON_CLAMP(g1, 0, 255);
   b1 = (b1 * (255 - a2) + b2*a2) / 255;
   b1 = CARBON_CLAMP(b1, 0, 255);
   *c1 = ((r1 & 0xff) << 24) | ((g1 & 0xff) << 16) | ((b1 & 0xff) << 8) | ((a1 & 0xff) << 0);
