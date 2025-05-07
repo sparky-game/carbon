@@ -192,27 +192,6 @@ static void build(void) {
 static void package(void) {
   carbon_log_info("Packaging...");
   cp_dash_r("COPYING carbon.h", WORKDIR);
-#undef dir
-#define dir "src"
-  carbon_println("  MKDIR   " WORKDIR "/" dir);
-  if (!carbon_fs_create_directory(WORKDIR "/" dir)) exit_gracefully();
-  cp_dash_r(dir "/carbon_*", WORKDIR "/" dir);
-#undef dir
-#define dir "vendor/stb_image"
-  carbon_println("  MKDIR   " WORKDIR "/" dir);
-  if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
-  cp_dash_r(dir "/*", WORKDIR "/" dir);
-#undef dir
-#define dir "vendor/stb_image_write"
-  carbon_println("  MKDIR   " WORKDIR "/" dir);
-  if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
-  cp_dash_r(dir "/*", WORKDIR "/" dir);
-#undef dir
-#define dir "vendor/RGFW"
-  carbon_println("  MKDIR   " WORKDIR "/" dir);
-  if (!carbon_fs_create_directories(WORKDIR "/" dir)) exit_gracefully();
-  cp_dash_r(dir "/*", WORKDIR "/" dir);
-#undef dir
   carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
