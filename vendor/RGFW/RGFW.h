@@ -1559,7 +1559,7 @@ void RGFW_init_keys(void) {
 
 u32 RGFW_apiKeyToRGFW(u32 keycode) {
 	#ifdef __cplusplus
-	if (RGFW_OS_BASED_VALUE(49, 192, 50, DOM_VK_BACK_QUOTE, KEY_GRAVE) != RGFW_backtick) {
+	if (RGFW_OS_BASED_VALUE(49, 192, 50, DOM_VK_BACK_QUOTE) != RGFW_backtick) {
 		RGFW_init_keys();
 	}
 	#endif
@@ -1832,7 +1832,7 @@ void RGFW_window_initBuffer(RGFW_window* win) {
 void RGFW_window_initBufferSize(RGFW_window* win, RGFW_area area) {
 	win->_flags |= RGFW_BUFFER_ALLOC;
 	#ifndef RGFW_WINDOWS
-	RGFW_window_initBufferPtr(win, RGFW_ALLOC(area.w * area.h * 4), area);
+	RGFW_window_initBufferPtr(win, (u8 *) RGFW_ALLOC(area.w * area.h * 4), area);
 	#else /* windows's bitmap allocs memory for us */
 	RGFW_window_initBufferPtr(win, NULL, area);
 	#endif
@@ -8307,7 +8307,7 @@ RGFW_window* RGFW_createWindowPtr(const char* name, RGFW_rect rect, RGFW_windowF
 	} else
 	#endif
 	{
-		NSRect contentRect = (NSRect){{0, 0}, {win->r.w, win->r.h}};
+                NSRect contentRect = (NSRect){{0, 0}, {(CGFloat) win->r.w, (CGFloat) win->r.h}};
 		win->src.view = ((id(*)(id, SEL, NSRect))objc_msgSend)
 			(NSAlloc((id)objc_getClass("NSView")), sel_registerName("initWithFrame:"),
 				contentRect);
@@ -8835,7 +8835,7 @@ RGFW_window* RGFW_createWindowPtr(const char* name, RGFW_rect rect, RGFW_windowF
 		win->r.x = v.x;
 		win->r.y = v.y;
 		((void(*)(id, SEL, NSRect, bool, bool))objc_msgSend)
-			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{win->r.x, win->r.y}, {win->r.w, win->r.h}}, true, true);
+			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{(CGFloat) win->r.x, (CGFloat) win->r.y}, {(CGFloat) win->r.w, (CGFloat) win->r.h}}, true, true);
 	}
 
 	void RGFW_window_resize(RGFW_window* win, RGFW_area a) {
@@ -8849,7 +8849,7 @@ RGFW_window* RGFW_createWindowPtr(const char* name, RGFW_rect rect, RGFW_windowF
 	win->r.h = a.h;
 
 	((void(*)(id, SEL, NSRect, bool, bool))objc_msgSend)
-		((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{win->r.x, win->r.y}, {win->r.w, win->r.h + offset}}, true, true);
+		((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{(CGFloat) win->r.x, (CGFloat) win->r.y}, {(CGFloat) win->r.w, (CGFloat) win->r.h + offset}}, true, true);
 }
 
 void RGFW_window_focus(RGFW_window* win) {
@@ -8947,12 +8947,12 @@ void RGFW_window_setAspectRatio(RGFW_window* win, RGFW_area a) {
 	if (a.w == 0 && a.h == 0) a = RGFW_AREA(1, 1);
 
 	((void (*)(id, SEL, NSSize))objc_msgSend)
-		((id)win->src.window, sel_registerName("setContentAspectRatio:"), (NSSize){a.w, a.h});
+		((id)win->src.window, sel_registerName("setContentAspectRatio:"), (NSSize){(CGFloat) a.w, (CGFloat) a.h});
 }
 
 void RGFW_window_setMinSize(RGFW_window* win, RGFW_area a) {
 	((void (*)(id, SEL, NSSize))objc_msgSend)
-		((id)win->src.window, sel_registerName("setMinSize:"), (NSSize){a.w, a.h});
+		((id)win->src.window, sel_registerName("setMinSize:"), (NSSize){(CGFloat) a.w, (CGFloat) a.h});
 }
 
 void RGFW_window_setMaxSize(RGFW_window* win, RGFW_area a) {
@@ -8961,7 +8961,7 @@ void RGFW_window_setMaxSize(RGFW_window* win, RGFW_area a) {
 	}
 
 	((void (*)(id, SEL, NSSize))objc_msgSend)
-		((id)win->src.window, sel_registerName("setMaxSize:"), (NSSize){a.w, a.h});
+		((id)win->src.window, sel_registerName("setMaxSize:"), (NSSize){(CGFloat) a.w, (CGFloat) a.h});
 }
 
 RGFW_bool RGFW_window_setIconEx(RGFW_window* win, u8* data, RGFW_area area, i32 channels, u8 type) {
@@ -8979,7 +8979,7 @@ RGFW_bool RGFW_window_setIconEx(RGFW_window* win, u8* data, RGFW_area area, i32 
 	RGFW_MEMCPY(NSBitmapImageRep_bitmapData(representation), data, area.w * area.h * channels);
 
 	// Add ze representation.
-	id dock_image = NSImage_initWithSize((NSSize){area.w, area.h});
+	id dock_image = NSImage_initWithSize((NSSize){(CGFloat) area.w, (CGFloat) area.h});
 	NSImage_addRepresentation(dock_image, representation);
 
 	// Finally, set the dock image to it.
@@ -9009,7 +9009,7 @@ RGFW_mouse* RGFW_loadMouse(u8* icon, RGFW_area a, i32 channels) {
 	RGFW_MEMCPY(NSBitmapImageRep_bitmapData(representation), icon, a.w * a.h * channels);
 
 	// Add ze representation.
-	id cursor_image = NSImage_initWithSize((NSSize){a.w, a.h});
+	id cursor_image = NSImage_initWithSize((NSSize){(CGFloat) a.w, (CGFloat) a.h});
 	NSImage_addRepresentation(cursor_image, representation);
 
 	// Finally, set the cursor image.
@@ -9199,7 +9199,7 @@ RGFW_monitor* RGFW_getMonitors(void) {
 }
 
 RGFW_bool RGFW_monitor_requestMode(RGFW_monitor mon, RGFW_monitorMode mode, RGFW_modeRequest request) {
-    CGPoint point = { mon.x, mon.y };
+    CGPoint point = { (CGFloat) mon.x, (CGFloat) mon.y };
 
     CGDirectDisplayID display;
     uint32_t displayCount = 0;
@@ -9334,7 +9334,7 @@ void RGFW_window_swapBuffers(RGFW_window* win) {
 
 		((void(*)(id, SEL, NSRect))objc_msgSend)(layer,
 			sel_registerName("setFrame:"),
-			(NSRect){{0, 0}, {win->r.w, win->r.h}});
+			(NSRect){{0, 0}, {(CGFloat) win->r.w, (CGFloat) win->r.h}});
 
 		CGImageRef image = createImageFromBytes(win->buffer, win->r.w, win->r.h);
 		// Get the current graphics context
@@ -9342,8 +9342,8 @@ void RGFW_window_swapBuffers(RGFW_window* win) {
 		// Get the CGContext from the current NSGraphicsContext
 		id cgContext = objc_msgSend_id(graphicsContext, sel_registerName("graphicsPort"));
 		// Draw the image in the context
-		NSRect bounds = (NSRect){{0,0}, {win->r.w, win->r.h}};
-		CGContextDrawImage((void*)cgContext, *(CGRect*)&bounds, image);
+		NSRect bounds = (NSRect){{0,0}, {(CGFloat) win->r.w, (CGFloat) win->r.h}};
+		CGContextDrawImage((CGContextRef)cgContext, *(CGRect*)&bounds, image);
 		// Flush the graphics context to ensure the drawing is displayed
 		objc_msgSend_id(graphicsContext, sel_registerName("flushGraphics"));
 
