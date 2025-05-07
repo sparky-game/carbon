@@ -393,6 +393,10 @@ f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
   return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
 }
 
+CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
+  return CARBON_VEC2(v.x * s, v.y * s);
+}
+
 CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v) {
   return (CBN_Vec3) {
     .x = (u.y * v.z) - (u.z * v.y),
@@ -413,6 +417,10 @@ CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
 CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot) {
   CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC2(v.x - pivot.x, v.y - pivot.y), angle);
   return CARBON_VEC2(r.x + pivot.x, r.y + pivot.y);
+}
+
+char *carbon_math_vec2_to_cstr(CBN_Vec2 v) {
+  return carbon_string_fmt("(%.3f, %.3f)", v.x, v.y);
 }
 
 u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p) {

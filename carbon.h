@@ -357,12 +357,15 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
  */
 #define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
 
-typedef union {
+typedef union CBN_Vec2 {
   f32 items[2];
   struct {
     union { f32 x, r, s, u; };
     union { f32 y, g, t, v; };
   };
+#ifdef __cplusplus
+  CBN_Vec2 Rotate(f32 angle) const;
+#endif
 } CBN_Vec2;
 
 typedef union {
@@ -428,9 +431,34 @@ CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Scales the 2D vector by the specified scalar value.
+ * @param v The 2D vector.
+ * @param s The scalar value.
+ * @return The scaled 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
+
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Rotates the 2D vector by the specified rotation value (in degrees).
+ * @param v The 2D vector.
+ * @param angle The rotation to apply (in degrees).
+ * @return The rotated 2D vector.
+ */
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
+
 CARBON_API CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
+
+/**
+ * @brief Returns the string representation of the 2D vector using default formatting.
+ * @param v The 2D vector.
+ * @return The serialized 2D vector as `(X, Y)`.
+ */
+CARBON_API char *carbon_math_vec2_to_cstr(CBN_Vec2 v);
+
 CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
 CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
@@ -454,10 +482,13 @@ CARBON_API void carbon_math_row_print(CBN_Row r, const char *name);
 
 #ifdef __cplusplus
 CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
-CBN_Vec3 operator+(const CBN_Vec3 &u, const CBN_Vec3 &v);
+void operator+=(CBN_Vec2 &u, const CBN_Vec2 &v);
 CBN_Vec2 operator-(const CBN_Vec2 &u, const CBN_Vec2 &v);
-CBN_Vec3 operator-(const CBN_Vec3 &u, const CBN_Vec3 &v);
 f32 operator*(const CBN_Vec2 &u, const CBN_Vec2 &v);
+CBN_Vec2 operator*(const CBN_Vec2 &v, const f32 s);
+void operator*=(CBN_Vec2 &v, const f32 s);
+CBN_Vec3 operator+(const CBN_Vec3 &u, const CBN_Vec3 &v);
+CBN_Vec3 operator-(const CBN_Vec3 &u, const CBN_Vec3 &v);
 f32 operator*(const CBN_Vec3 &u, const CBN_Vec3 &v);
 #endif
 
@@ -940,6 +971,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_coroutine.c"
 #endif  // CARBON_USE_COROUTINES
 #include "src/carbon_math.c"
+#include "src/carbon_math_mfns.cc"
 #include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"
 #include "src/carbon_log.c"
