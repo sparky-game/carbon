@@ -365,6 +365,7 @@ typedef union CBN_Vec2 {
   };
 #ifdef __cplusplus
   CBN_Vec2 Rotate(f32 angle) const;
+  const char *ToString(void) const;
 #endif
 } CBN_Vec2;
 
