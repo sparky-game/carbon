@@ -112,7 +112,7 @@ __attribute__((naked)) void carbon_coroutine_restore_ctx(void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
 
-void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd) {
+CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd) {
   usz current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item).rsp = rsp;
   switch (sm) {

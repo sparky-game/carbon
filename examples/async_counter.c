@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_USE_COROUTINES
 #define CARBON_IMPLEMENTATION
 #include "../carbon.h"
 
