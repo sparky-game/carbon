@@ -826,9 +826,19 @@ typedef enum {
   CBN_FILE_FORMAT_JPG,
 } CBN_FileFormat;
 
-typedef struct {
+typedef struct CBN_PatternMatchedFiles {
   char **files;
   usz count;
+#ifdef __cplusplus
+  using iterator = const char **;
+  using const_iterator = const char * const *;
+  iterator begin(void);
+  const_iterator begin(void) const;
+  const_iterator cbegin(void) const;
+  iterator end(void);
+  const_iterator end(void) const;
+  const_iterator cend(void) const;
+#endif
 } CBN_PatternMatchedFiles;
 
 CARBON_API u8 carbon_fs_exists(const char *file);
@@ -863,6 +873,7 @@ CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
  * @return The pointer to the newly allocated linear buffer of 8-bit per channel RGBA bytes.
  */
 CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
+
 CARBON_API u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
 CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
 CARBON_API void carbon_fs_destroy_img(CBN_List *img);
@@ -1017,6 +1028,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_strview_mfns.cc"
 #include "src/carbon_strlist.c"
 #include "src/carbon_fs.c"
+#include "src/carbon_fs_mfns.cc"
 #include "src/carbon_nn.c"
 #include "src/carbon_drawcanvas.c"
 #ifdef CARBON_IMPLEMENTATION_WINDOWING
