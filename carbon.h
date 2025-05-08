@@ -691,18 +691,74 @@ CARBON_API void carbon_clock_stop(CBN_Clock *c);
 #define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), CARBON_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), ((T *) (l).items)[(i)])
 #define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
-typedef struct {
+typedef struct CBN_List {
   void *items;
   usz capacity;
   usz stride;
   usz size;
+#ifdef __cplusplus
+  using iterator = void *;
+  using const_iterator = void * const;
+  iterator begin(void);
+  const_iterator begin(void) const;
+  const_iterator cbegin(void) const;
+  iterator end(void);
+  const_iterator end(void) const;
+  const_iterator cend(void) const;
+  /**
+   * @brief carbon_list_push
+   * @param value The value to append.
+   */
+  void Push(void *value);
+  /**
+   * @brief carbon_list_pop
+   * @param out_value The value of the element popped out.
+   */
+  void Pop(void *out_value);
+  /**
+   * @brief carbon_list_find
+   * @param value The value of the element to check.
+   * @return The index of the provided element, or -1 if not present.
+   */
+  isz Find(const void *value) const;
+  /**
+   * @brief carbon_list_remove
+   * @param idx The index of the element to remove.
+   */
+  void Remove(usz idx);
+#endif
 } CBN_List;
 
 CARBON_API CBN_List carbon_list_create(usz stride);
 CARBON_API void carbon_list_destroy(CBN_List *l);
+
+/**
+ * @brief Appends a copy of the value to the end of the list.
+ * @param l The list container.
+ * @param value The value to append.
+ */
 CARBON_API void carbon_list_push(CBN_List *l, void *value);
+
+/**
+ * @brief Removes the last element from the list.
+ * @param l The list container.
+ * @param out_value The value of the element popped out.
+ */
 CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
-CARBON_API isz carbon_list_find(CBN_List *l, const void *value);
+
+/**
+ * @brief Obtains the index of the provided element, or -1 if not present.
+ * @param l The list container.
+ * @param value The value of the element to check.
+ * @return The index of the provided element, or -1 if not present.
+ */
+CARBON_API isz carbon_list_find(const CBN_List *l, const void *value);
+
+/**
+ * @brief Removes the element specified by the provided index from the list.
+ * @param l The list container.
+ * @param idx The index of the element to remove.
+ */
 CARBON_API void carbon_list_remove(CBN_List *l, usz idx);
 
 /*
