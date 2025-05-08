@@ -8,7 +8,7 @@
 #ifdef __cplusplus
 
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) {
-  return (CBN_PatternMatchedFiles::iterator) files;
+  return (iterator) files;
 }
 
 CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::begin(void) const {
@@ -20,7 +20,7 @@ CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::cbegin(void) co
 }
 
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::end(void) {
-  return (CBN_PatternMatchedFiles::iterator) (files + count);
+  return (iterator) (files + count);
 }
 
 CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::end(void) const {
