@@ -758,14 +758,28 @@ CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
 **  ||       StrView       ||
 **  $$=====================$$
 */
-typedef struct {
+typedef struct CBN_StrView {
   const char *data;
   usz size;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_strview_to_cstr
+   * @return A pointer to a null-terminated char array with same data.
+   */
+  const char *c_str(void) const;
+#endif
 } CBN_StrView;
 
 CARBON_API CBN_StrView carbon_strview_from_buf(const char *data, usz size);
 CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
+
+/**
+ * @brief Returns a non-modifiable standard C char array version of the string.
+ * @param sv The StrView holding the data.
+ * @return A pointer to a null-terminated char array with same data.
+ */
 CARBON_API char *carbon_strview_to_cstr(CBN_StrView sv);
+
 CARBON_API CBN_StrView carbon_strview_from_strbuilder(CBN_StrBuilder *sb);
 CARBON_API CBN_StrView carbon_strview_trim_left(CBN_StrView sv);
 CARBON_API CBN_StrView carbon_strview_trim_right(CBN_StrView sv);
@@ -1000,6 +1014,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_string.c"
 #include "src/carbon_strbuilder.c"
 #include "src/carbon_strview.c"
+#include "src/carbon_strview_mfns.cc"
 #include "src/carbon_strlist.c"
 #include "src/carbon_fs.c"
 #include "src/carbon_nn.c"
