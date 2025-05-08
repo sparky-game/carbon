@@ -15,4 +15,8 @@ const char *CBN_Vec2::ToString(void) const {
   return carbon_math_vec2_to_cstr(*this);
 }
 
+const char *CBN_Vec3::ToString(void) const {
+  return carbon_math_vec3_to_cstr(*this);
+}
+
 #endif  // __cplusplus

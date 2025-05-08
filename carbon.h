@@ -382,13 +382,20 @@ typedef union CBN_Vec2 {
 #endif
 } CBN_Vec2;
 
-typedef union {
+typedef union CBN_Vec3 {
   f32 items[3];
   struct {
     union { f32 x, r, s, u; };
     union { f32 y, g, t, v; };
     union { f32 z, b, p, w; };
   };
+#ifdef __cplusplus
+  /**
+   * @brief carbon_math_vec3_to_cstr
+   * @return The serialized 3D vector as `(X, Y, Z)`.
+   */
+  const char *ToString(void) const;
+#endif
 } CBN_Vec3;
 
 typedef struct {
@@ -439,6 +446,7 @@ CARBON_API f32 carbon_math_cos(f32 x);
 CARBON_API f32 carbon_math_asin(f32 x);
 CARBON_API f32 carbon_math_atan(f32 x);
 CARBON_API f32 carbon_math_atan2(f32 y, f32 x);
+
 CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
@@ -478,6 +486,13 @@ CARBON_API CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, 
  * @return The serialized 2D vector as `(X, Y)`.
  */
 CARBON_API char *carbon_math_vec2_to_cstr(CBN_Vec2 v);
+
+/**
+ * @brief Returns the string representation of the 3D vector using default formatting.
+ * @param v The 3D vector.
+ * @return The serialized 3D vector as `(X, Y, Z)`.
+ */
+CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
 
 CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
 CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);

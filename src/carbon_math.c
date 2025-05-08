@@ -423,6 +423,10 @@ char *carbon_math_vec2_to_cstr(CBN_Vec2 v) {
   return carbon_string_fmt("(%.3f, %.3f)", v.x, v.y);
 }
 
+char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
+  return carbon_string_fmt("(%.3f, %.3f, %.3f)", v.x, v.y, v.z);
+}
+
 u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p) {
   return (p.x >= r.x && p.x <= r.x + r.w) && (p.y >= r.y && p.y <= r.y + r.h);
 }
