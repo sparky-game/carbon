@@ -7,30 +7,6 @@
 
 #ifdef __cplusplus
 
-CBN_List::iterator CBN_List::begin(void) {
-  return items;
-}
-
-CBN_List::const_iterator CBN_List::begin(void) const {
-  return items;
-}
-
-CBN_List::const_iterator CBN_List::cbegin(void) const {
-  return items;
-}
-
-CBN_List::iterator CBN_List::end(void) {
-  return (iterator) ((u64) items + (size * stride));
-}
-
-CBN_List::const_iterator CBN_List::end(void) const {
-  return (const_iterator) ((u64) items + (size * stride));
-}
-
-CBN_List::const_iterator CBN_List::cend(void) const {
-  return (const_iterator) ((u64) items + (size * stride));
-}
-
 void CBN_List::Push(void *value) {
   carbon_list_push(this, value);
 }

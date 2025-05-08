@@ -697,14 +697,6 @@ typedef struct CBN_List {
   usz stride;
   usz size;
 #ifdef __cplusplus
-  using iterator = void *;
-  using const_iterator = void * const;
-  iterator begin(void);
-  const_iterator begin(void) const;
-  const_iterator cbegin(void) const;
-  iterator end(void);
-  const_iterator end(void) const;
-  const_iterator cend(void) const;
   /**
    * @brief carbon_list_push
    * @param value The value to append.
