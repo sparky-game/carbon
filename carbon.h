@@ -729,7 +729,17 @@ typedef struct CBN_List {
 #endif
 } CBN_List;
 
+/**
+ * @brief Create a new list container.
+ * @param stride Size in bytes of the elements the list will hold.
+ * @return The list container.
+ */
 CARBON_API CBN_List carbon_list_create(usz stride);
+
+/**
+ * @brief Destroy a list container.
+ * @param l The list container.
+ */
 CARBON_API void carbon_list_destroy(CBN_List *l);
 
 /**
