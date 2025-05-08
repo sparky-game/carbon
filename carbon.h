@@ -854,11 +854,21 @@ CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 #define carbon_strlist_at(sl, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
 #define carbon_strlist_foreach(sl) for (struct { usz i; CBN_StrView sv; } it = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; it.i < (sl).size; ++it.i, it.i < (sl).size ? it.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, it.i)) : it.sv)
 
-typedef struct {
+typedef struct CBN_StrList {
   char **items;
   usz size;
   usz capacity;
   u8 unique;
+#ifdef __cplusplus
+  using iterator = const char **;
+  using const_iterator = const char * const *;
+  iterator begin(void);
+  const_iterator begin(void) const;
+  const_iterator cbegin(void) const;
+  iterator end(void);
+  const_iterator end(void) const;
+  const_iterator cend(void) const;
+#endif
 } CBN_StrList;
 
 CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
@@ -1077,12 +1087,14 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_list.c"
+#include "src/carbon_list_mfns.cc"
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strbuilder.c"
 #include "src/carbon_strview.c"
 #include "src/carbon_strview_mfns.cc"
 #include "src/carbon_strlist.c"
+#include "src/carbon_strlist_mfns.cc"
 #include "src/carbon_fs.c"
 #include "src/carbon_fs_mfns.cc"
 #include "src/carbon_nn.c"
