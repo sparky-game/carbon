@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_USE_WINDOWING
 #define CARBON_IMPLEMENTATION
+#define CARBON_IMPLEMENTATION_WINDOWING
 #include "../carbon.h"
 
 int main(void) {
