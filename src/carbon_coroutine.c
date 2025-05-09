@@ -108,7 +108,7 @@ static CBN_List carbon_coroutine__ctxs;    // CBN_List<CBN_Coroutine_CTX>
 static CBN_List carbon_coroutine__asleep;  // CBN_List<usz>
 static CBN_List carbon_coroutine__polls;  // CBN_List<struct pollfd>
 
-__attribute__((naked)) void carbon_coroutine_restore_ctx(void *rsp) {
+__attribute__((naked)) void carbon_coroutine_restore_ctx(__attribute__((unused)) void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
 
@@ -288,11 +288,11 @@ __attribute__((naked)) void carbon_coroutine_yield(void) {
   __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_NONE);
 }
 
-__attribute__((naked)) void carbon_coroutine_sleep_read(i32 fd) {
+__attribute__((naked)) void carbon_coroutine_sleep_read(__attribute__((unused)) i32 fd) {
   __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_READ);
 }
 
-__attribute__((naked)) void carbon_coroutine_sleep_write(i32 fd) {
+__attribute__((naked)) void carbon_coroutine_sleep_write(__attribute__((unused)) i32 fd) {
   __asm__ volatile (CARBON_COROUTINE__STORE_REGISTERS CARBON_COROUTINE__SLEEP_WRITE);
 }
 
