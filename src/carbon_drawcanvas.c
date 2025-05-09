@@ -151,3 +151,16 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
     }
   }
 }
+
+u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v) {
+  f32 k = carbon_math_fmod(5 + h/60, 6);
+  k = CARBON_CLAMP(CARBON_MIN(4 - k, k), 0, 1);
+  u32 r = (v - v*s*k) * 255;
+  k = carbon_math_fmod(3 + h/60, 6);
+  k = CARBON_CLAMP(CARBON_MIN(4 - k, k), 0, 1);
+  u32 g = (v - v*s*k) * 255;
+  k = carbon_math_fmod(1 + h/60, 6);
+  k = CARBON_CLAMP(CARBON_MIN(4 - k, k), 0, 1);
+  u32 b = (v - v*s*k) * 255;
+  return ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | ((255 & 0xff) << 0);
+}

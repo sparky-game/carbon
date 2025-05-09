@@ -1013,6 +1013,15 @@ CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_V
 CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color);
 CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
 
+/**
+ * @brief Transforms HSV color into RGB (A always set to 0xff).
+ * @param h Hue, in [0..360] range.
+ * @param s Saturation, in [0..1] range.
+ * @param v Value, in [0..1] range.
+ * @return 32-bit RGBA color value (A always set to 0xff).
+ */
+CARBON_API u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
+
 /*
 **  $$=======================$$
 **  ||       Windowing       ||
