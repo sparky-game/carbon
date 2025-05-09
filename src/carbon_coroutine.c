@@ -106,7 +106,7 @@ static CBN_List carbon_coroutine__active;  // CBN_List<usz>
 static CBN_List carbon_coroutine__dead;    // CBN_List<usz>
 static CBN_List carbon_coroutine__ctxs;    // CBN_List<CBN_Coroutine_CTX>
 static CBN_List carbon_coroutine__asleep;  // CBN_List<usz>
-static CBN_List carbon_coroutine__polls;  // CBN_List<struct pollfd>
+static CBN_List carbon_coroutine__polls;   // CBN_List<struct pollfd>
 
 __attribute__((naked)) void carbon_coroutine_restore_ctx(__attribute__((unused)) void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
@@ -239,13 +239,13 @@ void carbon_coroutine_go(void (*f)(void *), void *arg) {
 #if defined(__amd64__) || defined(_M_AMD64)
   *(--rsp) = (void *) carbon_coroutine__finish_current;
   *(--rsp) = (void *) f;
-  *(--rsp) = arg;
-  *(--rsp) = 0;
-  *(--rsp) = 0;
-  *(--rsp) = 0;
-  *(--rsp) = 0;
-  *(--rsp) = 0;
-  *(--rsp) = 0;
+  *(--rsp) = arg;  // pushq %rdi
+  *(--rsp) = 0;    // pushq %rbp
+  *(--rsp) = 0;    // pushq %rbx
+  *(--rsp) = 0;    // pushq %r12
+  *(--rsp) = 0;    // pushq %r13
+  *(--rsp) = 0;    // pushq %r14
+  *(--rsp) = 0;    // pushq %r15
 #elif defined(__aarch64__)
   *(--rsp) = arg;
   *(--rsp) = (void *) carbon_coroutine__finish_current;
