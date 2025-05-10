@@ -87,8 +87,12 @@
 #else
 #include <glob.h>
 #include <poll.h>
+#include <netdb.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #endif
 // macOS
 #ifdef __APPLE__
@@ -964,6 +968,19 @@ CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fm
 CARBON_API void carbon_fs_destroy_img(CBN_List *img);
 
 /*
+**  $$=====================$$
+**  ||       Network       ||
+**  $$=====================$$
+*/
+
+/**
+ * @brief Translate via DNS lookup a domain name to IP address format (IPv4 or IPv6).
+ * @param domain The domain name to resolve.
+ * @return A string representing the resolved IP address.
+ */
+CARBON_API char *carbon_net_resolve_dns_to_ip(const char *domain);
+
+/*
 **  $$=======================$$
 **  ||       NeuralNet       ||
 **  $$=======================$$
@@ -1125,6 +1142,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_strlist_mfns.cc"
 #include "src/carbon_fs.c"
 #include "src/carbon_fs_mfns.cc"
+#include "src/carbon_net.c"
 #include "src/carbon_nn.c"
 #include "src/carbon_drawcanvas.c"
 #ifdef CARBON_IMPLEMENTATION_WINDOWING
