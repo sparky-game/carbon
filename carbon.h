@@ -66,7 +66,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-
+// Common
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -78,20 +78,21 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+// Windows
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>
 #include <windows.h>
-#elif defined(__APPLE__)
-#include <glob.h>
-#include <poll.h>
-#include <sys/mman.h>
-#include <mach-o/dyld.h>
+// POSIX
 #else
 #include <glob.h>
 #include <poll.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
+#endif
+// macOS
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
 #endif
 
 /*
