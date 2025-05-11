@@ -308,6 +308,12 @@ i8 carbon_math_cmp(f32 x, f32 y) {
   else return 0;
 }
 
+u64 carbon_math_concat(u64 x, u64 y) {
+  u64 n = 10;
+  while (y >= n) n *= 10;
+  return n * x + y;
+}
+
 f32 carbon_math_sin(f32 x) {
   return carbon_math_cos(x - CARBON_PI_2);
 }

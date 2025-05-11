@@ -152,6 +152,12 @@ CARBON_TEST(carbon_math, smoothstep) {
   return CARBON_OK;
 }
 
+CARBON_TEST(carbon_math, concat) {
+  carbon_should_be_u64(1069, carbon_math_concat(10, 69));
+  carbon_should_be_u64(20250511, carbon_math_concat(carbon_math_concat(2025*10, 5), 11));
+  return CARBON_OK;
+}
+
 CARBON_TEST(carbon_math, asin) {
   carbon_should_be_f(-1.119769, carbon_math_asin(-0.90));
   carbon_should_be_f(-0.848062, carbon_math_asin(-0.75));

@@ -446,6 +446,15 @@ CARBON_API f32 carbon_math_sigmoid(f32 x);
 CARBON_API f32 carbon_math_tanh(f32 x);
 CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
+
+/**
+ * @brief Concatenates two unsigned integers together (e.g. `10` || `69` :: `1069`).
+ * @param x The first unsigned integer.
+ * @param y The second unsigned integer.
+ * @return The unsigned integer representing their concatenation.
+ */
+CARBON_API u64 carbon_math_concat(u64 x, u64 y);
+
 CARBON_API f32 carbon_math_sin(f32 x);
 CARBON_API f32 carbon_math_cos(f32 x);
 CARBON_API f32 carbon_math_asin(f32 x);
