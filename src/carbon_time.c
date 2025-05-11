@@ -47,6 +47,25 @@ char *carbon_time_get_iso8601(void) {
   return t;
 }
 
+u64 carbon_time_get_yyyymmddhhmmss(void) {
+  time_t now = time(0);
+  struct tm *now_info = localtime(&now);
+  const u64 fmt[] = {
+    (u64) now_info->tm_year + 1900,  // YYYY
+    (u64) now_info->tm_mon + 1,      // mm
+    (u64) now_info->tm_mday,         // dd
+    (u64) now_info->tm_hour,         // HH
+    (u64) now_info->tm_min,          // MM
+    (u64) now_info->tm_sec           // SS
+  };
+  u64 result = fmt[0];
+  for (usz i = 1; i < CARBON_ARRAY_LEN(fmt); ++i) {
+    if (fmt[i] < 10) result *= 10;
+    result = carbon_math_concat(result, fmt[i]);
+  }
+  return result;
+}
+
 void carbon_time_sleep(u64 ms) {
 #ifdef _WIN32
   Sleep(ms);
