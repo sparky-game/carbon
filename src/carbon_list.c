@@ -24,7 +24,7 @@ void carbon_list_destroy(CBN_List *l) {
     carbon_log_warn("`l` is not a valid pointer, skipping destruction");
     return;
   }
-  CARBON_FREE(l->items);
+  if (l->items) CARBON_FREE(l->items);
   memset(l, 0, sizeof(CBN_List));
   l = 0;
 }
