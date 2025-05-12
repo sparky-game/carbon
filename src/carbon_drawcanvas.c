@@ -132,8 +132,7 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
 
 void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color) {
   i32 x1, x2, y1, y2;
-  i32 r = radius + CARBON_SIGN(radius);
-  if (!carbon_drawcanvas__rect_normalize(dc, CARBON_RECT(center.x - r, center.y - r, 2*r, 2*r), &x1, &x2, &y1, &y2)) return;
+  if (!carbon_drawcanvas__rect_normalize(dc, CARBON_RECT(center.x - radius, center.y - radius, 2*radius, 2*radius), &x1, &x2, &y1, &y2)) return;
   for (i32 j = y1; j <= y2; ++j) {
     for (i32 i = x1; i <= x2; ++i) {
       i64 n = 0;
