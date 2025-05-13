@@ -5022,7 +5022,7 @@ void RGFW_writeClipboard(const char* text, u32 textLen) {
 	if (RGFW_root->src.clipboard)
 		RGFW_FREE(RGFW_root->src.clipboard);
 
-	RGFW_root->src.clipboard = RGFW_ALLOC(textLen);
+	RGFW_root->src.clipboard = (char *) RGFW_ALLOC(textLen);
 	strncpy(RGFW_root->src.clipboard, text, textLen);
 	RGFW_root->src.clipboard_len = textLen;
 #ifdef RGFW_WAYLAND
