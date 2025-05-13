@@ -221,7 +221,10 @@ usz carbon_coroutine_alive(void) {
 
 void carbon_coroutine_go(void (*f)(void *), void *arg) {
   usz id;
-  if (carbon_coroutine__dead.size) id = carbon_list_at(usz, carbon_coroutine__dead, --carbon_coroutine__dead.size);
+  if (carbon_coroutine__dead.size) {
+    --carbon_coroutine__dead.size;
+    id = carbon_list_at(usz, carbon_coroutine__dead, carbon_coroutine__dead.size);
+  }
   else {
     CBN_Coroutine_CTX ctx = {0, 0};
     carbon_list_push(&carbon_coroutine__ctxs, &ctx);
