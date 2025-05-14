@@ -38,7 +38,7 @@ Investigate and consider implementing a Promise async API to do work (like in JS
 
 Investigate and consider implementing a second version for `carbon_fs_read_entire_file` function, using `mmap` instead of `fread`.
 
-Buy and configure the domain for the product's website: `carbonlib.org`.
+Buy and configure the domain for the product's website: `carbonlib.org` or `libcarbon.org`.
 
 Implement argument/flag CLI parsing, just like in Go: <https://pkg.go.dev/flag>.
 - Tsoding's video on it: <https://www.youtube.com/watch?v=mpqaQIrVgew>.
