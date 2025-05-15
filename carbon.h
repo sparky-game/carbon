@@ -865,6 +865,32 @@ typedef struct CBN_StrView {
    * @return A pointer to a null-terminated char array with same data.
    */
   const char *c_str(void) const;
+  /**
+   * @brief carbon_strview_trim_both
+   * @return The StrView that remains after all whitespace characters are removed from the start and the end.
+   */
+  CBN_StrView Trim(void) const;
+  /**
+   * @brief carbon_strview_trim_left
+   * @return The StrView that remains after all whitespace characters are removed from the start.
+   */
+  CBN_StrView TrimStart(void) const;
+  /**
+   * @brief carbon_strview_trim_right
+   * @return The StrView that remains after all whitespace characters are removed from the end.
+   */
+  CBN_StrView TrimEnd(void) const;
+  /**
+   * @brief carbon_strview_chop_by_space
+   * @return The StrView containing the data from the beginning up to the first occurrence of the whitespace character.
+   */
+  CBN_StrView Chop(void);
+  /**
+   * @brief carbon_strview_chop
+   * @param c The char delimiter to search for.
+   * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
+   */
+  CBN_StrView Chop(char c);
 #endif
 } CBN_StrView;
 
@@ -879,12 +905,57 @@ CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
 CARBON_API char *carbon_strview_to_cstr(CBN_StrView sv);
 
 CARBON_API CBN_StrView carbon_strview_from_strbuilder(CBN_StrBuilder *sb);
+
+/**
+ * @brief Removes all the leading whitespace characters from the current StrView.
+ * @param sv The StrView holding the data.
+ * @return The StrView that remains after all whitespace characters are removed from the start.
+ */
 CARBON_API CBN_StrView carbon_strview_trim_left(CBN_StrView sv);
+
+/**
+ * @brief Removes all the trailing whitespace characters from the current StrView.
+ * @param sv The StrView holding the data.
+ * @return The StrView that remains after all whitespace characters are removed from the end.
+ */
 CARBON_API CBN_StrView carbon_strview_trim_right(CBN_StrView sv);
+
+/**
+ * @brief Removes all leading and trailing whitespace characters from the current StrView.
+ * @param sv The StrView holding the data.
+ * @return The StrView that remains after all whitespace characters are removed from the start and the end.
+ */
 CARBON_API CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
+
+/**
+ * @brief Returns the leading portion of the current StrView just before the first occurrence of a delimiter.
+ *
+ * The StrView is taken as a pointer, because it's modified to point to the data after the first occurrence of the delimiter.
+ *
+ * @param sv The StrView holding the data.
+ * @param c The char delimiter to search for.
+ * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
+ */
 CARBON_API CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
+
+/**
+ * @brief Returns the leading portion of the current StrView just before the first occurrence of a whitespace character.
+ *
+ * The StrView is taken as a pointer, because it's modified to point to the data after the first occurrence of the whitespace character.
+ *
+ * @param sv The StrView holding the data.
+ * @return The StrView containing the data from the beginning up to the first occurrence of the whitespace character.
+ */
 CARBON_API CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
+
+/**
+ * @brief Compares two StrViews and returns whether they're equal.
+ * @param x The first StrView.
+ * @param y The second StrView.
+ * @return A boolean value representing the equality between them.
+ */
 CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
+
 CARBON_API u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
 CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 

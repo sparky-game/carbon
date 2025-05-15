@@ -11,4 +11,24 @@ const char *CBN_StrView::c_str(void) const {
   return carbon_strview_to_cstr(*this);
 }
 
+CBN_StrView CBN_StrView::Trim(void) const {
+  return carbon_strview_trim_both(*this);
+}
+
+CBN_StrView CBN_StrView::TrimStart(void) const {
+  return carbon_strview_trim_left(*this);
+}
+
+CBN_StrView CBN_StrView::TrimEnd(void) const {
+  return carbon_strview_trim_right(*this);
+}
+
+CBN_StrView CBN_StrView::Chop(void) {
+  return carbon_strview_chop_by_space(this);
+}
+
+CBN_StrView CBN_StrView::Chop(char c) {
+  return carbon_strview_chop(this, c);
+}
+
 #endif  // __cplusplus
