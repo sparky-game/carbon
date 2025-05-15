@@ -31,4 +31,28 @@ CBN_StrView CBN_StrView::Chop(char c) {
   return carbon_strview_chop(this, c);
 }
 
+bool CBN_StrView::operator==(const CBN_StrView &sv) const {
+  return carbon_strview_are_equal(*this, sv);
+}
+
+bool CBN_StrView::operator==(const char *s) const {
+  return *this == carbon_strview_from_cstr(s);
+}
+
+bool operator==(const char *s, const CBN_StrView &sv) {
+  return sv == s;
+}
+
+bool CBN_StrView::operator!=(const CBN_StrView &sv) const {
+  return !(*this == sv);
+}
+
+bool CBN_StrView::operator!=(const char *s) const {
+  return !(*this == s);
+}
+
+bool operator!=(const char *s, const CBN_StrView &sv) {
+  return !(s == sv);
+}
+
 #endif  // __cplusplus

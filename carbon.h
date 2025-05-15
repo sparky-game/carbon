@@ -891,6 +891,13 @@ typedef struct CBN_StrView {
    * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
    */
   CBN_StrView Chop(char c);
+  // Overloaded Operators
+  bool operator==(const CBN_StrView &sv) const;
+  bool operator==(const char *s) const;
+  friend bool operator==(const char *s, const CBN_StrView &sv);
+  bool operator!=(const CBN_StrView &sv) const;
+  bool operator!=(const char *s) const;
+  friend bool operator!=(const char *s, const CBN_StrView &sv);
 #endif
 } CBN_StrView;
 
