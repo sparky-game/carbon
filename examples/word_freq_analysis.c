@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
   }
 
   // Analyze
-  CBN_HashMap hist = carbon_hashmap_create(1024*1024, sizeof(usz));
+  CBN_HashMap hist = carbon_hashmap_create(1 << 20, sizeof(usz));
   CBN_StrList keys = carbon_strlist_create(true);
   CBN_StrView txt = carbon_strview_from_strbuilder(&sb);
   usz n_tokens = 0;
