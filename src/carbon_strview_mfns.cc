@@ -7,6 +7,18 @@
 
 #ifdef __cplusplus
 
+CBN_StrView CBN_StrView::make(const char *data, usz size) {
+  return carbon_strview_from_buf(data, size);
+}
+
+CBN_StrView CBN_StrView::make(const char *s) {
+  return carbon_strview_from_cstr(s);
+}
+
+CBN_StrView CBN_StrView::make(const CBN_StrBuilder &sb) {
+  return carbon_strview_from_strbuilder(&sb);
+}
+
 const char *CBN_StrView::c_str(void) const {
   return carbon_strview_to_cstr(*this);
 }
@@ -36,7 +48,7 @@ bool CBN_StrView::operator==(const CBN_StrView &sv) const {
 }
 
 bool CBN_StrView::operator==(const char *s) const {
-  return *this == carbon_strview_from_cstr(s);
+  return *this == make(s);
 }
 
 bool operator==(const char *s, const CBN_StrView &sv) {

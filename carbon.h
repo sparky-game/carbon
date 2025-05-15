@@ -861,6 +861,25 @@ typedef struct CBN_StrView {
   usz size;
 #ifdef __cplusplus
   /**
+   * @brief carbon_strview_from_buf
+   * @param data The pointer to the char buffer.
+   * @param size The size of the char buffer.
+   * @return The StrView representing the provided char buffer.
+   */
+  static CBN_StrView make(const char *data, usz size);
+  /**
+   * @brief carbon_strview_from_cstr
+   * @param s The pointer to the standard C char array.
+   * @return The StrView representing the provided C-style string.
+   */
+  static CBN_StrView make(const char *s);
+  /**
+   * @brief carbon_strview_from_strbuilder
+   * @param sb The StrBuilder holding the data.
+   * @return The StrView representing the provided StrBuilder object.
+   */
+  static CBN_StrView make(const CBN_StrBuilder &sb);
+  /**
    * @brief carbon_strview_to_cstr
    * @return A pointer to a null-terminated char array with same data.
    */
@@ -901,8 +920,27 @@ typedef struct CBN_StrView {
 #endif
 } CBN_StrView;
 
+/**
+ * @brief Creates a StrView from a char buffer pointer and its size.
+ * @param data The pointer to the char buffer.
+ * @param size The size of the char buffer.
+ * @return The StrView representing the provided char buffer.
+ */
 CARBON_API CBN_StrView carbon_strview_from_buf(const char *data, usz size);
+
+/**
+ * @brief Creates a StrView from a null-terminated C-style string.
+ * @param s The pointer to the standard C char array.
+ * @return The StrView representing the provided C-style string.
+ */
 CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
+
+/**
+ * @brief Creates a StrView from a StrBuilder object holding some data.
+ * @param sb The StrBuilder holding the data.
+ * @return The StrView representing the provided StrBuilder object.
+ */
+CARBON_API CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb);
 
 /**
  * @brief Returns a non-modifiable standard C char array version of the string.
@@ -910,8 +948,6 @@ CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
  * @return A pointer to a null-terminated char array with same data.
  */
 CARBON_API char *carbon_strview_to_cstr(CBN_StrView sv);
-
-CARBON_API CBN_StrView carbon_strview_from_strbuilder(CBN_StrBuilder *sb);
 
 /**
  * @brief Removes all the leading whitespace characters from the current StrView.

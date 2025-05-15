@@ -19,6 +19,10 @@ CBN_StrView carbon_strview_from_cstr(const char *s) {
   return carbon_strview_from_buf(s, carbon_string_len(s));
 }
 
+CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb) {
+  return carbon_strview_from_buf(sb->items, sb->size);
+}
+
 char *carbon_strview_to_cstr(CBN_StrView sv) {
   static usz i = 0;
   static char xs[CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS][CARBON_STRVIEW_TO_CSTR_MAX_LEN];
@@ -29,10 +33,6 @@ char *carbon_strview_to_cstr(CBN_StrView sv) {
   ++i;
   if (i >= CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS) i = 0;
   return x;
-}
-
-CBN_StrView carbon_strview_from_strbuilder(CBN_StrBuilder *sb) {
-  return carbon_strview_from_buf(sb->items, sb->size);
 }
 
 CBN_StrView carbon_strview_trim_left(CBN_StrView sv) {
