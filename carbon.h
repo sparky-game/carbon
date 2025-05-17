@@ -332,9 +332,16 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_ROW_AT(r, i) (r).items[(i)]
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
 #define CARBON_ROW_PRINT(r) carbon_math_row_print(r, #r)
-#define CARBON_VEC2(x, y)       (CBN_Vec2){{(f32)(x), (f32)(y)}}
+
 #define CARBON_VEC3(x, y, z)    (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
 #define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
+
+/**
+ * @brief Defines an inline 2D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ */
+#define CARBON_VEC2(x, y) (CBN_Vec2){{(f32)(x), (f32)(y)}}
 
 /**
  * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
@@ -366,6 +373,9 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
  */
 #define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
 
+/**
+ * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
+ */
 typedef union CBN_Vec2 {
   f32 items[2];
   struct {
