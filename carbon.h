@@ -384,6 +384,17 @@ typedef union CBN_Vec2 {
    * @return The serialized 2D vector as `(X, Y)`.
    */
   const char *ToString(void) const;
+  // Overloaded Operators
+  CBN_Vec2 operator+(const CBN_Vec2 &v) const;
+  void operator+=(const CBN_Vec2 &v);
+  CBN_Vec2 operator-(const CBN_Vec2 &v) const;
+  void operator-=(const CBN_Vec2 &v);
+  f32 operator*(const CBN_Vec2 &v) const;
+  CBN_Vec2 operator*(const f32 s) const;
+  friend CBN_Vec2 operator*(const f32 s, const CBN_Vec2 &v);
+  void operator*=(const f32 s);
+  CBN_Vec2 operator/(const f32 s) const;
+  void operator/=(const f32 s);
 #endif
 } CBN_Vec2;
 
@@ -400,6 +411,10 @@ typedef union CBN_Vec3 {
    * @return The serialized 3D vector as `(X, Y, Z)`.
    */
   const char *ToString(void) const;
+  // Overloaded Operators
+  CBN_Vec3 operator+(const CBN_Vec3 &v) const;
+  CBN_Vec3 operator-(const CBN_Vec3 &v) const;
+  f32 operator*(const CBN_Vec3 &v) const;
 #endif
 } CBN_Vec3;
 
@@ -470,6 +485,27 @@ CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
+ * @brief Returns the length of the 2D vector squared.
+ * @param v The 2D vector.
+ * @return The 2D vector's length squared.
+ */
+CARBON_API f32 carbon_math_vec2_len_squared(CBN_Vec2 v);
+
+/**
+ * @brief Returns the length of the 2D vector.
+ * @param v The 2D vector.
+ * @return The 2D vector's length.
+ */
+CARBON_API f32 carbon_math_vec2_len(CBN_Vec2 v);
+
+/**
+ * @brief Returns a 2D vector with the same direction as the specified one, but with a length of `1`.
+ * @param v The 2D vector.
+ * @return The normalized 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
+
+/**
  * @brief Scales the 2D vector by the specified scalar value.
  * @param v The 2D vector.
  * @param s The scalar value.
@@ -528,18 +564,6 @@ CARBON_API void carbon_math_row_fill(CBN_Row r, f32 x);
 CARBON_API void carbon_math_row_rand(CBN_Row r, f32 min, f32 max);
 CARBON_API void carbon_math_row_copy(CBN_Row dst, CBN_Row src);
 CARBON_API void carbon_math_row_print(CBN_Row r, const char *name);
-
-#ifdef __cplusplus
-CBN_Vec2 operator+(const CBN_Vec2 &u, const CBN_Vec2 &v);
-void operator+=(CBN_Vec2 &u, const CBN_Vec2 &v);
-CBN_Vec2 operator-(const CBN_Vec2 &u, const CBN_Vec2 &v);
-f32 operator*(const CBN_Vec2 &u, const CBN_Vec2 &v);
-CBN_Vec2 operator*(const CBN_Vec2 &v, const f32 s);
-void operator*=(CBN_Vec2 &v, const f32 s);
-CBN_Vec3 operator+(const CBN_Vec3 &u, const CBN_Vec3 &v);
-CBN_Vec3 operator-(const CBN_Vec3 &u, const CBN_Vec3 &v);
-f32 operator*(const CBN_Vec3 &u, const CBN_Vec3 &v);
-#endif
 
 /*
 **  $$====================$$
@@ -1259,7 +1283,6 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_coroutine.c"
 #include "src/carbon_math.c"
 #include "src/carbon_math_mfns.cc"
-#include "src/carbon_math_ops.cc"
 #include "src/carbon_crypto.c"
 #include "src/carbon_log.c"
 #include "src/carbon_time.c"
