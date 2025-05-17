@@ -35,7 +35,7 @@ char *carbon_net_resolve_dns_to_ip(const char *domain) {
   case AF_INET6:
     addr = &((struct sockaddr_in6 *) addrs->ai_addr)->sin6_addr;
     break;
-  default: CARBON_ASSERT(0 && "unreachable");
+  default: CARBON_UNREACHABLE;
   }
   inet_ntop(addrs->ai_addr->sa_family, addr, x, INET6_ADDRSTRLEN);
   ++i;

@@ -83,6 +83,7 @@ void carbon_fs_copy(const char *from, const char *to, u8 recursive) {
   CARBON_NOTUSED(from);
   CARBON_NOTUSED(to);
   CARBON_NOTUSED(recursive);
+  CARBON_NOTIMPLEMENTED;
 }
 
 u8 carbon_fs_remove(const char *file) {
@@ -96,6 +97,7 @@ u8 carbon_fs_remove(const char *file) {
 u8 carbon_fs_remove_all(const char *file) {
   // TODO: not yet implemented
   CARBON_NOTUSED(file);
+  CARBON_NOTIMPLEMENTED;
   return false;
 }
 
@@ -406,8 +408,7 @@ u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz widt
     // TODO: customize the quality value [1, 100] with a macro (maybe `CARBON_FS_WRITE_IMG_JPG_QUALITY`)
     result = stbi_write_jpg(file, width, height, chs, pixels, 90);
     break;
-  default:
-    CARBON_ASSERT(0 && "unreachable");
+  default: CARBON_UNREACHABLE;
   }
   if (!result) carbon_log_error("unable to write pixels to file (`%s`)", file);
   // NOTE: maybe just `return result;` is fine?

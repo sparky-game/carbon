@@ -120,6 +120,9 @@
 #define CARBON_ARRAY_SHIFT(xs, xs_sz) (CARBON_ASSERT((xs_sz) > 0), --(xs_sz), *(xs)++)
 #define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
+#define CARBON_UNREACHABLE CARBON_ASSERT(false && "unreachable")
+#define CARBON_NOTIMPLEMENTED CARBON_ASSERT(false && "not yet implemented")
+#define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
 
 #ifdef __cplusplus
 #include <type_traits>

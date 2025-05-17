@@ -139,8 +139,7 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
     break;
   }
-  default:
-    CARBON_ASSERT(0 && "unreachable");
+  default: CARBON_UNREACHABLE;
   }
   if (carbon_coroutine__polls.size) {
     i32 timeout = carbon_coroutine__active.size ? 0 : -1;
@@ -166,7 +165,7 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
 
 CARBON_INLINE void carbon_coroutine__finish_current(void) {
   usz current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
-  if (!current_active_item) CARBON_ASSERT(0 && "unreachable");
+  if (!current_active_item) CARBON_UNREACHABLE;
   carbon_list_push(&carbon_coroutine__dead, &current_active_item);
   carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
   if (carbon_coroutine__polls.size) {
