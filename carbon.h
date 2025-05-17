@@ -874,6 +874,10 @@ CARBON_API u8 carbon_string_has_char(const char *s, char c);
 **  ||       StrBuilder       ||
 **  $$========================$$
 */
+
+/**
+ * @brief Represents a mutable string of characters.
+ */
 typedef struct {
   char *items;
   usz size;
@@ -890,6 +894,10 @@ CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
 **  ||       StrView       ||
 **  $$=====================$$
 */
+
+/**
+ * @brief Represents a view into a string of characters, whilst not owning the actual memory.
+ */
 typedef struct CBN_StrView {
   const char *data;
   usz size;
@@ -1052,6 +1060,28 @@ typedef struct CBN_StrList {
 #ifdef __cplusplus
   using iterator = const char **;
   using const_iterator = const char * const *;
+  /**
+   * @brief carbon_strlist_create(unique = false)
+   * @return The new StrList, configured to hold repeated strings.
+   */
+  static CBN_StrList make(void);
+  /**
+   * @brief carbon_strlist_from_splitted_cstr
+   * @param s The C-style string to split.
+   * @param delim The delimiter as a C-style string.
+   * @return The StrList containing the resulting strings.
+   */
+  static const CBN_StrList make(const char *s, const char *delim);
+  /**
+   * @brief carbon_strlist_create(unique = true)
+   * @return The new StrList, configured to hold only unique strings.
+   */
+  static CBN_StrList make_unique(void);
+  /**
+   * @brief carbon_strlist_push
+   * @param s The C-style string to append.
+   */
+  void Push(const char *s);
   iterator begin(void);
   const_iterator begin(void) const;
   const_iterator cbegin(void) const;
@@ -1061,10 +1091,30 @@ typedef struct CBN_StrList {
 #endif
 } CBN_StrList;
 
+/**
+ * @brief Create a new StrList container, ready to hold strings.
+ * @param unique A boolean to configure whether we want the StrList to hold repeated strings or not.
+ * @return The new StrList, configured to your liking.
+ */
 CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
+
+/**
+ * @brief Splits a C-style string into a StrList, based on a delimiter.
+ * @param s The C-style string to split.
+ * @param delim The delimiter as a C-style string.
+ * @return The StrList containing the resulting strings.
+ */
 CARBON_API CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim);
+
 CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
+
+/**
+ * @brief Appends a copy of the string to the end of the container.
+ * @param sl The StrList container.
+ * @param s The pointer to the standard C char array.
+ */
 CARBON_API void carbon_strlist_push(CBN_StrList *sl, const char *s);
+
 CARBON_API void carbon_strlist_pop(CBN_StrList *sl, const char *s);
 CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 

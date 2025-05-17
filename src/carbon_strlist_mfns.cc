@@ -7,6 +7,22 @@
 
 #ifdef __cplusplus
 
+CBN_StrList CBN_StrList::make(void) {
+  return carbon_strlist_create(false);
+}
+
+const CBN_StrList CBN_StrList::make(const char *s, const char *delim) {
+  return carbon_strlist_from_splitted_cstr(s, delim);
+}
+
+CBN_StrList CBN_StrList::make_unique(void) {
+  return carbon_strlist_create(true);
+}
+
+void CBN_StrList::Push(const char *s) {
+  carbon_strlist_push(this, s);
+}
+
 CBN_StrList::iterator CBN_StrList::begin(void) {
   return (iterator) items;
 }
