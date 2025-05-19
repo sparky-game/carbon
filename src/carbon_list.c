@@ -14,7 +14,7 @@ CBN_List carbon_list_create(usz stride) {
   };
   if (!l.items) {
     carbon_log_error("failed to allocate memory (%zuB)", stride);
-    memset(&l, 0, sizeof(CBN_List));
+    memset(&l, 0, sizeof(l));
   }
   return l;
 }
@@ -25,8 +25,7 @@ void carbon_list_destroy(CBN_List *l) {
     return;
   }
   if (l->items) CARBON_FREE(l->items);
-  memset(l, 0, sizeof(CBN_List));
-  l = 0;
+  memset(l, 0, sizeof(*l));
 }
 
 void carbon_list_push(CBN_List *l, void *value) {
