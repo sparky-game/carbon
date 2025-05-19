@@ -199,7 +199,7 @@ static void package(void) {
 
 int main(int argc, char **argv) {
   if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) {
-    carbon_log_error("Unable to change CWD to binary's directory");
+    carbon_log_error("unable to change CWD to binary's directory");
     return 1;
   }
   rebuild_myself((const char **) argv);
@@ -209,30 +209,32 @@ int main(int argc, char **argv) {
 #ifdef CARBON_MAKE_USE_SANITIZERS
   carbon_log_warn("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
-  if (argc > 2) {
-    carbon_log_error("unrecognized option\nTry '%s help' for more information.", argv[0]);
+  const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
+  if (argc > 1) {
+    carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
   }
-  if (argc == 2) {
-    if (!carbon_string_cmp(argv[1], "help")) {
+  if (argc == 1) {
+    const char *subcmd = CARBON_SHIFT_ARGS(argc, argv);
+    if (!carbon_string_cmp(subcmd, "help")) {
       carbon_print(help_msg, argv[0], CARBON_NAME);
       return 0;
     }
-    else if (!carbon_string_cmp(argv[1], "clean")) {
+    else if (!carbon_string_cmp(subcmd, "clean")) {
       clean();
       return 0;
     }
-    else if (!carbon_string_cmp(argv[1], "mrproper")) {
+    else if (!carbon_string_cmp(subcmd, "mrproper")) {
       clean();
-      rm_dash_r(argv[0]);
+      rm_dash_r(program_name);
       return 0;
     }
-    else if (!carbon_string_cmp(argv[1], "check")) {
+    else if (!carbon_string_cmp(subcmd, "check")) {
       run_tests();
       return 0;
     }
     else {
-      carbon_log_error("unrecognized option\nTry '%s help' for more information.", argv[0]);
+      carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
       return 1;
     }
   }
