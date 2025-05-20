@@ -13,17 +13,14 @@ static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
 }
 
 CBN_StrList carbon_strlist_create(u8 unique) {
-  CBN_StrList sl = {
-    .items = (char **) CARBON_MALLOC(sizeof(char *)),
+  char **ptr = (char **) CARBON_MALLOC(sizeof(char *));
+  CARBON_ASSERT(ptr && "failed to allocate memory");
+  return (CBN_StrList) {
+    .items = ptr,
     .size = 0,
     .capacity = 1,
     .unique = unique
   };
-  if (!sl.items) {
-    carbon_log_error("failed to allocate memory (%zuB)", sizeof(char *));
-    memset(&sl, 0, sizeof(CBN_StrList));
-  }
-  return sl;
 }
 
 CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) {

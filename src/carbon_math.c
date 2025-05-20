@@ -456,16 +456,13 @@ u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2) {
 }
 
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
-  CBN_Matrix m = {
-    .items = (f32 *) CARBON_MALLOC(rows * cols * sizeof(f32)),
+  f32 *ptr = (f32 *) CARBON_MALLOC(rows * cols * sizeof(f32));
+  CARBON_ASSERT(ptr && "failed to allocate memory");
+  return (CBN_Matrix) {
+    .items = ptr,
     .rows = rows,
     .cols = cols
   };
-  if (!m.items) {
-    carbon_log_error("failed to allocate memory (%zuB)", rows * cols * sizeof(f32));
-    memset(&m, 0, sizeof(CBN_Matrix));
-  }
-  return m;
 }
 
 void carbon_math_mat_destroy(CBN_Matrix *m) {

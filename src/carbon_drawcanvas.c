@@ -8,17 +8,14 @@
 #define CARBON_DRAWCANVAS__AA_RES 2
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
-  CBN_DrawCanvas dc = {
-    .pixels = (u32 *) CARBON_MALLOC(width * height * sizeof(u32)),
+  u32 *ptr = (u32 *) CARBON_MALLOC(width * height * sizeof(u32));
+  CARBON_ASSERT(ptr && "failed to allocate memory");
+  return (CBN_DrawCanvas) {
+    .pixels = ptr,
     .width = width,
     .height = height,
     .stride = width
   };
-  if (!dc.pixels) {
-    carbon_log_error("failed to allocate memory (%zuB)", width * height * sizeof(u32));
-    memset(&dc, 0, sizeof(CBN_DrawCanvas));
-  }
-  return dc;
 }
 
 void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {

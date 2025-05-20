@@ -6,17 +6,14 @@
 #endif  // CARBON_IMPLEMENTATION
 
 CBN_List carbon_list_create(usz stride) {
-  CBN_List l = {
-    .items = CARBON_MALLOC(stride),
+  void *ptr = CARBON_MALLOC(stride);
+  CARBON_ASSERT(ptr && "failed to allocate memory");
+  return (CBN_List) {
+    .items = ptr,
     .capacity = 1,
     .stride = stride,
     .size = 0
   };
-  if (!l.items) {
-    carbon_log_error("failed to allocate memory (%zuB)", stride);
-    memset(&l, 0, sizeof(l));
-  }
-  return l;
 }
 
 void carbon_list_destroy(CBN_List *l) {

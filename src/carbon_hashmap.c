@@ -14,16 +14,13 @@ CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
 }
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
-  CBN_HashMap hm = {
-    .items = CARBON_CALLOC(capacity, stride),
+  void *ptr = CARBON_MALLOC(capacity * stride);
+  CARBON_ASSERT(ptr && "failed to allocate memory");
+  return (CBN_HashMap) {
+    .items = ptr,
     .capacity = capacity,
     .stride = stride
   };
-  if (!hm.items) {
-    carbon_log_error("failed to allocate memory (%zuB)", capacity * stride);
-    memset(&hm, 0, sizeof(CBN_HashMap));
-  }
-  return hm;
 }
 
 void carbon_hashmap_destroy(CBN_HashMap *hm) {

@@ -29,10 +29,7 @@ i32 carbon_string_cmp_n(const char *s1, const char *s2, usz size) {
 char *carbon_string_dup(const char *s) {
   usz len = carbon_string_len(s) + 1;
   char *data = (char *) CARBON_MALLOC(len);
-  if (!data) {
-    carbon_log_error("failed to allocate memory (%zuB)", len);
-    return false;
-  }
+  CARBON_ASSERT(data && "failed to allocate memory");
   return (char *) carbon_memory_copy(data, s, len);
 }
 
