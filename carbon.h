@@ -1086,10 +1086,8 @@ typedef struct CBN_StrList {
    */
   void Push(const char *s);
   iterator begin(void);
-  const_iterator begin(void) const;
   const_iterator cbegin(void) const;
   iterator end(void);
-  const_iterator end(void) const;
   const_iterator cend(void) const;
 #endif
 } CBN_StrList;

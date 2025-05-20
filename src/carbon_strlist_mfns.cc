@@ -24,11 +24,7 @@ void CBN_StrList::Push(const char *s) {
 }
 
 CBN_StrList::iterator CBN_StrList::begin(void) {
-  return (iterator) items;
-}
-
-CBN_StrList::const_iterator CBN_StrList::begin(void) const {
-  return items;
+  return const_cast<iterator>(static_cast<const CBN_StrList &>(*this).cbegin());
 }
 
 CBN_StrList::const_iterator CBN_StrList::cbegin(void) const {
@@ -36,11 +32,7 @@ CBN_StrList::const_iterator CBN_StrList::cbegin(void) const {
 }
 
 CBN_StrList::iterator CBN_StrList::end(void) {
-  return (iterator) items + size;
-}
-
-CBN_StrList::const_iterator CBN_StrList::end(void) const {
-  return items + size;
+  return const_cast<iterator>(static_cast<const CBN_StrList &>(*this).cend());
 }
 
 CBN_StrList::const_iterator CBN_StrList::cend(void) const {
