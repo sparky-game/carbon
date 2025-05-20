@@ -123,7 +123,8 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     carbon_list_push(&carbon_coroutine__asleep, &current_active_item);
     struct pollfd pfd = {
       .fd = fd,
-      .events = POLLRDNORM
+      .events = POLLRDNORM,
+      .revents = 0
     };
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
@@ -133,7 +134,8 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     carbon_list_push(&carbon_coroutine__asleep, &current_active_item);
     struct pollfd pfd = {
       .fd = fd,
-      .events = POLLWRNORM
+      .events = POLLWRNORM,
+      .revents = 0
     };
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
