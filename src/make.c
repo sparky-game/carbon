@@ -16,6 +16,12 @@
 #define CXX_STD "-std=c++11"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types -Wno-return-type-c-linkage"
 
+#if defined(__APPLE__)
+#define GUI_LIBS "-framework Cocoa -framework CoreVideo -framework IOKit"
+#elif defined(__linux__)
+#define GUI_LIBS "-lX11 -lXrandr"
+#endif
+
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
@@ -87,9 +93,6 @@ static void rebuild_myself(const char **host_argv) {
       "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
       "-fPIE", "-pipe", "-Os",
       __FILE__,
-#ifndef __APPLE__
-      "-static", "-Wl,-z,now", "-Wl,-z,relro",
-#endif
       "-o", (char *) bin, 0
     };
     carbon_println("  CCLD    %s", __FILE__);
@@ -148,11 +151,7 @@ static void test(void) {
 #else
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-  carbon_strbuilder_add_cstr(&cmd, "test/*.o ");
-#if !defined(__APPLE__) && !defined(CARBON_MAKE_USE_SANITIZERS)
-  carbon_strbuilder_add_cstr(&cmd, "-static -Wl,-z,now -Wl,-z,relro ");
-#endif
-  carbon_strbuilder_add_cstr(&cmd, "-o " TESTBIN);
+  carbon_strbuilder_add_cstr(&cmd, "test/*.o -o " TESTBIN);
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r("test/*.o");
@@ -182,13 +181,7 @@ static void build(void) {
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
   carbon_println("  LD      libcarbon.so");
   CBN_StrBuilder cmd = {0};
-  carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared ");
-#ifdef __APPLE__
-  carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
-#else
-  carbon_strbuilder_add_cstr(&cmd, "-Wl,-z,now -Wl,-z,relro ");
-#endif
-  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.so");
+  carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared " GUI_LIBS " -o " WORKDIR "/libcarbon.so");
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r(WORKDIR "/*.o");
@@ -212,15 +205,12 @@ static void examples(void) {
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
+    carbon_strbuilder_add_cstr(&cmd, it.f);
     for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
-      if (!carbon_string_cmp(it.f, gui_examples[i])) {
-#ifdef __APPLE__
-        carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
-#endif
-      }
+      if (!carbon_string_cmp(it.f, gui_examples[i])) carbon_strbuilder_add_cstr(&cmd, " " GUI_LIBS);
     }
     carbon_string_strip_substr(it.f, ".c");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.c -o %s.bin", it.f, it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -232,15 +222,12 @@ static void examples(void) {
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
+    carbon_strbuilder_add_cstr(&cmd, it.f);
     for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
-      if (!carbon_string_cmp(it.f, gui_examples[i])) {
-#ifdef __APPLE__
-        carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
-#endif
-      }
+      if (!carbon_string_cmp(it.f, gui_examples[i])) carbon_strbuilder_add_cstr(&cmd, " " GUI_LIBS);
     }
     carbon_string_strip_substr(it.f, ".cc");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.cc -o %s.bin", it.f, it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
