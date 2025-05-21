@@ -1,10 +1,10 @@
-name: test
+name: ci
 
 on:
   push:
     branches: [master]
     paths:
-      - '.github/workflows/test.yaml'
+      - '.github/workflows/ci.yaml'
       - 'src/**'
       - 'test/**'
       - 'vendor/**'
@@ -13,9 +13,10 @@ on:
     branches: [master]
     types: [opened, synchronize]
     paths:
-      - '.github/workflows/test.yaml'
+      - '.github/workflows/ci.yaml'
       - 'src/**'
       - 'test/**'
+      - 'vendor/**'
       - 'carbon.h'
   schedule:
     - cron: '0 9 * * 5'
@@ -27,7 +28,7 @@ concurrency:
 permissions: read-all
 
 jobs:
-  test:
+  ci:
     permissions:
       security-events: write
     runs-on: ubuntu-latest
@@ -38,9 +39,13 @@ jobs:
         uses: github/codeql-action/init@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
         with:
           languages: c-cpp
+      - name: bootstrap
+        run: clang src/make.c -o make
       - name: test
-        run: |
-          clang src/make.c -o make
-          ./make check
+        run: ./make test
+      - name: build
+        run: ./make build
+      - name: examples
+        run: ./make examples
       - name: analyze
         uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
