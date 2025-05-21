@@ -39,6 +39,13 @@ jobs:
         uses: github/codeql-action/init@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
         with:
           languages: c-cpp
+      - name: install-dependencies
+        run: |
+          sudo apt-get install -y \
+            libx11-dev            \
+            libxcursor-dev        \
+            libxrandr-dev         \
+            libxi-dev
       - name: bootstrap
         run: clang src/make.c -o make
       - name: test
