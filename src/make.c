@@ -14,16 +14,20 @@
 
 #define C_STD   "-std=c99"
 #define CXX_STD "-std=c++11"
-#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types"
+#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types -Wno-return-type-c-linkage"
 
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
   "  clean       remove previously created build artifacts\n"
   "  mrproper    same as `clean` plus remove this binary\n"
-  "  check       only run tests\n"
+  "  test        just run the `TESTING` stage\n"
+  "  build       just run the `BUILDING` stage\n"
+  "  examples    just run the `EXAMPLES` stage\n"
   "\n"
-  "If not provided any subcommand, it runs the full build pipeline.\n"
+  "If not provided any subcommand, it runs the full build pipeline:\n"
+  "  [TESTING] -> [BUILDING] -> [EXAMPLES] -> [PACKAGING]\n"
+  "\n"
   "If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.\n"
   "\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
@@ -52,6 +56,7 @@ static void clean(void) {
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
+  rm_dash_r("examples/*.bin");
   rm_dash_r(WORKDIR ".tgz");
 }
 
@@ -105,7 +110,7 @@ static void rebuild_myself(const char **host_argv) {
   }
 }
 
-static void run_tests(void) {
+static void test(void) {
   carbon_log_info("Running tests...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
@@ -189,12 +194,65 @@ static void build(void) {
   rm_dash_r(WORKDIR "/*.o");
 }
 
+static void examples(void) {
+  carbon_log_info("Building examples...");
+  CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("examples/*.c");
+  CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("examples/*.cc");
+  const char *gui_examples[] = {
+    "examples/flag_jp.c",
+    "examples/orbiting.cc",
+    "examples/triangle.c"
+  };
+  CBN_StrBuilder cmd = {0};
+  carbon_fs_pattern_match_foreach(c_files) {
+    carbon_println("  CCLD    %s", it.f);
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+    for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
+      if (!carbon_string_cmp(it.f, gui_examples[i])) {
+#ifdef __APPLE__
+        carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
+#endif
+      }
+    }
+    carbon_string_strip_substr(it.f, ".c");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.c -o %s.bin", it.f, it.f));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
+  }
+  carbon_fs_pattern_match_foreach(cxx_files) {
+    carbon_println("  CXXLD   %s", it.f);
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+    for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
+      if (!carbon_string_cmp(it.f, gui_examples[i])) {
+#ifdef __APPLE__
+        carbon_strbuilder_add_cstr(&cmd, "-framework Cocoa -framework CoreVideo -framework IOKit ");
+#endif
+      }
+    }
+    carbon_string_strip_substr(it.f, ".cc");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.cc -o %s.bin", it.f, it.f));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
+  }
+}
+
 static void package(void) {
   carbon_log_info("Packaging...");
   cp_dash_r("COPYING carbon.h", WORKDIR);
   carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   rm_dash_r(WORKDIR);
+  carbon_log_info(WORKDIR ".tgz is ready");
 }
 
 int main(int argc, char **argv) {
@@ -229,8 +287,16 @@ int main(int argc, char **argv) {
       rm_dash_r(program_name);
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "check")) {
-      run_tests();
+    else if (!carbon_string_cmp(subcmd, "test")) {
+      test();
+      return 0;
+    }
+    else if (!carbon_string_cmp(subcmd, "build")) {
+      build();
+      return 0;
+    }
+    else if (!carbon_string_cmp(subcmd, "examples")) {
+      examples();
       return 0;
     }
     else {
@@ -238,9 +304,9 @@ int main(int argc, char **argv) {
       return 1;
     }
   }
-  run_tests();
+  test();
   build();
+  examples();
   package();
-  carbon_log_info(WORKDIR ".tgz is ready");
   return 0;
 }
