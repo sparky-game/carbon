@@ -262,7 +262,7 @@ int main(int argc, char **argv) {
   if (argc == 1) {
     const char *subcmd = CARBON_SHIFT_ARGS(argc, argv);
     if (!carbon_string_cmp(subcmd, "help")) {
-      carbon_print(help_msg, argv[0], CARBON_NAME);
+      carbon_print(help_msg, program_name, CARBON_NAME);
       return 0;
     }
     else if (!carbon_string_cmp(subcmd, "clean")) {
