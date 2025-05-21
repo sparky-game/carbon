@@ -31,7 +31,12 @@ jobs:
   ci:
     permissions:
       security-events: write
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+      fail-fast: false
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: checkout-repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -47,7 +52,7 @@ jobs:
             libxrandr-dev         \
             libxi-dev
       - name: bootstrap
-        run: clang src/make.c -o make
+        run: ${{ matrix.compiler }} src/make.c -o make
       - name: test
         run: ./make test
       - name: build
