@@ -5,12 +5,7 @@
 #include "../carbon.h"
 
 #define TESTBIN "./test/carbon"
-#define WORKDIR                                         \
-  "carbon"                                              \
-  "-" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
-  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
-  "-" CARBON_TARGET_OS                                  \
-  "-" CARBON_CPU_ARCH
+#define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
 #define C_STD   "-std=c99"
 #define CXX_STD "-std=c++11"

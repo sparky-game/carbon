@@ -33,9 +33,8 @@
 
 #define CARBON_VERSION_MAJOR 0
 #define CARBON_VERSION_MINOR 12
-// TODO: handle patch version number as well
-// #define CARBON_VERSION_PATCH
-#define CARBON_VERSION_EXTRA "alpha"
+#define CARBON_VERSION_PATCH 0
+#define CARBON_VERSION_EXTRA "-alpha"
 
 /*
 **  Available compile-time options:
@@ -104,22 +103,28 @@
 **  ||       Definitions       ||
 **  $$=========================$$
 */
+#define CARBON_NAME "SPARKY Carbon"
+#define CARBON_VERSION "v" CARBON_VERSION_RAW
+
 #undef true
 #define true 1
 #undef false
 #define false 0
 #define CARBON_OK true
 #define CARBON_KO false
+
 #define CARBON_QUOTE(x) #x
 #define CARBON_PASTE(x, y) x ## y
 #define CARBON_EXPAND_AND_QUOTE(x) CARBON_QUOTE(x)
 #define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
+#define CARBON_MACRO_IS_EMPTY(x) ((0 - x - 1) == 1 && (x - 0) != -2)
 #define CARBON_NOTUSED(x) (void)(x)
 #define CARBON_UNUSED(x) CARBON_NOTUSED(x)
 #define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
 #define CARBON_ARRAY_SHIFT(xs, xs_sz) (CARBON_ASSERT((xs_sz) > 0), --(xs_sz), *(xs)++)
 #define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
+
 #define CARBON_UNREACHABLE CARBON_ASSERT(false && "unreachable")
 #define CARBON_NOTIMPLEMENTED CARBON_ASSERT(false && "not yet implemented")
 #define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
@@ -160,12 +165,18 @@
 #define CARBON_STATIC_ASSERT static_assert
 #endif
 
-#define CARBON_NAME "SPARKY Carbon"
-
-#define CARBON_VERSION                                  \
-  "v" CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)     \
-  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)     \
-  "-" CARBON_VERSION_EXTRA
+#if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)
+#error Version information not valid
+#elif CARBON_VERSION_PATCH != 0
+#define CARBON_VERSION_RAW                                              \
+  CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)                         \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)                     \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_PATCH) CARBON_VERSION_EXTRA
+#elif CARBON_VERSION_PATCH == 0
+#define CARBON_VERSION_RAW                                              \
+  CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)                         \
+  "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR) CARBON_VERSION_EXTRA
+#endif
 
 #if defined(__amd64__) || defined(_M_AMD64)
 #define CARBON_CPU_ARCH "amd64"
