@@ -132,6 +132,12 @@
 #endif
 
 #ifdef __cplusplus
+#define CARBON_TEMPLATE_CLASS(name) template <typename T> struct name
+#else
+#define CARBON_TEMPLATE_CLASS(name) struct name
+#endif
+
+#ifdef __cplusplus
 #define CARBON_API extern "C"
 #else
 #define CARBON_API extern
@@ -768,35 +774,85 @@ CARBON_API void carbon_clock_stop(CBN_Clock *c);
 #define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), CARBON_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), ((T *) (l).items)[(i)])
 #define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
-typedef struct CBN_List {
+/**
+ * @brief Represents a sequence container that encapsulates dynamic size arrays.
+ *
+ * In C++, this is a templated class/struct, which means it's not a type by itself,
+ * until it gets instantiated with the needed template arguments. The type `CBN_List`
+ * is an alias for `CBN_List_t<void *>`, which provides full-compatibility with the
+ * C API, even through C++ templates.
+ *
+ * @param T Type information of what will be stored in the container.
+ */
+CARBON_TEMPLATE_CLASS(CBN_List_t) {
   void *items;
   usz capacity;
   usz stride;
   usz size;
 #ifdef __cplusplus
+  using iterator = T *;
+  using const_iterator = const T *;
+  /**
+   * @brief carbon_list_create
+   * @return The list container.
+   */
+  static CBN_List_t make(void);
+  /**
+   * @brief carbon_list_destroy
+   */
+  void Free(void);
   /**
    * @brief carbon_list_push
    * @param value The value to append.
    */
-  void Push(void *value);
+  void Push(const T &value);
   /**
    * @brief carbon_list_pop
-   * @param out_value The value of the element popped out.
+   * @return The value of the element popped out.
    */
-  void Pop(void *out_value);
+  T Pop(void);
   /**
    * @brief carbon_list_find
    * @param value The value of the element to check.
    * @return The index of the provided element, or -1 if not present.
    */
-  isz Find(const void *value) const;
+  isz Find(const T &value) const;
   /**
    * @brief carbon_list_remove
    * @param idx The index of the element to remove.
    */
   void Remove(usz idx);
+  /**
+   * @brief Returns an iterator to the beginning.
+   * @return The iterator.
+   */
+  iterator begin(void);
+  /**
+   * @brief Returns a constant iterator to the beginning.
+   * @return The const_iterator.
+   */
+  const_iterator cbegin(void) const;
+  /**
+   * @brief Returns an iterator to the end.
+   * @return The iterator.
+   */
+  iterator end(void);
+  /**
+   * @brief Returns a constant iterator to the end.
+   * @return The const_iterator.
+   */
+  const_iterator cend(void) const;
+  // Overloaded Operators
+  T &operator[](usz idx);
+  const T &operator[](usz idx) const;
 #endif
-} CBN_List;
+};
+
+#ifdef __cplusplus
+using CBN_List = CBN_List_t<void *>;
+#else
+typedef struct CBN_List_t CBN_List;
+#endif
 
 /**
  * @brief Create a new list container.
