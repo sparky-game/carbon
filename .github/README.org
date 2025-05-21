@@ -21,7 +21,7 @@
 <br/>
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://api.scorecard.dev/projects/github.com/sparky-game/carbon/badge" alt="OpenSSF Scorecard">
-<img src="https://github.com/sparky-game/carbon/actions/workflows/test.yaml/badge.svg" alt="CI Test">
+<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" alt="CI Pipeline">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
 <img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">
 </p>
@@ -123,9 +123,13 @@ Subcommands:
   help        display this help
   clean       remove previously created build artifacts
   mrproper    same as `clean` plus remove this binary
-  check       only run tests
+  test        just run the `TESTING` stage
+  build       just run the `BUILDING` stage
+  examples    just run the `EXAMPLES` stage
 
-If not provided any subcommand, it runs the full build pipeline.
+If not provided any subcommand, it runs the full build pipeline:
+  [TESTING] -> [BUILDING] -> [EXAMPLES] -> [PACKAGING]
+
 If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.
 
 Report bugs to: <https://github.com/sparky-game/carbon/issues>
