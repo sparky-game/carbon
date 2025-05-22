@@ -643,7 +643,7 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
    : "<'Stuff' At %p>")
 
-#define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), &x}
+#define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), (void *) &x}
 
 #define carbon_print(msg, ...) carbon_log_print(stdout, msg, ##__VA_ARGS__)
 #define carbon_eprint(msg, ...) carbon_log_print(stderr, msg, ##__VA_ARGS__)
