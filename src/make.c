@@ -115,27 +115,25 @@ static void test(void) {
   CBN_StrBuilder cmd = {0};
   carbon_fs_pattern_match_foreach(c_files) {
     carbon_println("  CC      %s", it.f);
-    carbon_string_strip_substr(it.f, ".c");
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
     carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.c -o %s.o", it.f, it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s -o %s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
   carbon_fs_pattern_match_foreach(cxx_files) {
     carbon_println("  CXX     %s", it.f);
-    carbon_string_strip_substr(it.f, ".cc");
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
     carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s.cc -o %s.o", it.f, it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s -o %s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -163,14 +161,12 @@ static void build(void) {
   carbon_fs_pattern_match_foreach(c_files) {
     carbon_println("  CC      %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
-    carbon_string_strip_substr(it.f, ".c");
-    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s.c -o %s/%s.o", it.f, WORKDIR, it.f));
+    call_cmd(carbon_string_fmt(CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC -pipe -Os -c src/%s -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   carbon_fs_pattern_match_foreach(cxx_files) {
     carbon_println("  CXX     %s", it.f);
     carbon_string_strip_substr(it.f, "src/");
-    carbon_string_strip_substr(it.f, ".cc");
-    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s.cc -o %s/%s.o", it.f, WORKDIR, it.f));
+    call_cmd(carbon_string_fmt(CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC -pipe -Os -c src/%s -o %s/%s.o", it.f, WORKDIR, it.f));
   }
   carbon_println("  AR      libcarbon.a");
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
