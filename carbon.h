@@ -863,7 +863,7 @@ typedef struct CBN_List_t CBN_List;
 #endif
 
 #define carbon_list_at_raw(T, l, i) ((T *) (l).items)[(i)]
-#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), CARBON_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), ((T *) (l).items)[(i)])
+#define carbon_list_at(T, l, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (l).size && "List index out of bounds"), CARBON_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), carbon_list_at_raw(T, l, i))
 #define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
 /**
