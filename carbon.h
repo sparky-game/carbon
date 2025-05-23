@@ -839,7 +839,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @brief Returns a constant iterator to the beginning.
    * @return The const_iterator.
    */
-  const_iterator cbegin(void) const;
+  const_iterator begin(void) const;
   /**
    * @brief Returns an iterator to the end.
    * @return The iterator.
@@ -849,7 +849,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @brief Returns a constant iterator to the end.
    * @return The const_iterator.
    */
-  const_iterator cend(void) const;
+  const_iterator end(void) const;
   // Overloaded Operators
   T &operator[](usz idx);
   const T &operator[](usz idx) const;
@@ -907,6 +907,101 @@ CARBON_API isz carbon_list_find(const CBN_List *l, const void *value);
  * @param idx The index of the element to remove.
  */
 CARBON_API void carbon_list_remove(CBN_List *l, usz idx);
+
+// Because `CBN_List_t` is a templated class/struct, the definitions of all its
+// member functions need to be available at compile-time, not link-time; thus,
+// we define them here for the template instantiation to work properly.
+#ifdef __cplusplus
+/**
+ * @brief CBN_List_t<T>::make
+ */
+template <typename T>
+CBN_List_t<T> CBN_List_t<T>::make(void) {
+  auto l = carbon_list_create(sizeof(T));
+  return *(CBN_List_t<T> *) &l;
+}
+/**
+ * @brief CBN_List_t<T>.Free
+ */
+template <typename T>
+void CBN_List_t<T>::Free(void) {
+  carbon_list_destroy((CBN_List *) this);
+}
+/**
+ * @brief CBN_List_t<T>.Push
+ */
+template <typename T>
+void CBN_List_t<T>::Push(const T &value) {
+  carbon_list_push((CBN_List *) this, (void *) &value);
+}
+/**
+ * @brief CBN_List_t<T>.Pop
+ */
+template <typename T>
+T CBN_List_t<T>::Pop(void) {
+  T x;
+  carbon_list_pop(this, &x);
+  return x;
+}
+/**
+ * @brief CBN_List_t<T>.Find
+ */
+template <typename T>
+isz CBN_List_t<T>::Find(const T &value) const {
+  return carbon_list_find(this, value);
+}
+/**
+ * @brief CBN_List_t<T>.Remove
+ */
+template <typename T>
+void CBN_List_t<T>::Remove(usz idx) {
+  carbon_list_remove(this, idx);
+}
+/**
+ * @brief CBN_List_t<T>.begin
+ */
+template <typename T>
+typename CBN_List_t<T>::iterator CBN_List_t<T>::begin(void) {
+  return const_cast<iterator>(static_cast<const CBN_List_t &>(*this).begin());
+}
+/**
+ * @brief CBN_List_t<T>.begin (const)
+ */
+template <typename T>
+typename CBN_List_t<T>::const_iterator CBN_List_t<T>::begin(void) const {
+  return static_cast<const_iterator>(items);
+}
+/**
+ * @brief CBN_List_t<T>.end
+ */
+template <typename T>
+typename CBN_List_t<T>::iterator CBN_List_t<T>::end(void) {
+  return const_cast<iterator>(static_cast<const CBN_List_t &>(*this).end());
+}
+/**
+ * @brief CBN_List_t<T>.end (const)
+ */
+template <typename T>
+typename CBN_List_t<T>::const_iterator CBN_List_t<T>::end(void) const {
+  return static_cast<const_iterator>(items) + size;
+}
+/**
+ * @brief CBN_List_t<T>[idx]
+ */
+template <typename T>
+T &CBN_List_t<T>::operator[](usz idx) {
+  return const_cast<T &>(static_cast<const CBN_List_t &>(*this)[idx]);
+}
+/**
+ * @brief CBN_List_t<T>[idx] (const)
+ */
+template <typename T>
+const T &CBN_List_t<T>::operator[](usz idx) const {
+  CARBON_ASSERT(0 <= idx && idx < size && "List index out of bounds");
+  CARBON_ASSERT(sizeof(T) == stride && "List type doesn't match");
+  return ((T *) items)[idx];
+}
+#endif  // __cplusplus
 
 /*
 **  $$=====================$$
@@ -1415,7 +1510,6 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_time.c"
 #include "src/carbon_clock.c"
 #include "src/carbon_list.c"
-#include "src/carbon_list.cc"
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strbuilder.c"
