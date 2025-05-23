@@ -8,26 +8,18 @@
 #ifdef __cplusplus
 
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) {
-  return (iterator) files;
+  return const_cast<iterator>(static_cast<const CBN_PatternMatchedFiles &>(*this).begin());
 }
 
 CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::begin(void) const {
   return files;
 }
 
-CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::cbegin(void) const {
-  return files;
-}
-
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::end(void) {
-  return (iterator) (files + count);
+  return const_cast<iterator>(static_cast<const CBN_PatternMatchedFiles &>(*this).end());
 }
 
 CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::end(void) const {
-  return files + count;
-}
-
-CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::cend(void) const {
   return files + count;
 }
 

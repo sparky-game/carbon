@@ -1154,9 +1154,9 @@ typedef struct CBN_StrList {
    */
   void Push(const char *s);
   iterator begin(void);
-  const_iterator cbegin(void) const;
+  const_iterator begin(void) const;
   iterator end(void);
-  const_iterator cend(void) const;
+  const_iterator end(void) const;
 #endif
 } CBN_StrList;
 
@@ -1209,10 +1209,8 @@ typedef struct CBN_PatternMatchedFiles {
   using const_iterator = const char * const *;
   iterator begin(void);
   const_iterator begin(void) const;
-  const_iterator cbegin(void) const;
   iterator end(void);
   const_iterator end(void) const;
-  const_iterator cend(void) const;
 #endif
 } CBN_PatternMatchedFiles;
 
