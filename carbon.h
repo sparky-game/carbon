@@ -243,7 +243,6 @@ typedef double f64;
 CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 
 typedef u32 uint;
-typedef u64 ulong;
 typedef size_t usz;
 typedef ssize_t isz;
 typedef uintptr_t uptr;
