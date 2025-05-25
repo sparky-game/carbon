@@ -1301,9 +1301,10 @@ CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 **  ||       StrList       ||
 **  $$=====================$$
 */
-#define carbon_strlist_at(sl, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
-#define carbon_strlist_foreach(sl) for (struct { usz i; CBN_StrView sv; } it = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; it.i < (sl).size; ++it.i, it.i < (sl).size ? it.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, it.i)) : it.sv)
 
+/**
+ * @brief Represents a CBN_List containter specifically for strings.
+ */
 typedef struct CBN_StrList {
   char **items;
   usz size;
@@ -1330,16 +1331,39 @@ typedef struct CBN_StrList {
    */
   static CBN_StrList make_unique(void);
   /**
+   * @brief carbon_strlist_destroy
+   */
+  void Free(void);
+  /**
    * @brief carbon_strlist_push
    * @param s The C-style string to append.
    */
   void Push(const char *s);
+  /**
+   * @brief Returns an iterator to the beginning.
+   * @return The iterator.
+   */
   iterator begin(void);
+  /**
+   * @brief Returns a constant iterator to the beginning.
+   * @return The const_iterator.
+   */
   const_iterator begin(void) const;
+  /**
+   * @brief Returns an iterator to the end.
+   * @return The iterator.
+   */
   iterator end(void);
+  /**
+   * @brief Returns a constant iterator to the end.
+   * @return The const_iterator.
+   */
   const_iterator end(void) const;
 #endif
 } CBN_StrList;
+
+#define carbon_strlist_at(sl, i) (CARBON_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
+#define carbon_strlist_foreach(sl) for (struct { usz i; CBN_StrView sv; } it = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; it.i < (sl).size; ++it.i, it.i < (sl).size ? it.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, it.i)) : it.sv)
 
 /**
  * @brief Create a new StrList container, ready to hold strings.

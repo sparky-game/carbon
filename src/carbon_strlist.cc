@@ -19,6 +19,10 @@ CBN_StrList CBN_StrList::make_unique(void) {
   return carbon_strlist_create(true);
 }
 
+void CBN_StrList::Free(void) {
+  carbon_strlist_destroy(this);
+}
+
 void CBN_StrList::Push(const char *s) {
   carbon_strlist_push(this, s);
 }
