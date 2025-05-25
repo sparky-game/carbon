@@ -71,4 +71,12 @@ f32 CBN_Vec3::operator*(const CBN_Vec3 &v) const {
   return carbon_math_vec3_dot(*this, v);
 }
 
+u8 CBN_Rect::Contains(const CBN_Vec2 &p) const {
+  return carbon_math_rect_contains_point(*this, p);
+}
+
+u8 CBN_Rect::Overlaps(const CBN_Rect &r) const {
+  return carbon_math_rect_detect_collision(*this, r);
+}
+
 #endif  // __cplusplus

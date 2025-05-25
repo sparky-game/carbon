@@ -452,7 +452,7 @@ u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p) {
 }
 
 u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2) {
-  return (r1.x < r2.x + r2.w) && (r2.x < r1.x + r1.w) && (r1.y < r2.y + r2.h) && (r2.y < r1.y + r1.h);
+  return (r1.x <= r2.x + r2.w) && (r2.x <= r1.x + r1.w) && (r1.y <= r2.y + r2.h) && (r2.y <= r1.y + r1.h);
 }
 
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {

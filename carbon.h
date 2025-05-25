@@ -351,9 +351,6 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)
 #define CARBON_ROW_PRINT(r) carbon_math_row_print(r, #r)
 
-#define CARBON_VEC3(x, y, z)    (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
-#define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
-
 /**
  * @brief Defines an inline 2D vector.
  * @param x The value to assign to the X field.
@@ -426,6 +423,57 @@ typedef union CBN_Vec2 {
 #endif
 } CBN_Vec2;
 
+/**
+ * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
+ */
+#define CARBON_VEC3_ZERO CARBON_VEC3(0, 0, 0)
+
+/**
+ * @brief Defines an inline 3D vector which represents -X direction.
+ */
+#define CARBON_VEC3_LEFT CARBON_VEC3(-1, 0, 0)
+
+/**
+ * @brief Defines an inline 3D vector which represents +X direction.
+ */
+#define CARBON_VEC3_RIGHT CARBON_VEC3(1, 0, 0)
+
+/**
+ * @brief Defines an inline 3D vector which represents -Y direction.
+ */
+#define CARBON_VEC3_DOWN CARBON_VEC3(0, -1, 0)
+
+/**
+ * @brief Defines an inline 3D vector which represents +Y direction.
+ */
+#define CARBON_VEC3_UP CARBON_VEC3(0, 1, 0)
+
+/**
+ * @brief Defines an inline 3D vector which represents -Z direction.
+ */
+#define CARBON_VEC3_BACK CARBON_VEC3(0, 0, -1)
+
+/**
+ * @brief Defines an inline 3D vector which represents +Z direction.
+ */
+#define CARBON_VEC3_FORWARD CARBON_VEC3(0, 0, 1)
+
+/**
+ * @brief Defines an inline 3D vector whose 3 elements are equal to one.
+ */
+#define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
+
+/**
+ * @brief Defines an inline 3D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ * @param z The value to assign to the Z field.
+ */
+#define CARBON_VEC3(x, y, z) (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
+
+/**
+ * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
+ */
 typedef union CBN_Vec3 {
   f32 items[3];
   struct {
@@ -446,9 +494,35 @@ typedef union CBN_Vec3 {
 #endif
 } CBN_Vec3;
 
-typedef struct {
+/**
+ * @brief Defines an inline rectangle.
+ * @param x The value to assign to the X coordinate of the position.
+ * @param y The value to assign to the Y coordinate of the position.
+ * @param w The value to assign to the width of the size.
+ * @param h The value to assign to the height of the size.
+ */
+#define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
+
+/**
+ * @brief Represents the position and size of a rectangle with four 32-bit floating-point (f32) values.
+ */
+typedef struct CBN_Rect {
   f32 x, y;
   f32 w, h;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_math_rect_contains_point
+   * @param p The point to check.
+   * @return A boolean value representing whether the point is contained within this rectangle or not.
+   */
+  u8 Contains(const CBN_Vec2 &p) const;
+  /**
+   * @brief carbon_math_rect_detect_collision
+   * @param r The other rectangle to check with.
+   * @return A boolean value representing whether they overlap (also touching).
+   */
+  u8 Overlaps(const CBN_Rect &r) const;
+#endif
 } CBN_Rect;
 
 typedef struct {
@@ -572,8 +646,22 @@ CARBON_API char *carbon_math_vec2_to_cstr(CBN_Vec2 v);
  */
 CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
 
+/**
+ * @brief Determines whether the specified point is contained within a rectangle.
+ * @param r The rectangle.
+ * @param p The point to check.
+ * @return A boolean value representing whether the point is contained within this rectangle or not.
+ */
 CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
+
+/**
+ * @brief Determines whether the rectangles collide/overlap/intersect with each other.
+ * @param r1 The first rectangle.
+ * @param r2 The second rectangle.
+ * @return A boolean value representing whether they overlap (also touching).
+ */
 CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
+
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
 CARBON_API void carbon_math_mat_destroy(CBN_Matrix *m);
 CARBON_API void carbon_math_mat_fill(CBN_Matrix m, f32 x);
