@@ -325,7 +325,13 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   return true;
 }
 
-CBN_List carbon_fs_read_img_from_file(const char *file) {
+CBN_Image carbon_fs_read_img_from_file(const char *file) {
+  CBN_Image img;
+  img.data = carbon_fs_read_img_from_file_linearly(file, &img.width, &img.height, &img.channels);
+  return img;
+}
+
+CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file) {
   usz width = 0, height = 0, chs = 0;
   u8 *pixels = carbon_fs_read_img_from_file_linearly(file, &width, &height, &chs);
   CBN_List img = carbon_fs_img_tensorize(pixels, width, height, chs);
@@ -384,7 +390,11 @@ u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz he
   return bytes;
 }
 
-u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file) {
+u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file) {
+  return carbon_fs_write_img_to_file_linearly(img->data, fmt, img->width, img->height, img->channels, file);
+}
+
+u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file) {
   CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
   u8 *pixels = carbon_fs_img_linearize(img);
   u8 result = carbon_fs_write_img_to_file_linearly(pixels, fmt, first_ch.cols, first_ch.rows, img->size, file);
@@ -415,7 +425,12 @@ u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz widt
   return result ? true : false;
 }
 
-void carbon_fs_destroy_img(CBN_List *img) {
+void carbon_fs_destroy_img(CBN_Image *img) {
+  CARBON_FREE(img->data);
+  memset(img, 0, sizeof(*img));
+}
+
+void carbon_fs_destroy_tensor_img(CBN_List *img) {
   carbon_list_foreach(CBN_Matrix, *img) {
     carbon_math_mat_destroy(&it.var);
   }

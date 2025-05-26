@@ -1394,6 +1394,36 @@ CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 
 /*
 **  $$========================$$
+**  ||       DrawCanvas       ||
+**  $$========================$$
+*/
+#define CARBON_DRAWCANVAS_AT(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
+
+typedef struct {
+  u32 *pixels;
+  usz width;
+  usz height;
+  usz stride;
+} CBN_DrawCanvas;
+
+CARBON_API CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
+CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
+CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
+CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
+CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color);
+CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
+
+/**
+ * @brief Transforms HSV color into RGB (A always set to 0xff).
+ * @param h Hue, in [0..360] range.
+ * @param s Saturation, in [0..1] range.
+ * @param v Value, in [0..1] range.
+ * @return 32-bit RGBA color value (A always set to 0xff).
+ */
+CARBON_API u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
+
+/*
+**  $$========================$$
 **  ||       Filesystem       ||
 **  $$========================$$
 */
@@ -1412,12 +1442,62 @@ typedef struct CBN_PatternMatchedFiles {
 #ifdef __cplusplus
   using iterator = const char **;
   using const_iterator = const char * const *;
+  /**
+   * @brief Returns an iterator to the beginning.
+   * @return The iterator.
+   */
   iterator begin(void);
+  /**
+   * @brief Returns a constant iterator to the beginning.
+   * @return The const_iterator.
+   */
   const_iterator begin(void) const;
+  /**
+   * @brief Returns an iterator to the end.
+   * @return The iterator.
+   */
   iterator end(void);
+  /**
+   * @brief Returns a constant iterator to the end.
+   * @return The const_iterator.
+   */
   const_iterator end(void) const;
 #endif
 } CBN_PatternMatchedFiles;
+
+/**
+ * @brief Represents an image object as a linear buffer of 8-bit per channel RGBA bytes.
+ */
+typedef struct CBN_Image {
+  u8 *data;
+  usz width;
+  usz height;
+  usz channels;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_fs_read_img_from_file
+   * @param file The filename to read the image from.
+   * @return The image object.
+   */
+  static CBN_Image make(const char *file);
+  /**
+   * @brief carbon_fs_img_32bit_to_8bit
+   * @return The image object.
+   */
+  static CBN_Image make(const CBN_DrawCanvas &dc);
+  /**
+   * @brief carbon_fs_destroy_img
+   */
+  void Free(void);
+  /**
+   * @brief carbon_fs_write_img_to_file
+   * @param fmt The format of the image file to write to.
+   * @param file The filename to write the image to.
+   * @return A boolean value representing the success of the operation.
+   */
+  u8 Save(CBN_FileFormat fmt, const char *file) const;
+#endif
+} CBN_Image;
 
 CARBON_API u8 carbon_fs_exists(const char *file);
 CARBON_API u8 carbon_fs_is_regular_file(const char *file);
@@ -1434,9 +1514,28 @@ CARBON_API char *carbon_fs_get_bin_directory(void);
 CARBON_API CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
-CARBON_API CBN_List carbon_fs_read_img_from_file(const char *file);
+
+/**
+ * @brief Reads an image from disk.
+ * @param file The filename to read the image from.
+ * @return The image object.
+ */
+CARBON_API CBN_Image carbon_fs_read_img_from_file(const char *file);
+
+CARBON_API CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file);
+
+/**
+ * @brief Reads an image from disk as a linear buffer of 8-bit per channel RGBA bytes.
+ * @param file The filename to read the image from.
+ * @param out_width The width of the read image (output argument pointer).
+ * @param out_height The height of the read image (output argument pointer).
+ * @param out_chs The number of channels of the read image (output argument pointer).
+ * @return The pointer to the newly allocated linear buffer of 8-bit per channel RGBA bytes.
+ */
 CARBON_API u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
+
 CARBON_API CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs);
+
 CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
 
 /**
@@ -1452,9 +1551,26 @@ CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
  */
 CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
 
-CARBON_API u8 carbon_fs_write_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
+/**
+ * @brief Writes an image to disk.
+ * @param img The image object.
+ * @param fmt The format of the image file to write to.
+ * @param file The filename to write the image to.
+ * @return A boolean value representing the success of the operation.
+ */
+CARBON_API u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file);
+
+CARBON_API u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
+
 CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
-CARBON_API void carbon_fs_destroy_img(CBN_List *img);
+
+/**
+ * @brief Destroy an image object.
+ * @param img The image object.
+ */
+CARBON_API void carbon_fs_destroy_img(CBN_Image *img);
+
+CARBON_API void carbon_fs_destroy_tensor_img(CBN_List *img);
 
 /*
 **  $$=====================$$
@@ -1499,36 +1615,6 @@ CARBON_API CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m);
 CARBON_API void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr);
 CARBON_API void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr);
 CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
-
-/*
-**  $$========================$$
-**  ||       DrawCanvas       ||
-**  $$========================$$
-*/
-#define CARBON_DRAWCANVAS_AT(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
-
-typedef struct {
-  u32 *pixels;
-  usz width;
-  usz height;
-  usz stride;
-} CBN_DrawCanvas;
-
-CARBON_API CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
-CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
-CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
-CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
-CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color);
-CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
-
-/**
- * @brief Transforms HSV color into RGB (A always set to 0xff).
- * @param h Hue, in [0..360] range.
- * @param s Saturation, in [0..1] range.
- * @param v Value, in [0..1] range.
- * @return 32-bit RGBA color value (A always set to 0xff).
- */
-CARBON_API u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
 
 /*
 **  $$=======================$$
@@ -1627,11 +1713,11 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 #include "src/carbon_strview.cc"
 #include "src/carbon_strlist.c"
 #include "src/carbon_strlist.cc"
+#include "src/carbon_drawcanvas.c"
 #include "src/carbon_fs.c"
 #include "src/carbon_fs.cc"
 #include "src/carbon_net.c"
 #include "src/carbon_nn.c"
-#include "src/carbon_drawcanvas.c"
 #ifdef CARBON_IMPLEMENTATION_WINDOWING
 #include "src/carbon_win.c"
 #endif  // CARBON_IMPLEMENTATION_WINDOWING
