@@ -190,8 +190,10 @@
 #define CARBON_TARGET_OS "linux"
 #elif defined(__APPLE__)
 #define CARBON_TARGET_OS "macos"
-#elif defined(_WIN32)
-#define CARBON_TARGET_OS "windows"
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_TARGET_OS "windows-msvc"
+#elif defined(_WIN32) && defined(__MINGW64__)
+#define CARBON_TARGET_OS "windows-mingw"
 #else
 #error Target OS is not supported
 #endif
@@ -208,6 +210,10 @@
 #define CARBON_C_COMPILER "cl.exe"
 #define CARBON_CXX_COMPILER "cl.exe"
 #define CARBON_COMPILER_VERSION _MSC_FULL_VER
+#elif defined(_WIN32) && defined(__MINGW64__)
+#define CARBON_C_COMPILER "x86_64-w64-mingw32-gcc"
+#define CARBON_CXX_COMPILER "x86_64-w64-mingw32-g++"
+#define CARBON_COMPILER_VERSION __VERSION__
 #else
 #warning Unrecognized compiler, using defaults.
 #define CARBON_C_COMPILER "cc"
