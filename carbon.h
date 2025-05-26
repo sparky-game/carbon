@@ -1380,6 +1380,10 @@ CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
  */
 CARBON_API CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim);
 
+/**
+ * @brief Destroy a StrList container.
+ * @sl The StrList container.
+ */
 CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
 
 /**

@@ -48,8 +48,7 @@ void carbon_strlist_destroy(CBN_StrList *sl) {
     CARBON_FREE(sl->items[i]);
   }
   CARBON_FREE(sl->items);
-  memset(sl, 0, sizeof(CBN_StrList));
-  sl = 0;
+  memset(sl, 0, sizeof(*sl));
 }
 
 void carbon_strlist_push(CBN_StrList *sl, const char *s) {
