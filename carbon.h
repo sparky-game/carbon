@@ -1476,13 +1476,20 @@ typedef struct CBN_PatternMatchedFiles {
 } CBN_PatternMatchedFiles;
 
 /**
+ * @brief Represents the needed metadata for an image object definition.
+ */
+typedef struct {
+  usz width;
+  usz height;
+  usz channels;
+} CBN_Image_Metadata;
+
+/**
  * @brief Represents an image object as a linear buffer of 8-bit per channel RGBA bytes.
  */
 typedef struct CBN_Image {
   u8 *data;
-  usz width;
-  usz height;
-  usz channels;
+  CBN_Image_Metadata metadata;
 #ifdef __cplusplus
   /**
    * @brief carbon_fs_read_img_from_file

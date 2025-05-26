@@ -327,7 +327,8 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
 
 CBN_Image carbon_fs_read_img_from_file(const char *file) {
   CBN_Image img;
-  img.data = carbon_fs_read_img_from_file_linearly(file, &img.width, &img.height, &img.channels);
+  memset(&img, 0, sizeof(img));
+  img.data = carbon_fs_read_img_from_file_linearly(file, &img.metadata.width, &img.metadata.height, &img.metadata.channels);
   return img;
 }
 
@@ -391,7 +392,7 @@ u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz he
 }
 
 u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file) {
-  return carbon_fs_write_img_to_file_linearly(img->data, fmt, img->width, img->height, img->channels, file);
+  return carbon_fs_write_img_to_file_linearly(img->data, fmt, img->metadata.width, img->metadata.height, img->metadata.channels, file);
 }
 
 u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file) {

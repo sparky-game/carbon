@@ -30,9 +30,11 @@ CBN_Image CBN_Image::make(const char *file) {
 CBN_Image CBN_Image::make(const CBN_DrawCanvas &dc) {
   return (CBN_Image) {
     .data = carbon_fs_img_32bit_to_8bit(dc.pixels, dc.width, dc.height),
-    .width = dc.width,
-    .height = dc.height,
-    .channels = 4
+    .metadata = (CBN_Image_Metadata) {
+      .width = dc.width,
+      .height = dc.height,
+      .channels = 4
+    }
   };
 }
 
