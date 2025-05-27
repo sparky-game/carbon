@@ -2,5 +2,3 @@
 
 *.png binary
 *.gif binary
-
-carbon.h linguist-language=c
