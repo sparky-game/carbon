@@ -254,9 +254,24 @@ typedef ssize_t isz;
 typedef uintptr_t uptr;
 
 /*
-**  $$========================$$
-**  ||       Entrypoint       ||
-**  $$========================$$
+**  $$=====================$$
+**  ||       Version       ||
+**  $$=====================$$
+*/
+
+/**
+ * @brief Gets the library API version at run-time.
+ * @param major The major component of the version (output argument pointer).
+ * @param minor The minor component of the version (output argument pointer).
+ * @param patch The patch component of the version (output argument pointer).
+ * @return The full version string formatted as `vX.Y.Z[-EXTRA]`.
+ */
+CARBON_API char *carbon_version(usz *major, usz *minor, usz *patch);
+
+/*
+**  $$================================$$
+**  ||       Testing Entrypoint       ||
+**  $$================================$$
 */
 #ifdef CARBON_TESTING_ENTRY
 #define main(...)                                       \
@@ -1729,6 +1744,7 @@ CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_fi
 **  $$=============================$$
 */
 #ifdef CARBON_IMPLEMENTATION
+#include "src/carbon_version.c"
 #include "src/carbon_assert.c"
 #include "src/carbon_memory.c"
 #include "src/carbon_coroutine.c"
