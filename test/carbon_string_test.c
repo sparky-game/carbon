@@ -16,3 +16,9 @@ CARBON_TEST(carbon_string, ends_with_substr) {
   carbon_should_be_false(carbon_string_ends_with_substr(s, "Мир!"));
   return CARBON_OK;
 }
+
+CARBON_TEST(carbon_string, lev_dist) {
+  carbon_should_be(2, carbon_string_lev_dist("add", "daddy"));
+  carbon_should_be(2, carbon_string_lev_dist("daddy", "add"));
+  return CARBON_OK;
+}

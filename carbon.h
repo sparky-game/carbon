@@ -344,7 +344,9 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
 #define CARBON_F32_EPS 1.1920928955078125e-07
 #define CARBON_MIN(x, y) (x < y ? x : y)
+#define CARBON_MIN3(x, y, z) CARBON_MIN(x, CARBON_MIN(y, z))
 #define CARBON_MAX(x, y) (x > y ? x : y)
+#define CARBON_MAX3(x, y, z) CARBON_MAX(x, CARBON_MAX(y, z))
 #define CARBON_CLAMP(x, min, max) ((x <= min) ? min : (x >= max) ? max : x)
 #define CARBON_SIGN(x) (!x ? 0 : x < 0 ? -1 : 1)
 #define CARBON_STEP(edge, x) (x < edge ? 0 : 1)
@@ -1127,6 +1129,14 @@ CARBON_API u8 carbon_string_ends_with_substr(const char *s, const char *sub);
 CARBON_API u8 carbon_string_is_number(const char *s);
 CARBON_API u8 carbon_string_has_char(const char *s, char c);
 
+/**
+ * @brief Gets the Levenshtein distance between two strings.
+ * @param s1 The first string.
+ * @param s2 The second string.
+ * @return The Levenshtein distance between s1 and s2.
+ */
+CARBON_API usz carbon_string_lev_dist(const char *s1, const char *s2);
+
 /*
 **  $$========================$$
 **  ||       StrBuilder       ||
@@ -1210,6 +1220,12 @@ typedef struct CBN_StrView {
    * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
    */
   CBN_StrView Chop(char c);
+  /**
+   * @brief carbon_string_lev_dist
+   * @param sv The other StrView.
+   * @return The Levenshtein distance between both StrViews.
+   */
+  usz LevDist(const CBN_StrView &sv) const;
   // Overloaded Operators
   bool operator==(const CBN_StrView &sv) const;
   bool operator==(const char *s) const;

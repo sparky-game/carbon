@@ -80,3 +80,22 @@ u8 carbon_string_has_char(const char *s, char c) {
   if (!c_ptr) return false;
   return true;
 }
+
+usz carbon_string_lev_dist(const char *s1, const char *s2) {
+  usz n = carbon_string_len(s1);
+  usz m = carbon_string_len(s2);
+  CBN_Matrix dp = carbon_math_mat_create(n + 1, m + 1);
+  for (usz i = 0; i <= n; ++i) CARBON_MAT_AT(dp, i, 0) = i;
+  for (usz j = 0; j <= m; ++j) CARBON_MAT_AT(dp, 0, j) = j;
+  for (usz i = 1; i <= n; ++i) {
+    for (usz j = 1; j <= m; ++j) {
+      if (s1[i - 1] == s2[j - 1]) CARBON_MAT_AT(dp, i, j) = CARBON_MAT_AT(dp, i - 1, j - 1);
+      else CARBON_MAT_AT(dp, i, j) = 1 + CARBON_MIN3(CARBON_MAT_AT(dp, i - 1, j),
+                                                     CARBON_MAT_AT(dp, i, j - 1),
+                                                     CARBON_MAT_AT(dp, i - 1, j - 1));
+    }
+  }
+  usz dist = CARBON_MAT_AT(dp, n, m);
+  carbon_math_mat_destroy(&dp);
+  return dist;
+}

@@ -43,6 +43,10 @@ CBN_StrView CBN_StrView::Chop(char c) {
   return carbon_strview_chop(this, c);
 }
 
+usz CBN_StrView::LevDist(const CBN_StrView &sv) const {
+  return carbon_string_lev_dist(c_str(), sv.c_str());
+}
+
 bool CBN_StrView::operator==(const CBN_StrView &sv) const {
   return carbon_strview_are_equal(*this, sv);
 }
