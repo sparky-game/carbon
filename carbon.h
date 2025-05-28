@@ -260,7 +260,7 @@ typedef uintptr_t uptr;
 */
 
 /**
- * @brief Gets the library API version at run-time.
+ * @brief Gets the library API version at runtime.
  * @param major The major component of the version (output argument pointer).
  * @param minor The minor component of the version (output argument pointer).
  * @param patch The patch component of the version (output argument pointer).
