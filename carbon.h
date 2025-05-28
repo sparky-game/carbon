@@ -322,8 +322,6 @@ typedef enum {
   CBN_COROUTINE_SLEEP_MODE_WRITE
 } CBN_Coroutine_SleepMode;
 
-CARBON_API void carbon_coroutine_init(void);
-CARBON_API void carbon_coroutine_shutdown(void);
 CARBON_API usz carbon_coroutine_id(void);
 CARBON_API usz carbon_coroutine_alive(void);
 CARBON_API void carbon_coroutine_go(void (*f)(void *), void *arg);

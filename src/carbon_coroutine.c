@@ -169,6 +169,26 @@ int getpagesize(void) {
 }
 #endif
 
+__attribute__((constructor)) CARBON_INLINE void carbon_coroutine__init(void) {
+  carbon_coroutine__active = carbon_list_create(sizeof(usz));
+  carbon_coroutine__dead   = carbon_list_create(sizeof(usz));
+  carbon_coroutine__ctxs   = carbon_list_create(sizeof(CBN_Coroutine_CTX));
+  carbon_coroutine__asleep = carbon_list_create(sizeof(usz));
+  carbon_coroutine__polls  = carbon_list_create(sizeof(struct pollfd));
+  CBN_Coroutine_CTX ctx = {0, 0};
+  usz i = 0;
+  carbon_list_push(&carbon_coroutine__ctxs, &ctx);
+  carbon_list_push(&carbon_coroutine__active, &i);
+}
+
+__attribute__((destructor)) CARBON_INLINE void carbon_coroutine__shutdown(void) {
+  carbon_list_destroy(&carbon_coroutine__active);
+  carbon_list_destroy(&carbon_coroutine__dead);
+  carbon_list_destroy(&carbon_coroutine__ctxs);
+  carbon_list_destroy(&carbon_coroutine__asleep);
+  carbon_list_destroy(&carbon_coroutine__polls);
+}
+
 __attribute__((naked)) void carbon_coroutine_restore_ctx(__attribute__((unused)) void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
@@ -251,26 +271,6 @@ CARBON_INLINE void carbon_coroutine__finish_current(void) {
   current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   CBN_Coroutine_CTX current_ctx_item = carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item);
   carbon_coroutine_restore_ctx(current_ctx_item.rsp);
-}
-
-void carbon_coroutine_init(void) {
-  carbon_coroutine__active = carbon_list_create(sizeof(usz));
-  carbon_coroutine__dead   = carbon_list_create(sizeof(usz));
-  carbon_coroutine__ctxs   = carbon_list_create(sizeof(CBN_Coroutine_CTX));
-  carbon_coroutine__asleep = carbon_list_create(sizeof(usz));
-  carbon_coroutine__polls  = carbon_list_create(sizeof(struct pollfd));
-  CBN_Coroutine_CTX ctx = {0, 0};
-  usz i = 0;
-  carbon_list_push(&carbon_coroutine__ctxs, &ctx);
-  carbon_list_push(&carbon_coroutine__active, &i);
-}
-
-void carbon_coroutine_shutdown(void) {
-  carbon_list_destroy(&carbon_coroutine__active);
-  carbon_list_destroy(&carbon_coroutine__dead);
-  carbon_list_destroy(&carbon_coroutine__ctxs);
-  carbon_list_destroy(&carbon_coroutine__asleep);
-  carbon_list_destroy(&carbon_coroutine__polls);
 }
 
 usz carbon_coroutine_id(void) {
