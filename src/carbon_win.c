@@ -16,6 +16,7 @@
 
 static RGFW_window *carbon_win__handle;
 static u32 carbon_win__max_fps;
+static CBN_Image carbon_win__icon;
 
 void carbon_win_open(u16 width, u16 height, const char *title) {
   RGFW_area screen_size = RGFW_getScreenSize();
@@ -31,12 +32,24 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
 }
 
 void carbon_win_close(void) {
+  if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
   carbon_log_info("Window closed successfully");
 }
 
 void carbon_win_set_max_fps(u32 fps) {
   carbon_win__max_fps = fps;
+}
+
+void carbon_win_set_icon(CBN_Image img) {
+  carbon_win__icon = img;
+  RGFW_bool status = RGFW_window_setIcon(carbon_win__handle,
+                                         carbon_win__icon.data,
+                                         RGFW_AREA(carbon_win__icon.metadata.width,
+                                                   carbon_win__icon.metadata.height),
+                                         carbon_win__icon.metadata.channels);
+  if (!status) carbon_log_error("Unable to set the window icon");
+  else carbon_log_info("Set window icon correctly");
 }
 
 f64 carbon_win_get_deltatime(void) {

@@ -1670,6 +1670,18 @@ CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
 CARBON_API void carbon_win_close(void);
 CARBON_API void carbon_win_set_max_fps(u32 fps);
+
+/**
+ * @brief Set the window icon to a specific image object.
+ *
+ * The windowing module holds the ownership of the image object passed through.
+ * This means you mustn't worry about managing its memory, it's the window's
+ * responsability when it closes.
+ *
+ * @param img The image object of the icon.
+ */
+CARBON_API void carbon_win_set_icon(CBN_Image img);
+
 CARBON_API f64 carbon_win_get_deltatime(void);
 CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
 CARBON_API u8 carbon_win_shouldclose(void);
