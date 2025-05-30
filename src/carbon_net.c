@@ -9,7 +9,7 @@
 
 CARBON_INLINE struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *domain) {
   struct addrinfo *res = 0, hints;
-  memset(&hints, 0, sizeof(struct addrinfo));
+  memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
   i32 status = getaddrinfo(domain, 0, &hints, &res);
