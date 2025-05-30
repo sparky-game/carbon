@@ -9129,7 +9129,17 @@ id RGFW_getNSScreenForDisplayID(CGDirectDisplayID display) {
 	return NULL;
 }
 
-
+// NOTE: we ignore here the `-Wdeprecated-declarations` warning, because no suitable
+// non-deprecated replacements were found for [`CVDisplayLinkCreateWithCGDisplay`,
+// `CVDisplayLinkGetNominalOutputVideoRefreshPeriod`]. These funcs were deprecated by
+// Apple from macOS 15.0 onwards.
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 u32 RGFW_osx_getRefreshRate(CGDirectDisplayID display, CGDisplayModeRef mode) {
 	if (mode) {
 		u32 refreshRate = (int)CGDisplayModeGetRefreshRate(mode);
@@ -9144,6 +9154,11 @@ u32 RGFW_osx_getRefreshRate(CGDirectDisplayID display, CGDisplayModeRef mode) {
 
 	return 0;
 }
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 RGFW_monitor RGFW_NSCreateMonitor(CGDirectDisplayID display, id screen) {
 	RGFW_monitor monitor;
