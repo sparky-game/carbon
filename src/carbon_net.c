@@ -38,6 +38,7 @@ char *carbon_net_resolve_dns_to_ip(const char *domain) {
   default: CARBON_UNREACHABLE;
   }
   inet_ntop(addrs->ai_addr->sa_family, addr, x, INET6_ADDRSTRLEN);
+  freeaddrinfo(addrs);
   ++i;
   if (i >= CARBON_NET_RESOLVE_DNS_MAX_BUFFERS) i = 0;
   return x;
