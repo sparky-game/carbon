@@ -58,6 +58,7 @@ static void clean(void) {
   rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
   rm_dash_r("examples/*.bin");
+  rm_dash_r("examples/*.bin.old");
   rm_dash_r(WORKDIR ".tgz");
 }
 
@@ -66,7 +67,7 @@ static void exit_gracefully(void) {
   exit(1);
 }
 
-static void rebuild_myself(const char **host_argv) {
+static void rebuild_myself(char * const *host_argv) {
   const char *bin = host_argv[0];
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   if (carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(bin)) return;
@@ -102,7 +103,7 @@ static void rebuild_myself(const char **host_argv) {
     exit(1);
   }
   carbon_println("  EXEC    %s", bin);
-  if (-1 == execvp(bin, (char **) host_argv)) {
+  if (-1 == execvp(bin, host_argv)) {
     carbon_log_error("unable to execvp rebuilt binary");
     exit(1);
   }
@@ -238,12 +239,12 @@ int main(int argc, char **argv) {
     carbon_log_error("unable to change CWD to binary's directory");
     return 1;
   }
-  rebuild_myself((const char **) argv);
+  rebuild_myself(argv);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
-  carbon_log_warn(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
+  carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_log_warn("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
+  carbon_log_debug("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
   if (argc > 1) {
