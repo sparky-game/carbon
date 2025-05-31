@@ -13,7 +13,7 @@ CARBON_INLINE void carbon_test_manager__cleanup_and_exit(void) {
   exit(1);
 }
 
-void carbon_test_manager_argparse(i32 argc, char **argv) {
+void carbon_test_manager_argparse(i32 argc, char * const *argv) {
   static const char * const help_msg = "usage: %s [OPTION]\n"
     "Options:\n"
     "  -n, --no-output  disable JUnit XML test results output\n"
@@ -51,7 +51,8 @@ void carbon_test_manager_argparse(i32 argc, char **argv) {
   exit(1);
 }
 
-void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
+void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) {
+  const char *bin_file = host_argv[0];
   if (strstr(bin_file, ".old")) return;
   carbon_test_manager__test_suite.files = carbon_strlist_create(true);
   carbon_strlist_push(&carbon_test_manager__test_suite.files, src_file);
@@ -108,14 +109,7 @@ void carbon_test_manager_rebuild(const char *bin_file, const char *src_file) {
   CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   carbon_println("=======================================");
   // 4. Replace current binary with new one (execvp)
-  char *argv[4];
-  memset(argv, 0, 4 * sizeof(char *));
-  argv[0] = (char *) bin_file;
-  if (carbon_test_manager__cmd_args.output) {
-    argv[1] = (char *) "-o";
-    argv[2] = carbon_test_manager__cmd_args.output;
-  }
-  if (-1 == execvp(argv[0], argv)) {
+  if (-1 == execvp(bin_file, host_argv)) {
     carbon_log_error("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }

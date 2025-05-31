@@ -277,7 +277,7 @@ CARBON_API char *carbon_version(usz *major, usz *minor, usz *patch);
 #define main(...)                                       \
   main(int argc, char **argv) {                         \
     carbon_test_manager_argparse(argc, argv);           \
-    carbon_test_manager_rebuild(argv[0], __FILE__);     \
+    carbon_test_manager_rebuild(__FILE__, argv);        \
     return carbon_main();                               \
   };                                                    \
   int carbon_main(__VA_ARGS__)
@@ -1687,9 +1687,9 @@ CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
 CARBON_API u8 carbon_win_shouldclose(void);
 
 /*
-**  $$=========================$$
-**  ||       TestManager       ||
-**  $$=========================$$
+**  $$==========================$$
+**  ||       Test Manager       ||
+**  $$==========================$$
 */
 #define CARBON_RUN_ALL carbon_test_manager_run
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_EXPAND_AND_QUOTE(f), __FILE__)
@@ -1724,8 +1724,8 @@ typedef struct {
   char *output;
 } CBN_CmdArgs;
 
-CARBON_API void carbon_test_manager_argparse(int argc, char **argv);
-CARBON_API void carbon_test_manager_rebuild(const char *bin_file, const char *src_file);
+CARBON_API void carbon_test_manager_argparse(int argc, char * const *argv);
+CARBON_API void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv);
 CARBON_API CBN_Suite carbon_test_manager_spawn(void);
 CARBON_API CBN_Test *carbon_test_manager_alloc(CBN_Suite *s);
 CARBON_API void carbon_test_manager_cleanup(CBN_Suite *s);
