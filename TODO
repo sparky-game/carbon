@@ -74,11 +74,13 @@ Implement hashing functions:
 - `carbon_crypto_sha256`
 - `carbon_crypto_keccak256`
 
+Implement AES symmetric encryption algorithm:
+- Reference: <https://github.com/kokke/tiny-AES-C>.
+- It provides CBC and CTR modes of operation (also ECB, but it's not useful).
+- It provides 128, 192 and 256-bit key sizes.
+
 Research:
 - Index of Coincidence (IoC)
-- Symmetric encryption algorithms (e.g. AES)
-- Modes of operation (e.g. CBC, CTR, GCM)
-- Key sizes (e.g. 128, 192, 256, 384, 512)
 - Key-agreement protocol (e.g. DH, ECDH)
 
 Add russian alternatives to all functions (in cyrillic script).
