@@ -729,24 +729,27 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define carbon_log_error(msg, ...) carbon_eprintln(CARBON_COLOR_RED "[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 
 // NOTE: This ternary operation at runtime has been deprecated in favor of `_Generic` generic selection of C11.
-// #define carbon_log__var_to_spec(x)                                      \
-//   (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u8)           ? "%hhu"      \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i8)           ? "%hhd"      \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u16)          ? "%hu"       \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i16)          ? "%hd"       \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u32)          ? "%u"        \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i32)          ? "%d"        \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u64)          ? "%llu"      \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i64)          ? "%lld"      \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f32)          ? "%f"        \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f64)          ? "%lf"       \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char)         ? "%c"        \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char *)       ? "%s"        \
-//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
-//    : "<'Stuff' At %p>")
+/*
+  #define carbon_log__var_to_spec(x)                                      \
+  (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u8)           ? "%hhu"      \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i8)           ? "%hhd"      \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u16)          ? "%hu"       \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i16)          ? "%hd"       \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u32)          ? "%u"        \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i32)          ? "%d"        \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u64)          ? "%llu"      \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i64)          ? "%lld"      \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f32)          ? "%f"        \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f64)          ? "%lf"       \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char)         ? "%c"        \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char *)       ? "%s"        \
+  : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
+  : "<'Stuff' At %p>")
+*/
 
+#ifndef __cplusplus
 #define carbon_log__var_to_spec(x)              \
   _Generic((x),                                 \
            usz: "%zu",                          \
@@ -765,6 +768,24 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
            char *: "%s",                        \
            const char *: "%s",                  \
            default: "<'Stuff' At %p>")
+#else
+template <typename T> constexpr const char *carbon_log__var_to_spec(T)  { return "<'Stuff' At %p>"; }
+template <> constexpr const char *carbon_log__var_to_spec(usz)          { return "%zu"; }
+template <> constexpr const char *carbon_log__var_to_spec(isz)          { return "%zd"; }
+template <> constexpr const char *carbon_log__var_to_spec(u8)           { return "%hhu"; }
+template <> constexpr const char *carbon_log__var_to_spec(i8)           { return "%hhd"; }
+template <> constexpr const char *carbon_log__var_to_spec(u16)          { return "%hu"; }
+template <> constexpr const char *carbon_log__var_to_spec(i16)          { return "%hd"; }
+template <> constexpr const char *carbon_log__var_to_spec(u32)          { return "%u"; }
+template <> constexpr const char *carbon_log__var_to_spec(i32)          { return "%d"; }
+template <> constexpr const char *carbon_log__var_to_spec(u64)          { return "%llu"; }
+template <> constexpr const char *carbon_log__var_to_spec(i64)          { return "%lld"; }
+template <> constexpr const char *carbon_log__var_to_spec(f32)          { return "%f"; }
+template <> constexpr const char *carbon_log__var_to_spec(f64)          { return "%lf"; }
+template <> constexpr const char *carbon_log__var_to_spec(char)         { return "%c"; }
+template <> constexpr const char *carbon_log__var_to_spec(char *)       { return "%s"; }
+template <> constexpr const char *carbon_log__var_to_spec(const char *) { return "%s"; }
+#endif
 
 #define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), (void *) &x}
 
