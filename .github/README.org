@@ -62,7 +62,8 @@ Many thanks to *all of you* who are reading this; I hope it'll be useful and it'
 * Table of Contents :toc:
 - [[#usage][Usage]]
   - [[#get-the-code][Get the code]]
-  - [[#example][Example]]
+  - [[#build-from-source][Build from source]]
+  - [[#examples][Examples]]
 - [[#code-coverage][Code coverage]]
 - [[#licensing][Licensing]]
 - [[#references][References]]
@@ -104,7 +105,7 @@ FetchContent_MakeAvailable(carbon)
 
 You might want to take a look to the [[https://github.com/sparky-game/carbon/releases/latest][latest release available]] and download the appropriate pre-compiled package for your CPU's architecture and OS.
 
-*Build from source:*
+** Build from source
 
 If wanted to build /Carbon/ from source independently (i.e. without defining ~CARBON_IMPLEMENTATION~ in your code), it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library.
 
@@ -114,72 +115,11 @@ This custom build system can rebuild itself properly (using our preferred compil
 cc src/make.c -o make
 #+end_src
 
-Once built, we can take a look at the available subcommands:
+Once built, we can take a look at the available subcommands and options by issuing: ~./make help~.
 
-#+begin_example
-$ ./make help
-usage: ./make [SUBCMD]
-Subcommands:
-  help        display this help
-  clean       remove previously created build artifacts
-  mrproper    same as `clean` plus remove this binary
-  test        just run the `TESTING` stage
-  build       just run the `BUILDING` stage
-  examples    just run the `EXAMPLES` stage
+** Examples
 
-If not provided any subcommand, it runs the full build pipeline:
-  [TESTING] -> [BUILDING] -> [EXAMPLES] -> [PACKAGING]
-
-If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.
-
-Report bugs to: <https://github.com/sparky-game/carbon/issues>
-SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
-#+end_example
-
-** Example
-
-#+begin_src c
-// example.c
-
-#define CARBON_TESTING_ENTRY
-#define CARBON_IMPLEMENTATION
-#include <carbon.h>
-
-void inc_int(int *x) {
-  ++(*x);
-}
-
-CARBON_TEST(example, increment_integer) {
-  int a = 1, b = 0;
-  carbon_should_not_be(a, b);
-  inc_int(&b);
-  carbon_should_be(a, b);
-  return CARBON_OK;
-}
-
-int main(void) {
-  return CARBON_RUN_ALL();
-}
-#+end_src
-
-#+begin_src sh
-cc -I vendor/carbon example.c -o example
-#+end_src
-
-Once built, we can take a look at the available options:
-
-#+begin_example
-$ ./example -h
-usage: ./example [OPTION]
-Options:
-  -n, --no-output  disable JUnit XML test results output
-  -o, --output     output JUnit XML test results to specific file (default: `carbon_results.xml`)
-  -h, --help       display this help and exit
-  -v, --version    output version information and exit
-
-Report bugs to: <https://github.com/sparky-game/carbon/issues>
-SPARKY Carbon homepage: <https://github.com/sparky-game/carbon>
-#+end_example
+A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]].
 
 * Code coverage
 

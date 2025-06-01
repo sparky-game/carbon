@@ -8,6 +8,7 @@ test/carbon
 examples/*
 !examples/*.c
 !examples/*.cc
+!examples/README.org
 
 ai/build/
 ai/build/testgen
