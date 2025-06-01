@@ -13,29 +13,28 @@
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=blue" alt="License">
 <img src="https://img.shields.io/badge/C-99-blue" alt="C Standard">
 <img src="https://img.shields.io/badge/C++-11-blue" alt="C++ Standard">
-<img src="https://img.shields.io/github/repo-size/sparky-game/carbon?color=blue" alt="Size">
-<img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Release">
-<img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
-<img src="https://img.shields.io/badge/Hello-World!-blue">
-<img src="https://img.shields.io/badge/Привет-Мир!-blue">
-<br/>
+<img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
-<img src="https://api.scorecard.dev/projects/github.com/sparky-game/carbon/badge" alt="OpenSSF Scorecard">
-<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" alt="CI Pipeline">
-<img src="https://github.com/sparky-game/carbon/actions/workflows/security.yaml/badge.svg" alt="Security Analysis">
-<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">
 </p>
 #+end_html
 
 #+begin_quote
-~Carbon~ has been a dream so far, we haven't found a single bug to date and it's super easy to work with. ¯\_(ツ)_/¯
+~Carbon~ has been a dream so far, we haven't found a single bug and it's super easy to work with. (⸮)
 
-~ *ECUE* (Every /Carbon/ User Ever)
+- ¯\_(ツ)_/¯
 #+end_quote
 
-~Carbon~ is the ultimate *tiny* and *easy to use* high-level library for C/C++ written in *pure C (C99)*. @@html:<br>@@
+~Carbon~ is the ultimate *tiny* and *easy to use* high-level library for C/C++ written in *C99* ^ *C++11*. @@html:<br>@@
 It even can be used to test any piece of C/C++ code; thus, working as a full-fledged *testing suite*. @@html:<br>@@
 If you'd like to make a contribution, you can check the project's [[https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[https://github.com/sparky-game/carbon/blob/master/SECURITY.md][instructions]] and our [[https://github.com/sparky-game/carbon/blob/master/CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
+
+-----
+
+We use *CI/CD* to ensure the final product has the expected level of quality, if not more 🚀. This is the summary of the pipelines being run:
+
+| *Kind*                        | *Target*          | *Status*                                                                                                         |
+| CI (/Continuous Integration/) | /master/          | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" alt="CI Pipeline">@@ |
+| CD (/Continuous Deployment/)  | /master/docs/www/ | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">@@ |
 
 -----
 
