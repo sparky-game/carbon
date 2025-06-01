@@ -1,13 +1,13 @@
 #+AUTHOR: Wasym A. Alonso
 
 * Examples :toc:
-- [[#async-counter-async_counterc][Async counter (~async_counter.c~)]]
-- [[#dns-lookup-dns_lookupc][DNS lookup (~dns_lookup.c~)]]
+- [[#async-counter][Async counter]]
+- [[#dns-lookup][DNS lookup]]
 
-* Async counter (~async_counter.c~)
+* [[./async_counter.c][Async counter]]
 
-This examples showcases ...
+This example showcases ...
 
-* DNS lookup (~dns_lookup.c~)
+* [[./dns_lookup.c][DNS lookup]]
 
-This examples showcases ...
+This example showcases ...
