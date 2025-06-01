@@ -728,10 +728,6 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define carbon_log_warn(msg, ...) carbon_println(CARBON_COLOR_MAGENTA "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define carbon_log_error(msg, ...) carbon_eprintln(CARBON_COLOR_RED "[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 
-// TODO: these funcs should be deprecated
-#define CARBON_INFO_COLOR(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define CARBON_ERROR_ASS(msg, ...) carbon_eprintln(CARBON_COLOR_RED msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-
 #define carbon_log__var_to_spec(x)                                      \
   (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
@@ -757,6 +753,11 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define carbon_println(msg, ...) carbon_print(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
 #define carbon_eprintln(msg, ...) carbon_eprint(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
 
+#define carbon_cprint(color, msg, ...) carbon_print(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define carbon_ceprint(color, msg, ...) carbon_eprint(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define carbon_cprintln(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define carbon_ceprintln(color, msg, ...) carbon_eprintln(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+
 typedef struct {
   const char *spec;
   void *var;
@@ -769,11 +770,11 @@ CARBON_API void carbon_log_print(FILE *stream, const char *fmt, ...);
 **  ||       Should       ||
 **  $$====================$$
 */
-#define CARBON_COMPARE(expr, msg, ...)                          \
-  if ((expr)) {                                                 \
-    CARBON_ERROR_ASS("%s:%d :: FAILED -> " msg,                 \
-                     __FILE__, __LINE__, ##__VA_ARGS__);        \
-    return CARBON_KO;                                           \
+#define CARBON_COMPARE(expr, msg, ...)                                  \
+  if ((expr)) {                                                         \
+    carbon_ceprintln(CARBON_COLOR_RED, "%s:%d :: FAILED -> " msg,       \
+                     __FILE__, __LINE__, ##__VA_ARGS__);                \
+    return CARBON_KO;                                                   \
   }
 
 #define CARBON_COMPARE_OP(T, expected, actual, op, msg, ...)            \

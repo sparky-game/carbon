@@ -106,7 +106,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
     carbon_log_error("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
+  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   carbon_println("=======================================");
   // 4. Replace current binary with new one (execvp)
   if (-1 == execvp(bin_file, host_argv)) {
@@ -162,17 +162,17 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
 }
 
 u8 carbon_test_manager_run_s(CBN_Suite *s) {
-  CARBON_INFO_COLOR(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
+  carbon_cprintln(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
   carbon_println("=======================================");
   if (!s->tests || !s->n) {
     carbon_log_error("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
   }
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
-  if (carbon_test_manager__cmd_args.no_output) CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output disabled");
-  else CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
-  CARBON_INFO_COLOR(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
+  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
+  if (carbon_test_manager__cmd_args.no_output) carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output disabled");
+  else carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
+  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
+  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
   carbon_println("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
@@ -180,11 +180,11 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   for (usz i = 0; i < s->n; ++i) {
     u8 has_passed = s->tests[i].f();
     if (has_passed) {
-      CARBON_INFO_COLOR(CARBON_COLOR_GREEN, "(%.2zu/%.2zu) PASSED :: %s", i + 1, s->n, s->tests[i].name);
+      carbon_cprintln(CARBON_COLOR_GREEN, "(%.2zu/%.2zu) PASSED :: %s", i + 1, s->n, s->tests[i].name);
       ++passed;
     }
     else {
-      CARBON_ERROR_ASS("(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
+      carbon_ceprintln(CARBON_COLOR_RED, "(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
       ++failed;
     }
     if (!carbon_test_manager__cmd_args.no_output) {
