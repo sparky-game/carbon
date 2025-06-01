@@ -12,7 +12,7 @@
 **  ||    ***+++     ++--==+++++****++                                                 ||
 **  ||    ***+++     ***+++++   ****++               The ultimate high-level           ||
 **  ||    ***+++      #*++      ****++                  library for C/C++              ||
-**  ||    ***+++                ****++               written in C99 ^ C++11            ||
+**  ||    ***+++                ****++                written in C11/C++11             ||
 **  ||    **+----             :---=+++                                                 ||
 **  ||    *****=-----      ------=++++            Licensed under AGPL-3.0-only         ||
 **  ||      #*****=-----------=+++++                                                   ||
@@ -728,23 +728,43 @@ CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 #define carbon_log_warn(msg, ...) carbon_println(CARBON_COLOR_MAGENTA "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define carbon_log_error(msg, ...) carbon_eprintln(CARBON_COLOR_RED "[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 
-#define carbon_log__var_to_spec(x)                                      \
-  (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u8)           ? "%hhu"      \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i8)           ? "%hhd"      \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u16)          ? "%hu"       \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i16)          ? "%hd"       \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u32)          ? "%u"        \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i32)          ? "%d"        \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u64)          ? "%llu"      \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i64)          ? "%lld"      \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f32)          ? "%f"        \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f64)          ? "%lf"       \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char)         ? "%c"        \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char *)       ? "%s"        \
-   : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
-   : "<'Stuff' At %p>")
+// NOTE: This ternary operation at runtime has been deprecated in favor of `_Generic` generic selection of C11.
+// #define carbon_log__var_to_spec(x)                                      \
+//   (CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), usz)            ? "%zu"       \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), isz)          ? "%zd"       \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u8)           ? "%hhu"      \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i8)           ? "%hhd"      \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u16)          ? "%hu"       \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i16)          ? "%hd"       \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u32)          ? "%u"        \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i32)          ? "%d"        \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), u64)          ? "%llu"      \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), i64)          ? "%lld"      \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f32)          ? "%f"        \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), f64)          ? "%lf"       \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char)         ? "%c"        \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), char *)       ? "%s"        \
+//    : CARBON_TYPE_IS_SAME(CARBON_TYPE_OF(x), const char *) ? "%s"        \
+//    : "<'Stuff' At %p>")
+
+#define carbon_log__var_to_spec(x)              \
+  _Generic((x),                                 \
+           usz: "%zu",                          \
+           isz: "%zd",                          \
+           u8: "%hhu",                          \
+           i8: "%hhd",                          \
+           u16: "%hu",                          \
+           i16: "%hd",                          \
+           u32: "%u",                           \
+           i32: "%d",                           \
+           u64: "%llu",                         \
+           i64: "%lld",                         \
+           f32: "%f",                           \
+           f64: "%lf",                          \
+           char: "%c",                          \
+           char *: "%s",                        \
+           const char *: "%s",                  \
+           default: "<'Stuff' At %p>")
 
 #define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), (void *) &x}
 

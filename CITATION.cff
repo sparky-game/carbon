@@ -9,6 +9,6 @@ contact:
   - given-names: Wasym
     family-names: Atieh Alonso
     email: wasymatieh01@gmail.com
-abstract: "The ultimate high-level library for C/C++ written in C99 ^ C++11."
+abstract: "The ultimate high-level library for C/C++ written in C11/C++11."
 license: AGPL-3.0-only
 repository-code: "https://github.com/sparky-game/carbon"

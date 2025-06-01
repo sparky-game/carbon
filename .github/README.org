@@ -11,7 +11,7 @@
 #+begin_html
 <p align="center">
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=blue" alt="License">
-<img src="https://img.shields.io/badge/C-99-blue" alt="C Standard">
+<img src="https://img.shields.io/badge/C-11-blue" alt="C Standard">
 <img src="https://img.shields.io/badge/C++-11-blue" alt="C++ Standard">
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">

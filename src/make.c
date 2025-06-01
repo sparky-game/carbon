@@ -7,7 +7,7 @@
 #define TESTBIN "./test/carbon"
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
-#define C_STD   "-std=c99"
+#define C_STD   "-std=c11"
 #define CXX_STD "-std=c++11"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types -Wno-return-type-c-linkage"
 
