@@ -1,0 +1,13 @@
+Installation
+============
+
+```
+export PREFIX="~/.local/opt/carbon/"
+
+cc src/make.c -o make
+./make
+tar -xvf carbon-*.tgz -C $PREFIX
+```
+
+It's also possible to download a pre-compiled package for your CPU's architecture and OS from: <https://github.com/sparky-game/carbon/releases>.
+Then, you just must extract the contents of the package into your desired `PREFIX`.
