@@ -5019,10 +5019,18 @@ void RGFW_writeClipboard(const char* text, u32 textLen) {
 		return;
 	}
 
-	if (RGFW_root->src.clipboard)
-		RGFW_FREE(RGFW_root->src.clipboard);
+	if (RGFW_root->src.clipboard) {
+          RGFW_FREE(RGFW_root->src.clipboard);
+          RGFW_root->src.clipboard = 0;
+        }
 
 	RGFW_root->src.clipboard = (char *) RGFW_ALLOC(textLen);
+        if (!RGFW_root->src.clipboard) {
+          #ifdef RGFW_DEBUG
+          fprintf(stderr, "RGFW: Failed to allocate memory for clipboard\n");
+          #endif
+          return;
+        }
 	strncpy(RGFW_root->src.clipboard, text, textLen);
 	RGFW_root->src.clipboard_len = textLen;
 #ifdef RGFW_WAYLAND
