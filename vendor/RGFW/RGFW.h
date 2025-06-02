@@ -1832,7 +1832,7 @@ void RGFW_window_initBuffer(RGFW_window* win) {
 void RGFW_window_initBufferSize(RGFW_window* win, RGFW_area area) {
 	win->_flags |= RGFW_BUFFER_ALLOC;
 	#ifndef RGFW_WINDOWS
-	RGFW_window_initBufferPtr(win, (u8 *) RGFW_ALLOC(area.w * area.h * 4), area);
+	RGFW_window_initBufferPtr(win, (u8 *) RGFW_ALLOC((size_t) area.w * area.h * 4), area);
 	#else /* windows's bitmap allocs memory for us */
 	RGFW_window_initBufferPtr(win, NULL, area);
 	#endif
