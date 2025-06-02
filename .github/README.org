@@ -45,14 +45,6 @@ There you can ask questions, exchange ideas, share some of your work, make polls
 Do you want to support ~Carbon~? Consider becoming a [[https://github.com/sponsors/iWas-Coder][sponsor]], or making a donation via [[https://ko-fi.com/iwas_coder][Ko-fi]] or [[https://buymeacoffee.com/iwas.coder][Buy Me a Coffee]].
 Many thanks to *all of you* who are reading this; I hope it'll be useful and it'll make you *enjoy programming* a little bit more.
 
-#+begin_html
-<p align="center">
-<img src="../assets/run-tests-demo.gif" alt="Demo Carbon running tests" width=600>
-<br/>
-<i>The above example was generated with <a href="https://github.com/charmbracelet/vhs">VHS</a> (<a href="../assets/run-tests-demo.tape">source code</a>).</i>
-</p>
-#+end_html
-
 #+begin_quote
 [!WARNING]
 ~Carbon~ is currently in an *alpha* quality stage, and is not production-ready yet.
