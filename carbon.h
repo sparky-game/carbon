@@ -78,7 +78,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 // Windows
-#if defined(_WIN32)
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>
 #include <windows.h>
