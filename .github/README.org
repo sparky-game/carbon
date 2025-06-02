@@ -110,7 +110,7 @@ Once built, we can take a look at the available subcommands and options by issui
 
 ** Examples
 
-A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]].
+A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all; for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
 
 * Code coverage
 
