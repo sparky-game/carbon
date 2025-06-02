@@ -2686,7 +2686,7 @@ This is where OS specific stuff starts
 			}
 
 			/* check gamepad events */
-			u8 i;
+			u16 i;
 
 			for (i = 0; i < RGFW_gamepadCount; i++) {
 				struct js_event e;
@@ -5519,7 +5519,7 @@ void RGFW_window_close(RGFW_window* win) {
 			close(RGFW_eventWait_forceStop[1]);
 		}
 
-		u8 i;
+		u16 i;
 		for (i = 0; i < RGFW_gamepadCount; i++) {
 			if(RGFW_gamepads[i])
 				close(RGFW_gamepads[i]);
@@ -5592,7 +5592,7 @@ void RGFW_stopCheckEvents(void) {
 void RGFW_window_eventWait(RGFW_window* win, u32 waitMS) {
 	if (waitMS == 0) return;
 
-	u8 i;
+	u16 i;
 	if (RGFW_eventWait_forceStop[0] == 0 || RGFW_eventWait_forceStop[1] == 0) {
 		if (pipe(RGFW_eventWait_forceStop) != -1) {
 			fcntl(RGFW_eventWait_forceStop[0], F_GETFL, 0);
