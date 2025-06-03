@@ -16,10 +16,7 @@ char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size
   static const u8 modset[] = {0, 2, 1};
   *out_size = 4 * ((in_size + 2) / 3) + 1;
   char *out = (char *) CARBON_MALLOC(*out_size);
-  if (!out) {
-    *out_size = 0;
-    return 0;
-  }
+  CARBON_ASSERT(out && "failed to allocate memory");
   for (usz i = 0, j = 0; i < in_size;) {
     u32 A = (i < in_size) ? (u8) in[i++] : 0;
     u32 B = (i < in_size) ? (u8) in[i++] : 0;
@@ -55,6 +52,7 @@ u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size) {
   }
   ++out_sz;
   u8 *out = (u8 *) CARBON_MALLOC(out_sz);
+  CARBON_ASSERT(out && "failed to allocate memory");
   for (usz i = 0; i < out_sz / 3; ++i) {
     u8 A = codeset[in[4*i + 0]];
     u8 B = codeset[in[4*i + 1]];
