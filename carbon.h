@@ -1882,6 +1882,22 @@ CARBON_API usz carbon_skap_count(const CBN_SKAP_Handle *handle);
 CARBON_API usz carbon_skap_count_of(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType type);
 
 /*
+**  $$================================$$
+**  ||       Namespaced Aliases       ||
+**  $$================================$$
+*/
+#ifdef __cplusplus
+namespace cbn {
+  using Vec2 = CBN_Vec2;
+  using Vec3 = CBN_Vec3;
+  using Rect = CBN_Rect;
+  template <typename T>
+  using List = CBN_List_t<T>;
+  using StrView = CBN_StrView;
+}
+#endif
+
+/*
 **  $$=============================$$
 **  ||       Implementations       ||
 **  $$=============================$$
