@@ -445,6 +445,14 @@ typedef union CBN_Vec2 {
 } CBN_Vec2;
 
 /**
+ * @brief Defines an inline 3D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ * @param z The value to assign to the Z field.
+ */
+#define CARBON_VEC3(x, y, z) (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
+
+/**
  * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
  */
 #define CARBON_VEC3_ZERO CARBON_VEC3(0, 0, 0)
@@ -483,14 +491,6 @@ typedef union CBN_Vec2 {
  * @brief Defines an inline 3D vector whose 3 elements are equal to one.
  */
 #define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
-
-/**
- * @brief Defines an inline 3D vector.
- * @param x The value to assign to the X field.
- * @param y The value to assign to the Y field.
- * @param z The value to assign to the Z field.
- */
-#define CARBON_VEC3(x, y, z) (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
 
 /**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
