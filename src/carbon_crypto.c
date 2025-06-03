@@ -5,6 +5,16 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+#define CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS 4
+#define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p) (0 == ((uptr) (p) & 7))
+#define CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(x, y) ((x) << (y) ^ ((x) >> (64 - (y))))
+
+static const u8 carbon_crypto_keccak256__k[] = {
+  1, 26, 94, 112, 31, 33, 121, 85, 14, 12, 53, 38, 63, 79, 93, 83, 82, 72, 22, 102, 121, 88, 33, 116,
+  1,  6,  9,  22, 14, 20,   2, 12, 13, 19, 23, 15,  4, 24, 21,  8, 16,  5,  3,  18,  17, 11,  7,  10,
+  1, 62, 28,  27, 36, 44,   6, 55, 20,  3, 10, 43, 25, 39, 41, 45, 15, 21,  8,  18,   2, 61, 56,  14
+};
+
 char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size) {
   static const u8 charset[] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -120,4 +130,127 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
     out = (out >> 8) ^ codeset[in[i] ^ (out & 0xff)];
   }
   return ~out;
+}
+
+CARBON_INLINE u64 carbon_crypto_keccak256__get_round_const(u8 round) {
+  u64 result = 0;
+  u8 k_round = carbon_crypto_keccak256__k[round];
+  if (k_round & (1 << 6)) { result |= ((u64) 1 << 63); }
+  if (k_round & (1 << 5)) { result |= ((u64) 1 << 31); }
+  if (k_round & (1 << 4)) { result |= ((u64) 1 << 15); }
+  if (k_round & (1 << 3)) { result |= ((u64) 1 << 7);  }
+  if (k_round & (1 << 2)) { result |= ((u64) 1 << 3);  }
+  if (k_round & (1 << 1)) { result |= ((u64) 1 << 1);  }
+  if (k_round & (1 << 0)) { result |= ((u64) 1 << 0);  }
+  return result;
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__phase_theta(u64 *A) {
+  u64 C[5], D[5];
+  for (u8 i = 0; i < 5; ++i) {
+    C[i] = A[i];
+    for (u8 j = 5; j < 25; j += 5) C[i] ^= A[i + j];
+  }
+  for (u8 i = 0; i < 5; ++i) {
+    D[i] = CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(C[(i + 1) % 5], 1) ^ C[(i + 4) % 5];
+  }
+  for (u8 i = 0; i < 5; ++i) {
+    for (u8 j = 0; j < 25; j += 5) {
+      A[i + j] ^= D[i];
+    }
+  }
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__phase_pi(u64 *A) {
+  u64 A1 = A[1];
+  for (u8 i = 1; i < 24; ++i) {
+    A[carbon_crypto_keccak256__k[24 + i - 1]] = A[carbon_crypto_keccak256__k[24 + i]];
+  }
+  A[10] = A1;
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__phase_chi(u64 *A) {
+  for (u8 i = 0; i < 25; i += 5) {
+    u64 A0 = A[i + 0], A1 = A[i + 1];
+    A[i + 0] ^= ~A1 & A[i + 2];
+    A[i + 1] ^= ~A[i + 2] & A[i + 3];
+    A[i + 2] ^= ~A[3 + i] & A[i + 4];
+    A[i + 3] ^= ~A[i + 4] & A0;
+    A[i + 4] ^= ~A0 & A1;
+  }
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__permutation(u64 *hash) {
+  for (u8 r = 0; r < 24; ++r) {
+    carbon_crypto_keccak256__phase_theta(hash);
+    for (u8 i = 1; i < 25; ++i) {
+      hash[i] = CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(hash[i], carbon_crypto_keccak256__k[48 + i - 1]);
+    }
+    carbon_crypto_keccak256__phase_pi(hash);
+    carbon_crypto_keccak256__phase_chi(hash);
+    *hash ^= carbon_crypto_keccak256__get_round_const(r);
+  }
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__process_blk(u64 *hash, const u64 *blk) {
+  for (u8 i = 0; i < 17; ++i) hash[i] ^= blk[i];
+  carbon_crypto_keccak256__permutation(hash);
+}
+
+CARBON_INLINE void carbon_crypto_keccak256__update(CBN_Keccak256 *ctx, const u8 *msg, u16 msg_size) {
+  u16 idx = ctx->rest;
+  ctx->rest = (ctx->rest + msg_size) % 136;
+  if (idx) {
+    u16 left = 136 - idx;
+    carbon_memory_copy((u8 *) ctx->msg + idx, msg, CARBON_MIN(msg_size, left));
+    if (msg_size < left) return;
+    carbon_crypto_keccak256__process_blk(ctx->hash, ctx->msg);
+    msg += left;
+    msg_size -= left;
+  }
+  while (msg_size >= 136) {
+    u64 *aligned_msg_blk;
+    if (CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(msg)) aligned_msg_blk = (u64 *) msg;
+    else {
+      carbon_memory_copy(ctx->msg, msg, 136);
+      aligned_msg_blk = ctx->msg;
+    }
+    carbon_crypto_keccak256__process_blk(ctx->hash, aligned_msg_blk);
+    msg += 136;
+    msg_size -= 136;
+  }
+  if (msg_size) carbon_memory_copy(ctx->msg, msg, msg_size);
+}
+
+void carbon_crypto_keccak256(const u8 *in, const usz in_size, u8 *out) {
+  if (!out) {
+    carbon_log_warn("`out` is not a valid pointer, skipping computation");
+    return;
+  }
+  CBN_Keccak256 ctx;
+  memset(&ctx, 0, sizeof(ctx));
+  carbon_crypto_keccak256__update(&ctx, in, in_size);
+  memset((u8 *) ctx.msg + ctx.rest, 0, 136 - ctx.rest);
+  ((u8 *) ctx.msg)[ctx.rest] |= 0x01;
+  ((u8 *) ctx.msg)[136 - 1]  |= 0x80;
+  carbon_crypto_keccak256__process_blk(ctx.hash, ctx.msg);
+  carbon_memory_copy(out, ctx.hash, 32);
+}
+
+void carbon_crypto_keccak256_to_hex_cstr(const u8 *hash, char *out_cstr) {
+  for (usz i = 0; i < 32; ++i) {
+    snprintf(&out_cstr[i*2], 3, "%02x", hash[i]);
+  }
+}
+
+char *carbon_crypto_keccak256_as_hex_cstr(const u8 *in, const usz in_size) {
+  static usz i = 0;
+  static char xs[CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS][32*2 + 1];
+  char *x = xs[i];
+  u8 hash[32] = {0};
+  carbon_crypto_keccak256(in, in_size, hash);
+  carbon_crypto_keccak256_to_hex_cstr(hash, x);
+  ++i;
+  if (i >= CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS) i = 0;
+  return x;
 }
