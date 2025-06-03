@@ -7,6 +7,7 @@
 
 #define CARBON_SKAP__HEX_SPEC "%#012x"
 
+// @type_dependant
 static const char * const carbon_skap__allowed_types[] = {
   "images"
 };
@@ -17,6 +18,7 @@ static CBN_List carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_COUNT];
 
+// @type_dependant
 CARBON_INLINE CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
   if (!carbon_string_cmp(s, "images")) return CARBON_SKAP_ASSET_TYPE_IMAGE;
   else {
@@ -80,14 +82,13 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
         }
       }
       if (!type_is_valid) {
-        if (!carbon_string_cmp(ag.type, "image")) {
+        if (!carbon_string_cmp(ag.type, "image") ||
+            !carbon_string_cmp(ag.type, "img")   ||
+            !carbon_string_cmp(ag.type, "imgs")) {
           carbon_log_error("on line %zu, syntax error; type `%s` not recognized, maybe you ment `images`?", line_n, ag.type);
-          return false;
         }
-        else {
-          carbon_log_error("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
-          return false;
-        }
+        else carbon_log_error("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
+        return false;
       }
       // Check whether path is valid
       if (ag.path[carbon_string_len(ag.path) - 1] != '/') {
@@ -143,7 +144,8 @@ CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
   carbon_list_destroy(asset_groups);
 }
 
-CARBON_INLINE void carbon_skap__create_global_lists() {
+// @type_dependant
+CARBON_INLINE void carbon_skap__create_global_lists(void) {
   carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE] = carbon_list_create(sizeof(CBN_Image));
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_skap__asset_idxs[i] = carbon_list_create(sizeof(CBN_SKAP_AssetIdx));
@@ -151,7 +153,8 @@ CARBON_INLINE void carbon_skap__create_global_lists() {
   }
 }
 
-CARBON_INLINE void carbon_skap__destroy_global_lists() {
+// @type_dependant
+CARBON_INLINE void carbon_skap__destroy_global_lists(void) {
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     carbon_fs_destroy_img(&it.var);
   }
@@ -183,6 +186,7 @@ CARBON_INLINE void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_g
   }
 }
 
+// @type_dependant
 CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
@@ -213,6 +217,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, CBN_List *asset_groups) {
   }
 }
 
+// @type_dependant
 CARBON_INLINE void carbon_skap__append_blobs(FILE *fd) {
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     CBN_Image *asset = &carbon_list_at_raw(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
@@ -352,6 +357,7 @@ void carbon_skap_print(const CBN_SKAP_Handle *handle) {
   }
 }
 
+// @type_dependant
 u8 carbon_skap_lookup(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
   if (!handle || !asset_name || !out_blob) {
     carbon_log_error("`handle`, `asset_name` and `out_blob` must be valid pointers");
