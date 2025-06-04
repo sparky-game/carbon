@@ -988,6 +988,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
   usz stride;
   usz size;
 #ifdef __cplusplus
+  using value_type = T;
   using iterator = T *;
   using const_iterator = const T *;
   /**
@@ -1003,7 +1004,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @brief carbon_list_push
    * @param value The value to append.
    */
-  void Push(const T &value);
+  void Push(const value_type &value);
   /**
    * @brief carbon_list_pop
    * @return The value of the element popped out.
@@ -1014,7 +1015,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @param value The value of the element to check.
    * @return The index of the provided element, or -1 if not present.
    */
-  isz Find(const T &value) const;
+  isz Find(const value_type &value) const;
   /**
    * @brief carbon_list_remove
    * @param idx The index of the element to remove.
@@ -1121,7 +1122,7 @@ void CBN_List_t<T>::Free(void) {
  * @brief CBN_List_t<T>.Push
  */
 template <typename T>
-void CBN_List_t<T>::Push(const T &value) {
+void CBN_List_t<T>::Push(const value_type &value) {
   carbon_list_push((CBN_List *) this, (void *) &value);
 }
 /**
@@ -1137,7 +1138,7 @@ T CBN_List_t<T>::Pop(void) {
  * @brief CBN_List_t<T>.Find
  */
 template <typename T>
-isz CBN_List_t<T>::Find(const T &value) const {
+isz CBN_List_t<T>::Find(const value_type &value) const {
   return carbon_list_find(this, value);
 }
 /**
