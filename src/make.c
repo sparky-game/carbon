@@ -173,7 +173,7 @@ static void build(void) {
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
   carbon_println("  LD      libcarbon.so");
   CBN_StrBuilder cmd = {0};
-  carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -pipe -Os " WORKDIR "/*.o -shared " GUI_LIBS " -o " WORKDIR "/libcarbon.so");
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -pipe -Os " WORKDIR "/*.o -shared " GUI_LIBS " -o " WORKDIR "/libcarbon.so");
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r(WORKDIR "/*.o");
