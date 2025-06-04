@@ -20,6 +20,7 @@ void carbon_math_srand(u64 seed) {
 }
 
 i32 carbon_math_rand(void) {
+  if (!carbon_math__rand_seed) carbon_math_srand(carbon_time_get());
   carbon_math__rand_seed = CARBON_PCG_RAND_MAGIC * carbon_math__rand_seed + 1;
   return carbon_math__rand_seed >> 33;
 }
