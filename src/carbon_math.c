@@ -5,15 +5,15 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-#define CARBON_MATH_MT19937_64_RAND_NN 312
-#define CARBON_MATH_MT19937_64_RAND_MM 156
-#define CARBON_MATH_MT19937_64_RAND_MATRIX_A 0xB5026F5AA96619E9ULL
-#define CARBON_MATH_MT19937_64_RAND_UM 0xFFFFFFFF80000000ULL
-#define CARBON_MATH_MT19937_64_RAND_LM 0x7FFFFFFFULL
+#define CARBON_MATH__MT19937_64_RAND_NN 312
+#define CARBON_MATH__MT19937_64_RAND_MM 156
+#define CARBON_MATH__MT19937_64_RAND_MATRIX_A 0xB5026F5AA96619E9ULL
+#define CARBON_MATH__MT19937_64_RAND_UM 0xFFFFFFFF80000000ULL
+#define CARBON_MATH__MT19937_64_RAND_LM 0x7FFFFFFFULL
 
 static u64 carbon_math__rand_seed;
-static u64 carbon_math__mt19937_64_rand_state_vec[CARBON_MATH_MT19937_64_RAND_NN];
-static u64 carbon_math__mt19937_64_rand_state_idx = CARBON_MATH_MT19937_64_RAND_NN + 1;
+static u64 carbon_math__mt19937_64_rand_state_vec[CARBON_MATH__MT19937_64_RAND_NN];
+static u64 carbon_math__mt19937_64_rand_state_idx = CARBON_MATH__MT19937_64_RAND_NN + 1;
 
 void carbon_math_srand(u64 seed) {
   carbon_math__rand_seed = seed - 1;
@@ -37,28 +37,28 @@ void carbon_math_mt19937_64_srand(u64 seed) {
   u64 *sv = carbon_math__mt19937_64_rand_state_vec;
   u64 *si = &carbon_math__mt19937_64_rand_state_idx;
   sv[0] = seed;
-  for (*si = 1; *si < CARBON_MATH_MT19937_64_RAND_NN; ++(*si)) {
+  for (*si = 1; *si < CARBON_MATH__MT19937_64_RAND_NN; ++(*si)) {
     sv[*si] = (6364136223846793005ULL * (sv[*si - 1] ^ (sv[*si - 1] >> 62)) + *si);
   }
 }
 
 u64 carbon_math_mt19937_64_rand(void) {
-  static u64 mag[] = {0ULL, CARBON_MATH_MT19937_64_RAND_MATRIX_A};
+  static u64 mag[] = {0ULL, CARBON_MATH__MT19937_64_RAND_MATRIX_A};
   i32 i; u64 x;
   u64 *sv = carbon_math__mt19937_64_rand_state_vec;
   u64 *si = &carbon_math__mt19937_64_rand_state_idx;
-  if (*si >= CARBON_MATH_MT19937_64_RAND_NN) {
-    if (*si == CARBON_MATH_MT19937_64_RAND_NN + 1) carbon_math_mt19937_64_srand(5489ULL);
-    for (i = 0; i < CARBON_MATH_MT19937_64_RAND_NN - CARBON_MATH_MT19937_64_RAND_MM; ++i) {
-      x = (sv[i] & CARBON_MATH_MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_MATH_MT19937_64_RAND_LM);
-      sv[i] = sv[i + CARBON_MATH_MT19937_64_RAND_MM] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+  if (*si >= CARBON_MATH__MT19937_64_RAND_NN) {
+    if (*si == CARBON_MATH__MT19937_64_RAND_NN + 1) carbon_math_mt19937_64_srand(5489ULL);
+    for (i = 0; i < CARBON_MATH__MT19937_64_RAND_NN - CARBON_MATH__MT19937_64_RAND_MM; ++i) {
+      x = (sv[i] & CARBON_MATH__MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_MATH__MT19937_64_RAND_LM);
+      sv[i] = sv[i + CARBON_MATH__MT19937_64_RAND_MM] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
     }
-    for (; i < CARBON_MATH_MT19937_64_RAND_NN - 1; ++i) {
-      x = (sv[i] & CARBON_MATH_MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_MATH_MT19937_64_RAND_LM);
-      sv[i] = sv[i + (CARBON_MATH_MT19937_64_RAND_MM - CARBON_MATH_MT19937_64_RAND_NN)] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+    for (; i < CARBON_MATH__MT19937_64_RAND_NN - 1; ++i) {
+      x = (sv[i] & CARBON_MATH__MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_MATH__MT19937_64_RAND_LM);
+      sv[i] = sv[i + (CARBON_MATH__MT19937_64_RAND_MM - CARBON_MATH__MT19937_64_RAND_NN)] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
     }
-    x = (sv[CARBON_MATH_MT19937_64_RAND_NN - 1] & CARBON_MATH_MT19937_64_RAND_UM) | (sv[0] & CARBON_MATH_MT19937_64_RAND_LM);
-    sv[CARBON_MATH_MT19937_64_RAND_NN - 1] = sv[CARBON_MATH_MT19937_64_RAND_MM - 1] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+    x = (sv[CARBON_MATH__MT19937_64_RAND_NN - 1] & CARBON_MATH__MT19937_64_RAND_UM) | (sv[0] & CARBON_MATH__MT19937_64_RAND_LM);
+    sv[CARBON_MATH__MT19937_64_RAND_NN - 1] = sv[CARBON_MATH__MT19937_64_RAND_MM - 1] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
     *si = 0;
   }
   x = sv[(*si)++];
