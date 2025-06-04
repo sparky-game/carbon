@@ -525,6 +525,14 @@ typedef union CBN_Vec3 {
 #define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
 
 /**
+ * @brief Defines an inline rectangle whose width and height are equal (square).
+ * @param x The value to assign to the X coordinate of the position.
+ * @param y The value to assign to the Y coordinate of the position.
+ * @param sz The value to assign to both the width and the height of the size.
+ */
+#define CARBON_RECT_SQUARE(x, y, sz) CARBON_RECT(x, y, sz, sz)
+
+/**
  * @brief Represents the position and size of a rectangle with four 32-bit floating-point (f32) values.
  */
 typedef struct CBN_Rect {
