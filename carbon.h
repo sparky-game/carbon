@@ -1642,6 +1642,13 @@ CARBON_API u8 carbon_fs_create_directories(const char *path);
 CARBON_API char *carbon_fs_get_bin_directory(void);
 CARBON_API CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
+
+/**
+ * @brief Reads all the text data from the given file into a StrBuilder object.
+ * @param sb The StrBuilder object where the read data will be stored.
+ * @param file The filename to read the data from.
+ * @return A boolean value representing the success of the operation.
+ */
 CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 
 /**
