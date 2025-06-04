@@ -1235,30 +1235,12 @@ CARBON_API u8 carbon_string_has_char(const char *s, char c);
 CARBON_API usz carbon_string_lev_dist(const char *s1, const char *s2);
 
 /*
-**  $$========================$$
-**  ||       StrBuilder       ||
-**  $$========================$$
-*/
-
-/**
- * @brief Represents a mutable string of characters.
- */
-typedef struct {
-  char *items;
-  usz size;
-  usz capacity;
-} CBN_StrBuilder;
-
-CARBON_API void carbon_strbuilder_add_buf(CBN_StrBuilder *sb, const char *data, usz size);
-CARBON_API void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s);
-CARBON_API void carbon_strbuilder_add_null(CBN_StrBuilder *sb);
-CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
-
-/*
 **  $$=====================$$
 **  ||       StrView       ||
 **  $$=====================$$
 */
+
+typedef struct CBN_StrBuilder CBN_StrBuilder;  // Forward declaration
 
 /**
  * @brief Represents a view into a string of characters, whilst not owning the actual memory.
@@ -1414,6 +1396,84 @@ CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
 
 CARBON_API u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
 CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
+
+/*
+**  $$========================$$
+**  ||       StrBuilder       ||
+**  $$========================$$
+*/
+
+/**
+ * @brief Represents a mutable string of characters.
+ */
+typedef struct CBN_StrBuilder {
+  char *items;
+  usz size;
+  usz capacity;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_fs_read_entire_file
+   *
+   * It may throw a `std::runtime_error` if there was a problem reading the file.
+   *
+   * @param file The filename to read the data from.
+   * @return The StrBuilder object where the read data will be stored.
+   */
+  static CBN_StrBuilder make(const char *file);
+  /**
+   * @brief carbon_strbuilder_free
+   */
+  void Free(void);
+  /**
+   * @brief carbon_strbuilder_add_null
+   */
+  void Push(void);
+  /**
+   * @brief carbon_strbuilder_add_cstr
+   * @param s The string to append.
+   */
+  void Push(const char *s);
+  /**
+   * @brief carbon_strbuilder_add_strview
+   * @param sv The StrView to append.
+   */
+  void Push(const CBN_StrView &sv);
+  /**
+   * @brief StrView::make(CBN_StrBuilder const&)
+   * @return The StrView representing the current StrBuilder object.
+   */
+  CBN_StrView ToString(void) const;
+  // Overloaded Operators
+  CBN_StrBuilder &operator<<(const char *s);
+  CBN_StrBuilder &operator<<(const CBN_StrView &sv);
+#endif
+} CBN_StrBuilder;
+
+/**
+ * @brief Appends a copy of the StrView to the end of the StrBuilder's buffer.
+ * @param sb The StrBuilder object.
+ * @param sv The StrView to append.
+ */
+CARBON_API void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv);
+
+/**
+ * @brief Appends a copy of the string to the end of the StrBuilder's buffer.
+ * @param sb The StrBuilder object.
+ * @param s The string to append.
+ */
+CARBON_API void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s);
+
+/**
+ * @brief Appends an empty string (null terminator) to the end of the StrBuilder's buffer.
+ * @param sb The StrBuilder object.
+ */
+CARBON_API void carbon_strbuilder_add_null(CBN_StrBuilder *sb);
+
+/**
+ * @brief Frees (deallocates) and cleans up the CBN_StrBuilder object.
+ * @param sb The StrBuilder object.
+ */
+CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
 
 /*
 **  $$=====================$$
@@ -1963,6 +2023,7 @@ namespace cbn {
   using Rect = CBN_Rect;
   template <typename T>
   using List = CBN_List_t<T>;
+  using StrBuilder = CBN_StrBuilder;
   using StrView = CBN_StrView;
 }
 #endif
@@ -1987,6 +2048,7 @@ namespace cbn {
 #include "src/carbon_hashmap.c"
 #include "src/carbon_string.c"
 #include "src/carbon_strbuilder.c"
+#include "src/carbon_strbuilder.cc"
 #include "src/carbon_strview.c"
 #include "src/carbon_strview.cc"
 #include "src/carbon_strlist.c"

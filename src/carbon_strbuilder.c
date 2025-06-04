@@ -5,29 +5,23 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
-void carbon_strbuilder_add_buf(CBN_StrBuilder *sb, const char *data, usz size) {
-  if (sb->size + size > sb->capacity) {
+void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv) {
+  if (sb->size + sv.size > sb->capacity) {
     if (!sb->capacity) sb->capacity = 256;
-    while (sb->size + size > sb->capacity) sb->capacity *= 2;
-    char *prev_p = sb->items;
-    usz sz = sb->capacity * sizeof(char);
-    sb->items = (char *) CARBON_REALLOC(sb->items, sz);
-    if (!sb->items && sb->size > 0) {
-      carbon_log_error("failed to reallocate memory (%zuB)", sz);
-      CARBON_FREE(prev_p);
-      return;
-    }
+    while (sb->size + sv.size > sb->capacity) sb->capacity *= 2;
+    sb->items = (char *) CARBON_REALLOC(sb->items, sb->capacity * sizeof(char));
+    CARBON_ASSERT(sb->items && "failed to reallocate memory");
   }
-  carbon_memory_copy(sb->items + sb->size, data, size * sizeof(char));
-  sb->size += size;
+  carbon_memory_copy(sb->items + sb->size, sv.data, sv.size * sizeof(char));
+  sb->size += sv.size;
 }
 
 void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s) {
-  carbon_strbuilder_add_buf(sb, s, carbon_string_len(s));
+  carbon_strbuilder_add_strview(sb, carbon_strview_from_cstr(s));
 }
 
 void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
-  carbon_strbuilder_add_buf(sb, "", 1);
+  carbon_strbuilder_add_strview(sb, carbon_strview_from_buf("", 1));
 }
 
 void carbon_strbuilder_free(CBN_StrBuilder *sb) {
