@@ -386,6 +386,13 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_VEC2_1(x) CARBON_VEC2(x, x)
 
 /**
+ * @brief Defines an inline 2D vector (from polar coordinate system).
+ * @param r The radial coordinate.
+ * @param phi The angular coordinate.
+ */
+#define CARBON_VEC2_P(r, phi) CARBON_VEC2(r * cos(phi), r * sin(phi))
+
+/**
  * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
  */
 #define CARBON_VEC2_ZERO CARBON_VEC2(0, 0)
