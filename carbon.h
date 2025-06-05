@@ -454,6 +454,28 @@ typedef union CBN_Vec2 {
   inline constexpr CBN_Vec2 yx(void) const { return CARBON_VEC2_yx(*this); }
   inline constexpr CBN_Vec2 yy(void) const { return CARBON_VEC2_yy(*this); }
   /**
+   * @brief carbon_math_vec2_len
+   * @return The 2D vector's length.
+   */
+  f32 Length(void) const;
+  /**
+   * @brief carbon_math_vec2_len_squared
+   * @return The 2D vector's length squared.
+   */
+  f32 LengthSquared(void) const;
+  /**
+   * @brief carbon_math_vec2_norm
+   * @return The normalized 2D vector.
+   */
+  CBN_Vec2 Normalize(void) const;
+  /**
+   * @brief carbon_math_vec2_lerp
+   * @param v The other 2D vector.
+   * @param t A value [0..1] indicating the weight of `v`.
+   * @return The interpolated 2D vector.
+   */
+  CBN_Vec2 Lerp(const CBN_Vec2 &v, f32 t) const;
+  /**
    * @brief carbon_math_vec2_rotate
    * @param angle The rotation to apply (in degrees).
    * @return The rotated 2D vector.
@@ -942,6 +964,15 @@ CARBON_API f32 carbon_math_vec2_len(CBN_Vec2 v);
  * @return The normalized 2D vector.
  */
 CARBON_API CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
+
+/**
+ * @brief Performs a linear interpolation between two 2D vectors based on the given weighting.
+ * @param u The first 2D vector.
+ * @param v The second 2D vector.
+ * @param t A value [0..1] indicating the weight of `v`.
+ * @return The interpolated 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t);
 
 /**
  * @brief Scales the 2D vector by the specified scalar value.

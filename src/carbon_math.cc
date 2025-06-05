@@ -7,6 +7,22 @@
 
 #ifdef __cplusplus
 
+f32 CBN_Vec2::Length(void) const {
+  return carbon_math_vec2_len(*this);
+}
+
+f32 CBN_Vec2::LengthSquared(void) const {
+  return carbon_math_vec2_len_squared(*this);
+}
+
+CBN_Vec2 CBN_Vec2::Normalize(void) const {
+  return carbon_math_vec2_norm(*this);
+}
+
+CBN_Vec2 CBN_Vec2::Lerp(const CBN_Vec2 &v, f32 t) const {
+  return carbon_math_vec2_lerp(*this, v, t);
+}
+
 CBN_Vec2 CBN_Vec2::Rotate(f32 angle) const {
   return carbon_math_vec2_rotate(*this, angle);
 }

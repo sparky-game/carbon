@@ -414,6 +414,10 @@ CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v) {
   return carbon_math_vec2_scale(v, 1/len);
 }
 
+CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t) {
+  return CARBON_VEC2(CARBON_LERP(u.x, v.x, t), CARBON_LERP(u.y, v.y, t));
+}
+
 CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
   return CARBON_VEC2(v.x * s, v.y * s);
 }
