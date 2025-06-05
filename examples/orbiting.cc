@@ -14,10 +14,10 @@ int main(void) {
   auto position = CARBON_VEC2(canvas.width - radius - 20, canvas.height/2);
   while (!carbon_win_shouldclose()) {
     const auto dt = carbon_win_get_deltatime();
-    carbon_drawcanvas_fill(canvas, 0x4a81b5ff);
+    carbon_drawcanvas_fill(canvas, 0x181818ff);
     rotation += 45 * dt;
     position += CARBON_VEC2_UP.Rotate(rotation) * 180 * dt;
-    carbon_drawcanvas_circle(canvas, position, radius, 0xb57e4aff);
+    carbon_drawcanvas_circle(canvas, position, radius, 0xffdd33ff);
     carbon_win_update(canvas);
   }
   carbon_win_close();
