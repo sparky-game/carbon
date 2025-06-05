@@ -422,29 +422,7 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
  */
 #define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
 
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, x} 2D vector components.
- * @param v The 2D vector to take the components from.
- */
-#define CARBON_VEC2_xx(v) CARBON_VEC2((v).x, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, y} 2D vector components.
- * @param v The 2D vector to take the components from.
- */
-#define CARBON_VEC2_xy(v) CARBON_VEC2((v).x, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, x} 2D vector components.
- * @param v The 2D vector to take the components from.
- */
-#define CARBON_VEC2_yx(v) CARBON_VEC2((v).y, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, y} 2D vector components.
- * @param v The 2D vector to take the components from.
- */
-#define CARBON_VEC2_yy(v) CARBON_VEC2((v).y, (v).y)
+typedef union CBN_Vec3 CBN_Vec3;  // Forward declaration
 
 /**
  * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
@@ -456,10 +434,6 @@ typedef union CBN_Vec2 {
     union { f32 y, g, t, v; };
   };
 #ifdef __cplusplus
-  inline constexpr CBN_Vec2 xx(void) const { return CARBON_VEC2_xx(*this); }
-  inline constexpr CBN_Vec2 xy(void) const { return CARBON_VEC2_xy(*this); }
-  inline constexpr CBN_Vec2 yx(void) const { return CARBON_VEC2_yx(*this); }
-  inline constexpr CBN_Vec2 yy(void) const { return CARBON_VEC2_yy(*this); }
   /**
    * @brief carbon_math_vec2_floor
    * @return The rounded down 2D vector.
@@ -509,6 +483,43 @@ typedef union CBN_Vec2 {
   void operator*=(const f32 s);
   CBN_Vec2 operator/(const f32 s) const;
   void operator/=(const f32 s);
+  // Swizzling Operations
+  constexpr auto xx(void)  const;
+  constexpr auto xy(void)  const;
+  constexpr auto xz(void)  const;
+  constexpr auto yx(void)  const;
+  constexpr auto yy(void)  const;
+  constexpr auto yz(void)  const;
+  constexpr auto zx(void)  const;
+  constexpr auto zy(void)  const;
+  constexpr auto zz(void)  const;
+  constexpr auto xxx(void) const;
+  constexpr auto xxy(void) const;
+  constexpr auto xxz(void) const;
+  constexpr auto xyx(void) const;
+  constexpr auto xyy(void) const;
+  constexpr auto xyz(void) const;
+  constexpr auto xzx(void) const;
+  constexpr auto xzy(void) const;
+  constexpr auto xzz(void) const;
+  constexpr auto yxx(void) const;
+  constexpr auto yxy(void) const;
+  constexpr auto yxz(void) const;
+  constexpr auto yyx(void) const;
+  constexpr auto yyy(void) const;
+  constexpr auto yyz(void) const;
+  constexpr auto yzx(void) const;
+  constexpr auto yzy(void) const;
+  constexpr auto yzz(void) const;
+  constexpr auto zxx(void) const;
+  constexpr auto zxy(void) const;
+  constexpr auto zxz(void) const;
+  constexpr auto zyx(void) const;
+  constexpr auto zyy(void) const;
+  constexpr auto zyz(void) const;
+  constexpr auto zzx(void) const;
+  constexpr auto zzy(void) const;
+  constexpr auto zzz(void) const;
 #endif
 } CBN_Vec2;
 
@@ -574,216 +585,6 @@ typedef union CBN_Vec2 {
 #define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
 
 /**
- * @brief The Swizzle simplifying access to the corresponding {x, x} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xx(v) CARBON_VEC2((v).x, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, y} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xy(v) CARBON_VEC2((v).x, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, z} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xz(v) CARBON_VEC2((v).x, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, x} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yx(v) CARBON_VEC2((v).y, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, y} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yy(v) CARBON_VEC2((v).y, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, z} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yz(v) CARBON_VEC2((v).y, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, x} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zx(v) CARBON_VEC2((v).z, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, y} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zy(v) CARBON_VEC2((v).z, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, z} 2D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zz(v) CARBON_VEC2((v).z, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, x, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xxx(v) CARBON_VEC3((v).x, (v).x, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, x, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xxy(v) CARBON_VEC3((v).x, (v).x, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, x, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, y, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xyx(v) CARBON_VEC3((v).x, (v).y, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, y, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xyy(v) CARBON_VEC3((v).x, (v).y, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, z, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, z, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xzy(v) CARBON_VEC3((v).x, (v).z, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {x, z, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_xzz(v) CARBON_VEC3((v).x, (v).z, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, x, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yxx(v) CARBON_VEC3((v).y, (v).x, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, x, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yxy(v) CARBON_VEC3((v).y, (v).x, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, x, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yxz(v) CARBON_VEC3((v).y, (v).x, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, y, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yyx(v) CARBON_VEC3((v).y, (v).y, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, y, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yyy(v) CARBON_VEC3((v).y, (v).y, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, y, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yyz(v) CARBON_VEC3((v).y, (v).y, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, z, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yzx(v) CARBON_VEC3((v).y, (v).z, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, z, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yzy(v) CARBON_VEC3((v).y, (v).z, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {y, z, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_yzz(v) CARBON_VEC3((v).y, (v).z, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, x, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zxx(v) CARBON_VEC3((v).z, (v).x, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, x, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zxy(v) CARBON_VEC3((v).z, (v).x, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, x, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zxz(v) CARBON_VEC3((v).z, (v).x, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, y, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zyx(v) CARBON_VEC3((v).z, (v).y, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, y, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zyy(v) CARBON_VEC3((v).z, (v).y, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, y, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zyz(v) CARBON_VEC3((v).z, (v).y, (v).z)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, z, x} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zzx(v) CARBON_VEC3((v).z, (v).z, (v).x)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, z, y} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
-
-/**
- * @brief The Swizzle simplifying access to the corresponding {z, z, z} 3D vector components.
- * @param v The 3D vector to take the components from.
- */
-#define CARBON_VEC3_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
-
-/**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
  */
 typedef union CBN_Vec3 {
@@ -794,41 +595,6 @@ typedef union CBN_Vec3 {
     union { f32 z, b, p, w; };
   };
 #ifdef __cplusplus
-  inline constexpr CBN_Vec2 xx(void)  const { return CARBON_VEC3_xx(*this);  }
-  inline constexpr CBN_Vec2 xy(void)  const { return CARBON_VEC3_xy(*this);  }
-  inline constexpr CBN_Vec2 xz(void)  const { return CARBON_VEC3_xz(*this);  }
-  inline constexpr CBN_Vec2 yx(void)  const { return CARBON_VEC3_yx(*this);  }
-  inline constexpr CBN_Vec2 yy(void)  const { return CARBON_VEC3_yy(*this);  }
-  inline constexpr CBN_Vec2 yz(void)  const { return CARBON_VEC3_yz(*this);  }
-  inline constexpr CBN_Vec2 zx(void)  const { return CARBON_VEC3_zx(*this);  }
-  inline constexpr CBN_Vec2 zy(void)  const { return CARBON_VEC3_zy(*this);  }
-  inline constexpr CBN_Vec2 zz(void)  const { return CARBON_VEC3_zz(*this);  }
-  inline constexpr CBN_Vec3 xxx(void) const { return CARBON_VEC3_xxx(*this); }
-  inline constexpr CBN_Vec3 xxy(void) const { return CARBON_VEC3_xxy(*this); }
-  inline constexpr CBN_Vec3 xxz(void) const { return CARBON_VEC3_xxz(*this); }
-  inline constexpr CBN_Vec3 xyx(void) const { return CARBON_VEC3_xyx(*this); }
-  inline constexpr CBN_Vec3 xyy(void) const { return CARBON_VEC3_xyy(*this); }
-  inline constexpr CBN_Vec3 xzx(void) const { return CARBON_VEC3_xzx(*this); }
-  inline constexpr CBN_Vec3 xzy(void) const { return CARBON_VEC3_xzy(*this); }
-  inline constexpr CBN_Vec3 xzz(void) const { return CARBON_VEC3_xzz(*this); }
-  inline constexpr CBN_Vec3 yxx(void) const { return CARBON_VEC3_yxx(*this); }
-  inline constexpr CBN_Vec3 yxy(void) const { return CARBON_VEC3_yxy(*this); }
-  inline constexpr CBN_Vec3 yxz(void) const { return CARBON_VEC3_yxz(*this); }
-  inline constexpr CBN_Vec3 yyx(void) const { return CARBON_VEC3_yyx(*this); }
-  inline constexpr CBN_Vec3 yyy(void) const { return CARBON_VEC3_yyy(*this); }
-  inline constexpr CBN_Vec3 yyz(void) const { return CARBON_VEC3_yyz(*this); }
-  inline constexpr CBN_Vec3 yzx(void) const { return CARBON_VEC3_yzx(*this); }
-  inline constexpr CBN_Vec3 yzy(void) const { return CARBON_VEC3_yzy(*this); }
-  inline constexpr CBN_Vec3 yzz(void) const { return CARBON_VEC3_yzz(*this); }
-  inline constexpr CBN_Vec3 zxx(void) const { return CARBON_VEC3_zxx(*this); }
-  inline constexpr CBN_Vec3 zxy(void) const { return CARBON_VEC3_zxy(*this); }
-  inline constexpr CBN_Vec3 zxz(void) const { return CARBON_VEC3_zxz(*this); }
-  inline constexpr CBN_Vec3 zyx(void) const { return CARBON_VEC3_zyx(*this); }
-  inline constexpr CBN_Vec3 zyy(void) const { return CARBON_VEC3_zyy(*this); }
-  inline constexpr CBN_Vec3 zyz(void) const { return CARBON_VEC3_zyz(*this); }
-  inline constexpr CBN_Vec3 zzx(void) const { return CARBON_VEC3_zzx(*this); }
-  inline constexpr CBN_Vec3 zzy(void) const { return CARBON_VEC3_zzy(*this); }
-  inline constexpr CBN_Vec3 zzz(void) const { return CARBON_VEC3_zzz(*this); }
   /**
    * @brief carbon_math_vec3_to_cstr
    * @return The serialized 3D vector as `(X, Y, Z)`.
@@ -838,8 +604,83 @@ typedef union CBN_Vec3 {
   CBN_Vec3 operator+(const CBN_Vec3 &v) const;
   CBN_Vec3 operator-(const CBN_Vec3 &v) const;
   f32 operator*(const CBN_Vec3 &v) const;
+  // Swizzling Operations
+  constexpr auto xx(void)  const;
+  constexpr auto xy(void)  const;
+  constexpr auto xz(void)  const;
+  constexpr auto yx(void)  const;
+  constexpr auto yy(void)  const;
+  constexpr auto yz(void)  const;
+  constexpr auto zx(void)  const;
+  constexpr auto zy(void)  const;
+  constexpr auto zz(void)  const;
+  constexpr auto xxx(void) const;
+  constexpr auto xxy(void) const;
+  constexpr auto xxz(void) const;
+  constexpr auto xyx(void) const;
+  constexpr auto xyy(void) const;
+  constexpr auto xyz(void) const;
+  constexpr auto xzx(void) const;
+  constexpr auto xzy(void) const;
+  constexpr auto xzz(void) const;
+  constexpr auto yxx(void) const;
+  constexpr auto yxy(void) const;
+  constexpr auto yxz(void) const;
+  constexpr auto yyx(void) const;
+  constexpr auto yyy(void) const;
+  constexpr auto yyz(void) const;
+  constexpr auto yzx(void) const;
+  constexpr auto yzy(void) const;
+  constexpr auto yzz(void) const;
+  constexpr auto zxx(void) const;
+  constexpr auto zxy(void) const;
+  constexpr auto zxz(void) const;
+  constexpr auto zyx(void) const;
+  constexpr auto zyy(void) const;
+  constexpr auto zyz(void) const;
+  constexpr auto zzx(void) const;
+  constexpr auto zzy(void) const;
+  constexpr auto zzz(void) const;
 #endif
 } CBN_Vec3;
+
+// Vector Swizzling Operations
+#define CARBON_VEC_xx(v)  CARBON_VEC2((v).x, (v).x)
+#define CARBON_VEC_xy(v)  CARBON_VEC2((v).x, (v).y)
+#define CARBON_VEC_xz(v)  CARBON_VEC2((v).x, (v).z)
+#define CARBON_VEC_yx(v)  CARBON_VEC2((v).y, (v).x)
+#define CARBON_VEC_yy(v)  CARBON_VEC2((v).y, (v).y)
+#define CARBON_VEC_yz(v)  CARBON_VEC2((v).y, (v).z)
+#define CARBON_VEC_zx(v)  CARBON_VEC2((v).z, (v).x)
+#define CARBON_VEC_zy(v)  CARBON_VEC2((v).z, (v).y)
+#define CARBON_VEC_zz(v)  CARBON_VEC2((v).z, (v).z)
+#define CARBON_VEC_xxx(v) CARBON_VEC3((v).x, (v).x, (v).x)
+#define CARBON_VEC_xxy(v) CARBON_VEC3((v).x, (v).x, (v).y)
+#define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
+#define CARBON_VEC_xyx(v) CARBON_VEC3((v).x, (v).y, (v).x)
+#define CARBON_VEC_xyy(v) CARBON_VEC3((v).x, (v).y, (v).y)
+#define CARBON_VEC_xyz(v) CARBON_VEC3((v).x, (v).y, (v).z)
+#define CARBON_VEC_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)
+#define CARBON_VEC_xzy(v) CARBON_VEC3((v).x, (v).z, (v).y)
+#define CARBON_VEC_xzz(v) CARBON_VEC3((v).x, (v).z, (v).z)
+#define CARBON_VEC_yxx(v) CARBON_VEC3((v).y, (v).x, (v).x)
+#define CARBON_VEC_yxy(v) CARBON_VEC3((v).y, (v).x, (v).y)
+#define CARBON_VEC_yxz(v) CARBON_VEC3((v).y, (v).x, (v).z)
+#define CARBON_VEC_yyx(v) CARBON_VEC3((v).y, (v).y, (v).x)
+#define CARBON_VEC_yyy(v) CARBON_VEC3((v).y, (v).y, (v).y)
+#define CARBON_VEC_yyz(v) CARBON_VEC3((v).y, (v).y, (v).z)
+#define CARBON_VEC_yzx(v) CARBON_VEC3((v).y, (v).z, (v).x)
+#define CARBON_VEC_yzy(v) CARBON_VEC3((v).y, (v).z, (v).y)
+#define CARBON_VEC_yzz(v) CARBON_VEC3((v).y, (v).z, (v).z)
+#define CARBON_VEC_zxx(v) CARBON_VEC3((v).z, (v).x, (v).x)
+#define CARBON_VEC_zxy(v) CARBON_VEC3((v).z, (v).x, (v).y)
+#define CARBON_VEC_zxz(v) CARBON_VEC3((v).z, (v).x, (v).z)
+#define CARBON_VEC_zyx(v) CARBON_VEC3((v).z, (v).y, (v).x)
+#define CARBON_VEC_zyy(v) CARBON_VEC3((v).z, (v).y, (v).y)
+#define CARBON_VEC_zyz(v) CARBON_VEC3((v).z, (v).y, (v).z)
+#define CARBON_VEC_zzx(v) CARBON_VEC3((v).z, (v).z, (v).x)
+#define CARBON_VEC_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
+#define CARBON_VEC_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
 
 /**
  * @brief Defines an inline rectangle.

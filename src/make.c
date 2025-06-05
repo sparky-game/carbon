@@ -8,7 +8,7 @@
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
 #define C_STD   "-std=c11"
-#define CXX_STD "-std=c++11"
+#define CXX_STD "-std=c++14"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
 
 #if defined(__APPLE__)
