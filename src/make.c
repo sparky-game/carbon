@@ -9,7 +9,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++11"
-#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Werror=incompatible-pointer-types -Wno-return-type-c-linkage"
+#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
 
 #if defined(__APPLE__)
 #define GUI_LIBS "-framework Cocoa -framework CoreVideo -framework IOKit"
