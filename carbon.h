@@ -380,6 +380,12 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_VEC2(x, y) (CBN_Vec2){{(f32)(x), (f32)(y)}}
 
 /**
+ * @brief Defines an inline 2D vector.
+ * @param x The value to assign to both the X and Y fields.
+ */
+#define CARBON_VEC2_1(x) CARBON_VEC2(x, x)
+
+/**
  * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
  */
 #define CARBON_VEC2_ZERO CARBON_VEC2(0, 0)
@@ -451,6 +457,19 @@ typedef union CBN_Vec2 {
  * @param z The value to assign to the Z field.
  */
 #define CARBON_VEC3(x, y, z) (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
+
+/**
+ * @brief Defines an inline 3D vector.
+ * @param x The value to assign to the X, Y and Z fields.
+ */
+#define CARBON_VEC3_1(x) CARBON_VEC3(x, x, x)
+
+/**
+ * @brief Defines an inline 3D vector.
+ * @param v The 2D vector to assign to the X and Y fields.
+ * @param z The value to assign to the Z field.
+ */
+#define CARBON_VEC3_V(v, z) CARBON_VEC3((v).x, (v).y, z)
 
 /**
  * @brief Defines an inline 3D vector whose 3 elements are equal to zero.

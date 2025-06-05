@@ -19,10 +19,9 @@ int main(void) {
   };
   constexpr auto n_colors = CARBON_ARRAY_LEN(colors);
   constexpr auto size = 100;
-  constexpr auto speed = 200;
   auto position = CARBON_VEC2(carbon_math_rand_between(0, canvas.width - size),
                               carbon_math_rand_between(0, canvas.height - size));
-  auto velocity = CARBON_VEC2(speed, speed);
+  auto velocity = CARBON_VEC2_1(200);
   auto c = 0;
   while (!carbon_win_shouldclose()) {
     const auto dt = carbon_win_get_deltatime();
