@@ -185,8 +185,9 @@ static void examples(void) {
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("examples/*.cc");
   const char *gui_examples[] = {
     "examples/flag_jp.c",
+    "examples/triangle.c",
     "examples/orbiting.cc",
-    "examples/triangle.c"
+    "examples/bouncing_square.cc"
   };
   CBN_StrBuilder cmd = {0};
   carbon_fs_pattern_match_foreach(c_files) {
