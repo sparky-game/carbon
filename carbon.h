@@ -461,6 +461,11 @@ typedef union CBN_Vec2 {
   inline constexpr CBN_Vec2 yx(void) const { return CARBON_VEC2_yx(*this); }
   inline constexpr CBN_Vec2 yy(void) const { return CARBON_VEC2_yy(*this); }
   /**
+   * @brief carbon_math_vec2_floor
+   * @return The rounded down 2D vector.
+   */
+  CBN_Vec2 Floor(void) const;
+  /**
    * @brief carbon_math_vec2_len
    * @return The 2D vector's length.
    */
@@ -950,6 +955,13 @@ CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Rounds down the components of the 2D vector.
+ * @param v The 2D vector.
+ * @return The rounded down 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
 
 /**
  * @brief Returns the length of the 2D vector squared.

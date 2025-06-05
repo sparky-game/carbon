@@ -7,6 +7,10 @@
 
 #ifdef __cplusplus
 
+CBN_Vec2 CBN_Vec2::Floor(void) const {
+  return carbon_math_vec2_floor(*this);
+}
+
 f32 CBN_Vec2::Length(void) const {
   return carbon_math_vec2_len(*this);
 }
