@@ -97,6 +97,13 @@
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif
+// C++
+#ifdef __cplusplus
+#include <string>
+#include <utility>
+#include <stdexcept>
+#include <type_traits>
+#endif
 
 /*
 **  $$=========================$$
@@ -130,7 +137,6 @@
 #define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
 
 #ifdef __cplusplus
-#include <type_traits>
 #define CARBON_TYPE_IS_SAME(T, U) std::is_same<T, U>::value
 #else
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)

@@ -7,9 +7,6 @@
 
 #ifdef __cplusplus
 
-#include <string>
-#include <stdexcept>
-
 CBN_StrBuilder CBN_StrBuilder::make(const char *file) {
   CBN_StrBuilder sb;
   memset(&sb, 0, sizeof(sb));
