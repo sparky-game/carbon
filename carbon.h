@@ -304,6 +304,13 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
 #define CARBON_CALLOC(n, sz)     calloc(n, sz)
 #define CARBON_FREE(p)           free(p)
 
+/**
+ * @brief Copies a set of bytes from a memory area to another one.
+ * @param dst The destination memory area address.
+ * @param src The source memory area address.
+ * @param n The amount of bytes to copy from `src`.
+ * @return The original value of `dst`.
+ */
 CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
 
 /*
