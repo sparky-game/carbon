@@ -442,6 +442,12 @@ typedef union CBN_Vec2 {
   };
 #ifdef __cplusplus
   /**
+   * @brief carbon_math_vec2_clamp
+   * @param min The minimum value (as 2D vector).
+   * @param max The maximum value (as 2D vector).
+   */
+  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max);
+  /**
    * @brief carbon_math_vec2_floor
    * @return The rounded down 2D vector.
    */
@@ -481,8 +487,13 @@ typedef union CBN_Vec2 {
   const char *ToString(void) const;
   // Overloaded Operators
   CBN_Vec2 operator+(const CBN_Vec2 &v) const;
+  CBN_Vec2 operator+(const f32 s) const;
+  friend CBN_Vec2 operator+(const f32 s, const CBN_Vec2 &v);
   void operator+=(const CBN_Vec2 &v);
+  CBN_Vec2 operator-(void) const;
   CBN_Vec2 operator-(const CBN_Vec2 &v) const;
+  CBN_Vec2 operator-(const f32 s) const;
+  friend CBN_Vec2 operator-(const f32 s, const CBN_Vec2 &v);
   void operator-=(const CBN_Vec2 &v);
   f32 operator*(const CBN_Vec2 &v) const;
   CBN_Vec2 operator*(const f32 s) const;
@@ -803,6 +814,15 @@ CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Restricts a 2D vector between a minimum and a maximum value.
+ * @param v The 2D vector.
+ * @param min The minimum value (as 2D vector).
+ * @param max The maximum value (as 2D vector).
+ * @return The restricted 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
 
 /**
  * @brief Rounds down the components of the 2D vector.

@@ -7,6 +7,10 @@
 
 #ifdef __cplusplus
 
+void CBN_Vec2::Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max) {
+  *this = carbon_math_vec2_clamp(*this, min, max);
+}
+
 CBN_Vec2 CBN_Vec2::Floor(void) const {
   return carbon_math_vec2_floor(*this);
 }
@@ -39,12 +43,32 @@ CBN_Vec2 CBN_Vec2::operator+(const CBN_Vec2 &v) const {
   return carbon_math_vec2_add(*this, v);
 }
 
+CBN_Vec2 CBN_Vec2::operator+(const f32 s) const {
+  return CARBON_VEC2(x + s, y + s);
+}
+
+CBN_Vec2 operator+(const f32 s, const CBN_Vec2 &v) {
+  return v + s;
+}
+
 void CBN_Vec2::operator+=(const CBN_Vec2 &v) {
   *this = *this + v;
 }
 
+CBN_Vec2 CBN_Vec2::operator-(void) const {
+  return *this * -1;
+}
+
 CBN_Vec2 CBN_Vec2::operator-(const CBN_Vec2 &v) const {
   return carbon_math_vec2_sub(*this, v);
+}
+
+CBN_Vec2 CBN_Vec2::operator-(const f32 s) const {
+  return CARBON_VEC2(x - s, y - s);
+}
+
+CBN_Vec2 operator-(const f32 s, const CBN_Vec2 &v) {
+  return -v + s;
 }
 
 void CBN_Vec2::operator-=(const CBN_Vec2 &v) {

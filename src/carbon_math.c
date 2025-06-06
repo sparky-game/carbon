@@ -400,6 +400,10 @@ f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
   return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
 }
 
+CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max) {
+  return CARBON_VEC2(CARBON_CLAMP(v.x, min.x, max.x), CARBON_CLAMP(v.y, min.y, max.y));
+}
+
 CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v) {
   return CARBON_VEC2(carbon_math_floor(v.x), carbon_math_floor(v.y));
 }

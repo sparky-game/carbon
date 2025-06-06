@@ -35,6 +35,7 @@ int main(void) {
       velocity.y *= -1;
       c = (c + 1) % n_colors;
     }
+    position.Clamp(CARBON_VEC2_ZERO, CARBON_VEC2(canvas.width, canvas.height) - size);
     carbon_drawcanvas_rect(canvas, CARBON_RECT_SQUARE_V(position, size), colors[c]);
     carbon_win_update(canvas);
   }
