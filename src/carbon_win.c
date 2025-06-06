@@ -42,6 +42,7 @@ void carbon_win_close(void) {
 
 void carbon_win_set_max_fps(u32 fps) {
   carbon_win__max_fps = fps;
+  carbon_log_info("Window max FPS set to %$", $(carbon_win__max_fps));
 }
 
 void carbon_win_set_icon(CBN_Image img) {
@@ -85,11 +86,6 @@ void carbon_win_update(CBN_DrawCanvas dc) {
 }
 
 u8 carbon_win_shouldclose(void) {
-  static u8 is_first_time = true;
-  if (is_first_time) {
-    carbon_log_info("Window max FPS set to %$", $(carbon_win__max_fps));
-    is_first_time = false;
-  }
   RGFW_window_checkEvent(carbon_win__handle);
   return RGFW_window_shouldClose(carbon_win__handle);
 }
