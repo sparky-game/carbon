@@ -123,6 +123,13 @@ f32 carbon_math_ceil(f32 x) {
   return u.f;
 }
 
+f32 carbon_math_snap(f32 x, f32 dx) {
+  f32 res = x + CARBON_SIGN(dx) * 1e-6;
+  if (dx > 0) return carbon_math_ceil(res);
+  if (dx < 0) return carbon_math_floor(res);
+  return x;
+}
+
 f32 carbon_math_sqrt(f32 x) {
   if (x == 2) return CARBON_SQRT2;
   if (x == 3) return CARBON_SQRT3;

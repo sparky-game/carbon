@@ -781,6 +781,7 @@ CARBON_API f32 carbon_math_abs(f32 x);
 CARBON_API f32 carbon_math_round(f32 x);
 CARBON_API f32 carbon_math_floor(f32 x);
 CARBON_API f32 carbon_math_ceil(f32 x);
+CARBON_API f32 carbon_math_snap(f32 x, f32 dx);
 CARBON_API f32 carbon_math_sqrt(f32 x);
 CARBON_API f32 carbon_math_fmod(f32 x, f32 y);
 CARBON_API f32 carbon_math_pow(f32 x, f32 y);
