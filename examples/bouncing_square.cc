@@ -23,8 +23,7 @@ int main(void) {
                               carbon_math_rand_between(0, canvas.height - size));
   auto velocity = CARBON_VEC2_1(200);
   auto c = 0;
-  while (!carbon_win_shouldclose()) {
-    const auto dt = carbon_win_get_deltatime();
+  cbn::win::ForFrame([&](const auto dt){
     carbon_drawcanvas_fill(canvas, 0x181818ff);
     position += velocity * dt;
     if (position.x < 0 || position.x + size >= canvas.width) {
@@ -38,7 +37,7 @@ int main(void) {
     position.Clamp(CARBON_VEC2_ZERO, CARBON_VEC2(canvas.width, canvas.height) - size);
     carbon_drawcanvas_rect(canvas, CARBON_RECT_SQUARE_V(position, size), colors[c]);
     carbon_win_update(canvas);
-  }
+  });
   carbon_win_close();
   carbon_drawcanvas_destroy(&canvas);
   return 0;

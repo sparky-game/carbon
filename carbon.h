@@ -2068,7 +2068,26 @@ CARBON_API void carbon_win_set_icon(CBN_Image img);
 
 CARBON_API f64 carbon_win_get_deltatime(void);
 CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
+
+/**
+ * @brief Checks if the window should close or not.
+ * @return A boolean value representing whether the window should close or not.
+ */
 CARBON_API u8 carbon_win_shouldclose(void);
+
+#ifdef __cplusplus
+/**
+ * @brief Organizes the main window loop by calling back to the user's code for each frame.
+ * @param callback The code to be executed in each frame, wrapped around to provide the dt (DeltaTime).
+ */
+template <typename T>
+void carbon_win_forframe(T &&callback) {
+  while (!carbon_win_shouldclose()) {
+    const auto dt = carbon_win_get_deltatime();
+    callback(dt);
+  }
+}
+#endif
 
 /*
 **  $$==========================$$
@@ -2258,6 +2277,12 @@ namespace cbn {
   using List = CBN_List_t<T>;
   using StrBuilder = CBN_StrBuilder;
   using StrView = CBN_StrView;
+  namespace win {
+    template <typename... Args>
+    auto ForFrame(Args &&... args) {
+      return carbon_win_forframe(std::forward<Args>(args)...);
+    }
+  }
 }
 #endif
 
