@@ -34,37 +34,38 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
   "%s homepage: <https://github.com/sparky-game/carbon>\n";
 
-// TODO: migrate this func to the lib itself
-static inline void call_cmd(const char *cmd) {
-  if (!system(cmd)) return;
-  carbon_log_error("Unable to run `%s`", cmd);
-  exit(1);
+static inline void exit_gracefully(void) {
+  // TODO: avoid forward declaring `clean` by implementing `rm_dash_r` in the lib itself
+  void clean(void);
+  clean(); exit(1);
 }
 
 // TODO: migrate this func to the lib itself
-static inline void rm_dash_r(const char *path) {
+static void call_cmd(const char *cmd) {
+  if (!system(cmd)) return;
+  carbon_log_error("Unable to run `%s`", cmd);
+  exit_gracefully();
+}
+
+// TODO: migrate this func to the lib itself
+static void rm_dash_r(const char *path) {
   carbon_println("  RM      %s", path);
   call_cmd(carbon_string_fmt("rm -rf %s", path));
 }
 
 // TODO: migrate this func to the lib itself
-static inline void cp_dash_r(const char *origin, const char *dest) {
+static void cp_dash_r(const char *origin, const char *dest) {
   carbon_println("  CP      %s -> %s", origin, dest);
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
-static void clean(void) {
+void clean(void) {
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
   rm_dash_r(WORKDIR ".tgz");
-}
-
-static void exit_gracefully(void) {
-  clean();
-  exit(1);
 }
 
 static void rebuild_myself(char * const *host_argv) {
