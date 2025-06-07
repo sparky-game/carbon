@@ -319,6 +319,15 @@ CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line
  */
 CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
 
+/**
+ * @brief Compares two sets of bytes from two different memory areas.
+ * @param v1 The first memory area address.
+ * @param v2 The second memory area address.
+ * @param n The amount of bytes to compare from both `v1` and `v2`.
+ * @return The difference between the first two differing bytes.
+ */
+CARBON_API i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
+
 /*
 **  $$=======================$$
 **  ||       Coroutine       ||

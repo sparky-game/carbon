@@ -76,7 +76,7 @@ isz carbon_list_find(const CBN_List *l, const void *value) {
   }
   for (usz i = 0; i < l->size; ++i) {
     void *curr = (void *) ((u64) l->items + (i * l->stride));
-    if (!memcmp(curr, value, l->stride)) return i;
+    if (!carbon_memory_cmp(curr, value, l->stride)) return i;
   }
   return -1;
 }
