@@ -7,8 +7,8 @@
 
 int main(void) {
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(800, 600);
-  carbon_win_open(canvas.width, canvas.height, "Bouncing Square");
-  carbon_win_set_max_fps(60);
+  cbn::win::Open(canvas.width, canvas.height, "Bouncing Square");
+  cbn::win::SetMaxFPS(60);
   constexpr u32 colors[] = {
     0xff1818ff,
     0x18ff18ff,
@@ -36,9 +36,9 @@ int main(void) {
     }
     position.Clamp(CARBON_VEC2_ZERO, CARBON_VEC2(canvas.width, canvas.height) - size);
     carbon_drawcanvas_rect(canvas, CARBON_RECT_SQUARE_V(position, size), colors[c]);
-    carbon_win_update(canvas);
+    cbn::win::Update(canvas);
   });
-  carbon_win_close();
+  cbn::win::Close();
   carbon_drawcanvas_destroy(&canvas);
   return 0;
 }

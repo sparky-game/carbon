@@ -2281,10 +2281,17 @@ namespace cbn {
   using Vec3 = CBN_Vec3;
   using Rect = CBN_Rect;
   template <typename T>
-  using List = CBN_List_t<T>;
+  using List       = CBN_List_t<T>;
   using StrBuilder = CBN_StrBuilder;
-  using StrView = CBN_StrView;
+  using StrView    = CBN_StrView;
   namespace win {
+    const auto Open         = carbon_win_open;
+    const auto Close        = carbon_win_close;
+    const auto SetMaxFPS    = carbon_win_set_max_fps;
+    const auto SetIcon      = carbon_win_set_icon;
+    const auto GetDeltaTime = carbon_win_get_deltatime;
+    const auto Update       = carbon_win_update;
+    const auto ShouldClose  = carbon_win_shouldclose;
     template <typename... Args>
     auto ForFrame(Args &&... args) {
       return carbon_win_forframe(std::forward<Args>(args)...);
