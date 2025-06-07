@@ -71,4 +71,8 @@ bool operator!=(const char *s, const CBN_StrView &sv) {
   return !(s == sv);
 }
 
+constexpr CBN_StrView operator""sv(const char *s, usz len) {
+  return CBN_StrView::make(s, len);
+}
+
 #endif  // __cplusplus
