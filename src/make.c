@@ -65,6 +65,7 @@ void clean(void) {
   rm_dash_r(WORKDIR);
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
+  rm_dash_r("examples/*.png");
   rm_dash_r(WORKDIR ".tgz");
 }
 
@@ -237,10 +238,7 @@ static void package(void) {
 }
 
 int main(int argc, char **argv) {
-  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) {
-    carbon_log_error("unable to change CWD to binary's directory");
-    return 1;
-  }
+  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) return 1;
   rebuild_myself(argv);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);

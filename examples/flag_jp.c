@@ -21,6 +21,7 @@ int main(void) {
   carbon_win_close();
   const char *filepath = "flag_jp.png";
   u8 *canvas_bytes = carbon_fs_img_32bit_to_8bit(canvas.pixels, canvas.width, canvas.height);
+  carbon_fs_change_directory(carbon_fs_get_bin_directory());
   if (carbon_fs_write_img_to_file_linearly(canvas_bytes, CBN_FILE_FORMAT_PNG, canvas.width, canvas.height, 4, filepath)) {
     carbon_log_info("written canvas to `%$` successfully", $(filepath));
   }
