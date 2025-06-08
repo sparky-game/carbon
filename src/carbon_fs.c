@@ -155,7 +155,7 @@ u8 carbon_fs_create_directories(const char *path) {
 
 char *carbon_fs_get_bin_directory(void) {
   static char dir[CARBON_FS_PATH_MAX_LEN];
-  memset(dir, 0, CARBON_FS_PATH_MAX_LEN);
+  carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
 #if defined(_WIN32)
   usz len = GetModuleFileNameA(0, dir, MAX_PATH);
   if (len > 0) {
@@ -223,7 +223,7 @@ char *carbon_fs_get_bin_directory(void) {
 CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   static usz i = 0;
   CBN_PatternMatchedFiles out;
-  memset(&out, 0, sizeof(CBN_PatternMatchedFiles));
+  carbon_memory_set(&out, 0, sizeof(out));
 #ifdef _WIN32
   static usz counts[CARBON_FS_PATMAT_MAX_STRUCTS];
   static char *results[CARBON_FS_PATMAT_MAX_STRUCTS][MAX_PATH];
@@ -255,7 +255,7 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
 #else
   static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS];
   glob_t *x = &xs[i];
-  memset(x, 0, sizeof(glob_t));
+  carbon_memory_set(x, 0, sizeof(*x));
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
   case GLOB_NOSPACE:
     carbon_log_error("out of memory");
@@ -327,7 +327,7 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
 
 CBN_Image carbon_fs_read_img_from_file(const char *file) {
   CBN_Image img;
-  memset(&img, 0, sizeof(img));
+  carbon_memory_set(&img, 0, sizeof(img));
   img.data = carbon_fs_read_img_from_file_linearly(file, &img.metadata.width, &img.metadata.height, &img.metadata.channels);
   return img;
 }
@@ -428,7 +428,7 @@ u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz widt
 
 void carbon_fs_destroy_img(CBN_Image *img) {
   CARBON_FREE(img->data);
-  memset(img, 0, sizeof(*img));
+  carbon_memory_set(img, 0, sizeof(*img));
 }
 
 void carbon_fs_destroy_tensor_img(CBN_List *img) {

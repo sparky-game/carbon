@@ -30,5 +30,5 @@ void carbon_strbuilder_free(CBN_StrBuilder *sb) {
     return;
   }
   CARBON_FREE(sb->items);
-  memset(sb, 0, sizeof(CBN_StrBuilder));
+  carbon_memory_set(sb, 0, sizeof(*sb));
 }

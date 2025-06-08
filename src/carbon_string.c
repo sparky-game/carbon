@@ -37,7 +37,7 @@ char *carbon_string_fmt(const char *s, ...) {
   static usz i = 0;
   static char xs[CARBON_STRING_FMT_MAX_BUFFERS][CARBON_STRING_FMT_MAX_LEN];
   char *x = xs[i];
-  memset(x, 0, CARBON_STRING_FMT_MAX_LEN);
+  carbon_memory_set(x, 0, CARBON_STRING_FMT_MAX_LEN);
   va_list args;
   va_start(args, s);
   i32 bytes = vsnprintf(x, CARBON_STRING_FMT_MAX_LEN, s, args);

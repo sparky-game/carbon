@@ -27,7 +27,7 @@ char *carbon_strview_to_cstr(CBN_StrView sv) {
   static usz i = 0;
   static char xs[CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS][CARBON_STRVIEW_TO_CSTR_MAX_LEN];
   char *x = xs[i];
-  memset(x, 0, CARBON_STRVIEW_TO_CSTR_MAX_LEN);
+  carbon_memory_set(x, 0, CARBON_STRVIEW_TO_CSTR_MAX_LEN);
   carbon_memory_copy(x, sv.data, sv.size);
   x[sv.size] = 0;
   ++i;

@@ -24,8 +24,7 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
     return;
   }
   CARBON_FREE(dc->pixels);
-  memset(dc, 0, sizeof(CBN_DrawCanvas));
-  dc = 0;
+  carbon_memory_set(dc, 0, sizeof(*dc));
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {

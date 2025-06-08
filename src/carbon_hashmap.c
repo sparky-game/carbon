@@ -29,8 +29,7 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
     return;
   }
   CARBON_FREE(hm->items);
-  memset(hm, 0, sizeof(CBN_HashMap));
-  hm = 0;
+  carbon_memory_set(hm, 0, sizeof(*hm));
 }
 
 void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {

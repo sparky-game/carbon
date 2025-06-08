@@ -195,7 +195,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, CBN_List *asset_groups) {
       carbon_strlist_foreach(ag.assets) {
         const char *asset_name = carbon_string_fmt("%s%s", ag.path, carbon_strview_to_cstr(it.sv));
         CBN_SKAP_AssetIdx idx;
-        memset(&idx, 0, sizeof(idx));
+        carbon_memory_set(&idx, 0, sizeof(idx));
         strncpy(idx.name, asset_name, sizeof(idx.name));
         idx.metadata.type = carbon_skap__str2type(ag.type);
         switch (idx.metadata.type) {
@@ -282,7 +282,7 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP_Handle *out_handle) {
     carbon_log_error("there is no SKAP file named `%s`", skap);
     return false;
   }
-  memset(out_handle, 0, sizeof(*out_handle));
+  carbon_memory_set(out_handle, 0, sizeof(*out_handle));
   out_handle->fd = fopen(skap, "rb");
   // Read header
   fread(&out_handle->header, sizeof(out_handle->header), 1, out_handle->fd);

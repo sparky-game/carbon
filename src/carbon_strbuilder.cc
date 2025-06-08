@@ -9,7 +9,7 @@
 
 CBN_StrBuilder CBN_StrBuilder::make(const char *file) {
   CBN_StrBuilder sb;
-  memset(&sb, 0, sizeof(sb));
+  carbon_memory_set(&sb, 0, sizeof(sb));
   if (!carbon_fs_read_entire_file(&sb, file)) {
     throw std::runtime_error("file (`" + std::string(file) + "`) could not be read");
   }

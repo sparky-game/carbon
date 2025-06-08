@@ -228,9 +228,9 @@ void carbon_crypto_keccak256(const u8 *in, const usz in_size, u8 *out) {
     return;
   }
   CBN_Keccak256 ctx;
-  memset(&ctx, 0, sizeof(ctx));
+  carbon_memory_set(&ctx, 0, sizeof(ctx));
   carbon_crypto_keccak256__update(&ctx, in, in_size);
-  memset((u8 *) ctx.msg + ctx.rest, 0, 136 - ctx.rest);
+  carbon_memory_set((u8 *) ctx.msg + ctx.rest, 0, 136 - ctx.rest);
   ((u8 *) ctx.msg)[ctx.rest] |= 0x01;
   ((u8 *) ctx.msg)[136 - 1]  |= 0x80;
   carbon_crypto_keccak256__process_blk(ctx.hash, ctx.msg);

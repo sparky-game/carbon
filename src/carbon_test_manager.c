@@ -85,7 +85,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
   }
   else if (rebuild_child_pid == 0) {
     char *argv[128];
-    memset(argv, 0, 128 * sizeof(char *));
+    carbon_memory_set(argv, 0, 128 * sizeof(char));
     argv[0] = (char *) CARBON_COMPILER;
     argv[1] = (char *) "-I";
     argv[2] = (char *) ".";
@@ -117,7 +117,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
 
 CBN_Suite carbon_test_manager_spawn(void) {
   CBN_Suite s;
-  memset(&s, 0, sizeof(CBN_Suite));
+  carbon_memory_set(&s, 0, sizeof(s));
   return s;
 }
 
@@ -157,8 +157,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
   }
   CARBON_FREE(s->tests);
   carbon_strlist_destroy(&s->files);
-  memset(s, 0, sizeof(CBN_Suite));
-  s = 0;
+  carbon_memory_set(s, 0, sizeof(*s));
 }
 
 u8 carbon_test_manager_run_s(CBN_Suite *s) {

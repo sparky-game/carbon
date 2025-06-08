@@ -14,10 +14,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
     .bs = (CBN_Row *) CARBON_MALLOC((arch_count - 1) * sizeof(CBN_Row)),
     .as = (CBN_Row *) CARBON_MALLOC(arch_count * sizeof(CBN_Row))
   };
-  if (!nn.ws || !nn.bs || !nn.as) {
-    carbon_log_error("failed to allocate memory");
-    memset(&nn, 0, sizeof(CBN_NeuralNet));
-  }
+  CARBON_ASSERT(nn.ws && nn.bs && nn.as && "failed to allocate memory");
   nn.as[0] = carbon_math_row_create(nn.arch[0]);
   for (usz i = 1; i < nn.arch_count; ++i) {
     nn.ws[i - 1] = carbon_math_mat_create(nn.as[i - 1].cols, nn.arch[i]);
@@ -41,8 +38,7 @@ void carbon_nn_destroy(CBN_NeuralNet *nn) {
   CARBON_FREE(nn->ws);
   CARBON_FREE(nn->bs);
   CARBON_FREE(nn->as);
-  memset(nn, 0, sizeof(CBN_NeuralNet));
-  nn = 0;
+  carbon_memory_set(nn, 0, sizeof(*nn));
 }
 
 void carbon_nn_fill(CBN_NeuralNet nn, f32 x) {

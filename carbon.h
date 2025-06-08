@@ -328,6 +328,15 @@ CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
  */
 CARBON_API i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
 
+/**
+ * @brief Fills a set of bytes from a memory area with a specific value.
+ * @param dst The memory area address.
+ * @param c The value to fill the memory area with.
+ * @param n The amount of bytes to fill from `dst`.
+ * @return The same `dst` value.
+ */
+CARBON_API void *carbon_memory_set(void *dst, i32 c, usz n);
+
 /*
 **  $$=======================$$
 **  ||       Coroutine       ||
@@ -2394,6 +2403,7 @@ namespace cbn {
   namespace mem {
     const auto cpy = carbon_memory_copy;
     const auto cmp = carbon_memory_cmp;
+    const auto set = carbon_memory_set;
   }
   namespace str {
     const auto len        = carbon_string_len;

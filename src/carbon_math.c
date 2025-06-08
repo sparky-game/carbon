@@ -491,8 +491,7 @@ void carbon_math_mat_destroy(CBN_Matrix *m) {
     return;
   }
   CARBON_FREE(m->items);
-  memset(m, 0, sizeof(CBN_Matrix));
-  m = 0;
+  carbon_memory_set(m, 0, sizeof(*m));
 }
 
 void carbon_math_mat_fill(CBN_Matrix m, f32 x) {
@@ -583,8 +582,7 @@ void carbon_math_row_destroy(CBN_Row *r) {
     return;
   }
   CARBON_FREE(r->items);
-  memset(r, 0, sizeof(CBN_Row));
-  r = 0;
+  carbon_memory_set(r, 0, sizeof(*r));
 }
 
 CBN_Matrix carbon_math_row_to_mat(CBN_Row r) {

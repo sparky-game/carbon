@@ -22,7 +22,7 @@ void carbon_list_destroy(CBN_List *l) {
     return;
   }
   if (l->items) CARBON_FREE(l->items);
-  memset(l, 0, sizeof(*l));
+  carbon_memory_set(l, 0, sizeof(*l));
 }
 
 void carbon_list_push(CBN_List *l, void *value) {
