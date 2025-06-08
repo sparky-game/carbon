@@ -6,7 +6,7 @@
 #include "../carbon.h"
 
 int main(void) {
-  CBN_DrawCanvas canvas = carbon_drawcanvas_create(800, 600);
+  auto canvas = cbn::DrawCanvas::make(800, 600);
   cbn::win::Open(canvas.width, canvas.height, "Bouncing Square");
   cbn::win::SetMaxFPS(60);
   constexpr u32 colors[] = {
@@ -24,7 +24,7 @@ int main(void) {
   auto velocity = CARBON_VEC2_1(200);
   auto c = 0;
   cbn::win::ForFrame([&](const auto dt){
-    carbon_drawcanvas_fill(canvas, 0x181818ff);
+    canvas.Fill(0x181818ff);
     position += velocity * dt;
     if (position.x < 0 || position.x + size >= canvas.width) {
       velocity.x *= -1;
@@ -35,10 +35,10 @@ int main(void) {
       c = (c + 1) % n_colors;
     }
     position.Clamp(CARBON_VEC2_ZERO, CARBON_VEC2(canvas.width, canvas.height) - size);
-    carbon_drawcanvas_rect(canvas, CARBON_RECT_SQUARE_V(position, size), colors[c]);
+    canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), colors[c]);
     cbn::win::Update(canvas);
   });
   cbn::win::Close();
-  carbon_drawcanvas_destroy(&canvas);
+  canvas.Free();
   return 0;
 }
