@@ -10,12 +10,9 @@ int main(void) {
   cbn::win::Open(canvas.width, canvas.height, "Bouncing Square");
   cbn::win::SetMaxFPS(60);
   constexpr u32 colors[] = {
-    0xff1818ff,
-    0x18ff18ff,
-    0x1818ffff,
-    0xffff18ff,
-    0xff18ffff,
-    0x18ffffff
+    0xff1818ff, 0x18ff18ff,
+    0x1818ffff, 0xffff18ff,
+    0xff18ffff, 0x18ffffff
   };
   constexpr auto n_colors = CARBON_ARRAY_LEN(colors);
   constexpr auto size = 100;
