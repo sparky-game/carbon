@@ -34,6 +34,10 @@ f32 carbon_math_randf(void) {
   return (f32) carbon_math_rand() / (f32) CARBON_RAND_MAX;
 }
 
+f32 carbon_math_randf_between(f32 min, f32 max) {
+  return carbon_math_randf() * (max - min) + min;
+}
+
 void carbon_math_mt19937_64_srand(u64 seed) {
   u64 *sv = carbon_math__mt19937_64_rand_state_vec;
   u64 *si = &carbon_math__mt19937_64_rand_state_idx;

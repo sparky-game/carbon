@@ -797,6 +797,7 @@ CARBON_API void carbon_math_srand(u64 seed);
 CARBON_API i32 carbon_math_rand(void);
 CARBON_API i32 carbon_math_rand_between(i32 min, i32 max);
 CARBON_API f32 carbon_math_randf(void);
+CARBON_API f32 carbon_math_randf_between(f32 min, f32 max);
 CARBON_API void carbon_math_mt19937_64_srand(u64 seed);
 CARBON_API u64 carbon_math_mt19937_64_rand(void);
 CARBON_API f32 carbon_math_abs(f32 x);
