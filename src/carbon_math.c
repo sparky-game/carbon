@@ -5,6 +5,7 @@
 #include <carbon.h>
 #endif  // CARBON_IMPLEMENTATION
 
+#define CARBON_MATH__RAND_PCG_MAGIC 6364136223846793005ULL
 #define CARBON_MATH__MT19937_64_RAND_NN 312
 #define CARBON_MATH__MT19937_64_RAND_MM 156
 #define CARBON_MATH__MT19937_64_RAND_MATRIX_A 0xB5026F5AA96619E9ULL
@@ -21,7 +22,7 @@ void carbon_math_srand(u64 seed) {
 
 i32 carbon_math_rand(void) {
   if (!carbon_math__rand_seed) carbon_math_srand(carbon_time_get());
-  carbon_math__rand_seed = CARBON_PCG_RAND_MAGIC * carbon_math__rand_seed + 1;
+  carbon_math__rand_seed = CARBON_MATH__RAND_PCG_MAGIC * carbon_math__rand_seed + 1;
   return carbon_math__rand_seed >> 33;
 }
 

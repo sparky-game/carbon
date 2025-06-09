@@ -385,7 +385,6 @@ CARBON_API void carbon_coroutine_wakeup(usz id);
 #define CARBON_LOG2_10 (3.32192809488736234789)
 #define CARBON_I32_MAX 0x7fffffff
 #define CARBON_RAND_MAX CARBON_I32_MAX
-#define CARBON_PCG_RAND_MAGIC 6364136223846793005ULL
 #define CARBON_F32_EPS 1.1920928955078125e-07
 #define CARBON_MIN(x, y) (x < y ? x : y)
 #define CARBON_MIN3(x, y, z) CARBON_MIN(x, CARBON_MIN(y, z))
