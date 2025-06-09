@@ -475,6 +475,13 @@ u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2) {
   return (r1.x <= r2.x + r2.w) && (r2.x <= r1.x + r1.w) && (r1.y <= r2.y + r2.h) && (r2.y <= r1.y + r1.h);
 }
 
+void carbon_math_rect_scale(CBN_Rect *r, const f32 s) {
+  r->x = CARBON_LERP(r->x, r->x + r->w/2, 1 - s);
+  r->y = CARBON_LERP(r->y, r->y + r->h/2, 1 - s);
+  r->w = CARBON_LERP(0, r->w, s);
+  r->h = CARBON_LERP(0, r->h, s);
+}
+
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
   f32 *ptr = (f32 *) CARBON_MALLOC(rows * cols * sizeof(f32));
   CARBON_ASSERT(ptr && "failed to allocate memory");

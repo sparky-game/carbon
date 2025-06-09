@@ -775,6 +775,11 @@ typedef struct CBN_Rect {
    * @return A boolean value representing whether they overlap (also touching).
    */
   u8 Overlaps(const CBN_Rect &r) const;
+  /**
+   * @brief carbon_math_rect_scale
+   * @param s The scale factor value.
+   */
+  void Scale(const f32 s);
 #endif
 } CBN_Rect;
 
@@ -940,6 +945,13 @@ CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
  * @return A boolean value representing whether they overlap (also touching).
  */
 CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
+
+/**
+ * @brief Scales the rectangle by the specified value.
+ * @param r The rectangle.
+ * @param s The scale factor value.
+ */
+CARBON_API void carbon_math_rect_scale(CBN_Rect *r, const f32 s);
 
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
 CARBON_API void carbon_math_mat_destroy(CBN_Matrix *m);

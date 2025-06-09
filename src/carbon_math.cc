@@ -173,4 +173,8 @@ u8 CBN_Rect::Overlaps(const CBN_Rect &r) const {
   return carbon_math_rect_detect_collision(*this, r);
 }
 
+void CBN_Rect::Scale(const f32 s) {
+  carbon_math_rect_scale(this, s);
+}
+
 #endif  // __cplusplus
