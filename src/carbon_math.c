@@ -140,8 +140,13 @@ f32 carbon_math_sqrt(f32 x) {
   return s;
 }
 
+i32 carbon_math_imod(i32 x, i32 y) {
+  CARBON_ASSERT(y && "division by 0 is not defined");
+  return (x%y + y) % y;
+}
+
 f32 carbon_math_fmod(f32 x, f32 y) {
-  if (y == 0) CARBON_ASSERT(0 && "division by 0 is not defined");
+  CARBON_ASSERT(y && "division by 0 is not defined");
   if (x != x || y != y) return x;
   f32 r = x - (i32) (x / y) * y;
   if ((r < 0 && y > 0) || (r > 0 && y < 0)) r += y;
