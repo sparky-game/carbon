@@ -111,6 +111,8 @@ Once built, we can take a look at the available subcommands and options by issui
 
 A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all; for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
 
+Furthermore, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
+
 * Licensing
 
 Copyright (C) Wasym A. Alonso. All Rights Reserved.
