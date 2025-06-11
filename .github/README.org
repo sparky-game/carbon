@@ -105,7 +105,11 @@ This custom build system can rebuild itself properly (using our preferred compil
 cc src/make.c -o make
 #+end_src
 
-Once built, we can take a look at the available subcommands and options by issuing: ~./make help~.
+Once built, we can take a look at the available subcommands and options by issuing the command ~./make help~. To run the full build pipeline it's just as easy as:
+
+#+begin_src sh
+./make
+#+end_src
 
 ** Examples
 
