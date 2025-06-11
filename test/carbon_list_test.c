@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_list, create_destroy) {
+#define TEST(name) CARBON_TEST(carbon_list, name)
+
+TEST(create_destroy) {
   CBN_List l = carbon_list_create(sizeof(i32));
   carbon_should_be(1, l.capacity);
   carbon_should_be(sizeof(i32), l.stride);
@@ -17,7 +19,7 @@ CARBON_TEST(carbon_list, create_destroy) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_list, push_element) {
+TEST(push_element) {
   CBN_List l = carbon_list_create(sizeof(i32));
   i32 i = 7;
   carbon_list_push(&l, &i);
@@ -27,7 +29,7 @@ CARBON_TEST(carbon_list, push_element) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_list, pop_element) {
+TEST(pop_element) {
   CBN_List l = carbon_list_create(sizeof(i32));
   i32 x = 1, i = 7, j = 0;
   carbon_list_push(&l, &x);
@@ -40,7 +42,7 @@ CARBON_TEST(carbon_list, pop_element) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_list, find_element) {
+TEST(find_element) {
   CBN_List l = carbon_list_create(sizeof(i32));
   i32 i = 1, j = 7, k = 3;
   carbon_list_push(&l, &i);
@@ -53,7 +55,7 @@ CARBON_TEST(carbon_list, find_element) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_list, remove_element) {
+TEST(remove_element) {
   CBN_List l = carbon_list_create(sizeof(i32));
   i32 i = 1, j = 7, k = 3;
   carbon_list_push(&l, &i);
@@ -73,3 +75,5 @@ CARBON_TEST(carbon_list, remove_element) {
   carbon_list_destroy(&l);
   return CARBON_OK;
 }
+
+#undef TEST

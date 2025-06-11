@@ -1402,7 +1402,7 @@ void CBN_List_t<T>::Push(const value_type &value) {
 template <typename T>
 typename CBN_List_t<T>::value_type CBN_List_t<T>::Pop(void) {
   value_type x;
-  carbon_list_pop(this, &x);
+  carbon_list_pop((CBN_List *) this, &x);
   return x;
 }
 /**
@@ -1410,14 +1410,14 @@ typename CBN_List_t<T>::value_type CBN_List_t<T>::Pop(void) {
  */
 template <typename T>
 isz CBN_List_t<T>::Find(const value_type &value) const {
-  return carbon_list_find(this, value);
+  return carbon_list_find((CBN_List *) this, (void *) &value);
 }
 /**
  * @brief CBN_List_t<T>.Remove
  */
 template <typename T>
 void CBN_List_t<T>::Remove(usz idx) {
-  carbon_list_remove(this, idx);
+  carbon_list_remove((CBN_List *) this, idx);
 }
 /**
  * @brief CBN_List_t<T>.begin
@@ -1460,7 +1460,7 @@ typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) {
 template <typename T>
 const typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) const {
   CARBON_ASSERT(0 <= idx && idx < size && "List index out of bounds");
-  CARBON_ASSERT(sizeof(T) == stride && "List type doesn't match");
+  CARBON_ASSERT(sizeof(value_type) == stride && "List type doesn't match");
   return ((value_type *) items)[idx];
 }
 #endif  // __cplusplus
