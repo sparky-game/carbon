@@ -1280,7 +1280,7 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @brief carbon_list_pop
    * @return The value of the element popped out.
    */
-  T Pop(void);
+  value_type Pop(void);
   /**
    * @brief carbon_list_find
    * @param value The value of the element to check.
@@ -1313,8 +1313,8 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    */
   const_iterator end(void) const;
   // Overloaded Operators
-  T &operator[](usz idx);
-  const T &operator[](usz idx) const;
+  value_type &operator[](usz idx);
+  const value_type &operator[](usz idx) const;
 #endif
 };
 
@@ -1349,7 +1349,7 @@ CARBON_API void carbon_list_destroy(CBN_List *l);
 CARBON_API void carbon_list_push(CBN_List *l, void *value);
 
 /**
- * @brief Removes the last element from the list.
+ * @brief Removes the last element from the list (LIFO).
  * @param l The list container.
  * @param out_value The value of the element popped out.
  */
@@ -1400,8 +1400,8 @@ void CBN_List_t<T>::Push(const value_type &value) {
  * @brief CBN_List_t<T>.Pop
  */
 template <typename T>
-T CBN_List_t<T>::Pop(void) {
-  T x;
+typename CBN_List_t<T>::value_type CBN_List_t<T>::Pop(void) {
+  value_type x;
   carbon_list_pop(this, &x);
   return x;
 }
@@ -1451,17 +1451,17 @@ typename CBN_List_t<T>::const_iterator CBN_List_t<T>::end(void) const {
  * @brief CBN_List_t<T>[idx]
  */
 template <typename T>
-T &CBN_List_t<T>::operator[](usz idx) {
-  return const_cast<T &>(static_cast<const CBN_List_t &>(*this)[idx]);
+typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) {
+  return const_cast<value_type &>(static_cast<const CBN_List_t &>(*this)[idx]);
 }
 /**
  * @brief CBN_List_t<T>[idx] (const)
  */
 template <typename T>
-const T &CBN_List_t<T>::operator[](usz idx) const {
+const typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) const {
   CARBON_ASSERT(0 <= idx && idx < size && "List index out of bounds");
   CARBON_ASSERT(sizeof(T) == stride && "List type doesn't match");
-  return ((T *) items)[idx];
+  return ((value_type *) items)[idx];
 }
 #endif  // __cplusplus
 
