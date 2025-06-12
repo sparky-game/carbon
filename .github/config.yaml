@@ -1,0 +1,9 @@
+newIssueWelcomeComment: >-
+  Thanks for opening this issue! A Sparky team member should be by to give feedback soon. In the meantime, please check out the [contributing guidelines](https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org).
+
+newPRWelcomeComment: >-
+  Thanks for opening this pull request! A Sparky team member should be by to give feedback soon. In the meantime, please check out the [contributing guidelines](https://github.com/sparky-game/carbon/blob/master/CONTRIBUTING.org).
+
+firstPRMergeComment: >-
+  Congrats on merging your first pull request! :tada: How awesome!
+  ![Jaw Drop Cat](https://c.tenor.com/Elk9jBStUl4AAAAd/tenor.gif)
