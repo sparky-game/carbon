@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_IMPLEMENTATION
-#include "../carbon.h"
+#include <carbon.h>
 
 int main(int argc, char **argv) {
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);

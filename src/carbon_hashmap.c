@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_assert.h"
+#include "carbon_memory.h"
+#include "carbon_log.h"
+#include "carbon_string.h"
+#include "carbon_hashmap.h"
 
 CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
   u64 hash = 0;

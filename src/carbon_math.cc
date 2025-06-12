@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
-
 #ifdef __cplusplus
+
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_math.h"
 
 void CBN_Vec2::Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max) {
   *this = carbon_math_vec2_clamp(*this, min, max);

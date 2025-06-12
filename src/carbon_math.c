@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_assert.h"
+#include "carbon_memory.h"
+#include "carbon_log.h"
+#include "carbon_time.h"
+#include "carbon_math.h"
+#include "carbon_string.h"
 
 #define CARBON_MATH__RAND_PCG_MAGIC 6364136223846793005ULL
 #define CARBON_MATH__MT19937_64_RAND_NN 312

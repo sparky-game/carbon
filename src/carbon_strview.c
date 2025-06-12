@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_memory.h"
+#include "carbon_string.h"
+#include "carbon_strview.h"
+#include "carbon_strbuilder.h"
 
 #define CARBON_STRVIEW_TO_CSTR_MAX_LEN     1024
 #define CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS 4

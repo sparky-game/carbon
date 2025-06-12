@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_math.h"
+#include "carbon_time.h"
 
 #define CARBON_TIME_GET_ISO8601_FMT         "%Y-%m-%dT%H:%M:%S%z"
 #define CARBON_TIME_GET_ISO8601_MAX_LEN     30

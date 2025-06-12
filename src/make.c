@@ -1,8 +1,36 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_IMPLEMENTATION
-#include "../carbon.h"
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_version.h"
+#include "carbon_assert.h"
+#include "carbon_memory.h"
+#include "carbon_math.h"
+#include "carbon_log.h"
+#include "carbon_time.h"
+#include "carbon_list.h"
+#include "carbon_string.h"
+#include "carbon_strview.h"
+#include "carbon_strbuilder.h"
+#include "carbon_strlist.h"
+#include "carbon_fs.h"
+
+// #define CARBON_IMPLEMENTATION
+#include "carbon_version.c"
+#include "carbon_assert.c"
+#include "carbon_memory.c"
+#include "carbon_math.c"
+#include "carbon_log.c"
+#include "carbon_time.c"
+#include "carbon_list.c"
+#include "carbon_string.c"
+#include "carbon_strbuilder.c"
+#include "carbon_strview.c"
+#include "carbon_strlist.c"
+#include "carbon_fs.c"
 
 #define TESTBIN "./test/carbon"
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
@@ -22,12 +50,12 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "  help        display this help\n"
   "  clean       remove previously created build artifacts\n"
   "  mrproper    same as `clean` plus remove this binary\n"
-  "  test        just run the `TESTING` stage\n"
   "  build       just run the `BUILDING` stage\n"
+  "  test        just run the `TESTING` stage\n"
   "  examples    just run the `EXAMPLES` stage\n"
   "\n"
   "If not provided any subcommand, it runs the full build pipeline:\n"
-  "  [TESTING] -> [BUILDING] -> [EXAMPLES] -> [PACKAGING]\n"
+  "  [BUILDING] -> [TESTING] -> [EXAMPLES] -> [PACKAGING]\n"
   "\n"
   "If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.\n"
   "\n"
@@ -60,6 +88,7 @@ static void cp_dash_r(const char *origin, const char *dest) {
 }
 
 void clean(void) {
+  rm_dash_r("carbon.h");
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
   rm_dash_r(WORKDIR);
@@ -111,6 +140,26 @@ static void rebuild_myself(char * const *host_argv) {
   }
 }
 
+static void hdrgen(void) {
+  carbon_println("  GEN     carbon.h");
+  call_cmd("echo '// This file has been automatically generated.  DO NOT EDIT !!!\n' > carbon.h");
+  call_cmd("cat carbon.h.in >> carbon.h");
+  const char *hdrs[] = {
+    "src/carbon_deps.h",       "src/carbon_defs.h",       "src/carbon_types.h",        "src/carbon_version.h",
+    "src/carbon_test_entry.h", "src/carbon_assert.h",     "src/carbon_memory.h",       "src/carbon_coroutine.h",
+    "src/carbon_math.h",       "src/carbon_crypto.h",     "src/carbon_log.h",          "src/carbon_should.h",
+    "src/carbon_time.h",       "src/carbon_clock.h",      "src/carbon_list.h",         "src/carbon_circularqueue.h",
+    "src/carbon_hashmap.h",    "src/carbon_string.h",     "src/carbon_strview.h",      "src/carbon_strbuilder.h",
+    "src/carbon_strlist.h",    "src/carbon_drawcanvas.h", "src/carbon_fs.h",           "src/carbon_net.h",
+    "src/carbon_nn.h",         "src/carbon_win.h",        "src/carbon_test_manager.h", "src/carbon_junit.h",
+    "src/carbon_skap.h",       "src/carbon_aliases.h"
+  };
+  for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
+    call_cmd("echo >> carbon.h");
+    call_cmd(carbon_string_fmt("cat %s >> carbon.h", hdrs[i]));
+  }
+}
+
 static void test(void) {
   carbon_log_info("Running tests...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
@@ -147,7 +196,7 @@ static void test(void) {
 #else
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-  carbon_strbuilder_add_cstr(&cmd, "test/*.o -o " TESTBIN);
+  carbon_strbuilder_add_cstr(&cmd, "test/*.o " WORKDIR "/libcarbon.a -o " TESTBIN);
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r("test/*.o");
@@ -185,12 +234,6 @@ static void examples(void) {
   carbon_log_info("Building examples...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("examples/*.c");
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("examples/*.cc");
-  const char *gui_examples[] = {
-    "examples/flag_jp.c",
-    "examples/triangle.c",
-    "examples/orbiting.cc",
-    "examples/bouncing_square.cc"
-  };
   CBN_StrBuilder cmd = {0};
   carbon_fs_pattern_match_foreach(c_files) {
     carbon_println("  CCLD    %s", it.f);
@@ -201,11 +244,8 @@ static void examples(void) {
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
-    for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
-      if (!carbon_string_cmp(it.f, gui_examples[i])) carbon_strbuilder_add_cstr(&cmd, " " GUI_LIBS);
-    }
     carbon_string_strip_substr(it.f, ".c");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -o %s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -L " WORKDIR " -lcarbon -o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -218,11 +258,8 @@ static void examples(void) {
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
-    for (usz i = 0; i < CARBON_ARRAY_LEN(gui_examples); ++i) {
-      if (!carbon_string_cmp(it.f, gui_examples[i])) carbon_strbuilder_add_cstr(&cmd, " " GUI_LIBS);
-    }
     carbon_string_strip_substr(it.f, ".cc");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -o %s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -L " WORKDIR " -lcarbon -o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -233,7 +270,6 @@ static void package(void) {
   cp_dash_r("COPYING carbon.h", WORKDIR);
   carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
-  rm_dash_r(WORKDIR);
   carbon_log_info(WORKDIR ".tgz is ready");
 }
 
@@ -266,15 +302,18 @@ int main(int argc, char **argv) {
       rm_dash_r(program_name);
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "test")) {
-      test();
-      return 0;
-    }
     else if (!carbon_string_cmp(subcmd, "build")) {
+      hdrgen();
       build();
       return 0;
     }
+    else if (!carbon_string_cmp(subcmd, "test")) {
+      hdrgen();
+      test();
+      return 0;
+    }
     else if (!carbon_string_cmp(subcmd, "examples")) {
+      hdrgen();
       examples();
       return 0;
     }
@@ -283,8 +322,9 @@ int main(int argc, char **argv) {
       return 1;
     }
   }
-  test();
+  hdrgen();
   build();
+  test();
   examples();
   package();
   return 0;

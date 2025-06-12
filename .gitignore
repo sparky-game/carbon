@@ -4,6 +4,8 @@
 *.old
 *.tgz
 make
+carbon.h
+carbon-*/
 test/carbon
 examples/*
 !examples/*.c

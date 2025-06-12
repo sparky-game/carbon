@@ -10,7 +10,7 @@ on:
       - 'vendor/**'
       - 'examples/**/*.c'
       - 'examples/**/*.cc'
-      - 'carbon.h'
+      - 'carbon.h.in'
   pull_request:
     branches: [master]
     types: [opened, synchronize]
@@ -21,7 +21,7 @@ on:
       - 'vendor/**'
       - 'examples/**/*.c'
       - 'examples/**/*.cc'
-      - 'carbon.h'
+      - 'carbon.h.in'
   schedule:
     - cron: '0 9 * * 5'
 
@@ -57,10 +57,10 @@ jobs:
             libxi-dev
       - name: bootstrap
         run: ${{ matrix.compiler }} src/make.c -o make
-      - name: test
-        run: ./make test
       - name: build
         run: ./make build
+      - name: test
+        run: ./make test
       - name: examples
         run: ./make examples
       - name: analyze

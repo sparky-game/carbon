@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifndef CARBON_IMPLEMENTATION
-#include <carbon.h>
-#endif  // CARBON_IMPLEMENTATION
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_assert.h"
+#include "carbon_memory.h"
+#include "carbon_math.h"
+#include "carbon_log.h"
+#include "carbon_string.h"
+#include "carbon_crypto.h"
 
 #define CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS 4
 #define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p) (0 == ((uptr) (p) & 7))

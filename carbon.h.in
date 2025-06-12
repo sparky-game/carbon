@@ -1,0 +1,46 @@
+/*
+**  $$=================================================================================$$
+**  ||                                                                                 ||
+**  ||               ------                                                            ||
+**  ||            ------==+                                                            ||
+**  ||         ------=+++++                     _____            _                     ||
+**  ||      ------=+++++                       /  __ \          | |                    ||
+**  ||    =----=++++=           ------         | /  \/ __ _ _ __| |__   ___  _ __      ||
+**  ||    ***++++            ------=++         | |    / _` | '__| '_ \ / _ \| '_ \     ||
+**  ||    ***+++          ------=+++++         | \__/\ (_| | |  | |_) | (_) | | | |    ||
+**  ||    ***+++      ------==++++**++          \____/\__,_|_|  |_.__/ \___/|_| |_|    ||
+**  ||    ***+++     ++--==+++++****++                                                 ||
+**  ||    ***+++     ***+++++   ****++               The ultimate high-level           ||
+**  ||    ***+++      #*++      ****++                  library for C/C++              ||
+**  ||    ***+++                ****++                written in C11/C++14             ||
+**  ||    **+----             :---=+++                                                 ||
+**  ||    *****=-----      ------=++++            Licensed under AGPL-3.0-only         ||
+**  ||      #*****=-----------=+++++                                                   ||
+**  ||         ******=-----=+++++                        Wasym A. Alonso               ||
+**  ||            ******=+++++                                                         ||
+**  ||               ***+++                          wasymatieh01@gmail.com            ||
+**  ||                                                                                 ||
+**  ||                                        https://github.com/sparky-game/carbon    ||
+**  ||                                                                                 ||
+**  ||                                                                                 ||
+**  $$=================================================================================$$
+*/
+
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
+
+#pragma once
+
+#define CARBON_VERSION_MAJOR 0
+#define CARBON_VERSION_MINOR 13
+#define CARBON_VERSION_PATCH 0
+#define CARBON_VERSION_EXTRA "-alpha"
+
+/*
+**  Available compile-time options:
+**
+**    - CARBON_TESTING_ENTRY ------------> Redefines the `main` function, thus making it behave
+**                                         as a test suite entrypoint. It's only relevant to
+**                                         define it in the translation unit where we're defining
+**                                         the `main` function.
+*/

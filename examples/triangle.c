@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_IMPLEMENTATION
-#define CARBON_IMPLEMENTATION_WINDOWING
-#include "../carbon.h"
+#include <carbon.h>
 
 int main(void) {
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(640, 360);
