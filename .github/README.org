@@ -134,7 +134,7 @@ For more information, see <https://www.gnu.org/licenses/agpl-3.0>.
 
 As mentioned above, /Carbon/ is licensed under the GNU's *AGPL-3.0-only*, which means that any software created or that uses it is also subject to the same license. This implies that if you develop an application using /Carbon/, it must also be released as free software under the GNU's *AGPL-3.0-only*. This ensures that the freedoms to use, study, modify and share the software are preserved for everyone.
 
-If you prefer to release your application under a different, more commercially friendly license, there is an option available. You can purchase a copy of the *Carbon Runtime Library Exception (Carbon RLE)*, which is in essence a /GPL Exception/, for you to use this library without releasing your software under GNU's *AGPL-3.0-only*. Some key aspects of the *Carbon RLE* are the following:
+If you prefer to release your application under a different, more commercially friendly license, there is an option available. You can purchase a copy of the *Carbon Runtime Library Exception (Carbon RLE)*, which is in essence a /distinct commercial license/, for you to use this library without releasing your software under GNU's *AGPL-3.0-only*. Some key aspects of the *Carbon RLE* are the following:
 - *One-Time Purchase (OTP):* Once obtaining a copy of the RLE, it lasts forever without expiration date.
 - *Project-specific:* Each RLE is tied to a single project of yours.
 - *Version compatibility:* Each RLE applies to a specific branch or minor version of /Carbon/ (e.g. ~v1.0.y/lts~), enabling you to update the library to a more up-to-date version with the same RLE.
