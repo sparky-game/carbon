@@ -12,6 +12,6 @@ examples/*
 !examples/*.cc
 !examples/README.org
 
-ai/build/
-ai/build/testgen
-ai/*.diff
+testgen/build/
+testgen/build/testgen
+testgen/*.diff
