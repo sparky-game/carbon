@@ -47,6 +47,7 @@
 // C++
 #ifdef __cplusplus
 #include <string>
+#include <memory>
 #include <utility>
 #include <stdexcept>
 #include <type_traits>
