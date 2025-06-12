@@ -111,6 +111,11 @@ Once built, we can take a look at the available subcommands and options by issui
 ./make
 #+end_src
 
+#+begin_quote
+[!TIP]
+Checkout the [[../INSTALL][installation instructions]] to make /Carbon/ available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
+#+end_quote
+
 ** Examples
 
 A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all; for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
