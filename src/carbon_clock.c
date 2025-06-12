@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_time.h"
-#include "carbon_clock.h"
+#include "carbon.inc"
 
 CBN_Clock carbon_clock_start(void) {
   return (CBN_Clock) {

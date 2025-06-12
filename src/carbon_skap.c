@@ -1,23 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_assert.h"
-#include "carbon_memory.h"
-#include "carbon_list.h"
-#include "carbon_strlist.h"
-#include "carbon_string.h"
-#include "carbon_strview.h"
-#include "carbon_strbuilder.h"
-#include "carbon_hashmap.h"
-#include "carbon_log.h"
-#include "carbon_time.h"
-#include "carbon_fs.h"
-#include "carbon_skap.h"
-#include "carbon_crypto.h"
+#include "carbon.inc"
 
 #define CARBON_SKAP__HEX_SPEC "%#012x"
 

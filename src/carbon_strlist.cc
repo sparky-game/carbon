@@ -3,11 +3,7 @@
 
 #ifdef __cplusplus
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_strlist.h"
+#include "carbon.inc"
 
 CBN_StrList CBN_StrList::make(void) {
   return carbon_strlist_create(false);

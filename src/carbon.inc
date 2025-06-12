@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
+
+#pragma once
+
+#include "../carbon.h.in"
+#include "carbon_deps.h"
+#include "carbon_defs.h"
+#include "carbon_types.h"
+#include "carbon_version.h"
+#include "carbon_test_entry.h"
+#include "carbon_assert.h"
+#include "carbon_memory.h"
+#include "carbon_coroutine.h"
+#include "carbon_math.h"
+#include "carbon_crypto.h"
+#include "carbon_log.h"
+#include "carbon_should.h"
+#include "carbon_time.h"
+#include "carbon_clock.h"
+#include "carbon_list.h"
+#include "carbon_circularqueue.h"
+#include "carbon_hashmap.h"
+#include "carbon_string.h"
+#include "carbon_strview.h"
+#include "carbon_strbuilder.h"
+#include "carbon_strlist.h"
+#include "carbon_drawcanvas.h"
+#include "carbon_fs.h"
+#include "carbon_net.h"
+#include "carbon_nn.h"
+#include "carbon_win.h"
+#include "carbon_test_manager.h"
+#include "carbon_junit.h"
+#include "carbon_skap.h"
+
+// Local Variables:
+// mode: c
+// End:

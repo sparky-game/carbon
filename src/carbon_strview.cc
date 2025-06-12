@@ -3,12 +3,7 @@
 
 #ifdef __cplusplus
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_string.h"
-#include "carbon_strview.h"
+#include "carbon.inc"
 
 CBN_StrView CBN_StrView::make(const char *data, usz size) {
   return carbon_strview_from_buf(data, size);

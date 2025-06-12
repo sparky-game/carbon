@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_assert.h"
-#include "carbon_log.h"
-#include "carbon_string.h"
-#include "carbon_strview.h"
-#include "carbon_strlist.h"
+#include "carbon.inc"
 
 #define carbon_log__printv(stream, x) fprintf(stream, carbon_log__var_to_spec(x), (x))
 

@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
+#include "carbon.inc"
 
 char *carbon_version(usz *major, usz *minor, usz *patch) {
   if (major) *major = CARBON_VERSION_MAJOR;

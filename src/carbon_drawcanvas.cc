@@ -3,12 +3,7 @@
 
 #ifdef __cplusplus
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_math.h"
-#include "carbon_drawcanvas.h"
+#include "carbon.inc"
 
 CBN_DrawCanvas CBN_DrawCanvas::make(usz width, usz height) {
   return carbon_drawcanvas_create(width, height);

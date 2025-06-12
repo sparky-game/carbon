@@ -3,16 +3,7 @@
 
 #ifdef __cplusplus
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_math.h"
-#include "carbon_strview.h"
-#include "carbon_strbuilder.h"
-#include "carbon_list.h"
-#include "carbon_drawcanvas.h"
-#include "carbon_fs.h"
+#include "carbon.inc"
 
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) {
   return const_cast<iterator>(static_cast<const CBN_PatternMatchedFiles &>(*this).begin());

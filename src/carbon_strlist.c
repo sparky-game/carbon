@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "../carbon.h.in"
-#include "carbon_deps.h"
-#include "carbon_defs.h"
-#include "carbon_types.h"
-#include "carbon_assert.h"
-#include "carbon_memory.h"
-#include "carbon_string.h"
-#include "carbon_strlist.h"
-#include "carbon_log.h"
+#include "carbon.inc"
 
 static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
   for (usz i = 0; i < sl->size; ++i) {
