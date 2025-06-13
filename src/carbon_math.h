@@ -399,6 +399,11 @@ typedef union CBN_Vec3 {
 #define CARBON_RECT_SQUARE_V(v, sz) CARBON_RECT_SQUARE(v.x, v.y, sz)
 
 /**
+ * @brief Defines an inline rectangle whose 4 elements are equal to zero.
+ */
+#define CARBON_RECT_ZERO CARBON_RECT(0, 0, 0, 0)
+
+/**
  * @brief Represents the position and size of a rectangle with four 32-bit floating-point (f32) values.
  */
 typedef struct CBN_Rect {
