@@ -46,17 +46,11 @@ static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
   "%s homepage: <https://github.com/sparky-game/carbon>\n";
 
-static inline void exit_gracefully(void) {
-  // TODO: avoid forward declaring `clean` by implementing `rm_dash_r` in the lib itself
-  void clean(void);
-  clean(); exit(1);
-}
-
 // TODO: migrate this func to the lib itself
 static void call_cmd(const char *cmd) {
   if (!system(cmd)) return;
-  carbon_log_error("Unable to run `%s`", cmd);
-  exit_gracefully();
+  carbon_log_error("Failed to run `%s`", cmd);
+  CARBON_UNREACHABLE;
 }
 
 // TODO: migrate this func to the lib itself
@@ -69,17 +63,6 @@ static void rm_dash_r(const char *path) {
 static void cp_dash_r(const char *origin, const char *dest) {
   carbon_println("  CP      %s -> %s", origin, dest);
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
-}
-
-void clean(void) {
-  rm_dash_r("carbon.h");
-  rm_dash_r(TESTBIN);
-  rm_dash_r("test/*.o");
-  rm_dash_r(WORKDIR);
-  rm_dash_r("examples/*.bin");
-  rm_dash_r("examples/*.bin.old");
-  rm_dash_r("examples/*.png");
-  rm_dash_r(WORKDIR ".tgz");
 }
 
 static void rebuild_myself(char * const *host_argv) {
@@ -122,6 +105,17 @@ static void rebuild_myself(char * const *host_argv) {
     carbon_log_error("unable to execvp rebuilt binary");
     exit(1);
   }
+}
+
+static void clean(void) {
+  rm_dash_r("carbon.h");
+  rm_dash_r(TESTBIN);
+  rm_dash_r("test/*.o");
+  rm_dash_r(WORKDIR);
+  rm_dash_r("examples/*.bin");
+  rm_dash_r("examples/*.bin.old");
+  rm_dash_r("examples/*.png");
+  rm_dash_r(WORKDIR ".tgz");
 }
 
 static void hdrgen(void) {
@@ -191,7 +185,7 @@ static void test(void) {
 static void build(void) {
   carbon_log_info("Building...");
   carbon_println("  MKDIR   " WORKDIR);
-  if (!carbon_fs_create_directory(WORKDIR)) exit_gracefully();
+  if (!carbon_fs_create_directory(WORKDIR)) CARBON_UNREACHABLE;
   CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
   CBN_PatternMatchedFiles cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc");
   carbon_fs_pattern_match_foreach(c_files) {
