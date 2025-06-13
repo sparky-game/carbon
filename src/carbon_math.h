@@ -427,6 +427,8 @@ typedef struct CBN_Rect {
    * @param s The scale factor value.
    */
   void Scale(const f32 s);
+  // Overloaded Operators
+  bool operator==(const CBN_Rect &r) const;
 #endif
 } CBN_Rect;
 

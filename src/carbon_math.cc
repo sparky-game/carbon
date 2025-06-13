@@ -175,4 +175,8 @@ void CBN_Rect::Scale(const f32 s) {
   carbon_math_rect_scale(this, s);
 }
 
+bool CBN_Rect::operator==(const CBN_Rect &r) const {
+  return (x == r.x) && (y == r.y) && (w == r.w) && (h == r.h);
+}
+
 #endif  // __cplusplus
