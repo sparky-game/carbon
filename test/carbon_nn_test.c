@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_nn, or_gate) {
+#define TEST(name) CARBON_TEST(carbon_nn, name)
+
+TEST(or_gate) {
   usz arch[] = {2, 1, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -30,7 +32,7 @@ CARBON_TEST(carbon_nn, or_gate) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_nn, nor_gate) {
+TEST(nor_gate) {
   usz arch[] = {2, 1, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -57,7 +59,7 @@ CARBON_TEST(carbon_nn, nor_gate) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_nn, and_gate) {
+TEST(and_gate) {
   usz arch[] = {2, 1, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -84,7 +86,7 @@ CARBON_TEST(carbon_nn, and_gate) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_nn, nand_gate) {
+TEST(nand_gate) {
   usz arch[] = {2, 1, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -111,7 +113,7 @@ CARBON_TEST(carbon_nn, nand_gate) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_nn, xor_gate) {
+TEST(xor_gate) {
   usz arch[] = {2, 2, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -138,7 +140,7 @@ CARBON_TEST(carbon_nn, xor_gate) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_nn, xnor_gate) {
+TEST(xnor_gate) {
   usz arch[] = {2, 2, 1};
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
@@ -164,3 +166,5 @@ CARBON_TEST(carbon_nn, xnor_gate) {
   carbon_nn_destroy(&nn);
   return CARBON_OK;
 }
+
+#undef TEST

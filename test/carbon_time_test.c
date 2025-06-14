@@ -3,9 +3,13 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_time, snowflake) {
+#define TEST(name) CARBON_TEST(carbon_time, name)
+
+TEST(snowflake) {
   CBN_SnowflakeComponents cmps = carbon_time_snowflake_parse(1160192133117220889);
   carbon_should_be_u64(1733452918, cmps.timestamp);
   carbon_should_be_u64(2594841, cmps.random);
   return CARBON_OK;
 }
+
+#undef TEST

@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_crypto, base64) {
+#define TEST(name) CARBON_TEST(carbon_crypto, name)
+
+TEST(base64) {
   const char *msg = "Hello";
   const usz msg_size = carbon_string_len(msg);
   usz b64_msg_size = 0;
@@ -19,7 +21,7 @@ CARBON_TEST(carbon_crypto, base64) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_crypto, crc32) {
+TEST(crc32) {
   const char *msg = "Hello";
   const usz msg_size = carbon_string_len(msg);
   u32 crc32_msg = carbon_crypto_crc32((const u8 *) msg, msg_size);
@@ -27,7 +29,7 @@ CARBON_TEST(carbon_crypto, crc32) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_crypto, keccak256_ShortMsgKAT_0) {
+TEST(keccak256_ShortMsgKAT_0) {
   // Using official known-answer and Monte Carlo test results as of round 3
   // of the SHA-3 competition: <https://keccak.team/obsolete/KeccakKAT-3.zip>.
   // Specifically, this test uses `Len = 0` from `ShortMsgKAT_256.txt`.
@@ -36,7 +38,7 @@ CARBON_TEST(carbon_crypto, keccak256_ShortMsgKAT_0) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_crypto, keccak256_ShortMsgKAT_8_456) {
+TEST(keccak256_ShortMsgKAT_8_456) {
   // Using official known-answer and Monte Carlo test results as of round 3
   // of the SHA-3 competition: <https://keccak.team/obsolete/KeccakKAT-3.zip>.
   // Specifically, this test uses `Len = {8..456}` from `ShortMsgKAT_256.txt`.
@@ -221,3 +223,5 @@ CARBON_TEST(carbon_crypto, keccak256_ShortMsgKAT_8_456) {
 #undef KAT
   return CARBON_OK;
 }
+
+#undef TEST

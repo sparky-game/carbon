@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_strlist, create_destroy) {
+#define TEST(name) CARBON_TEST(carbon_strlist, name)
+
+TEST(create_destroy) {
   CBN_StrList sl = carbon_strlist_create(false);
   carbon_should_be(0, sl.size);
   carbon_should_be(1, sl.capacity);
@@ -15,7 +17,7 @@ CARBON_TEST(carbon_strlist, create_destroy) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_strlist, push_pop_single) {
+TEST(push_pop_single) {
   CBN_StrList sl = carbon_strlist_create(false);
   carbon_strlist_push(&sl, "hello");
   carbon_should_be(1, sl.size);
@@ -29,7 +31,7 @@ CARBON_TEST(carbon_strlist, push_pop_single) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_strlist, push_pop_multiple) {
+TEST(push_pop_multiple) {
   CBN_StrList sl = carbon_strlist_create(false);
   carbon_strlist_push(&sl, "hello");
   carbon_strlist_push(&sl, "bye");
@@ -45,7 +47,7 @@ CARBON_TEST(carbon_strlist, push_pop_multiple) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_strlist, split_cstr) {
+TEST(split_cstr) {
   const char *s = "apple,banana,orange";
   CBN_StrList s_splitted = carbon_strlist_from_splitted_cstr(s, ",");
   carbon_should_be(3, s_splitted.size);
@@ -55,3 +57,5 @@ CARBON_TEST(carbon_strlist, split_cstr) {
   carbon_strlist_destroy(&s_splitted);
   return CARBON_OK;
 }
+
+#undef TEST

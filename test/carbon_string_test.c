@@ -3,22 +3,26 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_string, starts_with_substr) {
+#define TEST(name) CARBON_TEST(carbon_string, name)
+
+TEST(starts_with_substr) {
   const char *s = "Hello, World!";
   carbon_should_be_true(carbon_string_starts_with_substr(s, "Hello"));
   carbon_should_be_false(carbon_string_starts_with_substr(s, "Привет"));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_string, ends_with_substr) {
+TEST(ends_with_substr) {
   const char *s = "Hello, World!";
   carbon_should_be_true(carbon_string_ends_with_substr(s, "World!"));
   carbon_should_be_false(carbon_string_ends_with_substr(s, "Мир!"));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_string, lev_dist) {
+TEST(lev_dist) {
   carbon_should_be(2, carbon_string_lev_dist("add", "daddy"));
   carbon_should_be(2, carbon_string_lev_dist("daddy", "add"));
   return CARBON_OK;
 }
+
+#undef TEST

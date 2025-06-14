@@ -3,19 +3,21 @@
 
 #include <carbon.h>
 
-static unsigned char test_dummy(void) {
+static u8 test_dummy(void) {
   carbon_should_be_true(1 == 1);
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_test_manager, suite_creation) {
+#define TEST(name) CARBON_TEST(carbon_test_manager, name)
+
+TEST(suite_creation) {
   CBN_Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_test_manager, registration) {
+TEST(registration) {
   CBN_Suite s = carbon_test_manager_spawn();
   carbon_should_be_p(0, s.tests);
   carbon_should_be(0, s.n);
@@ -30,3 +32,5 @@ CARBON_TEST(carbon_test_manager, registration) {
   carbon_should_be(0, s.n);
   return CARBON_OK;
 }
+
+#undef TEST

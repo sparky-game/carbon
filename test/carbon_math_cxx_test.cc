@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_math_ops, vec2_add) {
+#define TEST(name) CARBON_TEST(carbon_math_cxx, name)
+
+TEST(vec2_add) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   CBN_Vec2 r = u + v;
@@ -12,7 +14,7 @@ CARBON_TEST(carbon_math_ops, vec2_add) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math_ops, vec3_add) {
+TEST(vec3_add) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   CBN_Vec3 r = u + v;
@@ -22,7 +24,7 @@ CARBON_TEST(carbon_math_ops, vec3_add) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math_ops, vec2_sub) {
+TEST(vec2_sub) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   CBN_Vec2 r = u - v;
@@ -31,7 +33,7 @@ CARBON_TEST(carbon_math_ops, vec2_sub) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math_ops, vec3_sub) {
+TEST(vec3_sub) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   CBN_Vec3 r = u - v;
@@ -41,16 +43,18 @@ CARBON_TEST(carbon_math_ops, vec3_sub) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math_ops, vec2_dot) {
+TEST(vec2_dot) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   carbon_should_be_f(11, u * v);
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math_ops, vec3_dot) {
+TEST(vec3_dot) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   carbon_should_be_f(32, u * v);
   return CARBON_OK;
 }
+
+#undef TEST

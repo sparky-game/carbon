@@ -3,7 +3,9 @@
 
 #include <carbon.h>
 
-CARBON_TEST(carbon_math, abs) {
+#define TEST(name) CARBON_TEST(carbon_math, name)
+
+TEST(abs) {
   carbon_should_be(77, carbon_math_abs(-77));
   carbon_should_be(77, carbon_math_abs(77));
   carbon_should_be_f(6.9, carbon_math_abs(-6.9));
@@ -11,7 +13,7 @@ CARBON_TEST(carbon_math, abs) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, round) {
+TEST(round) {
   carbon_should_be_f(-5, carbon_math_round(-4.5));
   carbon_should_be_f(-4, carbon_math_round(-4.4));
   carbon_should_be_f(-1, carbon_math_round(-0.5));
@@ -22,7 +24,7 @@ CARBON_TEST(carbon_math, round) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, floor) {
+TEST(floor) {
   carbon_should_be_f(-5, carbon_math_floor(-4.5));
   carbon_should_be_f(-5, carbon_math_floor(-4.4));
   carbon_should_be_f(-1, carbon_math_floor(-0.5));
@@ -33,7 +35,7 @@ CARBON_TEST(carbon_math, floor) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, ceil) {
+TEST(ceil) {
   carbon_should_be_f(-4, carbon_math_ceil(-4.5));
   carbon_should_be_f(-4, carbon_math_ceil(-4.4));
   carbon_should_be_f(0, carbon_math_ceil(-0.5));
@@ -44,13 +46,13 @@ CARBON_TEST(carbon_math, ceil) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, sqrt) {
+TEST(sqrt) {
   carbon_should_be_f(CARBON_SQRT2, carbon_math_sqrt(2));
   carbon_should_be_f(CARBON_SQRT3, carbon_math_sqrt(3));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, fmod) {
+TEST(fmod) {
   carbon_should_be_f(0, carbon_math_fmod(1, 1));
   carbon_should_be_f(0, carbon_math_fmod(2, 1));
   carbon_should_be_f(0, carbon_math_fmod(4, 1));
@@ -65,7 +67,7 @@ CARBON_TEST(carbon_math, fmod) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, pow) {
+TEST(pow) {
   carbon_should_be_f(0, carbon_math_pow(0, 1));
   carbon_should_be_f(0, carbon_math_pow(0, 69));
   carbon_should_be_f(1, carbon_math_pow(-69, 0));
@@ -79,7 +81,7 @@ CARBON_TEST(carbon_math, pow) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, exp2) {
+TEST(exp2) {
   carbon_should_be_f(0.125, carbon_math_exp2(-3));
   carbon_should_be_f(0.25, carbon_math_exp2(-2));
   carbon_should_be_f(0.5, carbon_math_exp2(-1));
@@ -90,7 +92,7 @@ CARBON_TEST(carbon_math, exp2) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, exp) {
+TEST(exp) {
   carbon_should_be_f(1, carbon_math_exp(0));
   carbon_should_be_f(CARBON_E, carbon_math_exp(1));
   carbon_should_be_f(CARBON_E_0_5, carbon_math_exp(0.5));
@@ -99,7 +101,7 @@ CARBON_TEST(carbon_math, exp) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, exp10) {
+TEST(exp10) {
   carbon_should_be_f(0.001, carbon_math_exp10(-3));
   carbon_should_be_f(0.01, carbon_math_exp10(-2));
   carbon_should_be_f(0.1, carbon_math_exp10(-1));
@@ -110,7 +112,7 @@ CARBON_TEST(carbon_math, exp10) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, frexp) {
+TEST(frexp) {
   i32 exp;
   carbon_should_be_f(0.625, carbon_math_frexp(2560, &exp));
   carbon_should_be(12, exp);
@@ -119,7 +121,7 @@ CARBON_TEST(carbon_math, frexp) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, sigmoid) {
+TEST(sigmoid) {
   carbon_should_be_f(0, carbon_math_sigmoid(-14));
   carbon_should_be_f(0.006692, carbon_math_sigmoid(-5));
   carbon_should_be_f(0.047425, carbon_math_sigmoid(-3));
@@ -132,7 +134,7 @@ CARBON_TEST(carbon_math, sigmoid) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, tanh) {
+TEST(tanh) {
   carbon_should_be_f(-1, carbon_math_tanh(-14));
   carbon_should_be_f(-0.995054, carbon_math_tanh(-3));
   carbon_should_be_f(-0.761594, carbon_math_tanh(-1));
@@ -143,7 +145,7 @@ CARBON_TEST(carbon_math, tanh) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, smoothstep) {
+TEST(smoothstep) {
   carbon_should_be_f(0, carbon_math_smoothstep(0, 1, 0));
   carbon_should_be_f(0.028, carbon_math_smoothstep(0, 1, 0.1));
   carbon_should_be_f(0.5, carbon_math_smoothstep(0, 1, 0.5));
@@ -152,13 +154,13 @@ CARBON_TEST(carbon_math, smoothstep) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, concat) {
+TEST(concat) {
   carbon_should_be_u64(1069, carbon_math_concat(10, 69));
   carbon_should_be_u64(20250511, carbon_math_concat(carbon_math_concat(2025*10, 5), 11));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, asin) {
+TEST(asin) {
   carbon_should_be_f(-1.119769, carbon_math_asin(-0.90));
   carbon_should_be_f(-0.848062, carbon_math_asin(-0.75));
   carbon_should_be_f(-0.523599, carbon_math_asin(-0.5));
@@ -171,7 +173,7 @@ CARBON_TEST(carbon_math, asin) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec2_add) {
+TEST(vec2_add) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   CBN_Vec2 r = carbon_math_vec2_add(u, v);
@@ -180,7 +182,7 @@ CARBON_TEST(carbon_math, vec2_add) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec3_add) {
+TEST(vec3_add) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   CBN_Vec3 r = carbon_math_vec3_add(u, v);
@@ -190,7 +192,7 @@ CARBON_TEST(carbon_math, vec3_add) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec2_sub) {
+TEST(vec2_sub) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   CBN_Vec2 r = carbon_math_vec2_sub(u, v);
@@ -199,7 +201,7 @@ CARBON_TEST(carbon_math, vec2_sub) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec3_sub) {
+TEST(vec3_sub) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   CBN_Vec3 r = carbon_math_vec3_sub(u, v);
@@ -209,21 +211,21 @@ CARBON_TEST(carbon_math, vec3_sub) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec2_dot) {
+TEST(vec2_dot) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
   carbon_should_be_f(11, carbon_math_vec2_dot(u, v));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec3_dot) {
+TEST(vec3_dot) {
   CBN_Vec3 u = {{1, 2, 3}};
   CBN_Vec3 v = {{4, 5, 6}};
   carbon_should_be_f(32, carbon_math_vec3_dot(u, v));
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, vec3_cross) {
+TEST(vec3_cross) {
   CBN_Vec3 u = {{3, -3, 1}};
   CBN_Vec3 v = {{4, 9, 2}};
   CBN_Vec3 r = carbon_math_vec3_cross(u, v);
@@ -233,7 +235,7 @@ CARBON_TEST(carbon_math, vec3_cross) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, rect_contains_point) {
+TEST(rect_contains_point) {
   CBN_Rect r = {0, 0, 10, 5};
   CBN_Vec2 p1 = {{8, 3}};
   CBN_Vec2 p2 = {{3, 8}};
@@ -242,7 +244,7 @@ CARBON_TEST(carbon_math, rect_contains_point) {
   return CARBON_OK;
 }
 
-CARBON_TEST(carbon_math, rect_detect_collision) {
+TEST(rect_detect_collision) {
   CBN_Rect r1 = {0, 5, 5, 5}, r2 = {4, 11, 5, 5};
   carbon_should_be_false(carbon_math_rect_detect_collision(r1, r2));
   carbon_should_be_false(carbon_math_rect_detect_collision(r2, r1));
@@ -254,3 +256,5 @@ CARBON_TEST(carbon_math, rect_detect_collision) {
   carbon_should_be_true(carbon_math_rect_detect_collision(r6, r5));
   return CARBON_OK;
 }
+
+#undef TEST
