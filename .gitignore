@@ -6,7 +6,7 @@
 make
 carbon.h
 carbon-*/
-test/carbon
+test/testentry
 examples/*
 !examples/*.c
 !examples/*.cc

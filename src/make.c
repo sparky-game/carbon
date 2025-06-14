@@ -16,7 +16,7 @@
 #include "carbon_strlist.c"
 #include "carbon_fs.c"
 
-#define TESTBIN "./test/carbon"
+#define TESTBIN "./test/testentry"
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
 #define C_STD   "-std=c11"
