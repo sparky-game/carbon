@@ -81,7 +81,7 @@ typedef struct CBN_StrView {
   bool operator!=(const CBN_StrView &sv) const;
   bool operator!=(const char *s) const;
   friend bool operator!=(const char *s, const CBN_StrView &sv);
-  friend constexpr CBN_StrView operator""sv(const char *s, usz len);
+  friend constexpr CBN_StrView operator""_sv(const char *s, usz len);
 #endif
 } CBN_StrView;
 
