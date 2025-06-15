@@ -24,13 +24,13 @@ typedef struct CBN_StrView {
    * @param size The size of the char buffer.
    * @return The StrView representing the provided char buffer.
    */
-  static CBN_StrView make(const char *data, usz size);
+  static constexpr CBN_StrView make(const char *data, usz size);
   /**
    * @brief carbon_strview_from_cstr
    * @param s The pointer to the standard C char array.
    * @return The StrView representing the provided C-style string.
    */
-  static CBN_StrView make(const char *s);
+  static constexpr CBN_StrView make(const char *s);
   /**
    * @brief carbon_strview_from_strbuilder
    * @param sb The StrBuilder holding the data.

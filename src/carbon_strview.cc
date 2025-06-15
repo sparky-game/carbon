@@ -5,11 +5,11 @@
 
 #include "carbon.inc"
 
-CBN_StrView CBN_StrView::make(const char *data, usz size) {
+constexpr CBN_StrView CBN_StrView::make(const char *data, usz size) {
   return carbon_strview_from_buf(data, size);
 }
 
-CBN_StrView CBN_StrView::make(const char *s) {
+constexpr CBN_StrView CBN_StrView::make(const char *s) {
   return carbon_strview_from_cstr(s);
 }
 
