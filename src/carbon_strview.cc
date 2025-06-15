@@ -5,11 +5,11 @@
 
 #include "carbon.inc"
 
-constexpr CBN_StrView CBN_StrView::make(const char *data, usz size) {
+CBN_StrView CBN_StrView::make(const char *data, usz size) {
   return carbon_strview_from_buf(data, size);
 }
 
-constexpr CBN_StrView CBN_StrView::make(const char *s) {
+CBN_StrView CBN_StrView::make(const char *s) {
   return carbon_strview_from_cstr(s);
 }
 
@@ -69,7 +69,7 @@ bool operator!=(const char *s, const CBN_StrView &sv) {
   return !(s == sv);
 }
 
-constexpr CBN_StrView operator""_sv(const char *s, usz len) {
+CBN_StrView operator""_sv(const char *s, usz len) {
   return CBN_StrView::make(s, len);
 }
 
