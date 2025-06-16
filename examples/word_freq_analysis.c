@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   // Read file
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
-    carbon_log_error("file (`%$`) could not be read", $(file));
+    carbon_log_error("FILE (`%$`) could not be read", $(file));
     return 1;
   }
 
