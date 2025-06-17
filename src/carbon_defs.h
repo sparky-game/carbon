@@ -28,7 +28,6 @@
 #define CARBON_UNUSED(x) CARBON_NOTUSED(x)
 #define CARBON_ARRAY_LEN(x) (sizeof((x)) / sizeof((x)[0]))
 #define CARBON_ARRAY_SHIFT(xs, xs_sz) (CARBON_ASSERT((xs_sz) > 0), --(xs_sz), *(xs)++)
-#define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
 #define CARBON_UNREACHABLE CARBON_ASSERT(false && "unreachable")
@@ -36,8 +35,10 @@
 #define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
 
 #ifdef __cplusplus
+#define CARBON_TYPE_OF(x) decltype(x)
 #define CARBON_TYPE_IS_SAME(T, U) std::is_same<T, U>::value
 #else
+#define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
@@ -130,3 +131,7 @@
 #else
 #define CARBON_COMPILER CARBON_C_COMPILER
 #endif
+
+// Local Variables:
+// mode: c++
+// End:
