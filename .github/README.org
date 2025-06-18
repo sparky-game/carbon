@@ -15,6 +15,7 @@
 <img src="https://img.shields.io/badge/C++-14-blue" alt="C++ Standard">
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=blue" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
+<img src="https://cla-assistant.io/readme/badge/sparky-game/carbon" alt="SCLA signatures count">
 </p>
 #+end_html
 
@@ -32,9 +33,9 @@ If you'd like to make a contribution, you can check the project's [[../CONTRIBUT
 
 We use *CI/CD* to ensure the final product has the expected level of quality, if not more 🚀. This is the summary of the pipelines being run:
 
-| *Kind*                        | *Target*          | *Status*                                                                                                         |
-| CI (/Continuous Integration/) | /master/          | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" alt="CI Pipeline">@@ |
-| CD (/Continuous Deployment/)  | /master/docs/www/ | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" alt="CD Website">@@ |
+| *Kind*                        | *Target*          | *Status*                                                                                                                                                                |
+| CI (/Continuous Integration/) | /master/          | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" href="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml">@@   |
+| CD (/Continuous Deployment/)  | /master/docs/www/ | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" href="https://github.com/sparky-game/carbon/actions/workflows/www.yaml">@@ |
 
 -----
 
