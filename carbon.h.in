@@ -39,8 +39,8 @@
 /*
 **  Available compile-time options:
 **
-**    - CARBON_TESTING_ENTRY ------------> Redefines the `main` function, thus making it behave
-**                                         as a test suite entrypoint. It's only relevant to
-**                                         define it in the translation unit where we're defining
-**                                         the `main` function.
+**    - CARBON_TESTING_ENTRY --> Redefines the `main` function, thus making it behave
+**                               as a test suite entrypoint. It's only relevant to
+**                               define it in the translation unit where we're defining
+**                               the `main` function.
 */
