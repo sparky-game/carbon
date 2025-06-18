@@ -3,6 +3,13 @@
 
 Thank you for your interest in contributing to this project, it is extremely appreciated.
 
+#+begin_quote
+[!IMPORTANT]
+In order to accept your contribution is necessary to accept the terms of the [[https://gist.github.com/iWas-Coder/d75ad634d2c00d02785273ddf5c25a70][Sparky Contributor License Agreement (SCLA)]].
+
+We use it to be able to sell copies of the *CRLE (Carbon Runtime Library Exception)*, which is in essence a /distinct commercial license/, for you to use this library without releasing your software under GNU's *AGPL-3.0-only*. The CRLE is just a license/legal agreement, it doesn't contain any modified versions of the library and *never* will be.
+#+end_quote
+
 * Submitting changes
 
 Please, send a GitHub Pull Request (PR) to [[https://github.com/sparky-game/carbon][sparky-game/carbon]] with a clear list of what you've done ([[http://help.github.com/pull-requests/][read more about PRs]]). The best place to start is to fork the repository to your personal profile, and start working from there.
@@ -15,15 +22,17 @@ git commit -s -m "Commit subject
 > A paragraph describing what changed and its impact."
 #+end_src
 
+The ~-s~ switch is mandatory, as it automatically appends the *DCO-compliant* ~Signed-off-by~ line to the commit message. For more information about DCO, see [[https://developercertificate.org][this]].
+
 * Coding conventions
 
 Start reading our code and you'll get the hang of it. We optimize for readabillity, but not compromising on its looks:
 
-- We indent using two spaces (soft tabs)
-- We ALWAYS put spaces after list items and method parameters (~[1, 2, 3]~, not ~[1,2,3]~) and around operators (~x += 1~, not ~x+=1~)
+- We indent using two spaces (soft tabs).
+- We ALWAYS put spaces after list items and method parameters (~[1, 2, 3]~, not ~[1,2,3]~) and around operators (~x += 1~, not ~x+=1~).
 - This is free and open source software. Consider the people who will read your code, and make it look nice for them. It's sort of like driving a car: perhaps you love doing donuts when you're alone, but with passengers the goal is to make the ride as smooth as possible.
 
-For more information, see [[https://github.com/sparky-game/carbon/blob/master/CODE_OF_CONDUCT.md][CODE_OF_CONDUCT.md]].
+For more information, see [[../CODE_OF_CONDUCT.md][CODE_OF_CONDUCT.md]].
 
 Thanks a lot. Yours faithfully,
 
