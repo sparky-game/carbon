@@ -57,12 +57,8 @@ namespace cbn {
       return carbon_win_forframe(std::forward<Args>(args)...);
     }
   }
-  template <typename T>
-  using Scope = std::unique_ptr<T>;
-  template <typename T>
-  using Ref = std::shared_ptr<T>;
 }
-#endif
+#endif  // __cplusplus
 
 // Local Variables:
 // mode: c++

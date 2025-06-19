@@ -49,6 +49,6 @@
 #include <string>
 #include <memory>
 #include <utility>
-#include <stdexcept>
+#include <optional>
 #include <type_traits>
 #endif

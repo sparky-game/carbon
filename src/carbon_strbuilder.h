@@ -19,13 +19,10 @@ typedef struct CBN_StrBuilder {
 #ifdef __cplusplus
   /**
    * @brief carbon_fs_read_entire_file
-   *
-   * It may throw a `std::runtime_error` if there was a problem reading the file.
-   *
    * @param file The filename to read the data from.
    * @return The StrBuilder object where the read data will be stored.
    */
-  static CBN_StrBuilder make(const char *file);
+  static Opt<CBN_StrBuilder> make(const char *file);
   /**
    * @brief carbon_strbuilder_free
    */

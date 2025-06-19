@@ -30,3 +30,16 @@ typedef u32 uint;
 typedef size_t usz;
 typedef ssize_t isz;
 typedef uintptr_t uptr;
+
+#ifdef __cplusplus
+template <typename T>
+using Opt = std::optional<T>;
+template <typename T>
+using Scope = std::unique_ptr<T>;
+template <typename T>
+using Ref = std::shared_ptr<T>;
+#endif  // __cplusplus
+
+// Local Variables:
+// mode: c++
+// End:
