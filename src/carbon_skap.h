@@ -45,13 +45,55 @@ typedef struct {
   u64 build_ver;
 } CBN_SKAP_Header;
 
-typedef struct {
+typedef struct CBN_SKAP {
   FILE *fd;
   usz blob_section_start_pos;
   CBN_SKAP_Header header;
   usz type_counters[CARBON_SKAP_ASSET_TYPE_COUNT];
   CBN_HashMap idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
-} CBN_SKAP_Handle;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_skap_create
+   * @param decl The filename of the DECL file in disk.
+   * @param skap The filename that the resulting SKAP file should have in disk.
+   * @return A boolean value indicating whether it created the SKAP successfully or not.
+   */
+  static u8 Create(const char *decl, const char *skap);
+  /**
+   * @brief carbon_skap_open
+   * @param skap The filename of the SKAP in disk.
+   * @return The handle info object of the opened SKAP.
+   */
+  static Opt<CBN_SKAP> make(const char *skap);
+  /**
+   * @brief carbon_skap_close
+   */
+  void Free(void);
+  /**
+   * @brief carbon_skap_print
+   */
+  void Print(void) const;
+  /**
+   * @brief carbon_skap_lookup
+   */
+  template <typename T>
+  Opt<T> Lookup(const char *asset_name) const;
+  /**
+   * @brief carbon_skap_count
+   * @return The number of assets stored in the opened SKAP.
+   */
+  usz Count(void) const;
+  /**
+   * @brief carbon_skap_count_of
+   * @return The number of assets of the specified type stored in the opened SKAP.
+   */
+  template <typename T>
+  usz CountOf(void) const;
+private:
+  template <typename T>
+  static constexpr CBN_SKAP_AssetType GetAssetType(void);
+#endif
+} CBN_SKAP;
 
 /**
  * @brief Creates a SKAP from a declarations (DECL) file.
@@ -77,19 +119,19 @@ CARBON_API u8 carbon_skap_create(const char *decl, const char *skap);
  * @param out_handle The handle info object of the opened SKAP (output argument pointer).
  * @return A boolean value indicating whether it opened the SKAP successfully or not.
  */
-CARBON_API u8 carbon_skap_open(const char *skap, CBN_SKAP_Handle *out_handle);
+CARBON_API u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle);
 
 /**
  * @brief Closes a previously opened SKAP.
  * @param handle The handle info object of the opened SKAP.
  */
-CARBON_API void carbon_skap_close(CBN_SKAP_Handle *handle);
+CARBON_API void carbon_skap_close(CBN_SKAP *handle);
 
 /**
  * @brief Prints out the metadata or global info of a SKAP.
  * @param handle The handle info object of the opened SKAP.
  */
-CARBON_API void carbon_skap_print(const CBN_SKAP_Handle *handle);
+CARBON_API void carbon_skap_print(const CBN_SKAP *handle);
 
 /**
  * @brief Requests the retrieval or acquisition of an asset from a SKAP.
@@ -99,14 +141,14 @@ CARBON_API void carbon_skap_print(const CBN_SKAP_Handle *handle);
  * @param out_blob The retrieved asset from the SKAP (output argument pointer).
  * @return A boolean value indicating whether it retrieved the requested asset from the SKAP successfully or not.
  */
-CARBON_API u8 carbon_skap_lookup(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
+CARBON_API u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
 
 /**
  * @brief Counts how many assets are stored in a SKAP.
  * @param handle The handle info object of the opened SKAP.
  * @return The number of assets stored in the opened SKAP.
  */
-CARBON_API usz carbon_skap_count(const CBN_SKAP_Handle *handle);
+CARBON_API usz carbon_skap_count(const CBN_SKAP *handle);
 
 /**
  * @brief Counts how many assets of a specific type are stored in a SKAP.
@@ -114,4 +156,45 @@ CARBON_API usz carbon_skap_count(const CBN_SKAP_Handle *handle);
  * @param type The asset type you're interested in.
  * @return The number of assets of the specified type stored in the opened SKAP.
  */
-CARBON_API usz carbon_skap_count_of(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType type);
+CARBON_API usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type);
+
+// Because `CBN_SKAP` has some templated member functions, their definitions
+// need to be available at compile-time, not link-time; thus, we define them
+// here for the template instantiation to work properly.
+#ifdef __cplusplus
+/**
+ * @brief CBN_SKAP.Lookup<T>
+ */
+template <typename T>
+Opt<T> CBN_SKAP::Lookup(const char *asset_name) const {
+  T asset;
+  if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
+  return asset;
+}
+/**
+ * @brief CBN_SKAP.CountOf<T>
+ */
+template <typename T>
+usz CBN_SKAP::CountOf(void) const {
+  return carbon_skap_count_of(this, GetAssetType<T>());
+}
+/**
+ * @brief CBN_SKAP::GetAssetType<T>
+ */
+template <typename T>
+constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
+  CARBON_STATIC_ASSERT(false, "CBN_SKAP::GetAssetType<T> :: type T is not a valid asset type");
+  return CARBON_SKAP_ASSET_TYPE_COUNT;
+}
+/**
+ * @brief CBN_SKAP::GetAssetType<CBN_Image>
+ */
+template <>
+constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType<CBN_Image>(void) {
+  return CARBON_SKAP_ASSET_TYPE_IMAGE;
+}
+#endif  // __cplusplus
+
+// Local Variables:
+// mode: c++
+// End:

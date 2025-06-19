@@ -27,7 +27,9 @@ namespace cbn {
   using RingBuffer = CircularQueue<T>;
   using StrBuilder = CBN_StrBuilder;
   using StrView    = CBN_StrView;
+  using Image      = CBN_Image;
   using DrawCanvas = CBN_DrawCanvas;
+  using SKAP       = CBN_SKAP;
   namespace mem {
     const auto cpy = carbon_memory_copy;
     const auto cmp = carbon_memory_cmp;

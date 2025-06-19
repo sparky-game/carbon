@@ -271,7 +271,7 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
   return true;
 }
 
-u8 carbon_skap_open(const char *skap, CBN_SKAP_Handle *out_handle) {
+u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   if (!out_handle) {
     carbon_log_error("`out_handle` must be a valid pointer");
     return false;
@@ -319,7 +319,7 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP_Handle *out_handle) {
   return true;
 }
 
-void carbon_skap_close(CBN_SKAP_Handle *handle) {
+void carbon_skap_close(CBN_SKAP *handle) {
   if (!handle) {
     carbon_log_warn("`handle` is not a valid pointer, skipping closing");
     return;
@@ -330,7 +330,7 @@ void carbon_skap_close(CBN_SKAP_Handle *handle) {
   }
 }
 
-void carbon_skap_print(const CBN_SKAP_Handle *handle) {
+void carbon_skap_print(const CBN_SKAP *handle) {
   if (!handle) {
     carbon_log_warn("`handle` is not a valid pointer, skipping printing");
     return;
@@ -356,7 +356,7 @@ void carbon_skap_print(const CBN_SKAP_Handle *handle) {
 }
 
 // @type_dependant
-u8 carbon_skap_lookup(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
+u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
   if (!handle || !asset_name || !out_blob) {
     carbon_log_error("`handle`, `asset_name` and `out_blob` must be valid pointers");
     return false;
@@ -399,7 +399,7 @@ u8 carbon_skap_lookup(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType as
   return false;
 }
 
-usz carbon_skap_count(const CBN_SKAP_Handle *handle) {
+usz carbon_skap_count(const CBN_SKAP *handle) {
   usz count = 0;
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     count += carbon_skap_count_of(handle, (CBN_SKAP_AssetType) i);
@@ -407,7 +407,7 @@ usz carbon_skap_count(const CBN_SKAP_Handle *handle) {
   return count;
 }
 
-usz carbon_skap_count_of(const CBN_SKAP_Handle *handle, const CBN_SKAP_AssetType type) {
+usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type) {
   if (type >= CARBON_SKAP_ASSET_TYPE_COUNT) {
     carbon_log_error("`type` is not valid");
     return 0;
