@@ -550,8 +550,8 @@ Cursor XCreateFontCursor(Display *display, unsigned int shape) {
 // X11 :: XrmGetResource
 CARBON_WIN__DLDECL(XrmGetResource);
 Bool XrmGetResource(XrmDatabase database,
-                    char *str_name,
-                    char *str_class,
+                    const char *str_name,
+                    const char *str_class,
                     char **str_type_return,
                     XrmValue *value_return) {
   CARBON_WIN__DLSYM(carbon_win__dl_X11, XrmGetResource);
@@ -560,7 +560,7 @@ Bool XrmGetResource(XrmDatabase database,
 
 // X11 :: XStoreName
 CARBON_WIN__DLDECL(XStoreName);
-int XStoreName(Display *display, Window w, char *window_name) {
+int XStoreName(Display *display, Window w, const char *window_name) {
   CARBON_WIN__DLSYM(carbon_win__dl_X11, XStoreName);
   return XStoreName_ptr(display, w, window_name);
 }
@@ -644,7 +644,7 @@ int XDeleteProperty(Display *display, Window w, Atom property) {
 
 // X11 :: XrmGetStringDatabase
 CARBON_WIN__DLDECL(XrmGetStringDatabase);
-XrmDatabase XrmGetStringDatabase(char *data) {
+XrmDatabase XrmGetStringDatabase(const char *data) {
   CARBON_WIN__DLSYM(carbon_win__dl_X11, XrmGetStringDatabase);
   return XrmGetStringDatabase_ptr(data);
 }
@@ -889,7 +889,7 @@ int XSetClassHint(Display *display, Window w, XClassHint *class_hint) {
 
 // X11 :: XSetWMSizeHints
 CARBON_WIN__DLDECL(XSetWMSizeHints);
-Status XSetWMSizeHints(Display *display, Window w, XSizeHints *hints, Atom property) {
+void XSetWMSizeHints(Display *display, Window w, XSizeHints *hints, Atom property) {
   CARBON_WIN__DLSYM(carbon_win__dl_X11, XSetWMSizeHints);
   return XSetWMSizeHints_ptr(display, w, hints, property);
 }
