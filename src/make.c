@@ -22,10 +22,13 @@
 #define CXX_STD "-std=c++17"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
 
+// TODO: remove this and let the library dynamically load them if needed
 #if defined(__APPLE__)
-#define GUI_LIBS "-framework Cocoa -framework CoreVideo -framework IOKit"
+// #define GUI_LIBS "-framework Cocoa -framework CoreVideo -framework IOKit"
+#define GUI_LIBS "-framework CoreFoundation -lobjc"
 #elif defined(__linux__)
-#define GUI_LIBS "-lX11 -lXrandr"
+// #define GUI_LIBS "-lX11 -lXrandr"
+#define GUI_LIBS ""
 #endif
 
 static const char * const help_msg = "usage: %s [SUBCMD]\n"

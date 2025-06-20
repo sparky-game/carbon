@@ -34,6 +34,7 @@
 #include <glob.h>
 #include <poll.h>
 #include <netdb.h>
+#include <dlfcn.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <sys/types.h>
