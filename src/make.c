@@ -3,7 +3,6 @@
 
 #include "carbon.inc"
 // Needed sources for bootstrapping purposes
-#include "carbon_version.c"
 #include "carbon_assert.c"
 #include "carbon_memory.c"
 #include "carbon_math.c"
