@@ -16,6 +16,7 @@
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=lemonchiffon" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://cla-assistant.io/readme/badge/sparky-game/carbon" alt="SCLA signatures count">
+<img src="https://img.shields.io/github/commit-activity/w/sparky-game/carbon?color=brown" alt="Weekly commit frequency">
 </p>
 #+end_html
 
