@@ -96,6 +96,8 @@
 #define CARBON_TARGET_OS "linux"
 #elif defined(__APPLE__)
 #define CARBON_TARGET_OS "macos"
+#elif defined(__FreeBSD__)
+#define CARBON_TARGET_OS "freebsd"
 #elif defined(_WIN32) && defined(_MSC_VER)
 #define CARBON_TARGET_OS "windows-msvc"
 #elif defined(_WIN32) && defined(__MINGW64__)
