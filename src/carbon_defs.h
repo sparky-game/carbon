@@ -36,7 +36,7 @@
 
 #ifdef __cplusplus
 #define CARBON_TYPE_OF(x) decltype(x)
-#define CARBON_TYPE_IS_SAME(T, U) std::is_same<T, U>::value
+#define CARBON_TYPE_IS_SAME(T, U) std::is_same_v<T, U>
 #else
 #define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
