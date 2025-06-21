@@ -149,7 +149,7 @@ static void test(void) {
     carbon_println("  CC      %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
@@ -161,7 +161,7 @@ static void test(void) {
     carbon_println("  CXX     %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
@@ -172,7 +172,7 @@ static void test(void) {
   carbon_println("  LD      " TESTBIN);
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
 #else
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
@@ -219,7 +219,7 @@ static void examples(void) {
     carbon_println("  CCLD    %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
@@ -233,7 +233,7 @@ static void examples(void) {
     carbon_println("  CXXLD   %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined ");
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
