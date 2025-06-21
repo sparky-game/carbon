@@ -11,9 +11,15 @@
   typedef CARBON_TYPE_OF(name) name ## _t;      \
   name ## _t *name ## _ptr;
 
+#if defined(__linux__) || defined(__FreeBSD__)
+#define CARBON_WIN__DLOPEN(lib, name)                           \
+  lib = dlmopen(LM_ID_NEWLM, name, RTLD_LAZY | RTLD_LOCAL);     \
+  CARBON_ASSERT(lib && "Failed to load");
+#else
 #define CARBON_WIN__DLOPEN(lib, name)           \
   lib = dlopen(name, RTLD_LAZY | RTLD_LOCAL);   \
   CARBON_ASSERT(lib && "Failed to load");
+#endif
 
 #define CARBON_WIN__DLSYM(lib, name)                    \
   if (!name ## _ptr) {                                  \
