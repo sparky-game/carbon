@@ -183,15 +183,11 @@ usz CBN_SKAP::CountOf(void) const {
  */
 template <typename T>
 constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
-  CARBON_STATIC_ASSERT(false, "CBN_SKAP::GetAssetType<T> :: type T is not a valid asset type");
-  return CARBON_SKAP_ASSET_TYPE_COUNT;
-}
-/**
- * @brief CBN_SKAP::GetAssetType<CBN_Image>
- */
-template <>
-constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType<CBN_Image>(void) {
-  return CARBON_SKAP_ASSET_TYPE_IMAGE;
+  if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
+  else {
+    CARBON_STATIC_ASSERT(false, "type T is not a valid asset type");
+    return CARBON_SKAP_ASSET_TYPE_COUNT;
+  }
 }
 #endif  // __cplusplus
 
