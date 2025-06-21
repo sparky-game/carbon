@@ -1,13 +1,32 @@
 #+AUTHOR: Wasym A. Alonso
+#+TITLE: Examples
 
-* Examples :toc:
-- [[#async-counter][Async counter]]
-- [[#dns-lookup][DNS lookup]]
+This directory contains *examples* that are meant to be read by the users of the library to learn and explore its capabilities.
 
-* [[./async_counter.c][Async counter]]
+It is recommended to study them by ascending complexity order: from simplest to the complexest. Generally, the size of the file roughly corresponds to its complexity, so we recommend to sort the examples by their size and follow that order.
+
+In *POSIX* systems, this can be achieved by running the following command:
+
+#+begin_src sh
+ls -lS
+#+end_src
+
+In *Windows* systems, the equivalent command would be:
+
+#+begin_src sh
+dir /O:-S
+#+end_src
+
+This essentially sorts the files by size in *descending order* (i.e. largest first; shortest last, *closer to the prompt*). In other operating systems and applications it's recommended to use equivalent or similar functionality.
+
+* Table of Contents :toc:
+  - [[#async-counter][Async counter]]
+  - [[#dns-lookup][DNS lookup]]
+
+** [[./async_counter.c][Async counter]]
 
 This example showcases ...
 
-* [[./dns_lookup.c][DNS lookup]]
+** [[./dns_lookup.c][DNS lookup]]
 
 This example showcases ...

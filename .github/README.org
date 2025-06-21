@@ -13,7 +13,7 @@
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=coral" alt="License">
 <img src="https://img.shields.io/badge/C-11-violet" alt="C Standard">
 <img src="https://img.shields.io/badge/C++-17-violet" alt="C++ Standard">
-<img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=lemonchiffon" alt="Latest Git Tag">
+<img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=slateblue" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://cla-assistant.io/readme/badge/sparky-game/carbon" alt="SCLA signatures count">
 <img src="https://img.shields.io/github/commit-activity/w/sparky-game/carbon?color=brown" alt="Weekly commit frequency">
@@ -120,9 +120,11 @@ Checkout the [[../INSTALL][installation instructions]] to make /Carbon/ availabl
 
 ** Examples
 
-A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all; for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
+A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all: for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
 
-Furthermore, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
+Furthermore, you can also take a look at the amalgamated distributable *header file* (~carbon.h~), where each module of the library is declared and documented. This is all the documentation you'll ever need, and it's also a good place to find new things /Carbon/ can do.
+
+Lastly, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
 
 * Licensing
 
