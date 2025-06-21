@@ -134,6 +134,13 @@
 #define CARBON_COMPILER CARBON_C_COMPILER
 #endif
 
+#ifdef __cplusplus
+namespace std {
+  template <typename T>
+  struct always_false : std::false_type {};
+}
+#endif
+
 // Local Variables:
 // mode: c++
 // End:

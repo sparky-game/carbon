@@ -185,7 +185,7 @@ template <typename T>
 constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
   if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
   else {
-    CARBON_STATIC_ASSERT(false, "type T is not a valid asset type");
+    CARBON_STATIC_ASSERT(std::always_false<T>::value, "type T is not a valid asset type");
     return CARBON_SKAP_ASSET_TYPE_COUNT;
   }
 }
