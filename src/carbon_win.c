@@ -1190,16 +1190,11 @@ CARBON_INLINE void carbon_win__dl_close(void) {
 
 void carbon_win_open(u16 width, u16 height, const char *title) {
   carbon_win__dl_open();
-  RGFW_area screen_size = RGFW_getScreenSize();
   // TODO: let user resize the window.
-  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT((screen_size.w - width) / 2,
-                                                          (screen_size.h - height) / 2,
-                                                          width, height), RGFW_windowNoResize);
+  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, width, height), RGFW_windowNoResize);
   // TODO: use `RGFW_window_initBuffer` instead, so the buffer isn't tied up to the initial window size.
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(carbon_win__handle->r.w, carbon_win__handle->r.h));
-  carbon_log_info("Opened window at (%$, %$) of size %$x%$",
-                  $(carbon_win__handle->r.x), $(carbon_win__handle->r.y),
-                  $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
+  carbon_log_info("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
 }
 
 void carbon_win_close(void) {
