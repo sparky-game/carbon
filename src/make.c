@@ -109,11 +109,11 @@ static void clean(void) {
   rm_dash_r("carbon.h");
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
-  rm_dash_r(WORKDIR);
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
   rm_dash_r("examples/*.png");
-  rm_dash_r(WORKDIR ".tgz");
+  rm_dash_r("carbon-*/");
+  rm_dash_r("carbon-*.tgz");
 }
 
 static void hdrgen(void) {
