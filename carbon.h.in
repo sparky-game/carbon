@@ -37,10 +37,15 @@
 #define CARBON_VERSION_EXTRA "-alpha"
 
 /*
-**  Available compile-time options:
+**  Build options
+**  =============
 **
-**    - CARBON_TESTING_ENTRY --> Redefines the `main` function, thus making it behave
-**                               as a test suite entrypoint. It's only relevant to
-**                               define it in the translation unit where we're defining
-**                               the `main` function.
+**  `#define` these options before including `carbon.h`, or pass them as compiler flags:
+**
+**  +------------------------+----------------------------------------------------------+
+**  |  CARBON_TESTING_ENTRY  |  Redefines the `main` function, thus making it behave    |
+**  |                        |  as a test suite entrypoint. It's only relevant to       |
+**  |                        |  define it in the translation unit where we're defining  |
+**  |                        |  the `main` function.                                    |
+**  +------------------------+----------------------------------------------------------+
 */
