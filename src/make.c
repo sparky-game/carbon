@@ -22,15 +22,6 @@
 #define CXX_STD "-std=c++17"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
 
-// TODO: remove this and let the library dynamically load them if needed
-#if defined(__APPLE__)
-// #define GUI_LIBS "-framework Cocoa -framework CoreVideo -framework IOKit"
-#define GUI_LIBS "-framework CoreFoundation -lobjc"
-#elif defined(__linux__)
-// #define GUI_LIBS "-lX11 -lXrandr"
-#define GUI_LIBS ""
-#endif
-
 static const char * const help_msg = "usage: %s [SUBCMD]\n"
   "Subcommands:\n"
   "  help        display this help\n"
@@ -124,6 +115,7 @@ static void hdrgen(void) {
   carbon_println("  GEN     carbon.h");
   call_cmd("echo '// This file has been automatically generated.  DO NOT EDIT !!!\n' > carbon.h");
   call_cmd("cat carbon.h.in >> carbon.h");
+  // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
   const char *hdrs[] = {
     "src/carbon_deps.h",       "src/carbon_defs.h",       "src/carbon_types.h",        "src/carbon_version.h",
     "src/carbon_test_entry.h", "src/carbon_assert.h",     "src/carbon_memory.h",       "src/carbon_coroutine.h",
@@ -226,7 +218,11 @@ static void build(void) {
 #else
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-  carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared " GUI_LIBS " -o " WORKDIR "/libcarbon.so");
+  carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
+#ifdef __APPLE__
+  carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+#endif
+  carbon_strbuilder_add_cstr(&cmd, " -o " WORKDIR "/libcarbon.so");
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r(WORKDIR "/*.o");
@@ -247,7 +243,11 @@ static void examples(void) {
 #endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".c");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -L " WORKDIR " -lcarbon -o %s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, " " WORKDIR "/libcarbon.a ");
+#ifdef __APPLE__
+    carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+#endif
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -261,7 +261,11 @@ static void examples(void) {
 #endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".cc");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -L " WORKDIR " -lcarbon -o %s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, " " WORKDIR "/libcarbon.a ");
+#ifdef __APPLE__
+    carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+#endif
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
