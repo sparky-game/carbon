@@ -63,46 +63,41 @@ static void cp_dash_r(const char *origin, const char *dest) {
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
-static void bootstrap_myself(char * const *host_argv, u8 force) {
-  const char *bin = host_argv[0];
+// TODO: migrate this func to the lib itself
+static void exec_cmd(char * const *argv) {
+  CARBON_ASSERT(-1 != execvp(argv[0], argv) && "Failed to execvp");
+}
+
+// TODO: migrate this func to the lib itself
+static i32 fork_and_exec_cmd(char * const *argv) {
+  i32 status_code = 0;
+  pid_t child_pid = fork();
+  CARBON_ASSERT(child_pid != -1 && "Failed to fork process");
+  if (child_pid == 0) exec_cmd(argv);
+  else waitpid(child_pid, &status_code, 0);
+  return status_code;
+}
+
+static void bootstrap(char * const *host_argv, u8 force) {
 #ifdef CARBON_MAKE_ALREADY_REBUILT
-  if (!force && carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(bin)) return;
+  if (!force && carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(host_argv[0])) return;
 #endif
-  i32 bootstrap_status_code = 0;
-  pid_t bootstrap_child_pid = fork();
-  if (bootstrap_child_pid == -1) {
-    carbon_log_error("unable to fork child process");
-    CARBON_UNREACHABLE;
-  }
-  else if (bootstrap_child_pid == 0) {
-    char *argv[] = {
-      CARBON_C_COMPILER,
-      C_STD,
-      "-DCARBON_MAKE_ALREADY_REBUILT",
+  char *argv[] = {
+    CARBON_C_COMPILER,
+    C_STD,
+    "-DCARBON_MAKE_ALREADY_REBUILT",
 #ifdef CARBON_MAKE_USE_SANITIZERS
-      "-DCARBON_MAKE_USE_SANITIZERS",
+    "-DCARBON_MAKE_USE_SANITIZERS",
 #endif
-      "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
-      "-fPIE", "-pipe", "-Os",
-      __FILE__,
-      "-o", (char *) bin, 0
-    };
-    carbon_println("  CCLD    %s", __FILE__);
-    if (-1 == execvp(argv[0], argv)) {
-      carbon_log_error("unable to execvp from child process");
-      CARBON_UNREACHABLE;
-    }
-  }
-  else waitpid(bootstrap_child_pid, &bootstrap_status_code, 0);
-  if (bootstrap_status_code != 0) {
-    carbon_log_error("errors detected during bootstrap");
-    CARBON_UNREACHABLE;
-  }
-  carbon_println("  EXEC    %s", bin);
-  if (-1 == execvp(bin, host_argv)) {
-    carbon_log_error("unable to execvp rebuilt binary");
-    CARBON_UNREACHABLE;
-  }
+    "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
+    "-fPIE", "-pipe", "-Os",
+    __FILE__,
+    "-o", host_argv[0], 0
+  };
+  carbon_println("  CCLD    %s", __FILE__);
+  CARBON_ASSERT(0 == fork_and_exec_cmd(argv) && "Errors detected during bootstrap");
+  carbon_println("  EXEC    %s", host_argv[0]);
+  exec_cmd(host_argv);
 }
 
 static void clean(void) {
@@ -293,7 +288,7 @@ static void full_pipeline(void) {
 
 int main(int argc, char **argv) {
   if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) CARBON_UNREACHABLE;
-  bootstrap_myself(argv, false);
+  bootstrap(argv, false);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
@@ -310,7 +305,7 @@ int main(int argc, char **argv) {
     const char *subcmd = CARBON_SHIFT_ARGS(argc, argv);
     if (!carbon_string_cmp(flag, "-B") || !carbon_string_cmp(flag, "--always-bootstrap")) {
       const char *new_argv[] = { program_name, subcmd, 0 };
-      bootstrap_myself((char **) new_argv, true);
+      bootstrap((char **) new_argv, true);
     }
     carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
@@ -319,7 +314,7 @@ int main(int argc, char **argv) {
     const char *flag = CARBON_SHIFT_ARGS(argc, argv);
     if (!carbon_string_cmp(flag, "-B") || !carbon_string_cmp(flag, "--always-bootstrap")) {
       const char *new_argv[] = { program_name, 0 };
-      bootstrap_myself((char **) new_argv, true);
+      bootstrap((char **) new_argv, true);
     }
     const char *subcmd = flag;
     if (!carbon_string_cmp(subcmd, "help")) {
