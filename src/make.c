@@ -22,7 +22,12 @@
 #define CXX_STD "-std=c++17"
 #define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
 
-static const char * const help_msg = "usage: %s [SUBCMD]\n"
+static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
+  "\n"
+  "Flags:\n"
+  "  -B, --always-bootstrap\n"
+  "       Unconditionally re-bootstrap the build system.\n"
+  "\n"
   "Subcommands:\n"
   "  help        display this help\n"
   "  clean       remove previously created build artifacts\n"
@@ -58,18 +63,18 @@ static void cp_dash_r(const char *origin, const char *dest) {
   call_cmd(carbon_string_fmt("cp -r %s %s", origin, dest));
 }
 
-static void rebuild_myself(char * const *host_argv) {
+static void bootstrap_myself(char * const *host_argv, u8 force) {
   const char *bin = host_argv[0];
 #ifdef CARBON_MAKE_ALREADY_REBUILT
-  if (carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(bin)) return;
+  if (!force && carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(bin)) return;
 #endif
-  i32 rebuild_status_code = 0;
-  pid_t rebuild_child_pid = fork();
-  if (rebuild_child_pid == -1) {
+  i32 bootstrap_status_code = 0;
+  pid_t bootstrap_child_pid = fork();
+  if (bootstrap_child_pid == -1) {
     carbon_log_error("unable to fork child process");
-    exit(1);
+    CARBON_UNREACHABLE;
   }
-  else if (rebuild_child_pid == 0) {
+  else if (bootstrap_child_pid == 0) {
     char *argv[] = {
       CARBON_C_COMPILER,
       C_STD,
@@ -85,18 +90,18 @@ static void rebuild_myself(char * const *host_argv) {
     carbon_println("  CCLD    %s", __FILE__);
     if (-1 == execvp(argv[0], argv)) {
       carbon_log_error("unable to execvp from child process");
-      exit(1);
+      CARBON_UNREACHABLE;
     }
   }
-  else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
-  if (rebuild_status_code != 0) {
-    carbon_log_error("errors detected during rebuild");
-    exit(1);
+  else waitpid(bootstrap_child_pid, &bootstrap_status_code, 0);
+  if (bootstrap_status_code != 0) {
+    carbon_log_error("errors detected during bootstrap");
+    CARBON_UNREACHABLE;
   }
   carbon_println("  EXEC    %s", bin);
   if (-1 == execvp(bin, host_argv)) {
     carbon_log_error("unable to execvp rebuilt binary");
-    exit(1);
+    CARBON_UNREACHABLE;
   }
 }
 
@@ -278,9 +283,17 @@ static void package(void) {
   carbon_log_info(WORKDIR ".tgz is ready");
 }
 
+static void full_pipeline(void) {
+  hdrgen();
+  build();
+  test();
+  examples();
+  package();
+}
+
 int main(int argc, char **argv) {
-  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) return 1;
-  rebuild_myself(argv);
+  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) CARBON_UNREACHABLE;
+  bootstrap_myself(argv, false);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
@@ -288,49 +301,58 @@ int main(int argc, char **argv) {
   carbon_log_debug("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
-  if (argc > 1) {
+  if (argc > 2) {
+    carbon_log_error("ill-formed command\nTry '%s help' for more information.", program_name);
+    return 1;
+  }
+  if (argc == 2) {
+    const char *flag = CARBON_SHIFT_ARGS(argc, argv);
+    const char *subcmd = CARBON_SHIFT_ARGS(argc, argv);
+    if (!carbon_string_cmp(flag, "-B") || !carbon_string_cmp(flag, "--always-bootstrap")) {
+      const char *new_argv[] = { program_name, subcmd, 0 };
+      bootstrap_myself((char **) new_argv, true);
+    }
     carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
   }
   if (argc == 1) {
-    const char *subcmd = CARBON_SHIFT_ARGS(argc, argv);
+    const char *flag = CARBON_SHIFT_ARGS(argc, argv);
+    if (!carbon_string_cmp(flag, "-B") || !carbon_string_cmp(flag, "--always-bootstrap")) {
+      const char *new_argv[] = { program_name, 0 };
+      bootstrap_myself((char **) new_argv, true);
+    }
+    const char *subcmd = flag;
     if (!carbon_string_cmp(subcmd, "help")) {
       carbon_print(help_msg, program_name, CARBON_NAME);
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "clean")) {
+    if (!carbon_string_cmp(subcmd, "clean")) {
       clean();
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "mrproper")) {
+    if (!carbon_string_cmp(subcmd, "mrproper")) {
       clean();
       rm_dash_r(program_name);
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "build")) {
+    if (!carbon_string_cmp(subcmd, "build")) {
       hdrgen();
       build();
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "test")) {
+    if (!carbon_string_cmp(subcmd, "test")) {
       hdrgen();
       test();
       return 0;
     }
-    else if (!carbon_string_cmp(subcmd, "examples")) {
+    if (!carbon_string_cmp(subcmd, "examples")) {
       hdrgen();
       examples();
       return 0;
     }
-    else {
-      carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
-      return 1;
-    }
+    carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
+    return 1;
   }
-  hdrgen();
-  build();
-  test();
-  examples();
-  package();
+  full_pipeline();
   return 0;
 }
