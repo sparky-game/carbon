@@ -113,8 +113,7 @@ static void clean(void) {
 
 static void hdrgen(void) {
   carbon_println("  GEN     carbon.h");
-  call_cmd("echo '// This file has been automatically generated.  DO NOT EDIT !!!\n' > carbon.h");
-  call_cmd("cat carbon.h.in >> carbon.h");
+  call_cmd("cat carbon.h.in > carbon.h");
   // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
   const char *hdrs[] = {
     "src/carbon_deps.h",       "src/carbon_defs.h",       "src/carbon_types.h",        "src/carbon_version.h",
