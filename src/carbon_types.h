@@ -28,9 +28,9 @@ typedef double f64;
 CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 
 #ifdef __wasm32__
-typedef u32 usz;
+typedef __SIZE_TYPE__ usz;
 typedef i32 isz;
-typedef u32 uptr;
+typedef __UINTPTR_TYPE__ uptr;
 typedef struct {} FILE;
 extern FILE *stdout;
 #else
