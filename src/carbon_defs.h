@@ -88,6 +88,8 @@
 #define CARBON_CPU_ARCH "amd64"
 #elif defined(__aarch64__)
 #define CARBON_CPU_ARCH "aarch64"
+#elif defined(__wasm32__)
+#define CARBON_CPU_ARCH "wasm32"
 #else
 #error CPU architecture is not supported
 #endif
@@ -102,6 +104,8 @@
 #define CARBON_TARGET_OS "windows-msvc"
 #elif defined(_WIN32) && defined(__MINGW64__)
 #define CARBON_TARGET_OS "windows-mingw"
+#elif defined(__wasm__)
+#define CARBON_TARGET_OS "web"
 #else
 #error Target OS is not supported
 #endif
