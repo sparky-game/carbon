@@ -3,6 +3,10 @@
 
 #include "carbon.inc"
 
+#ifdef __wasm__
+#include "../vendor/walloc/walloc.c"
+#endif
+
 void *carbon_memory_copy(void *dst, const void *src, usz n) {
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;

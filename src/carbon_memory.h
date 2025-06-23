@@ -14,6 +14,13 @@
 #define CARBON_CALLOC(n, sz)     calloc(n, sz)
 #define CARBON_FREE(p)           free(p)
 
+#ifdef __wasm__
+void *malloc(usz);
+void *realloc(void *, usz);
+void *calloc(usz, usz);
+void free(void *);
+#endif
+
 /**
  * @brief Copies a set of bytes from a memory area to another one.
  * @param dst The destination memory area address.
