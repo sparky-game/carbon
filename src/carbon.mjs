@@ -40,6 +40,7 @@ export async function run(wasm_file) {
 
       // void carbon_log_print(FILE *stream, const char *fmt, ...);
       carbon_log_print: (stream, fmt, ...args) => {
+        console.log(fmt);
         todo();
       },
 
