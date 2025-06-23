@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-export function make_env(...envs) {
+function make_env(...envs) {
   return new Proxy(envs, {
     get(target, prop, receiver) {
       for (let env of envs) {
@@ -12,19 +12,21 @@ export function make_env(...envs) {
   });
 }
 
+function TODO() { throw new Error("NOT IMPLEMENTED"); }
+
 export let wasm = null;
 
 export async function init(wasmFile) {
   wasm = await WebAssembly.instantiateStreaming(fetch(wasmFile), {
     env: make_env({
-      puts: puts
+      // char *carbon_string_fmt(const char *s, ...);
+      carbon_string_fmt: (s, ...args) => {
+        TODO();
+      },
+      // void carbon_log_print(FILE *stream, const char *fmt, ...);
+      carbon_log_print: (stream, fmt, ...args) => {
+        TODO();
+      }
     })
   });
-}
-
-export function puts(ptr) {
-  const bytes = new Uint8Array(wasm.instance.exports.memory.buffer);
-  let str = "";
-  while (bytes[ptr] !== 0) str += String.fromCharCode(bytes[ptr++]);
-  console.log(str);
 }

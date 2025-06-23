@@ -31,6 +31,8 @@ CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 typedef u32 usz;
 typedef i32 isz;
 typedef u32 uptr;
+typedef struct {} FILE;
+extern FILE *stdout;
 #else
 typedef size_t usz;
 typedef ssize_t isz;
