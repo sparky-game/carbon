@@ -17,6 +17,7 @@ typedef signed short i16;
 CARBON_STATIC_ASSERT(sizeof(u16) == 2 && sizeof(i16) == 2, "Expected u16/i16 to be 2 bytes");
 typedef unsigned int u32;
 typedef signed int i32;
+typedef u32 uint;
 CARBON_STATIC_ASSERT(sizeof(u32) == 4 && sizeof(i32) == 4, "Expected u32/i32 to be 4 bytes");
 typedef unsigned long long u64;
 typedef signed long long i64;
@@ -26,10 +27,15 @@ CARBON_STATIC_ASSERT(sizeof(f32) == 4, "Expected f32 to be 4 bytes");
 typedef double f64;
 CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 
-typedef u32 uint;
+#ifdef __wasm32__
+typedef u32 usz;
+typedef i32 isz;
+typedef u32 uptr;
+#else
 typedef size_t usz;
 typedef ssize_t isz;
 typedef uintptr_t uptr;
+#endif
 
 #ifdef __cplusplus
 template <typename T>
