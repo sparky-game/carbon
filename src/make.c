@@ -271,24 +271,33 @@ static void test(void) {
   call_cmd_or_panic(TESTBIN " -n");
 }
 
-static void try_build_wasm_examples(CBN_PatternMatchedFiles c_files, CBN_PatternMatchedFiles cxx_files) {
+static void try_build_wasm_examples(void) {
   carbon_log_info("Trying to build examples for WASM...");
   CBN_StrBuilder cmd = {0};
-  carbon_fs_pattern_match_foreach(c_files) {
-    carbon_println("  CCLD    %s.wasm", it.f);
+  const char *c_files[] = {
+    "examples/triangle"
+  };
+  for (usz i = 0; i < CARBON_ARRAY_LEN(c_files); ++i) {
+    const char *f = c_files[i];
+    carbon_println("  CCLD    %s.wasm", f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " --target=wasm32 -I . " C_STD " " WARNS " -fPIE -pipe -Os ");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.c ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.c ", f));
     carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.wasm.a -nostdlib -Wl,--no-entry -Wl,--allow-undefined -Wl,--export=main ");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.wasm", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.wasm", f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-  carbon_fs_pattern_match_foreach(cxx_files) {
-    carbon_println("  CXXLD   %s.wasm", it.f);
+  const char *cxx_files[] = {
+    "examples/orbiting",
+    "examples/bouncing_square"
+  };
+  for (usz i = 0; i < CARBON_ARRAY_LEN(cxx_files); ++i) {
+    const char *f = cxx_files[i];
+    carbon_println("  CXXLD   %s.wasm", f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " --target=wasm32 -I . " CXX_STD " " WARNS " -fPIE -pipe -Os ");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.cc ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("%s.cc ", f));
     carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.wasm.a -nostdlib -Wl,--no-entry -Wl,--allow-undefined -Wl,--export=main ");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.wasm", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.wasm", f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -335,10 +344,10 @@ static void examples(void) {
     call_cmd_or_panic(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-#ifndef CARBON_MAKE_USE_SANITIZERS
-  try_build_wasm_examples(c_files, cxx_files);
+#ifdef CARBON_MAKE_USE_SANITIZERS
+  carbon_log_warn("Building examples for WASM has been disabled due to `CARBON_MAKE_USE_SANITIZERS` being defined");
 #else
-  carbon_log_warn("Building examples for WASM has been disabled due to `CARBON_MAKE_USE_SANITIZERS` being enabled");
+  try_build_wasm_examples();
 #endif
 }
 
