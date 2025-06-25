@@ -151,6 +151,26 @@ u8 carbon_fs_create_directories(const char *path) {
   return true;
 }
 
+char *carbon_fs_get_curr_directory(void) {
+  static char dir[CARBON_FS_PATH_MAX_LEN];
+  carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
+#ifdef _WIN32
+  char *path = _getcwd(dir, CARBON_FS_PATH_MAX_LEN - 1);
+#else
+  char *path = getcwd(dir, CARBON_FS_PATH_MAX_LEN - 1);
+#endif
+  if (!path) {
+    carbon_log_error("unable to get the current directory");
+    return 0;
+  }
+  usz len = carbon_string_len(path);
+  if (len && len < CARBON_FS_PATH_MAX_LEN - 1 && path[len - 1] != '/') {
+    path[len] = '/';
+    path[len + 1] = 0;
+  }
+  return path;
+}
+
 char *carbon_fs_get_bin_directory(void) {
   static char dir[CARBON_FS_PATH_MAX_LEN];
   carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
