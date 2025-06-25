@@ -31,20 +31,36 @@ namespace cbn {
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
   namespace mem {
-    const auto cpy = carbon_memory_copy;
-    const auto cmp = carbon_memory_cmp;
-    const auto set = carbon_memory_set;
+    const auto Copy    = carbon_memory_copy, cp  = Copy;
+    const auto Compare = carbon_memory_cmp,  cmp = Compare;
+    const auto Set     = carbon_memory_set,  set = Set;
   }
   namespace str {
-    const auto len        = carbon_string_len;
-    const auto cmp        = carbon_string_cmp;
-    const auto ncmp       = carbon_string_cmp_n;
-    const auto dup        = carbon_string_dup;
-    const auto fmt        = carbon_string_fmt;
+    const auto Length     = carbon_string_len,   len  = Length;
+    const auto Compare    = carbon_string_cmp,   cmp  = Compare;
+    const auto Compare_n  = carbon_string_cmp_n, ncmp = Compare_n;
+    const auto Duplicate  = carbon_string_dup,   dup  = Duplicate;
+    const auto Format     = carbon_string_fmt,   fmt  = Format;
     const auto StartsWith = carbon_string_starts_with_substr;
     const auto EndsWith   = carbon_string_starts_with_substr;
     const auto IsNumber   = carbon_string_is_number;
     const auto LevDist    = carbon_string_lev_dist;
+  }
+  namespace fs {
+    const auto Exists = carbon_fs_exists;
+    const auto IsFile = carbon_fs_is_regular_file;
+    const auto IsDir = carbon_fs_is_directory;
+    const auto LastMod = carbon_fs_mtime;
+    const auto Rename = carbon_fs_rename,                 mv      = Rename;
+    const auto Copy = carbon_fs_copy,                     cp      = Copy;
+    const auto Remove = carbon_fs_remove,                 rm      = Remove;
+    const auto RemoveAll = carbon_fs_remove_all,          rm_r    = RemoveAll;
+    const auto ChangeDir = carbon_fs_change_directory,    cd      = ChangeDir;
+    const auto CreateDir = carbon_fs_create_directory,    mkdir   = CreateDir;
+    const auto CreateDirs = carbon_fs_create_directories, mkdir_p = CreateDirs;
+    const auto GetCWD = carbon_fs_get_curr_directory,     cwd     = GetCWD;
+    const auto GetBinDir = carbon_fs_get_bin_directory;
+    const auto Size = carbon_fs_get_file_size;
   }
   namespace win {
     const auto Open         = carbon_win_open;
