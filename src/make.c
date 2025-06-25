@@ -278,16 +278,8 @@ static void package(void) {
   carbon_log_info(WORKDIR ".tgz is ready");
 }
 
-static void full_pipeline(void) {
-  hdrgen();
-  build();
-  test();
-  examples();
-  package();
-}
-
 int main(int argc, char **argv) {
-  if (!carbon_fs_change_directory(carbon_fs_get_bin_directory())) CARBON_UNREACHABLE;
+  CARBON_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
   bootstrap(argv, false);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
@@ -348,6 +340,10 @@ int main(int argc, char **argv) {
     carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
   }
-  full_pipeline();
+  hdrgen();
+  build();
+  test();
+  examples();
+  package();
   return 0;
 }
