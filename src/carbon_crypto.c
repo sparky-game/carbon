@@ -7,6 +7,12 @@
 #define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p) (0 == ((uptr) (p) & 7))
 #define CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(x, y) ((x) << (y) ^ ((x) >> (64 - (y))))
 
+typedef struct {
+  u64 hash[25];
+  u64 msg[24];
+  u16 rest;
+} CBN_Keccak256_CTX;
+
 static const u8 carbon_crypto_keccak256__k[] = {
   1, 26, 94, 112, 31, 33, 121, 85, 14, 12, 53, 38, 63, 79, 93, 83, 82, 72, 22, 102, 121, 88, 33, 116,
   1,  6,  9,  22, 14, 20,   2, 12, 13, 19, 23, 15,  4, 24, 21,  8, 16,  5,  3,  18,  17, 11,  7,  10,
@@ -195,7 +201,7 @@ CARBON_INLINE void carbon_crypto_keccak256__process_blk(u64 *hash, const u64 *bl
   carbon_crypto_keccak256__permutation(hash);
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__update(CBN_Keccak256 *ctx, const u8 *msg, u16 msg_size) {
+CARBON_INLINE void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const u8 *msg, u16 msg_size) {
   u16 idx = ctx->rest;
   ctx->rest = (ctx->rest + msg_size) % 136;
   if (idx) {
@@ -225,7 +231,7 @@ void carbon_crypto_keccak256(const u8 *in, const usz in_size, u8 *out) {
     carbon_log_warn("`out` is not a valid pointer, skipping computation");
     return;
   }
-  CBN_Keccak256 ctx;
+  CBN_Keccak256_CTX ctx;
   carbon_memory_set(&ctx, 0, sizeof(ctx));
   carbon_crypto_keccak256__update(&ctx, in, in_size);
   carbon_memory_set((u8 *) ctx.msg + ctx.rest, 0, 136 - ctx.rest);

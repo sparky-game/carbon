@@ -9,12 +9,6 @@
 
 #pragma once
 
-typedef struct {
-  u64 hash[25];
-  u64 msg[24];
-  u16 rest;
-} CBN_Keccak256;
-
 /**
  * @brief Encodes binary data to a newly-allocated Base64 string.
  *
