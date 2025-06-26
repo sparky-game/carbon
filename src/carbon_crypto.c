@@ -3,8 +3,11 @@
 
 #include "carbon.inc"
 
+#define CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS      4
 #define CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS 4
-#define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p) (0 == ((uptr) (p) & 7))
+
+#define CARBON_CRYPTO_SHA1__ROTATE_LEFT(x, y)         (((x) << (y)) | ((x) >> (32 - (y))))
+#define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p)     (0 == ((uptr) (p) & 7))
 #define CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(x, y) ((x) << (y) ^ ((x) >> (64 - (y))))
 
 typedef struct {
@@ -134,6 +137,89 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
     out = (out >> 8) ^ codeset[in[i] ^ (out & 0xff)];
   }
   return ~out;
+}
+
+void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
+  if (!out) {
+    carbon_log_warn("`out` is not a valid pointer, skipping computation");
+    return;
+  }
+  u32 h[] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
+  usz pad_size = ((in_size + 8) / 64 + 1) * 64;
+  u8 *msg = (u8 *) CARBON_CALLOC(pad_size, 1);
+  CARBON_ASSERT(msg && "failed to allocate memory");
+  carbon_memory_copy(msg, in, in_size);
+  msg[in_size] = 0x80;
+  u64 bit_len = (u64) in_size * 8;
+  for (usz i = 0; i < 8; ++i) {
+    msg[pad_size - 8 + i] = (bit_len >> (56 - 8 * i)) & 0xff;
+  }
+  for (usz off = 0; off < pad_size; off += 64) {
+    u32 w[80] = {0};
+    for (usz i = 0; i < 16; ++i) {
+      const u8 *d = msg + off + i*4;
+      w[i] = ((u32) d[0] << 24) | ((u32) d[1] << 16) | ((u32) d[2] << 8) | ((u32) d[3] << 0);
+    }
+    for (usz i = 16; i < 80; ++i) {
+      w[i] = CARBON_CRYPTO_SHA1__ROTATE_LEFT(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
+    }
+    u32 a = h[0], b = h[1], c = h[2], d = h[3], e = h[4];
+    for (usz i = 0; i < 80; ++i) {
+      u32 f, k;
+      if (i < 20) {
+        f = (b & c) | (~b & d);
+        k = 0x5a827999;
+      }
+      else if (i < 40) {
+        f = b ^ c ^ d;
+        k = 0x6ed9eba1;
+      }
+      else if (i < 60) {
+        f = (b & c) | (b & d) | (c & d);
+        k = 0x8f1bbcdc;
+      }
+      else {
+        f = b ^ c ^ d;
+        k = 0xca62c1d6;
+      }
+      u32 tmp = CARBON_CRYPTO_SHA1__ROTATE_LEFT(a, 5) + f + e + k + w[i];
+      e = d;
+      d = c;
+      c = CARBON_CRYPTO_SHA1__ROTATE_LEFT(b, 30);
+      b = a;
+      a = tmp;
+    }
+    h[0] += a;
+    h[1] += b;
+    h[2] += c;
+    h[3] += d;
+    h[4] += e;
+  }
+  CARBON_FREE(msg);
+  for (usz i = 0; i < CARBON_ARRAY_LEN(h); ++i) {
+    out[i * 4 + 0] = (h[i] >> 24) & 0xff;
+    out[i * 4 + 1] = (h[i] >> 16) & 0xff;
+    out[i * 4 + 2] = (h[i] >> 8)  & 0xff;
+    out[i * 4 + 3] = (h[i] >> 0)  & 0xff;
+  }
+}
+
+void carbon_crypto_sha1_to_hex_cstr(const u8 *hash, char *out_cstr) {
+  for (usz i = 0; i < 20; ++i) {
+    snprintf(&out_cstr[i*2], 3, "%02x", hash[i]);
+  }
+}
+
+char *carbon_crypto_sha1_as_hex_cstr(const u8 *in, const usz in_size) {
+  static usz i = 0;
+  static char xs[CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS][20*2 + 1];
+  char *x = xs[i];
+  u8 hash[20] = {0};
+  carbon_crypto_sha1(in, in_size, hash);
+  carbon_crypto_sha1_to_hex_cstr(hash, x);
+  ++i;
+  if (i >= CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS) i = 0;
+  return x;
 }
 
 CARBON_INLINE u64 carbon_crypto_keccak256__get_round_const(u8 round) {

@@ -43,6 +43,32 @@ CARBON_API u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
 CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 
 /**
+ * @brief Computes the SHA-1 hash of the given binary data.
+ * @param in The input binary data.
+ * @param in_size The size of the input binary data in bytes.
+ * @param out The resulting SHA-1 hash as a 20-byte buffer (output argument pointer).
+ */
+CARBON_API void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out);
+
+/**
+ * @brief Converts a 20-byte buffer containing a SHA-1 hash to its HEX string representation.
+ *
+ * The resulting HEX string buffer (`out_cstr`) must be at least 41 characters long (20*2 + 1).
+ *
+ * @param hash The SHA-1 hash as a 20-byte buffer.
+ * @param out_cstr The resulting HEX string representation of the SHA-1 hash (output argument pointer).
+ */
+CARBON_API void carbon_crypto_sha1_to_hex_cstr(const u8 *hash, char *out_cstr);
+
+/**
+ * @brief Computes the SHA-1 hash of the given binary data.
+ * @param in The input binary data.
+ * @param in_size The size of the input binary data in bytes.
+ * @return The resulting SHA-1 hash as a HEX string.
+ */
+CARBON_API char *carbon_crypto_sha1_as_hex_cstr(const u8 *in, const usz in_size);
+
+/**
  * @brief Computes the Keccak-256 hash of the given binary data.
  * @param in The input binary data.
  * @param in_size The size of the input binary data in bytes.
