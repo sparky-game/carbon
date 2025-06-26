@@ -35,6 +35,23 @@ namespace cbn {
     const auto Compare = carbon_memory_cmp,  cmp = Compare;
     const auto Set     = carbon_memory_set,  set = Set;
   }
+  namespace crypto {
+    namespace b64 {
+      const auto Encode = carbon_crypto_base64_encode;
+      const auto Decode = carbon_crypto_base64_decode;
+    }
+    const auto CRC32 = carbon_crypto_crc32;
+    namespace SHA1 {
+      const auto Compute     = carbon_crypto_sha1;
+      const auto ToHexString = carbon_crypto_sha1_to_hex_cstr;
+      const auto AsHexString = carbon_crypto_sha1_as_hex_cstr;
+    }
+    namespace Keccak256 {
+      const auto Compute     = carbon_crypto_keccak256;
+      const auto ToHexString = carbon_crypto_keccak256_to_hex_cstr;
+      const auto AsHexString = carbon_crypto_keccak256_as_hex_cstr;
+    }
+  }
   namespace str {
     const auto Length     = carbon_string_len,   len  = Length;
     const auto Compare    = carbon_string_cmp,   cmp  = Compare;
