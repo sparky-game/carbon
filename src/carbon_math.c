@@ -120,7 +120,7 @@ f32 carbon_math_ceil(f32 x) {
   else {
     volatile f32 __tmp = x + 0x1p120f;
     CARBON_NOTUSED(__tmp);
-    if (u.i >> 31) u.f = -0;
+    if (u.i >> 31) u.f = 0;
     else if (u.i << 1) u.f = 1;
   }
   return u.f;
