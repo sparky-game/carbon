@@ -12,6 +12,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+#ifndef __wasm__
 // Common
 #include <time.h>
 #include <ctype.h>
@@ -53,3 +54,4 @@
 #include <optional>
 #include <type_traits>
 #endif
+#endif  // __wasm__

@@ -88,6 +88,8 @@
 #define CARBON_CPU_ARCH "amd64"
 #elif defined(__aarch64__)
 #define CARBON_CPU_ARCH "aarch64"
+#elif defined(__wasm32__)
+#define CARBON_CPU_ARCH "wasm32"
 #else
 #error CPU architecture is not supported
 #endif
@@ -102,10 +104,13 @@
 #define CARBON_TARGET_OS "windows-msvc"
 #elif defined(_WIN32) && defined(__MINGW64__)
 #define CARBON_TARGET_OS "windows-mingw"
+#elif defined(__wasm__)
+#define CARBON_TARGET_OS "web"
 #else
 #error Target OS is not supported
 #endif
 
+#if !defined(CARBON_C_COMPILER) || !defined(CARBON_CXX_COMPILER)
 #if defined(__clang__)
 #define CARBON_C_COMPILER "clang"
 #define CARBON_CXX_COMPILER "clang++"
@@ -128,10 +133,22 @@
 #define CARBON_CXX_COMPILER "c++"
 #define CARBON_COMPILER_VERSION __VERSION__
 #endif
+#else
+#define CARBON_COMPILER_VERSION __VERSION__
+#endif
+
 #ifdef __cplusplus
 #define CARBON_COMPILER CARBON_CXX_COMPILER
 #else
 #define CARBON_COMPILER CARBON_C_COMPILER
+#endif
+
+#ifndef CARBON_AR_TOOL
+#if defined(_WIN32) && defined(__MINGW64__)
+#define CARBON_AR_TOOL "x86_64-w64-mingw32-ar"
+#else
+#define CARBON_AR_TOOL "ar"
+#endif
 #endif
 
 #ifdef __cplusplus
