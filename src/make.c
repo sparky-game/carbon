@@ -122,8 +122,8 @@ static void hdrgen(void) {
     "src/carbon_time.h",       "src/carbon_clock.h",      "src/carbon_list.h",         "src/carbon_circularqueue.h",
     "src/carbon_hashmap.h",    "src/carbon_string.h",     "src/carbon_strview.h",      "src/carbon_strbuilder.h",
     "src/carbon_strlist.h",    "src/carbon_drawcanvas.h", "src/carbon_fs.h",           "src/carbon_net.h",
-    "src/carbon_nn.h",         "src/carbon_win.h",        "src/carbon_test_manager.h", "src/carbon_junit.h",
-    "src/carbon_skap.h",       "src/carbon_aliases.h"
+    "src/carbon_audio.h",      "src/carbon_nn.h",         "src/carbon_win.h",          "src/carbon_test_manager.h",
+    "src/carbon_junit.h",      "src/carbon_skap.h",       "src/carbon_aliases.h"
   };
   for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
     call_cmd("echo >> carbon.h");
