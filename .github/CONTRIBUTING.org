@@ -24,6 +24,11 @@ git commit -s -m "Commit subject
 
 The ~-s~ switch is mandatory, as it automatically appends the *DCO-compliant* ~Signed-off-by~ line to the commit message. For more information about DCO, see [[https://developercertificate.org][this]].
 
+#+begin_quote
+[!NOTE]
+If your PR were to resolve an open issue, please, link them together under the **Development** section of the aforementioned issue or PR.
+#+end_quote
+
 * Coding conventions
 
 Start reading our code and you'll get the hang of it. We optimize for readabillity, but not compromising on its looks:
