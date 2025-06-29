@@ -26,8 +26,8 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
   usz size;
 #ifdef __cplusplus
   using value_type = T;
-  using iterator = T *;
-  using const_iterator = const T *;
+  using iterator = value_type *;
+  using const_iterator = const iterator;
   /**
    * @brief carbon_list_create
    * @return The list container.
