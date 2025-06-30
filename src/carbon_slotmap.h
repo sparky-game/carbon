@@ -9,11 +9,27 @@
 
 #pragma once
 
+/**
+ * @brief Represents the unique key format used to access stored values on a SlotMap.
+ */
 typedef struct {
   u64 id;
   u64 gen;
 } CBN_SlotMap_Key;
 
+/**
+ * @brief Represents a container with persistent unique keys, O(1) time operations and low overhead.
+ *
+ * Great for storing collections of objects that need stable, safe references but have
+ * no clear ownership otherwise, such as game entities or graph nodes.
+ *
+ * In C++, this is a templated class/struct, which means it's not a type by itself,
+ * until it gets instantiated with the needed template arguments. The type `CBN_SlotMap`
+ * is an alias for `CBN_SlotMap_t<void *>`, which provides full-compatibility with the
+ * C API, even through C++ templates.
+ *
+ * @param T Type information of what will be stored in the container.
+ */
 CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
   usz stride;
   u64 size;
