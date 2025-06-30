@@ -21,6 +21,7 @@
 #include "carbon_list.h"
 #include "carbon_circularqueue.h"
 #include "carbon_hashmap.h"
+#include "carbon_slotmap.h"
 #include "carbon_string.h"
 #include "carbon_strview.h"
 #include "carbon_strbuilder.h"

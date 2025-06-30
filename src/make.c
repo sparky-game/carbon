@@ -115,15 +115,16 @@ static void hdrgen(void) {
   carbon_println("  GEN     carbon.h");
   call_cmd("cat carbon.h.in > carbon.h");
   // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
+  // I supose we should read the `carbon.inc` file, and extract the included file from there.
   const char *hdrs[] = {
     "src/carbon_deps.h",       "src/carbon_defs.h",       "src/carbon_types.h",        "src/carbon_version.h",
     "src/carbon_test_entry.h", "src/carbon_assert.h",     "src/carbon_memory.h",       "src/carbon_coroutine.h",
     "src/carbon_math.h",       "src/carbon_crypto.h",     "src/carbon_log.h",          "src/carbon_should.h",
     "src/carbon_time.h",       "src/carbon_clock.h",      "src/carbon_list.h",         "src/carbon_circularqueue.h",
-    "src/carbon_hashmap.h",    "src/carbon_string.h",     "src/carbon_strview.h",      "src/carbon_strbuilder.h",
-    "src/carbon_strlist.h",    "src/carbon_drawcanvas.h", "src/carbon_fs.h",           "src/carbon_net.h",
-    "src/carbon_nn.h",         "src/carbon_win.h",        "src/carbon_test_manager.h", "src/carbon_junit.h",
-    "src/carbon_skap.h",       "src/carbon_aliases.h"
+    "src/carbon_hashmap.h",    "src/carbon_slotmap.h",    "src/carbon_string.h",       "src/carbon_strview.h",
+    "src/carbon_strbuilder.h", "src/carbon_strlist.h",    "src/carbon_drawcanvas.h",   "src/carbon_fs.h",
+    "src/carbon_net.h",        "src/carbon_nn.h",         "src/carbon_win.h",          "src/carbon_test_manager.h",
+    "src/carbon_junit.h",      "src/carbon_skap.h",       "src/carbon_aliases.h"
   };
   for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
     call_cmd("echo >> carbon.h");
