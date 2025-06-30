@@ -125,3 +125,5 @@ TEST(push_remove) {
   carbon_slotmap_destroy(&names);
   return CARBON_OK;
 }
+
+#undef TEST

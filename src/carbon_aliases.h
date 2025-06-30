@@ -25,6 +25,8 @@ namespace cbn {
   using RingQueue = CircularQueue<T>;
   template <typename T>
   using RingBuffer = CircularQueue<T>;
+  template <typename T>
+  using SlotMap = CBN_SlotMap_t<T>;
   using StrBuilder = CBN_StrBuilder;
   using StrView    = CBN_StrView;
   using Image      = CBN_Image;

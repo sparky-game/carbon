@@ -95,14 +95,14 @@ typedef struct CBN_List_t CBN_List;
 #define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
 
 /**
- * @brief Create a new list container.
+ * @brief Creates a new list container.
  * @param stride Size in bytes of the elements the list will hold.
  * @return The list container.
  */
 CARBON_API CBN_List carbon_list_create(usz stride);
 
 /**
- * @brief Destroy a list container.
+ * @brief Destroys a list container.
  * @param l The list container.
  */
 CARBON_API void carbon_list_destroy(CBN_List *l);
@@ -117,7 +117,7 @@ CARBON_API void carbon_list_push(CBN_List *l, void *value);
 /**
  * @brief Removes the last element from the list (LIFO).
  * @param l The list container.
- * @param out_value The value of the element popped out.
+ * @param out_value The value of the element popped out (output argument pointer).
  */
 CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
 
