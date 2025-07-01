@@ -19,5 +19,4 @@ int main(void) {
   });
   cbn::win::Close();
   canvas.Free();
-  return 0;
 }
