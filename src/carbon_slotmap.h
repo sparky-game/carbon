@@ -99,6 +99,8 @@ using CBN_SlotMap = CBN_SlotMap_t<void *>;
 typedef struct CBN_SlotMap_t CBN_SlotMap;
 #endif
 
+#define carbon_slotmap_foreach(T, sm) for (struct { usz i; T var; } it = {0, carbon_list_at(T, sm.data, 0)}; it.i < (sm.data).size; ++it.i, it.i < (sm.data).size ? it.var = carbon_list_at(T, sm.data, it.i) : it.var)
+
 /**
  * @brief Creates a new SlotMap container.
  * @param stride Size in bytes of the elements the SlotMap will hold.
