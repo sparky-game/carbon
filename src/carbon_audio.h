@@ -9,6 +9,22 @@
 
 #pragma once
 
+/**
+ * @brief Initializes the audio subsystem.
+ */
 CARBON_API void carbon_audio_init(void);
 
+/**
+ * @brief Shutdowns the audio subsystem.
+ */
 CARBON_API void carbon_audio_shutdown(void);
+
+/**
+ * @brief ...
+ */
+CARBON_API u8 carbon_audio_load_sound(const char *file, CBN_SlotMap_Key *out_key);
+
+/**
+ * @brief ...
+ */
+CARBON_API void carbon_audio_play_sound(const CBN_SlotMap_Key key);
