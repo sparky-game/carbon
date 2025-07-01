@@ -40,7 +40,7 @@ void carbon_audio_shutdown(void) {
   ma_engine_uninit(&carbon_audio__engine);
 }
 
-u8 carbon_audio_load_sound(const char *file, CBN_SlotMap_Key *out_key) {
+u8 carbon_audio_load_sound_from_file(const char *file, CBN_SlotMap_Key *out_key) {
   // TODO: think about `MA_SOUND_FLAG_STREAM` for streaming sounds (not loading entire files in memory)
   if (!out_key) {
     carbon_log_error("`out_key` must be a valid pointer");

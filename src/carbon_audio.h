@@ -22,7 +22,7 @@ CARBON_API void carbon_audio_shutdown(void);
 /**
  * @brief ...
  */
-CARBON_API u8 carbon_audio_load_sound(const char *file, CBN_SlotMap_Key *out_key);
+CARBON_API u8 carbon_audio_load_sound_from_file(const char *file, CBN_SlotMap_Key *out_key);
 
 /**
  * @brief ...
