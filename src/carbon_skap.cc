@@ -9,7 +9,7 @@ u8 CBN_SKAP::Create(const char *decl, const char *skap) {
   return carbon_skap_create(decl, skap);
 }
 
-Opt<CBN_SKAP> CBN_SKAP::make(const char *skap) {
+cbn::Opt<CBN_SKAP> CBN_SKAP::make(const char *skap) {
   CBN_SKAP handle;
   if (!carbon_skap_open(skap, &handle)) return {};
   return handle;

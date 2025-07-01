@@ -88,8 +88,8 @@ CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
    */
   const_iterator end(void) const;
   // Overloaded Operators
-  Opt<value_type> operator[](const CBN_SlotMap_Key key);
-  Opt<const value_type> operator[](const CBN_SlotMap_Key key) const;
+  cbn::Opt<value_type> operator[](const CBN_SlotMap_Key key);
+  cbn::Opt<const value_type> operator[](const CBN_SlotMap_Key key) const;
 #endif
 };
 
@@ -204,14 +204,14 @@ typename CBN_SlotMap_t<T>::const_iterator CBN_SlotMap_t<T>::end(void) const {
  * @brief CBN_SlotMap_t<T>[key]
  */
 template <typename T>
-Opt<typename CBN_SlotMap_t<T>::value_type> CBN_SlotMap_t<T>::operator[](const CBN_SlotMap_Key key) {
+cbn::Opt<typename CBN_SlotMap_t<T>::value_type> CBN_SlotMap_t<T>::operator[](const CBN_SlotMap_Key key) {
   return static_cast<const CBN_SlotMap_t &>(*this)[key];
 }
 /**
  * @brief CBN_SlotMap_t<T>[key] (const)
  */
 template <typename T>
-Opt<const typename CBN_SlotMap_t<T>::value_type> CBN_SlotMap_t<T>::operator[](const CBN_SlotMap_Key key) const {
+cbn::Opt<const typename CBN_SlotMap_t<T>::value_type> CBN_SlotMap_t<T>::operator[](const CBN_SlotMap_Key key) const {
   value_type x;
   if (!carbon_slotmap_lookup((CBN_SlotMap *) this, key, &x)) return {};
   return x;

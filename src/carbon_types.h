@@ -32,13 +32,19 @@ typedef ssize_t isz;
 typedef uintptr_t uptr;
 
 #ifdef __cplusplus
-template <typename T>
-using Opt = std::optional<T>;
-template <typename T>
-using Scope = std::unique_ptr<T>;
-template <typename T>
-using Ref = std::shared_ptr<T>;
-#endif  // __cplusplus
+namespace cbn {
+  template <typename... Ts>
+  using Tuple = std::tuple<Ts...>;
+  template <typename T>
+  using Opt = std::optional<T>;
+  template <typename T>
+  using Scope = std::unique_ptr<T>;
+  template <typename T>
+  using Ref = std::shared_ptr<T>;
+  template <typename T>
+  struct AlwaysFalse : std::false_type {};
+}
+#endif
 
 // Local Variables:
 // mode: c++

@@ -47,6 +47,7 @@
 #endif
 // C++
 #ifdef __cplusplus
+#include <tuple>
 #include <string>
 #include <memory>
 #include <utility>

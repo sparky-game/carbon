@@ -64,7 +64,7 @@ typedef struct CBN_SKAP {
    * @param skap The filename of the SKAP in disk.
    * @return The handle info object of the opened SKAP.
    */
-  static Opt<CBN_SKAP> make(const char *skap);
+  static cbn::Opt<CBN_SKAP> make(const char *skap);
   /**
    * @brief carbon_skap_close
    */
@@ -77,7 +77,7 @@ typedef struct CBN_SKAP {
    * @brief carbon_skap_lookup
    */
   template <typename T>
-  Opt<T> Lookup(const char *asset_name) const;
+  cbn::Opt<T> Lookup(const char *asset_name) const;
   /**
    * @brief carbon_skap_count
    * @return The number of assets stored in the opened SKAP.
@@ -166,7 +166,7 @@ CARBON_API usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_Asset
  * @brief CBN_SKAP.Lookup<T>
  */
 template <typename T>
-Opt<T> CBN_SKAP::Lookup(const char *asset_name) const {
+cbn::Opt<T> CBN_SKAP::Lookup(const char *asset_name) const {
   T asset;
   if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
   return asset;
@@ -185,7 +185,7 @@ template <typename T>
 constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
   if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
   else {
-    CARBON_STATIC_ASSERT(std::always_false<T>::value, "type T is not a valid asset type");
+    CARBON_STATIC_ASSERT(cbn::AlwaysFalse<T>::value, "type T is not a valid asset type");
     return CARBON_SKAP_ASSET_TYPE_COUNT;
   }
 }
