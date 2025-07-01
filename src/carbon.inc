@@ -29,6 +29,7 @@
 #include "carbon_drawcanvas.h"
 #include "carbon_fs.h"
 #include "carbon_net.h"
+#include "carbon_audio.h"
 #include "carbon_nn.h"
 #include "carbon_win.h"
 #include "carbon_test_manager.h"
