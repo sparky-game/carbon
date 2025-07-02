@@ -80,3 +80,7 @@ u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void 
   carbon_memory_copy(out_value, (void *) ((u64) sm->data.items + (idx * sm->stride)), sm->stride);
   return true;
 }
+
+char *carbon_slotmap_key_to_cstr(const CBN_SlotMap_Key key) {
+  return carbon_string_fmt("(%llu, %llu)", key.id, key.gen);
+}

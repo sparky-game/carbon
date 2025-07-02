@@ -12,9 +12,16 @@
 /**
  * @brief Represents the unique key format used to access stored values on a SlotMap.
  */
-typedef struct {
+typedef struct CBN_SlotMap_Key {
   u64 id;
   u64 gen;
+#ifdef __cplusplus
+  /**
+   * @brief carbon_slotmap_key_to_cstr
+   * @return The serialized key as `(id, gen)`.
+   */
+  const char *ToString(void) const;
+#endif
 } CBN_SlotMap_Key;
 
 /**
@@ -138,6 +145,13 @@ CARBON_API u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
  * @return A boolean value indicating whether it retrieved the element successfully or not.
  */
 CARBON_API u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value);
+
+/**
+ * @brief Returns the string representation of the key using default formatting.
+ * @param key The key to be serialized.
+ * @return The serialized key as `(id, gen)`.
+ */
+CARBON_API char *carbon_slotmap_key_to_cstr(const CBN_SlotMap_Key key);
 
 // Because `CBN_SlotMap_t` is a templated class/struct, the definitions of all its
 // member functions need to be available at compile-time, not link-time; thus,
