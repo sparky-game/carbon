@@ -41,8 +41,8 @@ namespace cbn {
   using Scope = std::unique_ptr<T>;
   template <typename T>
   using Ref = std::shared_ptr<T>;
-  template <typename T>
-  struct AlwaysFalse : std::false_type {};
+  template <typename T, typename... Ts>
+  concept TypeIsAllowed = (std::same_as<T, Ts> or ...);
 }
 #endif
 

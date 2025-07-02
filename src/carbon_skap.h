@@ -18,6 +18,11 @@ typedef enum {
   CARBON_SKAP_ASSET_TYPE_COUNT
 } CBN_SKAP_AssetType;
 
+#ifdef __cplusplus
+template <typename T>
+concept CBN_SKAP_AssetType_t = cbn::TypeIsAllowed<T, CBN_Image>;
+#endif
+
 typedef struct {
   CBN_SKAP_AssetType type;
   union {
@@ -90,8 +95,8 @@ typedef struct CBN_SKAP {
   template <typename T>
   usz CountOf(void) const;
 private:
-  template <typename T>
-  static constexpr CBN_SKAP_AssetType GetAssetType(void);
+  template <CBN_SKAP_AssetType_t T>
+  static consteval CBN_SKAP_AssetType GetAssetType(void);
 #endif
 } CBN_SKAP;
 
@@ -181,13 +186,10 @@ usz CBN_SKAP::CountOf(void) const {
 /**
  * @brief CBN_SKAP::GetAssetType<T>
  */
-template <typename T>
-constexpr CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
+template <CBN_SKAP_AssetType_t T>
+consteval CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
   if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
-  else {
-    CARBON_STATIC_ASSERT(cbn::AlwaysFalse<T>::value, "type T is not a valid asset type");
-    return CARBON_SKAP_ASSET_TYPE_COUNT;
-  }
+  else return CARBON_SKAP_ASSET_TYPE_COUNT;
 }
 #endif  // __cplusplus
 

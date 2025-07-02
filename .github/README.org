@@ -12,7 +12,7 @@
 <p align="center">
 <img src="https://img.shields.io/github/license/sparky-game/carbon?color=coral" alt="License">
 <img src="https://img.shields.io/badge/C-11-violet" alt="C Standard">
-<img src="https://img.shields.io/badge/C++-17-violet" alt="C++ Standard">
+<img src="https://img.shields.io/badge/C++-20-violet" alt="C++ Standard">
 <img src="https://img.shields.io/github/v/tag/sparky-game/carbon?color=slateblue" alt="Latest Git Tag">
 <img src="https://www.bestpractices.dev/projects/9605/badge" alt="OpenSSF Best Practices">
 <img src="https://cla-assistant.io/readme/badge/sparky-game/carbon" alt="SCLA signatures count">
@@ -26,7 +26,7 @@
 - ¯\_(ツ)_/¯
 #+end_quote
 
-~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑːbᵊn\slash{}]]/) is the ultimate *tiny* and *easy to use* high-level library for C/C++ written in *C11/C++17*. @@html:<br>@@
+~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑːbᵊn\slash{}]]/) is the ultimate *tiny* and *easy to use* high-level library for C/C++ (/написано в них/). @@html:<br>@@
 It even can be used to test any piece of C/C++ code; thus, working as a full-fledged *testing suite*. @@html:<br>@@
 If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[../SECURITY.md][instructions]] and our [[../CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
 
