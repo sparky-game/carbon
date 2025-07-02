@@ -29,15 +29,19 @@ void carbon_audio_init(void) {
   ma_result res = ma_engine_init(0, &carbon_audio__engine);
   CARBON_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
   carbon_audio__library = carbon_slotmap_create(sizeof(ma_sound *));
+  carbon_log_info("Initialized audio subsystem successfully");
 }
 
 void carbon_audio_shutdown(void) {
-  carbon_slotmap_foreach(ma_sound *, carbon_audio__library) {
-    ma_sound_uninit(it.var);
-    CARBON_FREE(it.var);
+  if (carbon_audio__library.size) {
+    carbon_slotmap_foreach(ma_sound *, carbon_audio__library) {
+      ma_sound_uninit(it.var);
+      CARBON_FREE(it.var);
+    }
   }
   carbon_slotmap_destroy(&carbon_audio__library);
   ma_engine_uninit(&carbon_audio__engine);
+  carbon_log_info("Shutdowned audio subsystem successfully");
 }
 
 u8 carbon_audio_load_sound_from_file(const char *file, CBN_SlotMap_Key *out_key) {
