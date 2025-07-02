@@ -44,21 +44,28 @@ void carbon_audio_shutdown(void) {
   carbon_log_info("Shutdowned audio subsystem successfully");
 }
 
-u8 carbon_audio_load_sound_from_file(const char *file, CBN_SlotMap_Key *out_key) {
-  // TODO: think about `MA_SOUND_FLAG_STREAM` for streaming sounds (not loading entire files in memory)
+CARBON_INLINE u8 carbon_audio__load_sound_from_file_ex(const char *file, CBN_SlotMap_Key *out_key, ma_sound_flags flags) {
   if (!out_key) {
     carbon_log_error("`out_key` must be a valid pointer");
     return false;
   }
   ma_sound *sound = (ma_sound *) CARBON_MALLOC(sizeof(ma_sound));
   CARBON_ASSERT(sound && "failed to allocate memory");
-  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, MA_SOUND_FLAG_ASYNC, 0, 0, sound)) {
+  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, sound)) {
     carbon_log_error("Failed to load sound from file (`%s`)", file);
     CARBON_FREE(sound);
     return false;
   }
   *out_key = carbon_slotmap_push(&carbon_audio__library, &sound);
   return true;
+}
+
+u8 carbon_audio_load_sound_from_file(const char *file, CBN_SlotMap_Key *out_key) {
+  return carbon_audio__load_sound_from_file_ex(file, out_key, MA_SOUND_FLAG_ASYNC);
+}
+
+u8 carbon_audio_load_sound_streaming_from_file(const char *file, CBN_SlotMap_Key *out_key) {
+  return carbon_audio__load_sound_from_file_ex(file, out_key, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM);
 }
 
 void carbon_audio_play_sound(const CBN_SlotMap_Key key) {

@@ -81,6 +81,21 @@ namespace cbn {
     const auto GetBinDir = carbon_fs_get_bin_directory;
     const auto Size = carbon_fs_get_file_size;
   }
+  namespace audio {
+    const auto Init               = carbon_audio_init;
+    const auto Shutdown           = carbon_audio_shutdown;
+    const auto LoadSound          = carbon_audio_load_sound;
+    const auto LoadSoundStreaming = carbon_audio_load_sound_streaming;
+    template <typename... Args>
+    auto LoadSounds(Args &&... files) {
+      return carbon_audio_load_sounds(std::forward<Args>(files)...);
+    }
+    template <typename... Args>
+    auto LoadSoundsStreaming(Args &&... files) {
+      return carbon_audio_load_sounds_streaming(std::forward<Args>(files)...);
+    }
+    const auto PlaySound  = carbon_audio_play_sound;
+  }
   namespace win {
     const auto Open         = carbon_win_open;
     const auto Close        = carbon_win_close;
