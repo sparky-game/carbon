@@ -89,9 +89,9 @@ namespace cbn {
     const auto GetDeltaTime = carbon_win_get_deltatime;
     const auto Update       = carbon_win_update;
     const auto ShouldClose  = carbon_win_shouldclose;
-    template <typename... Args>
-    auto ForFrame(Args &&... args) {
-      return carbon_win_forframe(std::forward<Args>(args)...);
+    template <typename T>
+    auto ForFrame(T &&callback) {
+      return carbon_win_forframe(callback);
     }
   }
 }
