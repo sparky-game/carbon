@@ -13,6 +13,7 @@
 #pragma GCC diagnostic ignored "-Wswitch-enum"
 #endif
 
+#include "../vendor/stb_vorbis/stb_vorbis.c"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../vendor/miniaudio/miniaudio.h"
 
