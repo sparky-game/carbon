@@ -20,7 +20,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
-#define WARNS   "-Wall -Wextra -Wswitch-enum -Werror=format -Wno-return-type-c-linkage"
+#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage"
 
 static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "\n"

@@ -94,9 +94,10 @@ namespace cbn {
     auto LoadSoundsStreaming(Args &&... files) {
       return carbon_audio_load_sounds_streaming(std::forward<Args>(files)...);
     }
-    const auto PlaySound  = carbon_audio_play_sound;
+    const auto PlaySound = carbon_audio_play_sound;
   }
   namespace win {
+    using KeyCode           = CBN_KeyCode;
     const auto Open         = carbon_win_open;
     const auto Close        = carbon_win_close;
     const auto SetMaxFPS    = carbon_win_set_max_fps;
@@ -108,6 +109,8 @@ namespace cbn {
     auto ForFrame(T &&callback) {
       return carbon_win_forframe(callback);
     }
+    const auto GetKeyDown = carbon_win_get_key_down;
+    const auto GetKeyUp   = carbon_win_get_key_up;
   }
 }
 #endif  // __cplusplus

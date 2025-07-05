@@ -9,6 +9,31 @@
 
 #pragma once
 
+#define CARBON_WIN_KEYCODES                                             \
+  x(A) x(B) x(C) x(D) x(E) x(F) x(G) x(H) x(I) x(J) x(K) x(L) x(M)      \
+  x(N) x(O) x(P) x(Q) x(R) x(S) x(T) x(U) x(V) x(W) x(X) x(Y) x(Z)      \
+  x(Zero) x(One) x(Two) x(Three) x(Four) x(Five) x(Six) x(Seven)        \
+  x(Eight) x(Nine) x(BackQuote) x(F1) x(F2) x(F3) x(F4) x(F5) x(F6)     \
+  x(F7) x(F8) x(F9) x(F10) x(F11) x(F12) x(Escape) x(Tab) x(CapsLock)   \
+  x(LeftShift) x(LeftControl) x(LeftMeta) x(LeftAlt) x(Space)           \
+  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)
+
+enum CBN_KeyCode_t {
+#define x(name) CARBON_KEY_CODE_ ## name,
+  CARBON_WIN_KEYCODES
+#undef x
+};
+
+#ifdef __cplusplus
+enum struct CBN_KeyCode {
+#define x(name) name = CARBON_KEY_CODE_ ## name,
+  CARBON_WIN_KEYCODES
+#undef x
+};
+#else
+typedef enum CBN_KeyCode_t CBN_KeyCode;
+#endif
+
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
 CARBON_API void carbon_win_close(void);
 CARBON_API void carbon_win_set_max_fps(u32 fps);
@@ -46,6 +71,20 @@ void carbon_win_forframe(T &&callback) {
   }
 }
 #endif
+
+/**
+ * @brief Returns true during the frame the user starts pressing down the specified key.
+ * @param key The KeyCode to evaluate.
+ * @return A boolean value representing whether the key is being pressed or not.
+ */
+CARBON_API u8 carbon_win_get_key_down(const CBN_KeyCode key);
+
+/**
+ * @brief Returns true during the frame the user releases the specified key.
+ * @param key The KeyCode to evaluate.
+ * @return A boolean value representing whether the key was released or not.
+ */
+CARBON_API u8 carbon_win_get_key_up(const CBN_KeyCode key);
 
 // Local Variables:
 // mode: c++
