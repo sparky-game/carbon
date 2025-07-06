@@ -105,7 +105,7 @@
  * @param r The radial coordinate.
  * @param phi The angular coordinate.
  */
-#define CARBON_VEC2_P(r, phi) CARBON_VEC2(r * cos(phi), r * sin(phi))
+#define CARBON_VEC2_P(r, phi) CARBON_VEC2(r * carbon_math_cos(phi), r * carbon_math_sin(phi))
 
 /**
  * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
