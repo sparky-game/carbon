@@ -32,6 +32,7 @@ namespace cbn {
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
   const auto version = carbon_version;
+  constexpr auto Assert = [](const bool expr){ CARBON_ASSERT(expr); };
   namespace log {
     using Color = CBN_Log_Color;
   }
@@ -106,16 +107,17 @@ namespace cbn {
     const auto Size = carbon_fs_get_file_size;
   }
   namespace audio {
+    using UID                     = CBN_SlotMap_Key;
     const auto Init               = carbon_audio_init;
     const auto Shutdown           = carbon_audio_shutdown;
     const auto LoadSound          = carbon_audio_load_sound;
     const auto LoadSoundStreaming = carbon_audio_load_sound_streaming;
     template <typename... Args>
-    auto LoadSounds(Args &&... files) {
+    [[nodiscard]] auto LoadSounds(Args &&... files) {
       return carbon_audio_load_sounds(std::forward<Args>(files)...);
     }
     template <typename... Args>
-    auto LoadSoundsStreaming(Args &&... files) {
+    [[nodiscard]] auto LoadSoundsStreaming(Args &&... files) {
       return carbon_audio_load_sounds_streaming(std::forward<Args>(files)...);
     }
     const auto PlaySound = carbon_audio_play_sound;
