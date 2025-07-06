@@ -114,6 +114,10 @@ CARBON_INLINE RGFW_key carbon_win__map_keycodes(const CBN_KeyCode key) {
   case CARBON_KEY_CODE_RightControl: return RGFW_controlR;
   case CARBON_KEY_CODE_RightShift:   return RGFW_shiftR;
   case CARBON_KEY_CODE_Return:       return RGFW_return;
+  case CARBON_KEY_CODE_UpArrow:      return RGFW_up;
+  case CARBON_KEY_CODE_DownArrow:    return RGFW_down;
+  case CARBON_KEY_CODE_LeftArrow:    return RGFW_left;
+  case CARBON_KEY_CODE_RightArrow:   return RGFW_right;
   default:                           return RGFW_keyNULL;
   }
 }

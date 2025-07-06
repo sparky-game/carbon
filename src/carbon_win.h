@@ -16,7 +16,8 @@
   x(Eight) x(Nine) x(BackQuote) x(F1) x(F2) x(F3) x(F4) x(F5) x(F6)     \
   x(F7) x(F8) x(F9) x(F10) x(F11) x(F12) x(Escape) x(Tab) x(CapsLock)   \
   x(LeftShift) x(LeftControl) x(LeftMeta) x(LeftAlt) x(Space)           \
-  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)
+  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)      \
+  x(UpArrow) x(DownArrow) x(LeftArrow) x(RightArrow)
 
 enum CBN_KeyCode_t {
 #define x(name) CARBON_KEY_CODE_ ## name,
