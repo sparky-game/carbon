@@ -4,20 +4,24 @@
 #include <carbon.h>
 
 namespace pong {
-  static constexpr auto c_MaxFPS             = 120;
-  static constexpr auto c_ScreenWidthRatio   = 16;
-  static constexpr auto c_ScreenHeightRatio  = 9;
-  static constexpr auto c_ScreenRatioFactor  = 80;
-  static constexpr auto c_ScreenWidth        = c_ScreenWidthRatio * c_ScreenRatioFactor;
-  static constexpr auto c_ScreenHeight       = c_ScreenHeightRatio * c_ScreenRatioFactor;
-  static constexpr auto c_BallSize           = 32;
-  static constexpr auto c_BallSpeed          = 1000;
-  static constexpr auto c_RacketPadding      = 100;
-  static constexpr auto c_RacketLength       = 5;
-  static constexpr auto c_RacketSpeed        = 1100;
-  static constexpr auto c_MaxReflectionAngle = 75;
-  static constexpr auto c_BackgroundColor    = 0x181818ff;
-  static constexpr auto c_ForegroundColor    = 0xdcdcdcff;
+  static constexpr auto c_Name                = "PONG";
+  static constexpr auto c_MaxFPS              = 120;
+  static constexpr auto c_ScreenWidthRatio    = 16;
+  static constexpr auto c_ScreenHeightRatio   = 9;
+  static constexpr auto c_ScreenRatioFactor   = 80;
+  static constexpr auto c_ScreenWidth         = c_ScreenWidthRatio * c_ScreenRatioFactor;
+  static constexpr auto c_ScreenHeight        = c_ScreenHeightRatio * c_ScreenRatioFactor;
+  static constexpr auto c_BallSize            = 32;
+  static constexpr auto c_BallSpeed           = 1000;
+  static constexpr auto c_BallSpeedAdjustment = 400;
+  static constexpr auto c_BallSpeedMin        = c_BallSpeed * 0.9;
+  static constexpr auto c_BallSpeedMax        = c_BallSpeed * 2;
+  static constexpr auto c_RacketPadding       = 100;
+  static constexpr auto c_RacketLength        = 5;
+  static constexpr auto c_RacketSpeed         = 1100;
+  static constexpr auto c_MaxReflectionAngle  = 75;
+  static constexpr auto c_BackgroundColor     = 0x181818ff;
+  static constexpr auto c_ForegroundColor     = 0xdcdcdcff;
 
   struct Entity {
     cbn::Vec2 position;
@@ -54,12 +58,20 @@ namespace pong {
                  },
                  m_Started{false}
     {
-      cbn::win::Open(m_Canvas.width, m_Canvas.height, "Pong");
+      cbn::Assert(cbn::fs::cd(cbn::fs::GetBinDir()));
+      cbn::audio::Init();
+      auto [sound_p1, sound_serve, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/p1.ogg", "pong.assets.d/serve.ogg", "pong.assets.d/p2.ogg");
+      cbn::Assert(sound_serve and sound_p1 and sound_p2);
+      m_Sound_Serve = *sound_serve;
+      m_Sound_P1 = *sound_p1;
+      m_Sound_P2 = *sound_p2;
+      cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
     }
 
     ~Game(void) {
       cbn::win::Close();
+      cbn::audio::Shutdown();
       m_Canvas.Free();
     }
 
@@ -76,9 +88,15 @@ namespace pong {
     Racket m_Racket_1;
     Racket m_Racket_2;
     bool m_Started;
+    cbn::audio::UID m_Sound_Serve;
+    cbn::audio::UID m_Sound_P1;
+    cbn::audio::UID m_Sound_P2;
 
     void Update(const f64 dt) {
-      if (!m_Started && cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) m_Started = true;
+      if (!m_Started && cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
+        m_Started = true;
+        cbn::audio::PlaySound(m_Sound_Serve);
+      }
       if (m_Started) {
         m_Ball.position += m_Ball.velocity * dt;
         BallCollideWalls();
@@ -107,28 +125,24 @@ namespace pong {
     }
 
     void BallCollideRackets(void) {
-      auto r1   = CARBON_RECT_V(m_Racket_1.position, c_BallSize, c_RacketLength * c_BallSize);
-      auto r2   = CARBON_RECT_V(m_Racket_2.position, c_BallSize, c_RacketLength * c_BallSize);
-      auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
-      f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
-      if (r1.Overlaps(ball)) {
-        f64 racket_center_y = m_Racket_1.position.y + (c_RacketLength * c_BallSize) / 2;
+      static auto resolve_collision = [this](const Racket &r, f64 dir, const cbn::audio::UID &sound) {
+        auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
+        if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketLength * c_BallSize).Overlaps(ball)) return false;
+        f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
+        f64 racket_center_y = r.position.y + (c_RacketLength * c_BallSize) / 2;
         f64 relative_y = (ball_center_y - racket_center_y) / ((c_RacketLength * c_BallSize) / 2);
         cbn::math::Clamp(relative_y, -1, 1);
         f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
-        auto speed = m_Ball.velocity.Length();
-        m_Ball.velocity.x = cbn::math::Abs(speed * cbn::math::Cos(angle));
+        f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
+        auto speed = m_Ball.velocity.Length() + d_speed;
+        cbn::math::Clamp(speed, c_BallSpeedMin, c_BallSpeedMax);
+        m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
         m_Ball.velocity.y = speed * cbn::math::Sin(angle);
-      }
-      if (r2.Overlaps(ball)) {
-        f64 racket_center_y = m_Racket_2.position.y + (c_RacketLength * c_BallSize) / 2;
-        f64 relative_y = (ball_center_y - racket_center_y) / ((c_RacketLength * c_BallSize) / 2);
-        cbn::math::Clamp(relative_y, -1, 1);
-        f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
-        auto speed = m_Ball.velocity.Length();
-        m_Ball.velocity.x = -cbn::math::Abs(speed * cbn::math::Cos(angle));
-        m_Ball.velocity.y = speed * cbn::math::Sin(angle);
-      }
+        cbn::audio::PlaySound(sound);
+        return true;
+      };
+      if (resolve_collision(m_Racket_1, 1, m_Sound_P1)) return;
+      resolve_collision(m_Racket_2, -1, m_Sound_P2);
     }
 
     void MoveRackets(const f64 dt) {
