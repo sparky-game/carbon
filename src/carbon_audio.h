@@ -38,18 +38,18 @@ CARBON_API void carbon_audio_play_sound(const CBN_SlotMap_Key key);
 /**
  * @brief carbon_audio_load_sound_from_file
  */
-cbn::Opt<CBN_SlotMap_Key> carbon_audio_load_sound(const char *file);
+[[nodiscard]] cbn::Opt<CBN_SlotMap_Key> carbon_audio_load_sound(const char *file);
 
 /**
  * @brief carbon_audio_load_sound_streaming_from_file
  */
-cbn::Opt<CBN_SlotMap_Key> carbon_audio_load_sound_streaming(const char *file);
+[[nodiscard]] cbn::Opt<CBN_SlotMap_Key> carbon_audio_load_sound_streaming(const char *file);
 
 /**
  * @brief carbon_audio_load_sound(...)
  */
 template <typename... Args>
-auto carbon_audio_load_sounds(Args &&... files) {
+[[nodiscard]] auto carbon_audio_load_sounds(Args &&... files) {
   return std::make_tuple(carbon_audio_load_sound(std::forward<Args>(files))...);
 }
 
@@ -57,7 +57,7 @@ auto carbon_audio_load_sounds(Args &&... files) {
  * @brief carbon_audio_load_sound_streaming(...)
  */
 template <typename... Args>
-auto carbon_audio_load_sounds_streaming(Args &&... files) {
+[[nodiscard]] auto carbon_audio_load_sounds_streaming(Args &&... files) {
   return std::make_tuple(carbon_audio_load_sound_streaming(std::forward<Args>(files))...);
 }
 #endif
