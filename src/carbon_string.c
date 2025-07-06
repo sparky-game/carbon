@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 #define CARBON_STRING_FMT_MAX_LEN     1024
-#define CARBON_STRING_FMT_MAX_BUFFERS 4
+#define CARBON_STRING_FMT_MAX_BUFFERS 64
 
 usz carbon_string_len(const char *s) {
   usz n = 0;

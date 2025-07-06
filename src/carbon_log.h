@@ -16,6 +16,16 @@
 #define CARBON_COLOR_MAGENTA "\033[1;35m"
 #define CARBON_COLOR_CYAN    "\033[1;36m"
 
+#ifdef __cplusplus
+struct CBN_Log_Color {
+  static constexpr const char *Red     = CARBON_COLOR_RED;
+  static constexpr const char *Green   = CARBON_COLOR_GREEN;
+  static constexpr const char *Yellow  = CARBON_COLOR_YELLOW;
+  static constexpr const char *Magenta = CARBON_COLOR_MAGENTA;
+  static constexpr const char *Cyan    = CARBON_COLOR_CYAN;
+};
+#endif
+
 #define carbon_log_debug(msg, ...) carbon_println(CARBON_COLOR_CYAN "[^] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define carbon_log_info(msg, ...) carbon_println(CARBON_COLOR_YELLOW "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
 #define carbon_log_warn(msg, ...) carbon_println(CARBON_COLOR_MAGENTA "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
@@ -69,10 +79,10 @@ constexpr auto carbon_log__var_to_spec(T) {
 #define carbon_println(msg, ...) carbon_print(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
 #define carbon_eprintln(msg, ...) carbon_eprint(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
 
-#define carbon_cprint(color, msg, ...) carbon_print(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_ceprint(color, msg, ...) carbon_eprint(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_cprintln(color, msg, ...) carbon_println(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_ceprintln(color, msg, ...) carbon_eprintln(color msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define carbon_cprint(color, msg, ...) carbon_print(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_ceprint(color, msg, ...) carbon_eprint(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_cprintln(color, msg, ...) carbon_println(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_ceprintln(color, msg, ...) carbon_eprintln(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
 
 typedef struct {
   const char *spec;

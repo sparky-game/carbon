@@ -11,7 +11,6 @@
 
 #ifdef __cplusplus
 namespace cbn {
-  const auto version = carbon_version;
   using Vec2         = CBN_Vec2;
   using Vec3         = CBN_Vec3;
   using Rect         = CBN_Rect;
@@ -32,10 +31,35 @@ namespace cbn {
   using Image      = CBN_Image;
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
+  const auto version = carbon_version;
+  namespace log {
+    using Color = CBN_Log_Color;
+  }
   namespace mem {
     const auto Copy    = carbon_memory_copy, cp  = Copy;
     const auto Compare = carbon_memory_cmp,  cmp = Compare;
     const auto Set     = carbon_memory_set,  set = Set;
+  }
+  namespace math {
+    constexpr auto pi = CARBON_PI;
+    namespace const_literals {
+      consteval f64 operator""_pi(const u64 n) { return n * CARBON_PI; }
+      consteval f64 operator""_pi(const long double n) { return n * CARBON_PI; }
+    }
+    const auto Abs = carbon_math_abs;
+    const auto Sin = carbon_math_sin;
+    const auto Cos = carbon_math_cos;
+    constexpr auto Clamp = [](auto &x, const auto min, const auto max){ x = CARBON_CLAMP(x, min, max); };
+    template <std::integral T>
+    T Rand(void) {
+      return carbon_math_rand();
+    }
+    template <std::floating_point T>
+    T Rand(void) {
+      return carbon_math_randf();
+    }
+    inline i32 Rand(const i32 min, const i32 max) { return carbon_math_rand_between(min, max); }
+    inline f32 Rand(const f32 min, const f32 max) { return carbon_math_randf_between(min, max); }
   }
   namespace crypto {
     namespace b64 {
@@ -105,12 +129,44 @@ namespace cbn {
     const auto GetDeltaTime = carbon_win_get_deltatime;
     const auto Update       = carbon_win_update;
     const auto ShouldClose  = carbon_win_shouldclose;
+    const auto GetKeyDown   = carbon_win_get_key_down;
+    const auto GetKeyUp     = carbon_win_get_key_up;
     template <typename T>
     auto ForFrame(T &&callback) {
       return carbon_win_forframe(callback);
     }
-    const auto GetKeyDown = carbon_win_get_key_down;
-    const auto GetKeyUp   = carbon_win_get_key_up;
+  }
+  template <typename... Args>
+  constexpr void print(const char *msg, Args &&... args) {
+    carbon_print(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void eprint(const char *msg, Args &&... args) {
+    carbon_eprint(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void println(const char *msg, Args &&... args) {
+    carbon_println(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void eprintln(const char *msg, Args &&... args) {
+    carbon_eprintln(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {
+    carbon_cprint(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void ceprint(const log::Color color, const char *msg, Args &&... args) {
+    carbon_ceprint(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void cprintln(const log::Color color, const char *msg, Args &&... args) {
+    carbon_cprintln(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
+    carbon_ceprintln(color, msg, std::forward<Args>(args)...);
   }
 }
 #endif  // __cplusplus
