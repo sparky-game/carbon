@@ -22,28 +22,17 @@ typedef struct CBN_PatternMatchedFiles {
   char **files;
   usz count;
 #ifdef __cplusplus
-  using iterator = const char **;
-  using const_iterator = const char * const *;
+  using iterator = char **;
   /**
    * @brief Returns an iterator to the beginning.
    * @return The iterator.
    */
-  iterator begin(void);
-  /**
-   * @brief Returns a constant iterator to the beginning.
-   * @return The const_iterator.
-   */
-  const_iterator begin(void) const;
+  iterator begin(void) const;
   /**
    * @brief Returns an iterator to the end.
    * @return The iterator.
    */
-  iterator end(void);
-  /**
-   * @brief Returns a constant iterator to the end.
-   * @return The const_iterator.
-   */
-  const_iterator end(void) const;
+  iterator end(void) const;
 #endif
 } CBN_PatternMatchedFiles;
 

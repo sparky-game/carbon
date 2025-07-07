@@ -27,7 +27,6 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
 #ifdef __cplusplus
   using value_type = T;
   using iterator = value_type *;
-  using const_iterator = const iterator;
   /**
    * @brief carbon_list_create
    * @return The list container.
@@ -62,22 +61,12 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    * @brief Returns an iterator to the beginning.
    * @return The iterator.
    */
-  iterator begin(void);
-  /**
-   * @brief Returns a constant iterator to the beginning.
-   * @return The const_iterator.
-   */
-  const_iterator begin(void) const;
+  iterator begin(void) const;
   /**
    * @brief Returns an iterator to the end.
    * @return The iterator.
    */
-  iterator end(void);
-  /**
-   * @brief Returns a constant iterator to the end.
-   * @return The const_iterator.
-   */
-  const_iterator end(void) const;
+  iterator end(void) const;
   // Overloaded Operators
   value_type &operator[](usz idx);
   const value_type &operator[](usz idx) const;
@@ -189,29 +178,15 @@ void CBN_List_t<T>::Remove(usz idx) {
  * @brief CBN_List_t<T>.begin
  */
 template <typename T>
-typename CBN_List_t<T>::iterator CBN_List_t<T>::begin(void) {
-  return const_cast<iterator>(static_cast<const CBN_List_t &>(*this).begin());
-}
-/**
- * @brief CBN_List_t<T>.begin (const)
- */
-template <typename T>
-typename CBN_List_t<T>::const_iterator CBN_List_t<T>::begin(void) const {
-  return static_cast<const_iterator>(items);
+typename CBN_List_t<T>::iterator CBN_List_t<T>::begin(void) const {
+  return (iterator) items;
 }
 /**
  * @brief CBN_List_t<T>.end
  */
 template <typename T>
-typename CBN_List_t<T>::iterator CBN_List_t<T>::end(void) {
-  return const_cast<iterator>(static_cast<const CBN_List_t &>(*this).end());
-}
-/**
- * @brief CBN_List_t<T>.end (const)
- */
-template <typename T>
-typename CBN_List_t<T>::const_iterator CBN_List_t<T>::end(void) const {
-  return static_cast<const_iterator>(items) + size;
+typename CBN_List_t<T>::iterator CBN_List_t<T>::end(void) const {
+  return (iterator) items + size;
 }
 /**
  * @brief CBN_List_t<T>[idx]

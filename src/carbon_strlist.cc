@@ -25,19 +25,11 @@ void CBN_StrList::Push(const char *s) {
   carbon_strlist_push(this, s);
 }
 
-CBN_StrList::iterator CBN_StrList::begin(void) {
-  return const_cast<iterator>(static_cast<const CBN_StrList &>(*this).begin());
-}
-
-CBN_StrList::const_iterator CBN_StrList::begin(void) const {
+CBN_StrList::iterator CBN_StrList::begin(void) const {
   return items;
 }
 
-CBN_StrList::iterator CBN_StrList::end(void) {
-  return const_cast<iterator>(static_cast<const CBN_StrList &>(*this).end());
-}
-
-CBN_StrList::const_iterator CBN_StrList::end(void) const {
+CBN_StrList::iterator CBN_StrList::end(void) const {
   return items + size;
 }
 

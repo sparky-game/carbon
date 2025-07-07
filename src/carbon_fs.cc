@@ -5,19 +5,11 @@
 
 #include "carbon.inc"
 
-CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) {
-  return const_cast<iterator>(static_cast<const CBN_PatternMatchedFiles &>(*this).begin());
-}
-
-CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::begin(void) const {
+CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) const {
   return files;
 }
 
-CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::end(void) {
-  return const_cast<iterator>(static_cast<const CBN_PatternMatchedFiles &>(*this).end());
-}
-
-CBN_PatternMatchedFiles::const_iterator CBN_PatternMatchedFiles::end(void) const {
+CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::end(void) const {
   return files + count;
 }
 

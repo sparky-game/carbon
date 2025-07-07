@@ -18,8 +18,7 @@ typedef struct CBN_StrList {
   usz capacity;
   u8 unique;
 #ifdef __cplusplus
-  using iterator = const char **;
-  using const_iterator = const char * const *;
+  using iterator = char **;
   /**
    * @brief carbon_strlist_create(unique = false)
    * @return The new StrList, configured to hold repeated strings.
@@ -50,22 +49,12 @@ typedef struct CBN_StrList {
    * @brief Returns an iterator to the beginning.
    * @return The iterator.
    */
-  iterator begin(void);
-  /**
-   * @brief Returns a constant iterator to the beginning.
-   * @return The const_iterator.
-   */
-  const_iterator begin(void) const;
+  iterator begin(void) const;
   /**
    * @brief Returns an iterator to the end.
    * @return The iterator.
    */
-  iterator end(void);
-  /**
-   * @brief Returns a constant iterator to the end.
-   * @return The const_iterator.
-   */
-  const_iterator end(void) const;
+  iterator end(void) const;
 #endif
 } CBN_StrList;
 

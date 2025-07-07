@@ -49,7 +49,6 @@ CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
   using Key = CBN_SlotMap_Key;
   using value_type = T;
   using iterator = value_type *;
-  using const_iterator = const iterator;
   using indices_type = CBN_List_t<Key>;
   using data_type = CBN_List_t<value_type>;
   using erase_type = CBN_List_t<u64>;
@@ -78,22 +77,12 @@ CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
    * @brief Returns an iterator to the beginning.
    * @return The iterator.
    */
-  iterator begin(void);
-  /**
-   * @brief Returns a constant iterator to the beginning.
-   * @return The const_iterator.
-   */
-  const_iterator begin(void) const;
+  iterator begin(void) const;
   /**
    * @brief Returns an iterator to the end.
    * @return The iterator.
    */
-  iterator end(void);
-  /**
-   * @brief Returns a constant iterator to the end.
-   * @return The const_iterator.
-   */
-  const_iterator end(void) const;
+  iterator end(void) const;
   // Overloaded Operators
   cbn::Opt<value_type> operator[](const CBN_SlotMap_Key key);
   cbn::Opt<const value_type> operator[](const CBN_SlotMap_Key key) const;
@@ -190,28 +179,14 @@ u8 CBN_SlotMap_t<T>::Remove(const CBN_SlotMap_Key key) {
  * @brief CBN_SlotMap_t<T>.begin
  */
 template <typename T>
-typename CBN_SlotMap_t<T>::iterator CBN_SlotMap_t<T>::begin(void) {
-  return const_cast<iterator>(static_cast<const CBN_SlotMap_t &>(*this).begin());
-}
-/**
- * @brief CBN_SlotMap_t<T>.begin (const)
- */
-template <typename T>
-typename CBN_SlotMap_t<T>::const_iterator CBN_SlotMap_t<T>::begin(void) const {
+typename CBN_SlotMap_t<T>::iterator CBN_SlotMap_t<T>::begin(void) const {
   return ((data_type *) &data)->begin();
 }
 /**
  * @brief CBN_SlotMap_t<T>.end
  */
 template <typename T>
-typename CBN_SlotMap_t<T>::iterator CBN_SlotMap_t<T>::end(void) {
-  return const_cast<iterator>(static_cast<const CBN_SlotMap_t &>(*this).end());
-}
-/**
- * @brief CBN_SlotMap_t<T>.end (const)
- */
-template <typename T>
-typename CBN_SlotMap_t<T>::const_iterator CBN_SlotMap_t<T>::end(void) const {
+typename CBN_SlotMap_t<T>::iterator CBN_SlotMap_t<T>::end(void) const {
   return ((data_type *) &data)->end();
 }
 /**
