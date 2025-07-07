@@ -15,6 +15,7 @@
 #include "carbon_strlist.c"
 #include "carbon_fs.c"
 
+#define HDRFILE "carbon.h"
 #define TESTBIN "./test/testentry"
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
@@ -101,7 +102,7 @@ static void bootstrap(char * const *host_argv, u8 force) {
 }
 
 static void clean(void) {
-  rm_dash_r("carbon.h");
+  rm_dash_r(HDRFILE);
   rm_dash_r(TESTBIN);
   rm_dash_r("test/*.o");
   rm_dash_r("examples/*.bin");
@@ -112,8 +113,9 @@ static void clean(void) {
 }
 
 static void hdrgen(void) {
-  carbon_println("  GEN     carbon.h");
-  call_cmd("cat carbon.h.in > carbon.h");
+  carbon_println("  GEN     " HDRFILE);
+  CBN_StrBuilder hdr = {0};
+  CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, HDRFILE ".in"));
   // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
   // I supose we should read the `carbon.inc` file, and extract the included file from there.
   const char *hdrs[] = {
@@ -127,10 +129,15 @@ static void hdrgen(void) {
     "src/carbon_test_manager.h", "src/carbon_junit.h",      "src/carbon_skap.h"
   };
   for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
-    call_cmd("echo >> carbon.h");
-    call_cmd(carbon_string_fmt("cat %s >> carbon.h", hdrs[i]));
+    carbon_strbuilder_add_cstr(&hdr, "\n");
+    CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, hdrs[i]));
   }
-  call_cmd("cat src/carbon_aliases.h >> carbon.h");
+  carbon_strbuilder_add_cstr(&hdr, "\n");
+  CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, "src/carbon_aliases.h"));
+  FILE *hdr_fd = fopen(HDRFILE, "w");
+  fwrite(hdr.items, hdr.size, 1, hdr_fd);
+  fclose(hdr_fd);
+  carbon_strbuilder_free(&hdr);
 }
 
 static void test(void) {
@@ -274,7 +281,7 @@ static void examples(void) {
 
 static void package(void) {
   carbon_log_info("Packaging...");
-  cp_dash_r("COPYING carbon.h", WORKDIR);
+  cp_dash_r("COPYING " HDRFILE, WORKDIR);
   carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
   carbon_log_info(WORKDIR ".tgz is ready");
