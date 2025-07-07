@@ -26,10 +26,10 @@ struct CBN_Log_Color {
 };
 #endif
 
-#define carbon_log_debug(msg, ...) carbon_println(CARBON_COLOR_CYAN "[^] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_log_info(msg, ...) carbon_println(CARBON_COLOR_YELLOW "[*] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_log_warn(msg, ...) carbon_println(CARBON_COLOR_MAGENTA "[?] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
-#define carbon_log_error(msg, ...) carbon_eprintln(CARBON_COLOR_RED "[!] " __FILE__ ":" CARBON_EXPAND_AND_QUOTE(__LINE__) " :: " msg CARBON_COLOR_RESET, ##__VA_ARGS__)
+#define carbon_log_debug(msg, ...) carbon_cprintln(CARBON_COLOR_CYAN, carbon_string_fmt("[^] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
+#define carbon_log_info(msg, ...) carbon_cprintln(CARBON_COLOR_YELLOW, carbon_string_fmt("[*] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
+#define carbon_log_warn(msg, ...) carbon_cprintln(CARBON_COLOR_MAGENTA, carbon_string_fmt("[?] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
+#define carbon_log_error(msg, ...) carbon_ceprintln(CARBON_COLOR_RED, carbon_string_fmt("[!] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
 
 #ifndef __cplusplus
 #define carbon_log__var_to_spec(x)              \

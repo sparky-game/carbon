@@ -11,13 +11,13 @@
 
 #ifdef __cplusplus
 namespace cbn {
-  using Vec2         = CBN_Vec2;
-  using Vec3         = CBN_Vec3;
-  using Rect         = CBN_Rect;
+  using Vec2 = CBN_Vec2;
+  using Vec3 = CBN_Vec3;
+  using Rect = CBN_Rect;
   template <typename T>
   using List = CBN_List_t<T>;
   template <typename T>
-  using CircularQueue  = CBN_CircularQueue_t<T>;
+  using CircularQueue = CBN_CircularQueue_t<T>;
   template <typename T>
   using CircularBuffer = CircularQueue<T>;
   template <typename T>
@@ -32,9 +32,57 @@ namespace cbn {
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
   const auto version = carbon_version;
-  constexpr auto Assert = [](const bool expr){ CARBON_ASSERT(expr); };
+  CARBON_INLINE void Assert(const auto expr) { CARBON_ASSERT(expr); }
+  template <typename... Args>
+  constexpr void print(const char *msg, Args &&... args) {
+    carbon_print(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void eprint(const char *msg, Args &&... args) {
+    carbon_eprint(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void println(const char *msg, Args &&... args) {
+    carbon_println(msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void eprintln(const char *msg, Args &&... args) {
+    carbon_eprintln(msg, std::forward<Args>(args)...);
+  }
   namespace log {
     using Color = CBN_Log_Color;
+    template <typename... Args>
+    constexpr void Debug(const char *msg, Args &&... args) {
+      carbon_log_debug(msg, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    constexpr void Info(const char *msg, Args &&... args) {
+      carbon_log_info(msg, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    constexpr void Warn(const char *msg, Args &&... args) {
+      carbon_log_warn(msg, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    constexpr void Error(const char *msg, Args &&... args) {
+      carbon_log_error(msg, std::forward<Args>(args)...);
+    }
+  }
+  template <typename... Args>
+  constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {
+    carbon_cprint(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void ceprint(const log::Color color, const char *msg, Args &&... args) {
+    carbon_ceprint(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void cprintln(const log::Color color, const char *msg, Args &&... args) {
+    carbon_cprintln(color, msg, std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
+    carbon_ceprintln(color, msg, std::forward<Args>(args)...);
   }
   namespace mem {
     const auto Copy    = carbon_memory_copy, cp  = Copy;
@@ -50,17 +98,13 @@ namespace cbn {
     const auto Abs = carbon_math_abs;
     const auto Sin = carbon_math_sin;
     const auto Cos = carbon_math_cos;
-    constexpr auto Clamp = [](auto &x, const auto min, const auto max){ x = CARBON_CLAMP(x, min, max); };
     template <std::integral T>
-    T Rand(void) {
-      return carbon_math_rand();
-    }
+    T Rand(void) { return carbon_math_rand(); }
     template <std::floating_point T>
-    T Rand(void) {
-      return carbon_math_randf();
-    }
-    inline i32 Rand(const i32 min, const i32 max) { return carbon_math_rand_between(min, max); }
-    inline f32 Rand(const f32 min, const f32 max) { return carbon_math_randf_between(min, max); }
+    T Rand(void) { return carbon_math_randf(); }
+    inline auto Rand(const i32 min, const i32 max) { return carbon_math_rand_between(min, max); }
+    inline auto Rand(const f32 min, const f32 max) { return carbon_math_randf_between(min, max); }
+    inline void Clamp(auto &x, const auto min, const auto max) { x = CARBON_CLAMP(x, min, max); }
   }
   namespace crypto {
     namespace b64 {
@@ -137,38 +181,6 @@ namespace cbn {
     auto ForFrame(T &&callback) {
       return carbon_win_forframe(callback);
     }
-  }
-  template <typename... Args>
-  constexpr void print(const char *msg, Args &&... args) {
-    carbon_print(msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void eprint(const char *msg, Args &&... args) {
-    carbon_eprint(msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void println(const char *msg, Args &&... args) {
-    carbon_println(msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void eprintln(const char *msg, Args &&... args) {
-    carbon_eprintln(msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprint(color, msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void ceprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprint(color, msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void cprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprintln(color, msg, std::forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprintln(color, msg, std::forward<Args>(args)...);
   }
 }
 #endif  // __cplusplus
