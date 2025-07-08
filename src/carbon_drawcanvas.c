@@ -7,7 +7,7 @@
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
   u32 *ptr = (u32 *) CARBON_MALLOC(width * height * sizeof(u32));
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_DrawCanvas) {
     .pixels = ptr,
     .width = width,

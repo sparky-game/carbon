@@ -5,7 +5,7 @@
 
 CBN_List carbon_list_create(usz stride) {
   void *ptr = CARBON_MALLOC(stride);
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_List) {
     .items = ptr,
     .capacity = 1,

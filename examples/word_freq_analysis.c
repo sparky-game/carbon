@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 
   // Print most frequent tokens
   usz n_top_words_num = atoi(n_top_words);
-  CARBON_ASSERT(n_top_words_num <= keys.size && "N_TOP_WORDS is too big");
+  CBN_ASSERT(n_top_words_num <= keys.size && "N_TOP_WORDS is too big");
   carbon_println("Top %$ tokens:", $(n_top_words_num));
   for (usz i = 0; i < n_top_words_num; ++i) {
     const char *token = carbon_strview_to_cstr(points[i].token);

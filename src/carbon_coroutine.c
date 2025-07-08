@@ -237,7 +237,7 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
       else ++i;
     }
   }
-  CARBON_ASSERT(carbon_coroutine__active.size);
+  CBN_ASSERT(carbon_coroutine__active.size);
   carbon_coroutine__current %= carbon_coroutine__active.size;
   current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   CBN_Coroutine_CTX current_ctx_item = carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item);
@@ -264,7 +264,7 @@ CARBON_INLINE void carbon_coroutine__finish_current(void) {
       else ++i;
     }
   }
-  CARBON_ASSERT(carbon_coroutine__active.size);
+  CBN_ASSERT(carbon_coroutine__active.size);
   carbon_coroutine__current %= carbon_coroutine__active.size;
   current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   CBN_Coroutine_CTX current_ctx_item = carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item);
@@ -290,7 +290,7 @@ void carbon_coroutine_go(void (*f)(void *), void *arg) {
     carbon_list_push(&carbon_coroutine__ctxs, &ctx);
     id = carbon_coroutine__ctxs.size - 1;
     carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp = CARBON_COROUTINE__ALLOC_STACK();
-    CARBON_ASSERT(carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp != CARBON_COROUTINE__ALLOC_STACK_FAILED);
+    CBN_ASSERT(carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp != CARBON_COROUTINE__ALLOC_STACK_FAILED);
   }
   void **rsp = (void **) ((u8 *) carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp + CARBON_COROUTINE__STACK_CAPACITY);
 #if defined(__linux__) && (defined(__amd64__) || defined(_M_AMD64))

@@ -144,12 +144,12 @@ f32 carbon_math_sqrt(f32 x) {
 }
 
 i32 carbon_math_imod(i32 x, i32 y) {
-  CARBON_ASSERT(y && "division by 0 is not defined");
+  CBN_ASSERT(y && "division by 0 is not defined");
   return (x%y + y) % y;
 }
 
 f32 carbon_math_fmod(f32 x, f32 y) {
-  CARBON_ASSERT(y && "division by 0 is not defined");
+  CBN_ASSERT(y && "division by 0 is not defined");
   if (x != x || y != y) return x;
   f32 r = x - (i32) (x / y) * y;
   if ((r < 0 && y > 0) || (r > 0 && y < 0)) r += y;
@@ -159,7 +159,7 @@ f32 carbon_math_fmod(f32 x, f32 y) {
 f32 carbon_math_pow(f32 x, f32 y) {
   if (y == 0) return 1;
   if (x == 0) {
-    if (y < 0) CARBON_ASSERT(0 && "division by 0 is not defined");
+    if (y < 0) CBN_ASSERT(0 && "division by 0 is not defined");
     return 0;
   }
   return carbon_math_exp(y * carbon_math_log(x));
@@ -312,7 +312,7 @@ f32 carbon_math_tanh(f32 x) {
 }
 
 f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
-  CARBON_ASSERT(a < b);
+  CBN_ASSERT(a < b);
   f32 x = CARBON_CLAMP((t - a) / (b - a), 0, 1);
   return x * x * (3 - 2 * x);
 }
@@ -492,7 +492,7 @@ void carbon_math_rect_scale(CBN_Rect *r, const f32 s) {
 
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
   f32 *ptr = (f32 *) CARBON_MALLOC(rows * cols * sizeof(f32));
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_Matrix) {
     .items = ptr,
     .rows = rows,
@@ -533,8 +533,8 @@ CBN_Row carbon_math_mat_row(CBN_Matrix m, usz row) {
 }
 
 void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src) {
-  CARBON_ASSERT(dst.rows == src.rows);
-  CARBON_ASSERT(dst.cols == src.cols);
+  CBN_ASSERT(dst.rows == src.rows);
+  CBN_ASSERT(dst.cols == src.cols);
   for (usz i = 0; i < dst.rows; ++i) {
     for (usz j = 0; j < dst.cols; ++j) {
       CARBON_MAT_AT(dst, i, j) = CARBON_MAT_AT(src, i, j);
@@ -543,8 +543,8 @@ void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src) {
 }
 
 void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m) {
-  CARBON_ASSERT(dst.rows == m.rows);
-  CARBON_ASSERT(dst.cols == m.cols);
+  CBN_ASSERT(dst.rows == m.rows);
+  CBN_ASSERT(dst.cols == m.cols);
   for (usz i = 0; i < dst.rows; ++i) {
     for (usz j = 0; j < dst.cols; ++j) {
       CARBON_MAT_AT(dst, i, j) += CARBON_MAT_AT(m, i, j);
@@ -553,9 +553,9 @@ void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m) {
 }
 
 void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b) {
-  CARBON_ASSERT(a.cols == b.rows);
-  CARBON_ASSERT(dst.rows == a.rows);
-  CARBON_ASSERT(dst.cols == b.cols);
+  CBN_ASSERT(a.cols == b.rows);
+  CBN_ASSERT(dst.rows == a.rows);
+  CBN_ASSERT(dst.cols == b.cols);
   carbon_math_mat_fill(dst, 0);
   usz n = a.cols;
   for (usz i = 0; i < dst.rows; ++i) {
@@ -609,8 +609,8 @@ CBN_Matrix carbon_math_row_to_mat(CBN_Row r) {
 }
 
 CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols) {
-  CARBON_ASSERT(i < r.cols);
-  CARBON_ASSERT(i + cols <= r.cols);
+  CBN_ASSERT(i < r.cols);
+  CBN_ASSERT(i + cols <= r.cols);
   return (CBN_Row) {
     .items = &CARBON_ROW_AT(r, i),
     .cols = cols

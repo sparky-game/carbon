@@ -13,7 +13,7 @@ CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
   void *ptr = CARBON_MALLOC(capacity * stride);
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_HashMap) {
     .items = ptr,
     .capacity = capacity,

@@ -78,10 +78,10 @@
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 
-// TODO: somehow perform bounds checking `CARBON_ASSERT(0 <= (i) && (i) < (m).rows && 0 <= (j) && (j) < (m).cols && "Matrix index out of bounds")`
+// TODO: somehow perform bounds checking `CBN_ASSERT(0 <= (i) && (i) < (m).rows && 0 <= (j) && (j) < (m).cols && "Matrix index out of bounds")`
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
 
-// TODO: somehow perform bounds checking `CARBON_ASSERT(0 <= (i) && (i) < (r).cols && "Row index out of bounds")`
+// TODO: somehow perform bounds checking `CBN_ASSERT(0 <= (i) && (i) < (r).cols && "Row index out of bounds")`
 #define CARBON_ROW_AT(r, i) (r).items[(i)]
 
 #define CARBON_MAT_PRINT(m) carbon_math_mat_print(m, #m)

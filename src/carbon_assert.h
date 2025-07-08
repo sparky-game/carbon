@@ -9,6 +9,6 @@
 
 #pragma once
 
-#define CARBON_ASSERT(x) ((void) ((x) || (carbon_assert_abort(#x, __FILE__, __LINE__, __func__), 0)))
+#define CBN_ASSERT(x) ((void) ((x) || (carbon_assert_abort(#x, __FILE__, __LINE__, __func__), 0)))
 
 CARBON_API void carbon_assert_abort(const char *expr, const char *file, u32 line, const char *func);

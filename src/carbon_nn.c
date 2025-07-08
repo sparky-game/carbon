@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
-  CARBON_ASSERT(arch_count > 0);
+  CBN_ASSERT(arch_count > 0);
   CBN_NeuralNet nn = {
     .arch = arch,
     .arch_count = arch_count,
@@ -12,7 +12,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
     .bs = (CBN_Row *) CARBON_MALLOC((arch_count - 1) * sizeof(CBN_Row)),
     .as = (CBN_Row *) CARBON_MALLOC(arch_count * sizeof(CBN_Row))
   };
-  CARBON_ASSERT(nn.ws && nn.bs && nn.as && "failed to allocate memory");
+  CBN_ASSERT(nn.ws && nn.bs && nn.as && "failed to allocate memory");
   nn.as[0] = carbon_math_row_create(nn.arch[0]);
   for (usz i = 1; i < nn.arch_count; ++i) {
     nn.ws[i - 1] = carbon_math_mat_create(nn.as[i - 1].cols, nn.arch[i]);
@@ -68,7 +68,7 @@ void carbon_nn_forward(CBN_NeuralNet nn) {
 }
 
 f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m) {
-  CARBON_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
+  CBN_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
   f32 c = 0;
   for (usz i = 0; i < m.rows; ++i) {
     CBN_Row row = carbon_math_mat_row(m, i);
@@ -85,7 +85,7 @@ f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m) {
 }
 
 CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m) {
-  CARBON_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
+  CBN_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
   CBN_NeuralNet g = carbon_nn_create(nn.arch, nn.arch_count);
   carbon_nn_zero(g);
   for (usz i = 0; i < m.rows; ++i) {

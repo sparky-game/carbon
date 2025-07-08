@@ -9,8 +9,8 @@
 
 #pragma once
 
-#define CARBON_NN_IN(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[0])
-#define CARBON_NN_OUT(nn) (CARBON_ASSERT((nn).arch_count > 0), (nn).as[(nn).arch_count - 1])
+#define CARBON_NN_IN(nn) (CBN_ASSERT((nn).arch_count > 0), (nn).as[0])
+#define CARBON_NN_OUT(nn) (CBN_ASSERT((nn).arch_count > 0), (nn).as[(nn).arch_count - 1])
 #define CARBON_NN_SIGMOID_DX(x) ((x) * (1 - (x)))
 #define CARBON_NN_PRINT(nn) carbon_nn_print(nn, #nn)
 

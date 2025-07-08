@@ -124,12 +124,12 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   usz size = sizeof(CBN_Test);
   if (!s->tests) {
     p = (CBN_Test *) CARBON_MALLOC(size);
-    CARBON_ASSERT(p && "failed to allocate memory");
+    CBN_ASSERT(p && "failed to allocate memory");
   }
   else {
     size *= s->n;
     p = (CBN_Test *) CARBON_REALLOC(s->tests, size);
-    CARBON_ASSERT(p && "failed to reallocate memory");
+    CBN_ASSERT(p && "failed to reallocate memory");
   }
   return p;
 }

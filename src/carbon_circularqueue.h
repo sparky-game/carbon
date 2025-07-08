@@ -76,7 +76,7 @@ typedef struct CBN_CircularQueue_t CBN_CircularQueue;
 #endif
 
 #define carbon_circularqueue_at_raw(T, cq, i) ((T *) (cq).items)[(i)]
-#define carbon_circularqueue_at(T, cq, i) (CARBON_ASSERT((i) < (cq).size && "CircularQueue index out of bounds"), CARBON_ASSERT(sizeof(T) == (cq).stride && "CircularQueue type doesn't match"), carbon_circularqueue_at_raw(T, cq, i))
+#define carbon_circularqueue_at(T, cq, i) (CBN_ASSERT((i) < (cq).size && "CircularQueue index out of bounds"), CBN_ASSERT(sizeof(T) == (cq).stride && "CircularQueue type doesn't match"), carbon_circularqueue_at_raw(T, cq, i))
 #define carbon_circularqueue_foreach(T, cq) for (struct { usz i; T var; } it = {0, carbon_circularqueue_at(T, cq, 0)}; it.i < (cq).size; ++it.i, it.i < (cq).size ? it.var = carbon_circularqueue_at(T, cq, it.i) : it.var)
 
 /**
@@ -184,8 +184,8 @@ typename CBN_CircularQueue_t<T>::value_type &CBN_CircularQueue_t<T>::operator[](
  */
 template <typename T>
 const typename CBN_CircularQueue_t<T>::value_type &CBN_CircularQueue_t<T>::operator[](usz idx) const {
-  CARBON_ASSERT(idx < size && "CircularQueue index out of bounds");
-  CARBON_ASSERT(sizeof(value_type) == stride && "CircularQueue type doesn't match");
+  CBN_ASSERT(idx < size && "CircularQueue index out of bounds");
+  CBN_ASSERT(sizeof(value_type) == stride && "CircularQueue type doesn't match");
   return ((value_type *) items)[idx];
 }
 #endif  // __cplusplus

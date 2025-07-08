@@ -22,7 +22,7 @@ CARBON_INLINE u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
 }
 
 CARBON_INLINE void carbon_slotmap__free(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
-  CARBON_ASSERT(carbon_slotmap__is_valid_key(sm, key) && "Key is not valid");
+  CBN_ASSERT(carbon_slotmap__is_valid_key(sm, key) && "Key is not valid");
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, key.id);
   u64 data_id = slot->id;
   slot->id = sm->freelist;

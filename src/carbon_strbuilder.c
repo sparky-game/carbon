@@ -8,7 +8,7 @@ void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv) {
     if (!sb->capacity) sb->capacity = 256;
     while (sb->size + sv.size > sb->capacity) sb->capacity *= 2;
     sb->items = (char *) CARBON_REALLOC(sb->items, sb->capacity * sizeof(char));
-    CARBON_ASSERT(sb->items && "failed to reallocate memory");
+    CBN_ASSERT(sb->items && "failed to reallocate memory");
   }
   carbon_memory_copy(sb->items + sb->size, sv.data, sv.size * sizeof(char));
   sb->size += sv.size;

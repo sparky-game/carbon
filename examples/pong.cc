@@ -57,17 +57,18 @@ namespace pong {
                    CARBON_VEC2_1(c_RacketSpeed)
                  }
     {
-      cbn::Assert(cbn::fs::cd(cbn::fs::GetBinDir()));
+      CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       cbn::audio::Init();
       auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
       auto [sound_serve, sound_p1, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg", "pong.assets.d/p1.ogg", "pong.assets.d/p2.ogg");
-      cbn::Assert(sound_music and sound_serve and sound_p1 and sound_p2);
+      CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2);
       m_Sound_Music = *sound_music;
       m_Sound_Serve = *sound_serve;
       m_Sound_P1 = *sound_p1;
       m_Sound_P2 = *sound_p2;
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
+      cbn::win::SetIcon(cbn::Image::make("pong.assets.d/icon.png"));
       cbn::audio::PlaySound(m_Sound_Music);
     }
 
@@ -89,7 +90,7 @@ namespace pong {
       if (!m_Started) {
         if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
           m_Score_P1 = m_Score_P2 = 0;
-          cbn::log::Debug("We have a WINNER !!!");
+          carbon_log_debug("We have a WINNER !!!");
           cbn::audio::PlaySound(m_Sound_Music);
         }
         if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
@@ -119,13 +120,13 @@ namespace pong {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P2;
-        cbn::log::Debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
+        carbon_log_debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P1;
-        cbn::log::Debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
+        carbon_log_debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
         m_Ball.velocity.y *= -1;

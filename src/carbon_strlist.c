@@ -12,7 +12,7 @@ static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
 
 CBN_StrList carbon_strlist_create(u8 unique) {
   char **ptr = (char **) CARBON_MALLOC(sizeof(char *));
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_StrList) {
     .items = ptr,
     .size = 0,

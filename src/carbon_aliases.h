@@ -32,7 +32,6 @@ namespace cbn {
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
   const auto version = carbon_version;
-  CARBON_INLINE void Assert(const auto expr) { CARBON_ASSERT(expr); }
   template <typename... Args>
   constexpr void print(const char *msg, Args &&... args) {
     carbon_print(msg, std::forward<Args>(args)...);

@@ -66,14 +66,14 @@ static void cp_dash_r(const char *origin, const char *dest) {
 
 // TODO: migrate this func to the lib itself
 static void exec_cmd(char * const *argv) {
-  CARBON_ASSERT(-1 != execvp(argv[0], argv) && "Failed to execvp");
+  CBN_ASSERT(-1 != execvp(argv[0], argv) && "Failed to execvp");
 }
 
 // TODO: migrate this func to the lib itself
 static i32 fork_and_exec_cmd(char * const *argv) {
   i32 status_code = 0;
   pid_t child_pid = fork();
-  CARBON_ASSERT(child_pid != -1 && "Failed to fork process");
+  CBN_ASSERT(child_pid != -1 && "Failed to fork process");
   if (child_pid == 0) exec_cmd(argv);
   else waitpid(child_pid, &status_code, 0);
   return status_code;
@@ -96,7 +96,7 @@ static void bootstrap(char * const *host_argv, u8 force) {
     "-o", host_argv[0], 0
   };
   carbon_println("  CCLD    %s", __FILE__);
-  CARBON_ASSERT(0 == fork_and_exec_cmd(argv) && "Errors detected during bootstrap");
+  CBN_ASSERT(0 == fork_and_exec_cmd(argv) && "Errors detected during bootstrap");
   carbon_println("  EXEC    %s", host_argv[0]);
   exec_cmd(host_argv);
 }
@@ -115,7 +115,7 @@ static void clean(void) {
 static void hdrgen(void) {
   carbon_println("  GEN     " HDRFILE);
   CBN_StrBuilder hdr = {0};
-  CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, HDRFILE ".in"));
+  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, HDRFILE ".in"));
   // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
   // I supose we should read the `carbon.inc` file, and extract the included file from there.
   const char *hdrs[] = {
@@ -130,10 +130,10 @@ static void hdrgen(void) {
   };
   for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
     carbon_strbuilder_add_cstr(&hdr, "\n");
-    CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, hdrs[i]));
+    CBN_ASSERT(carbon_fs_read_entire_file(&hdr, hdrs[i]));
   }
   carbon_strbuilder_add_cstr(&hdr, "\n");
-  CARBON_ASSERT(carbon_fs_read_entire_file(&hdr, "src/carbon_aliases.h"));
+  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, "src/carbon_aliases.h"));
   FILE *hdr_fd = fopen(HDRFILE, "w");
   fwrite(hdr.items, hdr.size, 1, hdr_fd);
   fclose(hdr_fd);
@@ -288,7 +288,7 @@ static void package(void) {
 }
 
 int main(int argc, char **argv) {
-  CARBON_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
+  CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
   bootstrap(argv, false);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);

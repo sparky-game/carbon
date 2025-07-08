@@ -5,7 +5,7 @@
 
 CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride) {
   void *ptr = CARBON_MALLOC(capacity * stride);
-  CARBON_ASSERT(ptr && "failed to allocate memory");
+  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_CircularQueue) {
     .items = ptr,
     .capacity = capacity,
