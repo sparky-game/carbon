@@ -151,7 +151,7 @@ namespace cbn {
     const auto Size = carbon_fs_get_file_size;
   }
   namespace audio {
-    using UID                     = CBN_SlotMap_Key;
+    using UID                     = CBN_Audio_UID;
     const auto Init               = carbon_audio_init;
     const auto Shutdown           = carbon_audio_shutdown;
     const auto LoadSound          = carbon_audio_load_sound;
@@ -165,6 +165,7 @@ namespace cbn {
       return carbon_audio_load_sounds_streaming(std::forward<Args>(files)...);
     }
     const auto PlaySound = carbon_audio_play_sound;
+    const auto StopSound = carbon_audio_stop_sound;
   }
   namespace win {
     using KeyCode           = CBN_KeyCode;
