@@ -16,8 +16,8 @@ TEST(base64) {
   u8 *recv_msg = carbon_crypto_base64_decode((const u8 *) b64_msg, &recv_msg_size);
   carbon_should_be_s(msg, recv_msg);
   carbon_should_be(msg_size, recv_msg_size);
-  CARBON_FREE(b64_msg);
-  CARBON_FREE(recv_msg);
+  CBN_FREE(b64_msg);
+  CBN_FREE(recv_msg);
   return CARBON_OK;
 }
 

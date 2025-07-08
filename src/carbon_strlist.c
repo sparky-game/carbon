@@ -11,7 +11,7 @@ static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
 }
 
 CBN_StrList carbon_strlist_create(u8 unique) {
-  char **ptr = (char **) CARBON_MALLOC(sizeof(char *));
+  char **ptr = (char **) CBN_MALLOC(sizeof(char *));
   CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_StrList) {
     .items = ptr,
@@ -33,7 +33,7 @@ CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) 
     start = found + delim_len;
   }
   if (*start) carbon_strlist_push(&sl, start);
-  CARBON_FREE(s_copy);
+  CBN_FREE(s_copy);
   return sl;
 }
 
@@ -43,9 +43,9 @@ void carbon_strlist_destroy(CBN_StrList *sl) {
     return;
   }
   for (usz i = 0; i < sl->size; ++i) {
-    CARBON_FREE(sl->items[i]);
+    CBN_FREE(sl->items[i]);
   }
-  CARBON_FREE(sl->items);
+  CBN_FREE(sl->items);
   carbon_memory_set(sl, 0, sizeof(*sl));
 }
 
@@ -59,10 +59,10 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
     sl->capacity *= 2;
     char **prev_p = sl->items;
     usz size = sl->capacity * sizeof(char *);
-    sl->items = (char **) CARBON_REALLOC(sl->items, size);
+    sl->items = (char **) CBN_REALLOC(sl->items, size);
     if (!sl->items) {
       carbon_log_error("failed to reallocate memory (%zuB)", size);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return;
     }
   }
@@ -80,7 +80,7 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     carbon_log_warn("string `%s` not present in list", s);
     return;
   }
-  CARBON_FREE(sl->items[idx]);
+  CBN_FREE(sl->items[idx]);
   for (usz i = idx; i < sl->size - 1; ++i) {
     sl->items[i] = sl->items[i + 1];
   }
@@ -89,10 +89,10 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     sl->capacity /= 2;
     char **prev_p = sl->items;
     usz size = sl->capacity * sizeof(char *);
-    sl->items = (char **) CARBON_REALLOC(sl->items, size);
+    sl->items = (char **) CBN_REALLOC(sl->items, size);
     if (!sl->items && sl->size > 0) {
       carbon_log_error("failed to reallocate memory (%zuB)", size);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return;
     }
   }

@@ -23,7 +23,7 @@ int main(void) {
   if (carbon_fs_write_img_to_file_linearly(canvas_bytes, CBN_FILE_FORMAT_PNG, canvas.width, canvas.height, 4, filepath)) {
     carbon_log_info("written canvas to `%$` successfully", $(filepath));
   }
-  CARBON_FREE(canvas_bytes);
+  CBN_FREE(canvas_bytes);
   carbon_drawcanvas_destroy(&canvas);
   return 0;
 }

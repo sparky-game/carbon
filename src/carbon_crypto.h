@@ -12,7 +12,7 @@
 /**
  * @brief Encodes binary data to a newly-allocated Base64 string.
  *
- * The caller of this function is responsible for freeing this memory using `CARBON_FREE`
+ * The caller of this function is responsible for freeing this memory using `CBN_FREE`
  * or equivalent.
  *
  * @param in The input binary data to be encoded.
@@ -25,7 +25,7 @@ CARBON_API char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, us
 /**
  * @brief Decodes a Base64 string to newly-allocated binary data buffer.
  *
- * The caller of this function is responsible for freeing this memory using `CARBON_FREE`
+ * The caller of this function is responsible for freeing this memory using `CBN_FREE`
  * or equivalent.
  *
  * @param in The input Base64 string to be decoded.

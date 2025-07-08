@@ -9,10 +9,10 @@
 
 #pragma once
 
-#define CARBON_MALLOC(sz)        malloc(sz)
-#define CARBON_REALLOC(p, newsz) realloc(p, newsz)
-#define CARBON_CALLOC(n, sz)     calloc(n, sz)
-#define CARBON_FREE(p)           free(p)
+#define CBN_MALLOC(sz)        malloc(sz)
+#define CBN_REALLOC(p, newsz) realloc(p, newsz)
+#define CBN_CALLOC(n, sz)     calloc(n, sz)
+#define CBN_FREE(p)           free(p)
 
 /**
  * @brief Copies a set of bytes from a memory area to another one.

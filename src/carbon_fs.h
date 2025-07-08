@@ -127,8 +127,8 @@ CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
 /**
  * @brief Converts a linear buffer of 32-bit RGBA pixels to a linear buffer of 8-bit per channel RGBA bytes.
  *
- * This function allocates memory in the heap using `CARBON_MALLOC`; thus, it's important to keep in mind the
- * lifetime of that allocation and free it accordingly using `CARBON_FREE`.
+ * This function allocates memory in the heap using `CBN_MALLOC`; thus, it's important to keep in mind the
+ * lifetime of that allocation and free it accordingly using `CBN_FREE`.
  *
  * @param pixels The pointer to the 32-bit RGBA linear buffer of pixels.
  * @param width The width of the image.

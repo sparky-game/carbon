@@ -12,7 +12,7 @@ CARBON_INLINE u64 carbon_hashmap__hash(const char *key, u32 n) {
 }
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
-  void *ptr = CARBON_MALLOC(capacity * stride);
+  void *ptr = CBN_MALLOC(capacity * stride);
   CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_HashMap) {
     .items = ptr,
@@ -26,7 +26,7 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
     carbon_log_warn("`hm` is not a valid pointer, skipping destruction");
     return;
   }
-  CARBON_FREE(hm->items);
+  CBN_FREE(hm->items);
   carbon_memory_set(hm, 0, sizeof(*hm));
 }
 

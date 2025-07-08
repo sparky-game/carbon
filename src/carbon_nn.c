@@ -8,9 +8,9 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
   CBN_NeuralNet nn = {
     .arch = arch,
     .arch_count = arch_count,
-    .ws = (CBN_Matrix *) CARBON_MALLOC((arch_count - 1) * sizeof(CBN_Matrix)),
-    .bs = (CBN_Row *) CARBON_MALLOC((arch_count - 1) * sizeof(CBN_Row)),
-    .as = (CBN_Row *) CARBON_MALLOC(arch_count * sizeof(CBN_Row))
+    .ws = (CBN_Matrix *) CBN_MALLOC((arch_count - 1) * sizeof(CBN_Matrix)),
+    .bs = (CBN_Row *) CBN_MALLOC((arch_count - 1) * sizeof(CBN_Row)),
+    .as = (CBN_Row *) CBN_MALLOC(arch_count * sizeof(CBN_Row))
   };
   CBN_ASSERT(nn.ws && nn.bs && nn.as && "failed to allocate memory");
   nn.as[0] = carbon_math_row_create(nn.arch[0]);
@@ -33,9 +33,9 @@ void carbon_nn_destroy(CBN_NeuralNet *nn) {
     carbon_math_row_destroy(&nn->bs[i - 1]);
     carbon_math_row_destroy(&nn->as[i]);
   }
-  CARBON_FREE(nn->ws);
-  CARBON_FREE(nn->bs);
-  CARBON_FREE(nn->as);
+  CBN_FREE(nn->ws);
+  CBN_FREE(nn->bs);
+  CBN_FREE(nn->as);
   carbon_memory_set(nn, 0, sizeof(*nn));
 }
 

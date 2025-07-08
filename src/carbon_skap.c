@@ -378,7 +378,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
   switch (asset_type) {
   case CARBON_SKAP_ASSET_TYPE_IMAGE: {
     CBN_Image asset = {
-      .data = (u8 *) CARBON_MALLOC(idx.blob_size),
+      .data = (u8 *) CBN_MALLOC(idx.blob_size),
       .metadata = idx.metadata.as_img
     };
     fseek(handle->fd, idx.blob_offset, SEEK_SET);
@@ -386,7 +386,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
       carbon_log_error("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
-      CARBON_FREE(asset.data);
+      CBN_FREE(asset.data);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));

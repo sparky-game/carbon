@@ -123,12 +123,12 @@ CBN_Test *carbon_test_manager_alloc(CBN_Suite *s) {
   CBN_Test *p = 0;
   usz size = sizeof(CBN_Test);
   if (!s->tests) {
-    p = (CBN_Test *) CARBON_MALLOC(size);
+    p = (CBN_Test *) CBN_MALLOC(size);
     CBN_ASSERT(p && "failed to allocate memory");
   }
   else {
     size *= s->n;
-    p = (CBN_Test *) CARBON_REALLOC(s->tests, size);
+    p = (CBN_Test *) CBN_REALLOC(s->tests, size);
     CBN_ASSERT(p && "failed to reallocate memory");
   }
   return p;
@@ -153,7 +153,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
     carbon_log_error("Suite `s` has not been initialized");
     return;
   }
-  CARBON_FREE(s->tests);
+  CBN_FREE(s->tests);
   carbon_strlist_destroy(&s->files);
   carbon_memory_set(s, 0, sizeof(*s));
 }

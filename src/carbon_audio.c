@@ -37,7 +37,7 @@ void carbon_audio_shutdown(void) {
   if (carbon_audio__library.size) {
     carbon_slotmap_foreach(ma_sound *, carbon_audio__library) {
       ma_sound_uninit(it.var);
-      CARBON_FREE(it.var);
+      CBN_FREE(it.var);
     }
   }
   carbon_slotmap_destroy(&carbon_audio__library);
@@ -50,11 +50,11 @@ CARBON_INLINE u8 carbon_audio__load_sound_from_file_ex(const char *file, CBN_Aud
     carbon_log_error("`out_uid` must be a valid pointer");
     return false;
   }
-  ma_sound *sound = (ma_sound *) CARBON_MALLOC(sizeof(ma_sound));
+  ma_sound *sound = (ma_sound *) CBN_MALLOC(sizeof(ma_sound));
   CBN_ASSERT(sound && "failed to allocate memory");
   if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, sound)) {
     carbon_log_error("Failed to load sound from file (`%s`)", file);
-    CARBON_FREE(sound);
+    CBN_FREE(sound);
     return false;
   }
   *out_uid = carbon_slotmap_push(&carbon_audio__library, &sound);

@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 CBN_List carbon_list_create(usz stride) {
-  void *ptr = CARBON_MALLOC(stride);
+  void *ptr = CBN_MALLOC(stride);
   CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_List) {
     .items = ptr,
@@ -19,7 +19,7 @@ void carbon_list_destroy(CBN_List *l) {
     carbon_log_warn("`l` is not a valid pointer, skipping destruction");
     return;
   }
-  if (l->items) CARBON_FREE(l->items);
+  if (l->items) CBN_FREE(l->items);
   carbon_memory_set(l, 0, sizeof(*l));
 }
 
@@ -32,10 +32,10 @@ void carbon_list_push(CBN_List *l, void *value) {
     l->capacity *= 2;
     void *prev_p = l->items;
     usz size = l->capacity * l->stride;
-    l->items = CARBON_REALLOC(l->items, size);
+    l->items = CBN_REALLOC(l->items, size);
     if (!l->items) {
       carbon_log_error("failed to reallocate memory (%zuB)", size);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return;
     }
   }
@@ -58,10 +58,10 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
     l->capacity /= 2;
     void *prev_p = l->items;
     usz size = l->capacity * l->stride;
-    l->items = CARBON_REALLOC(l->items, size);
+    l->items = CBN_REALLOC(l->items, size);
     if (!l->items && l->size > 0) {
       carbon_log_error("failed to reallocate memory (%zuB)", size);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return;
     }
   }
@@ -98,10 +98,10 @@ void carbon_list_remove(CBN_List *l, usz idx) {
     l->capacity /= 2;
     void *prev_p = l->items;
     usz size = l->capacity * l->stride;
-    l->items = CARBON_REALLOC(l->items, size);
+    l->items = CBN_REALLOC(l->items, size);
     if (!l->items && l->size > 0) {
       carbon_log_error("failed to reallocate memory (%zuB)", size);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return;
     }
   }

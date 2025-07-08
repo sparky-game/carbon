@@ -6,7 +6,7 @@
 #define CARBON_DRAWCANVAS__AA_RES 2
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
-  u32 *ptr = (u32 *) CARBON_MALLOC(width * height * sizeof(u32));
+  u32 *ptr = (u32 *) CBN_MALLOC(width * height * sizeof(u32));
   CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_DrawCanvas) {
     .pixels = ptr,
@@ -21,7 +21,7 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
     carbon_log_warn("`dc` is not a valid pointer, skipping destruction");
     return;
   }
-  CARBON_FREE(dc->pixels);
+  CBN_FREE(dc->pixels);
   carbon_memory_set(dc, 0, sizeof(*dc));
 }
 

@@ -3,16 +3,16 @@
 
 #include "carbon.inc"
 
-#define STBI_MALLOC  CARBON_MALLOC
-#define STBI_REALLOC CARBON_REALLOC
-#define STBI_FREE    CARBON_FREE
+#define STBI_MALLOC  CBN_MALLOC
+#define STBI_REALLOC CBN_REALLOC
+#define STBI_FREE    CBN_FREE
 #define STBI_ASSERT  CBN_ASSERT
 #define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb_image/stb_image.h"
 
-#define STBIW_MALLOC  CARBON_MALLOC
-#define STBIW_REALLOC CARBON_REALLOC
-#define STBIW_FREE    CARBON_FREE
+#define STBIW_MALLOC  CBN_MALLOC
+#define STBIW_REALLOC CBN_REALLOC
+#define STBIW_FREE    CBN_FREE
 #define STBIW_ASSERT  CBN_ASSERT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../vendor/stb_image_write/stb_image_write.h"
@@ -147,7 +147,7 @@ u8 carbon_fs_create_directories(const char *path) {
     }
   }
   carbon_fs_create_directory(pathcpy);
-  CARBON_FREE(pathcpy);
+  CBN_FREE(pathcpy);
   return true;
 }
 
@@ -322,10 +322,10 @@ u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   usz count = sb->size + n;
   if (count > sb->capacity) {
     char *prev_p = sb->items;
-    sb->items = (char *) CARBON_REALLOC(sb->items, count);
+    sb->items = (char *) CBN_REALLOC(sb->items, count);
     if (!sb->items && sb->size > 0) {
       carbon_log_error("failed to reallocate memory (%zuB)", count);
-      CARBON_FREE(prev_p);
+      CBN_FREE(prev_p);
       return false;
     }
     sb->capacity = count;
@@ -354,7 +354,7 @@ CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file) {
   usz width = 0, height = 0, chs = 0;
   u8 *pixels = carbon_fs_read_img_from_file_linearly(file, &width, &height, &chs);
   CBN_List img = carbon_fs_img_tensorize(pixels, width, height, chs);
-  CARBON_FREE(pixels);
+  CBN_FREE(pixels);
   return img;
 }
 
@@ -381,7 +381,7 @@ CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs) {
 u8 *carbon_fs_img_linearize(CBN_List *img) {
   CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
   usz n_pixels = first_ch.rows * first_ch.cols;
-  u8 *pixels = (u8 *) CARBON_MALLOC(img->size * n_pixels * sizeof(u8));
+  u8 *pixels = (u8 *) CBN_MALLOC(img->size * n_pixels * sizeof(u8));
   usz i = 0, j = 0;
   for (usz k = 0; k < n_pixels; ++k) {
     carbon_list_foreach(CBN_Matrix, *img) {
@@ -394,7 +394,7 @@ u8 *carbon_fs_img_linearize(CBN_List *img) {
 }
 
 u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height) {
-  u8 *bytes = (u8 *) CARBON_MALLOC(width * height * 4 * sizeof(u8));
+  u8 *bytes = (u8 *) CBN_MALLOC(width * height * 4 * sizeof(u8));
   for (usz i = 0; i < width * height; ++i) {
     u32 color = pixels[i];
     u8 r = (color >> 24) & 0xff;
@@ -417,7 +417,7 @@ u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const c
   CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
   u8 *pixels = carbon_fs_img_linearize(img);
   u8 result = carbon_fs_write_img_to_file_linearly(pixels, fmt, first_ch.cols, first_ch.rows, img->size, file);
-  CARBON_FREE(pixels);
+  CBN_FREE(pixels);
   return result;
 }
 
@@ -445,7 +445,7 @@ u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz widt
 }
 
 void carbon_fs_destroy_img(CBN_Image *img) {
-  CARBON_FREE(img->data);
+  CBN_FREE(img->data);
   carbon_memory_set(img, 0, sizeof(*img));
 }
 
