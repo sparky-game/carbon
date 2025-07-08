@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 void CBN_Vec2::Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max) {
@@ -178,5 +176,3 @@ void CBN_Rect::Scale(const f32 s) {
 bool CBN_Rect::operator==(const CBN_Rect &r) const {
   return (x == r.x) && (y == r.y) && (w == r.w) && (h == r.h);
 }
-
-#endif  // __cplusplus

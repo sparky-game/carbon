@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 cbn::Opt<CBN_StrBuilder> CBN_StrBuilder::make(const char *file) {
@@ -40,5 +38,3 @@ CBN_StrBuilder &CBN_StrBuilder::operator<<(const CBN_StrView &sv) {
   Push(sv);
   return *this;
 }
-
-#endif  // __cplusplus

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 CBN_PatternMatchedFiles::iterator CBN_PatternMatchedFiles::begin(void) const {
@@ -35,5 +33,3 @@ void CBN_Image::Free(void) {
 u8 CBN_Image::Save(CBN_FileFormat fmt, const char *file) const {
   return carbon_fs_write_img_to_file(this, fmt, file);
 }
-
-#endif  // __cplusplus

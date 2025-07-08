@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 CBN_StrView CBN_StrView::make(const char *data, usz size) {
@@ -72,5 +70,3 @@ bool operator!=(const char *s, const CBN_StrView &sv) {
 CBN_StrView operator""_sv(const char *s, usz len) {
   return CBN_StrView::make(s, len);
 }
-
-#endif  // __cplusplus

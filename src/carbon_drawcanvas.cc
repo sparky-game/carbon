@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 CBN_DrawCanvas CBN_DrawCanvas::make(usz width, usz height) {
@@ -40,5 +38,3 @@ u32 &CBN_DrawCanvas::operator()(usz i, usz j) {
 const u32 &CBN_DrawCanvas::operator()(usz i, usz j) const {
   return pixels[j * stride + i];
 }
-
-#endif  // __cplusplus

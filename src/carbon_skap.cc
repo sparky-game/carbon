@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 u8 CBN_SKAP::Create(const char *decl, const char *skap) {
@@ -26,5 +24,3 @@ void CBN_SKAP::Print(void) const {
 usz CBN_SKAP::Count(void) const {
   return carbon_skap_count(this);
 }
-
-#endif  // __cplusplus

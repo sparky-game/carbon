@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#ifdef __cplusplus
-
 #include "carbon.inc"
 
 CBN_StrList CBN_StrList::make(void) {
@@ -32,5 +30,3 @@ CBN_StrList::iterator CBN_StrList::begin(void) const {
 CBN_StrList::iterator CBN_StrList::end(void) const {
   return items + size;
 }
-
-#endif  // __cplusplus
