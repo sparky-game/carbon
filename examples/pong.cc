@@ -55,18 +55,20 @@ namespace pong {
                  m_Racket_2{
                    CARBON_VEC2(c_ScreenWidth - c_RacketPadding - c_BallSize, c_ScreenHeight/2 - (c_RacketLength * c_BallSize) / 2),
                    CARBON_VEC2_1(c_RacketSpeed)
-                 },
-                 m_Started{false}
+                 }
     {
       cbn::Assert(cbn::fs::cd(cbn::fs::GetBinDir()));
       cbn::audio::Init();
-      auto [sound_p1, sound_serve, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/p1.ogg", "pong.assets.d/serve.ogg", "pong.assets.d/p2.ogg");
-      cbn::Assert(sound_serve and sound_p1 and sound_p2);
+      auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
+      auto [sound_serve, sound_p1, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg", "pong.assets.d/p1.ogg", "pong.assets.d/p2.ogg");
+      cbn::Assert(sound_music and sound_serve and sound_p1 and sound_p2);
+      m_Sound_Music = *sound_music;
       m_Sound_Serve = *sound_serve;
       m_Sound_P1 = *sound_p1;
       m_Sound_P2 = *sound_p2;
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
+      cbn::audio::PlaySound(m_Sound_Music);
     }
 
     ~Game(void) {
@@ -83,19 +85,18 @@ namespace pong {
     }
 
   private:
-    cbn::DrawCanvas m_Canvas;
-    Ball m_Ball;
-    Racket m_Racket_1;
-    Racket m_Racket_2;
-    bool m_Started;
-    cbn::audio::UID m_Sound_Serve;
-    cbn::audio::UID m_Sound_P1;
-    cbn::audio::UID m_Sound_P2;
-
     void Update(const f64 dt) {
-      if (!m_Started && cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
-        m_Started = true;
-        cbn::audio::PlaySound(m_Sound_Serve);
+      if (!m_Started) {
+        if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
+          m_Score_P1 = m_Score_P2 = 0;
+          cbn::log::Debug("We have a WINNER !!!");
+          cbn::audio::PlaySound(m_Sound_Music);
+        }
+        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
+          m_Started = true;
+          cbn::audio::StopSound(m_Sound_Music);
+          cbn::audio::PlaySound(m_Sound_Serve);
+        }
       }
       if (m_Started) {
         m_Ball.position += m_Ball.velocity * dt;
@@ -114,9 +115,17 @@ namespace pong {
     }
 
     void BallCollideWalls(void) {
-      if (m_Ball.position.x < 0 || m_Ball.position.x + c_BallSize >= m_Canvas.width) {
+      if (m_Ball.position.x < 0) {
         m_Started = false;
         m_Ball = GetRandomBall();
+        ++m_Score_P2;
+        cbn::log::Debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
+      }
+      if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
+        m_Started = false;
+        m_Ball = GetRandomBall();
+        ++m_Score_P1;
+        cbn::log::Debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
         m_Ball.velocity.y *= -1;
@@ -161,6 +170,18 @@ namespace pong {
       cbn::math::Clamp(m_Racket_1.position.y, 0, m_Canvas.height - (c_RacketLength * c_BallSize));
       cbn::math::Clamp(m_Racket_2.position.y, 0, m_Canvas.height - (c_RacketLength * c_BallSize));
     }
+
+    cbn::DrawCanvas m_Canvas;
+    Ball m_Ball;
+    Racket m_Racket_1;
+    Racket m_Racket_2;
+    bool m_Started {false};
+    cbn::audio::UID m_Sound_Music;
+    cbn::audio::UID m_Sound_Serve;
+    cbn::audio::UID m_Sound_P1;
+    cbn::audio::UID m_Sound_P2;
+    u8 m_Score_P1 {0};
+    u8 m_Score_P2 {0};
 
     static Ball GetRandomBall(void) {
       using namespace cbn::math::const_literals;
