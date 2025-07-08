@@ -9,6 +9,6 @@ contact:
   - given-names: Wasym
     family-names: Atieh Alonso
     email: wasymatieh01@gmail.com
-abstract: "The ultimate high-level library for C/C++ (написано в них)."
+abstract: "The ultimate high-level library for C/C++ (с реализацией на этих языках)."
 license: AGPL-3.0-only
 repository-code: "https://github.com/sparky-game/carbon"
