@@ -30,7 +30,7 @@ void carbon_audio_init(void) {
   ma_result res = ma_engine_init(0, &carbon_audio__engine);
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
   carbon_audio__library = carbon_slotmap_create(sizeof(ma_sound *));
-  carbon_log_info("Initialized audio subsystem successfully");
+  CBN_INFO("Initialized audio subsystem successfully");
 }
 
 void carbon_audio_shutdown(void) {
@@ -42,18 +42,18 @@ void carbon_audio_shutdown(void) {
   }
   carbon_slotmap_destroy(&carbon_audio__library);
   ma_engine_uninit(&carbon_audio__engine);
-  carbon_log_info("Shutdowned audio subsystem successfully");
+  CBN_INFO("Shutdowned audio subsystem successfully");
 }
 
 CARBON_INLINE u8 carbon_audio__load_sound_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
   if (!out_uid) {
-    carbon_log_error("`out_uid` must be a valid pointer");
+    CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
   ma_sound *sound = (ma_sound *) CBN_MALLOC(sizeof(ma_sound));
   CBN_ASSERT(sound && "failed to allocate memory");
   if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, sound)) {
-    carbon_log_error("Failed to load sound from file (`%s`)", file);
+    CBN_ERROR("Failed to load sound from file (`%s`)", file);
     CBN_FREE(sound);
     return false;
   }

@@ -39,7 +39,7 @@ CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) 
 
 void carbon_strlist_destroy(CBN_StrList *sl) {
   if (!sl) {
-    carbon_log_warn("`sl` is not a valid pointer, skipping destruction");
+    CBN_WARN("`sl` is not a valid pointer, skipping destruction");
     return;
   }
   for (usz i = 0; i < sl->size; ++i) {
@@ -51,7 +51,7 @@ void carbon_strlist_destroy(CBN_StrList *sl) {
 
 void carbon_strlist_push(CBN_StrList *sl, const char *s) {
   if (!sl || !s) {
-    carbon_log_error("`sl` and `s` must be valid pointers");
+    CBN_ERROR("`sl` and `s` must be valid pointers");
     return;
   }
   if (sl->unique && carbon_strlist_contains(sl, s)) return;
@@ -61,7 +61,7 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
     usz size = sl->capacity * sizeof(char *);
     sl->items = (char **) CBN_REALLOC(sl->items, size);
     if (!sl->items) {
-      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CBN_ERROR("failed to reallocate memory (%zuB)", size);
       CBN_FREE(prev_p);
       return;
     }
@@ -72,12 +72,12 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
 
 void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
   if (!sl || !s) {
-    carbon_log_error("`sl` and `s` must be valid pointers");
+    CBN_ERROR("`sl` and `s` must be valid pointers");
     return;
   }
   i32 idx = carbon_strlist__find_idx(sl, s);
   if (idx == -1) {
-    carbon_log_warn("string `%s` not present in list", s);
+    CBN_WARN("string `%s` not present in list", s);
     return;
   }
   CBN_FREE(sl->items[idx]);
@@ -91,7 +91,7 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     usz size = sl->capacity * sizeof(char *);
     sl->items = (char **) CBN_REALLOC(sl->items, size);
     if (!sl->items && sl->size > 0) {
-      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CBN_ERROR("failed to reallocate memory (%zuB)", size);
       CBN_FREE(prev_p);
       return;
     }
@@ -100,7 +100,7 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
 
 u8 carbon_strlist_contains(CBN_StrList *sl, const char *s) {
   if (!sl || !s) {
-    carbon_log_error("`sl` and `s` must be valid pointers");
+    CBN_ERROR("`sl` and `s` must be valid pointers");
     return false;
   }
   for (usz i = 0; i < sl->size; ++i) {

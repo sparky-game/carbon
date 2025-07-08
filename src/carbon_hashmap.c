@@ -23,7 +23,7 @@ CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
 
 void carbon_hashmap_destroy(CBN_HashMap *hm) {
   if (!hm) {
-    carbon_log_warn("`hm` is not a valid pointer, skipping destruction");
+    CBN_WARN("`hm` is not a valid pointer, skipping destruction");
     return;
   }
   CBN_FREE(hm->items);
@@ -32,7 +32,7 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
 
 void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   if (!hm || !key || !value) {
-    carbon_log_error("`hm`, `key` and `value` must be valid pointers");
+    CBN_ERROR("`hm`, `key` and `value` must be valid pointers");
     return;
   }
   carbon_memory_copy((void *) ((u8 *) hm->items + (carbon_hashmap__hash(key, hm->capacity) * hm->stride)), value, hm->stride);
@@ -40,7 +40,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
 
 void carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
   if (!hm || !key || !out_value) {
-    carbon_log_error("`hm`, `key` and `out_value` must be valid pointers");
+    CBN_ERROR("`hm`, `key` and `out_value` must be valid pointers");
     return;
   }
   carbon_memory_copy(out_value, (void *) ((u8 *) hm->items + (carbon_hashmap__hash(key, hm->capacity) * hm->stride)), hm->stride);

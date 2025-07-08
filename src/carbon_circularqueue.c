@@ -18,7 +18,7 @@ CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride) {
 
 void carbon_circularqueue_destroy(CBN_CircularQueue *cq) {
   if (!cq) {
-    carbon_log_warn("`cq` is not a valid pointer, skipping destruction");
+    CBN_WARN("`cq` is not a valid pointer, skipping destruction");
     return;
   }
   if (cq->items) CBN_FREE(cq->items);
@@ -27,7 +27,7 @@ void carbon_circularqueue_destroy(CBN_CircularQueue *cq) {
 
 void carbon_circularqueue_push(CBN_CircularQueue *cq, void *value) {
   if (!cq || !value) {
-    carbon_log_error("`cq` and `value` must be valid pointers");
+    CBN_ERROR("`cq` and `value` must be valid pointers");
     return;
   }
   cq->tail = (cq->tail + 1) % cq->capacity;
@@ -43,11 +43,11 @@ void carbon_circularqueue_pop(CBN_CircularQueue *cq, void *out_value) {
 
 void carbon_circularqueue_peek(const CBN_CircularQueue *cq, void *out_value) {
   if (!cq || !out_value) {
-    carbon_log_error("`cq` and `out_value` must be valid pointers");
+    CBN_ERROR("`cq` and `out_value` must be valid pointers");
     return;
   }
   if (!cq->size) {
-    carbon_log_warn("circular queue is empty");
+    CBN_WARN("circular queue is empty");
     return;
   }
   carbon_memory_copy(out_value, (void *) ((u64) cq->items + (cq->head * cq->stride)), cq->stride);

@@ -31,7 +31,10 @@ namespace cbn {
   using Image      = CBN_Image;
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
-  const auto version = carbon_version;
+  const auto Version = carbon_version;
+  namespace log {
+    using Color = CBN_Log_Color;
+  }
   template <typename... Args>
   constexpr void print(const char *msg, Args &&... args) {
     carbon_print(msg, std::forward<Args>(args)...);
@@ -47,25 +50,6 @@ namespace cbn {
   template <typename... Args>
   constexpr void eprintln(const char *msg, Args &&... args) {
     carbon_eprintln(msg, std::forward<Args>(args)...);
-  }
-  namespace log {
-    using Color = CBN_Log_Color;
-    template <typename... Args>
-    constexpr void Debug(const char *msg, Args &&... args) {
-      carbon_log_debug(msg, std::forward<Args>(args)...);
-    }
-    template <typename... Args>
-    constexpr void Info(const char *msg, Args &&... args) {
-      carbon_log_info(msg, std::forward<Args>(args)...);
-    }
-    template <typename... Args>
-    constexpr void Warn(const char *msg, Args &&... args) {
-      carbon_log_warn(msg, std::forward<Args>(args)...);
-    }
-    template <typename... Args>
-    constexpr void Error(const char *msg, Args &&... args) {
-      carbon_log_error(msg, std::forward<Args>(args)...);
-    }
   }
   template <typename... Args>
   constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {

@@ -157,7 +157,7 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
   carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, width, height), RGFW_windowNoResize);
   // TODO: use `RGFW_window_initBuffer` instead, so the buffer isn't tied up to the initial window size.
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(carbon_win__handle->r.w, carbon_win__handle->r.h));
-  carbon_log_info("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
+  CBN_INFO("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
 
   RGFW_setKeyCallback(carbon_win__key_callback);
 }
@@ -166,12 +166,12 @@ void carbon_win_close(void) {
   if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
   carbon_win__dl_close();
-  carbon_log_info("Window closed successfully");
+  CBN_INFO("Window closed successfully");
 }
 
 void carbon_win_set_max_fps(u32 fps) {
   carbon_win__max_fps = fps;
-  carbon_log_info("Window max FPS set to %$", $(carbon_win__max_fps));
+  CBN_INFO("Window max FPS set to %$", $(carbon_win__max_fps));
 }
 
 void carbon_win_set_icon(CBN_Image img) {
@@ -181,8 +181,8 @@ void carbon_win_set_icon(CBN_Image img) {
                                          RGFW_AREA(carbon_win__icon.metadata.width,
                                                    carbon_win__icon.metadata.height),
                                          carbon_win__icon.metadata.channels);
-  if (!status) carbon_log_error("Unable to set the window icon");
-  else carbon_log_info("Set window icon correctly");
+  if (!status) CBN_ERROR("Unable to set the window icon");
+  else CBN_INFO("Set window icon correctly");
 }
 
 f64 carbon_win_get_deltatime(void) {

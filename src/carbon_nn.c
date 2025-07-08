@@ -24,7 +24,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
 
 void carbon_nn_destroy(CBN_NeuralNet *nn) {
   if (!nn) {
-    carbon_log_warn("`nn` is not a valid pointer, skipping destruction");
+    CBN_WARN("`nn` is not a valid pointer, skipping destruction");
     return;
   }
   carbon_math_row_destroy(&nn->as[0]);

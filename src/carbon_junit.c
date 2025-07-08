@@ -9,7 +9,7 @@ void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, con
   if (!out_filename) out_filename = CARBON_JUNIT_XML_OUT_FILENAME;
   FILE *fd = fopen(out_filename, "w");
   if (!fd) {
-    carbon_log_error("unable to open file (`%s`)", out_filename);
+    CBN_ERROR("unable to open file (`%s`)", out_filename);
     return;
   }
   const char *timestamp = carbon_time_get_iso8601();

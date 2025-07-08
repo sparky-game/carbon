@@ -57,7 +57,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
     // New group
     else if (line[0] == '[') {
       if (prev_line_was_new_group) {
-        carbon_log_error("on line %zu, syntax error; expected expression `<ASSET>`", line_n);
+        CBN_ERROR("on line %zu, syntax error; expected expression `<ASSET>`", line_n);
         return false;
       }
       if (first) first = false;
@@ -68,7 +68,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
                       CARBON_EXPAND_AND_QUOTE(CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN)
                       "[^]]",
                       ag.path, ag.type)) {
-        carbon_log_error("on line %zu, syntax error; expected expression `[\"<PATH>\" as <TYPE>]`", line_n);
+        CBN_ERROR("on line %zu, syntax error; expected expression `[\"<PATH>\" as <TYPE>]`", line_n);
         return false;
       }
       // Check whether type is valid
@@ -83,14 +83,14 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
         if (!carbon_string_cmp(ag.type, "image") ||
             !carbon_string_cmp(ag.type, "img")   ||
             !carbon_string_cmp(ag.type, "imgs")) {
-          carbon_log_error("on line %zu, syntax error; type `%s` not recognized, maybe you ment `images`?", line_n, ag.type);
+          CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `images`?", line_n, ag.type);
         }
-        else carbon_log_error("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
+        else CBN_ERROR("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
         return false;
       }
       // Check whether path is valid
       if (ag.path[carbon_string_len(ag.path) - 1] != '/') {
-        carbon_log_error("on line %zu, syntax error; path needs to end with `/` char", line_n);
+        CBN_ERROR("on line %zu, syntax error; path needs to end with `/` char", line_n);
         return false;
       }
       ag.assets = carbon_strlist_create(true);
@@ -101,7 +101,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
     // New asset in previous group
     else {
       if (first) {
-        carbon_log_error("on line %zu, asset without group declaration makes no sense", line_n);
+        CBN_ERROR("on line %zu, asset without group declaration makes no sense", line_n);
         return false;
       }
       carbon_list_pop(asset_groups, &ag);
@@ -123,7 +123,7 @@ CARBON_INLINE u8 carbon_skap__check_decl_assets(CBN_List *asset_groups) {
     carbon_strlist_foreach(ag.assets) {
       const char *asset_name = carbon_string_fmt("%s%s", ag.path, carbon_strview_to_cstr(it.sv));
       if (!carbon_fs_exists(asset_name)) {
-        carbon_log_error("asset declared as `%s` doesn't exist", asset_name);
+        CBN_ERROR("asset declared as `%s` doesn't exist", asset_name);
         status = false;
       }
     }
@@ -132,10 +132,10 @@ CARBON_INLINE u8 carbon_skap__check_decl_assets(CBN_List *asset_groups) {
 }
 
 CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
-  carbon_log_debug("asset_groups->size = %$", $(asset_groups->size));
+  CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
   if (asset_groups->size) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      carbon_log_debug("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
+      CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
       carbon_strlist_destroy(&it.var.assets);
     }
   }
@@ -240,19 +240,19 @@ CARBON_INLINE void carbon_skap__append_blobs(FILE *fd) {
 u8 carbon_skap_create(const char *decl, const char *skap) {
   // Input: DECL text file
   if (!carbon_fs_exists(decl)) {
-    carbon_log_error("there is no SKAP declarations file named `%s`", decl);
+    CBN_ERROR("there is no SKAP declarations file named `%s`", decl);
     return false;
   }
   CBN_List asset_groups = carbon_list_create(sizeof(CBN_SKAP_AssetGroup));
   FILE *decl_fd = fopen(decl, "r");
   if (!carbon_skap__parse_decl_file(decl_fd, &asset_groups)) {
-    carbon_log_error("SKAP declarations file (`%s`) has syntax errors and can't be parsed correctly", decl);
+    CBN_ERROR("SKAP declarations file (`%s`) has syntax errors and can't be parsed correctly", decl);
     carbon_skap__destroy_asset_groups(&asset_groups);
     return false;
   }
   fclose(decl_fd);
   if (!carbon_skap__check_decl_assets(&asset_groups)) {
-    carbon_log_error("SKAP declarations file (`%s`) has semantic errors and can't be interpreted correctly", decl);
+    CBN_ERROR("SKAP declarations file (`%s`) has semantic errors and can't be interpreted correctly", decl);
     carbon_skap__destroy_asset_groups(&asset_groups);
     return false;
   }
@@ -273,11 +273,11 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
 
 u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   if (!out_handle) {
-    carbon_log_error("`out_handle` must be a valid pointer");
+    CBN_ERROR("`out_handle` must be a valid pointer");
     return false;
   }
   if (!carbon_fs_exists(skap)) {
-    carbon_log_error("there is no SKAP file named `%s`", skap);
+    CBN_ERROR("there is no SKAP file named `%s`", skap);
     return false;
   }
   carbon_memory_set(out_handle, 0, sizeof(*out_handle));
@@ -285,12 +285,12 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   // Read header
   fread(&out_handle->header, sizeof(out_handle->header), 1, out_handle->fd);
   if (carbon_string_cmp_n(out_handle->header.signature, "SKAP", 4)) {
-    carbon_log_error("file `%s` is not a valid SKAP", skap);
+    CBN_ERROR("file `%s` is not a valid SKAP", skap);
     fclose(out_handle->fd);
     return false;
   }
   if (out_handle->header.fmt_ver != 1) {
-    carbon_log_error("file `%s` is SKAP, but it's using a different fmt version (%$) from the expected one (1)", skap, $(out_handle->header.fmt_ver));
+    CBN_ERROR("file `%s` is SKAP, but it's using a different fmt version (%$) from the expected one (1)", skap, $(out_handle->header.fmt_ver));
     fclose(out_handle->fd);
     return false;
   }
@@ -301,16 +301,16 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
     for (usz j = 0; j < out_handle->type_counters[i]; ++j) {
       CBN_SKAP_AssetIdx idx;
       fread(&idx, sizeof(idx), 1, out_handle->fd);
-      carbon_log_debug("----------------------------------------");
-      carbon_log_debug("idx.name = `%s`", idx.name);
-      carbon_log_debug("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
-      carbon_log_debug("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
-      carbon_log_debug("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
-      carbon_log_debug("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
-      carbon_log_debug("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
-      carbon_log_debug("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
-      carbon_log_debug("idx.checksum = %#010x", idx.checksum);
-      carbon_log_debug("----------------------------------------");
+      CBN_DEBUG("----------------------------------------");
+      CBN_DEBUG("idx.name = `%s`", idx.name);
+      CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
+      CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
+      CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
+      CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
+      CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
+      CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
+      CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
+      CBN_DEBUG("----------------------------------------");
       carbon_hashmap_set(&out_handle->idxs[i], idx.name, &idx);
     }
   }
@@ -321,7 +321,7 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
 
 void carbon_skap_close(CBN_SKAP *handle) {
   if (!handle) {
-    carbon_log_warn("`handle` is not a valid pointer, skipping closing");
+    CBN_WARN("`handle` is not a valid pointer, skipping closing");
     return;
   }
   fclose(handle->fd);
@@ -332,7 +332,7 @@ void carbon_skap_close(CBN_SKAP *handle) {
 
 void carbon_skap_print(const CBN_SKAP *handle) {
   if (!handle) {
-    carbon_log_warn("`handle` is not a valid pointer, skipping printing");
+    CBN_WARN("`handle` is not a valid pointer, skipping printing");
     return;
   }
   carbon_println("fd: %p", handle->fd);
@@ -358,21 +358,21 @@ void carbon_skap_print(const CBN_SKAP *handle) {
 // @type_dependant
 u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
   if (!handle || !asset_name || !out_blob) {
-    carbon_log_error("`handle`, `asset_name` and `out_blob` must be valid pointers");
+    CBN_ERROR("`handle`, `asset_name` and `out_blob` must be valid pointers");
     return false;
   }
   if (asset_type >= CARBON_SKAP_ASSET_TYPE_COUNT) {
-    carbon_log_error("`asset_type` is not valid");
+    CBN_ERROR("`asset_type` is not valid");
     return false;
   }
   CBN_SKAP_AssetIdx idx;
   carbon_hashmap_get(&handle->idxs[asset_type], asset_name, &idx);
   if (carbon_string_cmp(idx.name, asset_name)) {
-    carbon_log_error("`idx.name` doesn't match the `asset_name` requested");
+    CBN_ERROR("`idx.name` doesn't match the `asset_name` requested");
     return false;
   }
   if (idx.metadata.type != asset_type) {
-    carbon_log_error("`idx.metadata.type` doesn't match the `asset_type` requested");
+    CBN_ERROR("`idx.metadata.type` doesn't match the `asset_type` requested");
     return false;
   }
   switch (asset_type) {
@@ -385,12 +385,12 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     fread(asset.data, idx.blob_size, 1, handle->fd);
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
-      carbon_log_error("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
+      CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
       CBN_FREE(asset.data);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));
-    carbon_log_info("asset `%s` retrieved successfully", asset_name);
+    CBN_INFO("asset `%s` retrieved successfully", asset_name);
     return true;
   }
   case CARBON_SKAP_ASSET_TYPE_COUNT:
@@ -409,7 +409,7 @@ usz carbon_skap_count(const CBN_SKAP *handle) {
 
 usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type) {
   if (type >= CARBON_SKAP_ASSET_TYPE_COUNT) {
-    carbon_log_error("`type` is not valid");
+    CBN_ERROR("`type` is not valid");
     return 0;
   }
   return handle->type_counters[type];

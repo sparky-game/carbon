@@ -45,7 +45,7 @@ void carbon_test_manager_argparse(i32 argc, char * const *argv) {
     carbon_print(version_msg, CARBON_NAME, CARBON_VERSION);
     exit(0);
   }
-  carbon_log_error("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
+  CBN_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
   exit(1);
 }
 
@@ -78,7 +78,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
   i32 rebuild_status_code = 0;
   pid_t rebuild_child_pid = fork();
   if (rebuild_child_pid == -1) {
-    carbon_log_error("unable to fork child process");
+    CBN_ERROR("unable to fork child process");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   else if (rebuild_child_pid == 0) {
@@ -94,21 +94,21 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
       argv[it.i + 6] = carbon_strview_to_cstr(it.sv);
     }
     if (-1 == execvp(argv[0], argv)) {
-      carbon_log_error("unable to execvp from child process");
+      CBN_ERROR("unable to execvp from child process");
       carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
     }
   }
   // 3. Wait for rebuilding (child process) ends correctly
   else waitpid(rebuild_child_pid, &rebuild_status_code, 0);
   if (rebuild_status_code != 0) {
-    carbon_log_error("errors detected during rebuild");
+    CBN_ERROR("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
   carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
   carbon_println("=======================================");
   // 4. Replace current binary with new one (execvp)
   if (-1 == execvp(bin_file, host_argv)) {
-    carbon_log_error("unable to execvp rebuilt binary");
+    CBN_ERROR("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
 }
@@ -150,7 +150,7 @@ void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, cons
 
 void carbon_test_manager_cleanup(CBN_Suite *s) {
   if (!s->tests || !s->n) {
-    carbon_log_error("Suite `s` has not been initialized");
+    CBN_ERROR("Suite `s` has not been initialized");
     return;
   }
   CBN_FREE(s->tests);
@@ -162,7 +162,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   carbon_cprintln(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
   carbon_println("=======================================");
   if (!s->tests || !s->n) {
-    carbon_log_error("`(Suite *) s` has not been initialized");
+    CBN_ERROR("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
   }
   carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);

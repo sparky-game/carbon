@@ -16,7 +16,7 @@ CBN_List carbon_list_create(usz stride) {
 
 void carbon_list_destroy(CBN_List *l) {
   if (!l) {
-    carbon_log_warn("`l` is not a valid pointer, skipping destruction");
+    CBN_WARN("`l` is not a valid pointer, skipping destruction");
     return;
   }
   if (l->items) CBN_FREE(l->items);
@@ -25,7 +25,7 @@ void carbon_list_destroy(CBN_List *l) {
 
 void carbon_list_push(CBN_List *l, void *value) {
   if (!l || !value) {
-    carbon_log_error("`l` and `value` must be valid pointers");
+    CBN_ERROR("`l` and `value` must be valid pointers");
     return;
   }
   if (l->size == l->capacity) {
@@ -34,7 +34,7 @@ void carbon_list_push(CBN_List *l, void *value) {
     usz size = l->capacity * l->stride;
     l->items = CBN_REALLOC(l->items, size);
     if (!l->items) {
-      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CBN_ERROR("failed to reallocate memory (%zuB)", size);
       CBN_FREE(prev_p);
       return;
     }
@@ -45,11 +45,11 @@ void carbon_list_push(CBN_List *l, void *value) {
 
 void carbon_list_pop(CBN_List *l, void *out_value) {
   if (!l || !out_value) {
-    carbon_log_error("`l` and `out_value` must be valid pointers");
+    CBN_ERROR("`l` and `out_value` must be valid pointers");
     return;
   }
   if (!l->size) {
-    carbon_log_warn("list is empty");
+    CBN_WARN("list is empty");
     return;
   }
   carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
@@ -60,7 +60,7 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
     usz size = l->capacity * l->stride;
     l->items = CBN_REALLOC(l->items, size);
     if (!l->items && l->size > 0) {
-      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CBN_ERROR("failed to reallocate memory (%zuB)", size);
       CBN_FREE(prev_p);
       return;
     }
@@ -69,7 +69,7 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
 
 isz carbon_list_find(const CBN_List *l, const void *value) {
   if (!l || !value) {
-    carbon_log_error("`l` and `value` must be valid pointers");
+    CBN_ERROR("`l` and `value` must be valid pointers");
     return -1;
   }
   for (usz i = 0; i < l->size; ++i) {
@@ -81,11 +81,11 @@ isz carbon_list_find(const CBN_List *l, const void *value) {
 
 void carbon_list_remove(CBN_List *l, usz idx) {
   if (!l) {
-    carbon_log_error("`l` must be a valid pointer");
+    CBN_ERROR("`l` must be a valid pointer");
     return;
   }
   if (idx >= l->size) {
-    carbon_log_error("idx out of bounds (size: %$, idx: %$)", $(l->size), $(idx));
+    CBN_ERROR("idx out of bounds (size: %$, idx: %$)", $(l->size), $(idx));
     return;
   }
   if (idx < l->size - 1) {
@@ -100,7 +100,7 @@ void carbon_list_remove(CBN_List *l, usz idx) {
     usz size = l->capacity * l->stride;
     l->items = CBN_REALLOC(l->items, size);
     if (!l->items && l->size > 0) {
-      carbon_log_error("failed to reallocate memory (%zuB)", size);
+      CBN_ERROR("failed to reallocate memory (%zuB)", size);
       CBN_FREE(prev_p);
       return;
     }

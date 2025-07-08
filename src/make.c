@@ -48,7 +48,7 @@ static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
 // TODO: migrate this func to the lib itself
 static void call_cmd(const char *cmd) {
   if (!system(cmd)) return;
-  carbon_log_error("Failed to run `%s`", cmd);
+  CBN_ERROR("Failed to run `%s`", cmd);
   CARBON_UNREACHABLE;
 }
 
@@ -141,7 +141,7 @@ static void hdrgen(void) {
 }
 
 static void test(void) {
-  carbon_log_info("Running tests...");
+  CBN_INFO("Running tests...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
   CBN_StrBuilder cmd = {0};
@@ -185,7 +185,7 @@ static void test(void) {
 }
 
 static void build(void) {
-  carbon_log_info("Building...");
+  CBN_INFO("Building...");
   carbon_println("  MKDIR   " WORKDIR);
   if (!carbon_fs_create_directory(WORKDIR)) CARBON_UNREACHABLE;
   CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
@@ -237,7 +237,7 @@ static void build(void) {
 }
 
 static void examples(void) {
-  carbon_log_info("Building examples...");
+  CBN_INFO("Building examples...");
   CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("examples/*.c");
   CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("examples/*.cc");
   CBN_StrBuilder cmd = {0};
@@ -280,25 +280,25 @@ static void examples(void) {
 }
 
 static void package(void) {
-  carbon_log_info("Packaging...");
+  CBN_INFO("Packaging...");
   cp_dash_r("COPYING " HDRFILE, WORKDIR);
   carbon_println("  GZIP    " WORKDIR ".tgz");
   call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
-  carbon_log_info(WORKDIR ".tgz is ready");
+  CBN_INFO(WORKDIR ".tgz is ready");
 }
 
 int main(int argc, char **argv) {
   CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
   bootstrap(argv, false);
 #ifdef CARBON_MAKE_ALREADY_REBUILT
-  carbon_log_info(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
+  CBN_INFO(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_log_debug("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
+  CBN_DEBUG("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
   if (argc > 2) {
-    carbon_log_error("ill-formed command\nTry '%s help' for more information.", program_name);
+    CBN_ERROR("ill-formed command\nTry '%s help' for more information.", program_name);
     return 1;
   }
   if (argc == 2) {
@@ -308,7 +308,7 @@ int main(int argc, char **argv) {
       const char *new_argv[] = { program_name, subcmd, 0 };
       bootstrap((char **) new_argv, true);
     }
-    carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
+    CBN_ERROR("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
   }
   if (argc == 1) {
@@ -346,7 +346,7 @@ int main(int argc, char **argv) {
       examples();
       return 0;
     }
-    carbon_log_error("unrecognized option\nTry '%s help' for more information.", program_name);
+    CBN_ERROR("unrecognized option\nTry '%s help' for more information.", program_name);
     return 1;
   }
   hdrgen();

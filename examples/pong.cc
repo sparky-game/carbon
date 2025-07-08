@@ -90,7 +90,7 @@ namespace pong {
       if (!m_Started) {
         if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
           m_Score_P1 = m_Score_P2 = 0;
-          carbon_log_debug("We have a WINNER !!!");
+          CBN_DEBUG("We have a WINNER !!!");
           cbn::audio::PlaySound(m_Sound_Music);
         }
         if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
@@ -120,13 +120,13 @@ namespace pong {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P2;
-        carbon_log_debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
+        CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P1;
-        carbon_log_debug("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
+        CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
         m_Ball.velocity.y *= -1;

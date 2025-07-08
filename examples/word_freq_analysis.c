@@ -16,24 +16,24 @@ int main(int argc, char **argv) {
   // CLI Arguments
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
   if (argc < 2) {
-    carbon_log_error("usage: %$ [FILE] [N_TOP_WORDS]", $(program_name));
+    CBN_ERROR("usage: %$ [FILE] [N_TOP_WORDS]", $(program_name));
     return 1;
   }
   const char *file = CARBON_SHIFT_ARGS(argc, argv);
   if (!carbon_fs_is_regular_file(file)) {
-    carbon_log_error("FILE (`%$`) needs to be a regular file", $(file));
+    CBN_ERROR("FILE (`%$`) needs to be a regular file", $(file));
     return 1;
   }
   const char *n_top_words = CARBON_SHIFT_ARGS(argc, argv);
   if (!carbon_string_is_number(n_top_words)) {
-    carbon_log_error("N_TOP_WORDS (`%$`) needs to be a number", $(n_top_words));
+    CBN_ERROR("N_TOP_WORDS (`%$`) needs to be a number", $(n_top_words));
     return 1;
   }
 
   // Read file
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
-    carbon_log_error("FILE (`%$`) could not be read", $(file));
+    CBN_ERROR("FILE (`%$`) could not be read", $(file));
     return 1;
   }
 

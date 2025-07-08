@@ -12,7 +12,7 @@ CARBON_INLINE struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *doma
   hints.ai_socktype = SOCK_STREAM;
   i32 status = getaddrinfo(domain, 0, &hints, &res);
   if (status != 0) {
-    carbon_log_error("unable to getaddrinfo (%s)", gai_strerror(status));
+    CBN_ERROR("unable to getaddrinfo (%s)", gai_strerror(status));
     return 0;
   }
   return res;

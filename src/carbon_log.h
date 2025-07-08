@@ -26,10 +26,10 @@ struct CBN_Log_Color {
 };
 #endif
 
-#define carbon_log_debug(msg, ...) carbon_cprintln(CARBON_COLOR_CYAN, carbon_string_fmt("[^] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
-#define carbon_log_info(msg, ...) carbon_cprintln(CARBON_COLOR_YELLOW, carbon_string_fmt("[*] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
-#define carbon_log_warn(msg, ...) carbon_cprintln(CARBON_COLOR_MAGENTA, carbon_string_fmt("[?] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
-#define carbon_log_error(msg, ...) carbon_ceprintln(CARBON_COLOR_RED, carbon_string_fmt("[!] %s:%s :: %s", __FILE__, CARBON_EXPAND_AND_QUOTE(__LINE__), msg), ##__VA_ARGS__)
+#define CBN_DEBUG(msg, ...) carbon_cprintln(CARBON_COLOR_CYAN, carbon_string_fmt("[^] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
+#define CBN_INFO(msg, ...)  carbon_cprintln(CARBON_COLOR_YELLOW, carbon_string_fmt("[*] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
+#define CBN_WARN(msg, ...)  carbon_cprintln(CARBON_COLOR_MAGENTA, carbon_string_fmt("[?] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
+#define CBN_ERROR(msg, ...) carbon_ceprintln(CARBON_COLOR_RED, carbon_string_fmt("[!] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
 
 #ifndef __cplusplus
 #define carbon_log__var_to_spec(x)              \
@@ -74,14 +74,13 @@ constexpr auto carbon_log__var_to_spec(T) {
 
 #define $(x) (CBN_Log_BoxedVar){carbon_log__var_to_spec(x), (void *) &x}
 
-#define carbon_print(msg, ...) carbon_log_print(stdout, msg, ##__VA_ARGS__)
-#define carbon_eprint(msg, ...) carbon_log_print(stderr, msg, ##__VA_ARGS__)
-#define carbon_println(msg, ...) carbon_print(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
-#define carbon_eprintln(msg, ...) carbon_eprint(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
-
-#define carbon_cprint(color, msg, ...) carbon_print(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
-#define carbon_ceprint(color, msg, ...) carbon_eprint(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
-#define carbon_cprintln(color, msg, ...) carbon_println(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_print(msg, ...)            carbon_log_print(stdout, msg, ##__VA_ARGS__)
+#define carbon_eprint(msg, ...)           carbon_log_print(stderr, msg, ##__VA_ARGS__)
+#define carbon_println(msg, ...)          carbon_print(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
+#define carbon_eprintln(msg, ...)         carbon_eprint(carbon_string_fmt("%s\n", msg), ##__VA_ARGS__)
+#define carbon_cprint(color, msg, ...)    carbon_print(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_ceprint(color, msg, ...)   carbon_eprint(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
+#define carbon_cprintln(color, msg, ...)  carbon_println(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
 #define carbon_ceprintln(color, msg, ...) carbon_eprintln(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
 
 typedef struct {

@@ -18,7 +18,7 @@ CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
 
 void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
   if (!dc) {
-    carbon_log_warn("`dc` is not a valid pointer, skipping destruction");
+    CBN_WARN("`dc` is not a valid pointer, skipping destruction");
     return;
   }
   CBN_FREE(dc->pixels);

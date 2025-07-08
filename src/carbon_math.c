@@ -502,7 +502,7 @@ CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
 
 void carbon_math_mat_destroy(CBN_Matrix *m) {
   if (!m) {
-    carbon_log_warn("`m` is not a valid pointer, skipping destruction");
+    CBN_WARN("`m` is not a valid pointer, skipping destruction");
     return;
   }
   CBN_FREE(m->items);
@@ -593,7 +593,7 @@ CBN_Row carbon_math_row_create(usz cols) {
 
 void carbon_math_row_destroy(CBN_Row *r) {
   if (!r) {
-    carbon_log_warn("`r` is not a valid pointer, skipping destruction");
+    CBN_WARN("`r` is not a valid pointer, skipping destruction");
     return;
   }
   CBN_FREE(r->items);

@@ -24,7 +24,7 @@ void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
 
 void carbon_strbuilder_free(CBN_StrBuilder *sb) {
   if (!sb) {
-    carbon_log_warn("`sb` is not a valid pointer, skipping free");
+    CBN_WARN("`sb` is not a valid pointer, skipping free");
     return;
   }
   CBN_FREE(sb->items);

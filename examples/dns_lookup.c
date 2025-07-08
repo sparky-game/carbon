@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
   if (argc < 1) {
-    carbon_log_error("usage: %$ [DOMAIN]", $(program_name));
+    CBN_ERROR("usage: %$ [DOMAIN]", $(program_name));
     return 1;
   }
   const char *domain = CARBON_SHIFT_ARGS(argc, argv);

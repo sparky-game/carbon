@@ -141,7 +141,7 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
 
 void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
   if (!out) {
-    carbon_log_warn("`out` is not a valid pointer, skipping computation");
+    CBN_WARN("`out` is not a valid pointer, skipping computation");
     return;
   }
   u32 h[] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
@@ -314,7 +314,7 @@ CARBON_INLINE void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const
 
 void carbon_crypto_keccak256(const u8 *in, const usz in_size, u8 *out) {
   if (!out) {
-    carbon_log_warn("`out` is not a valid pointer, skipping computation");
+    CBN_WARN("`out` is not a valid pointer, skipping computation");
     return;
   }
   CBN_Keccak256_CTX ctx;
