@@ -20,6 +20,10 @@ namespace pong {
   static constexpr auto c_RacketLength        = 5;
   static constexpr auto c_RacketSpeed         = 1100;
   static constexpr auto c_MaxReflectionAngle  = 75;
+  static constexpr auto c_ScoreFontSize       = 8;
+  static constexpr auto c_ScoreFontPadding    = CARBON_VEC2(100, 50);
+  static constexpr auto c_NetThickness        = 4;
+  static constexpr auto c_NetColor            = 0x737373ff;
   static constexpr auto c_BackgroundColor     = 0x181818ff;
   static constexpr auto c_ForegroundColor     = 0xdcdcdcff;
 
@@ -47,6 +51,7 @@ namespace pong {
 
   struct Game {
     Game(void) : m_Canvas{cbn::DrawCanvas::make(c_ScreenWidth, c_ScreenHeight)},
+                 m_Net{CARBON_RECT(c_ScreenWidth/2 - c_NetThickness + 1, 0, c_NetThickness, c_ScreenHeight)},
                  m_Ball{GetRandomBall()},
                  m_Racket_1{
                    CARBON_VEC2(c_RacketPadding, c_ScreenHeight/2 - (c_RacketLength * c_BallSize) / 2),
@@ -89,8 +94,9 @@ namespace pong {
     void Update(const f64 dt) {
       if (!m_Started) {
         if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
-          m_Score_P1 = m_Score_P2 = 0;
+          CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
           CBN_DEBUG("We have a WINNER !!!");
+          m_Score_P1 = m_Score_P2 = 0;
           cbn::audio::PlaySound(m_Sound_Music);
         }
         if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
@@ -109,10 +115,24 @@ namespace pong {
 
     void Render(void) {
       m_Canvas.Fill(c_BackgroundColor);
-      if (m_Started) m_Ball.Render(m_Canvas);
+      m_Canvas.DrawRect(m_Net, c_NetColor);
+      RenderScoreboard();
       m_Racket_1.Render(m_Canvas);
       m_Racket_2.Render(m_Canvas);
+      if (m_Started) m_Ball.Render(m_Canvas);
       cbn::win::Update(m_Canvas);
+    }
+
+    void RenderScoreboard(void) {
+      const auto score_p1_str = std::to_string(m_Score_P1);
+      m_Canvas.DrawText(score_p1_str.c_str(),
+                        CARBON_VEC2(c_ScreenWidth/2 - c_ScoreFontPadding.x - m_Canvas.TextWidth(score_p1_str.c_str(), c_ScoreFontSize), c_ScoreFontPadding.y),
+                        c_ScoreFontSize,
+                        c_ForegroundColor);
+      m_Canvas.DrawText(std::to_string(m_Score_P2).c_str(),
+                        CARBON_VEC2(c_ScreenWidth/2 + c_ScoreFontPadding.x, c_ScoreFontPadding.y),
+                        c_ScoreFontSize,
+                        c_ForegroundColor);
     }
 
     void BallCollideWalls(void) {
@@ -120,13 +140,11 @@ namespace pong {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P2;
-        CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
         m_Started = false;
         m_Ball = GetRandomBall();
         ++m_Score_P1;
-        CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
         m_Ball.velocity.y *= -1;
@@ -173,6 +191,7 @@ namespace pong {
     }
 
     cbn::DrawCanvas m_Canvas;
+    const cbn::Rect m_Net;
     Ball m_Ball;
     Racket m_Racket_1;
     Racket m_Racket_2;
