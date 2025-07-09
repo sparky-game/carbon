@@ -27,6 +27,18 @@ void CBN_DrawCanvas::DrawCircle(CBN_Vec2 center, usz radius, u32 color) {
   carbon_drawcanvas_circle(*this, center, radius, color);
 }
 
+void CBN_DrawCanvas::DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  carbon_drawcanvas_text(*this, txt, position, size, color);
+}
+
+usz CBN_DrawCanvas::TextWidth(const char *txt, usz size) {
+  return carbon_drawcanvas_get_text_width(txt, size);
+}
+
+usz CBN_DrawCanvas::TextHeight(usz size) {
+  return carbon_drawcanvas_get_text_height(size);
+}
+
 u32 CBN_DrawCanvas::HSVToRGB(f32 h, f32 s, f32 v) {
   return carbon_drawcanvas_hsv_to_rgb(h, s, v);
 }

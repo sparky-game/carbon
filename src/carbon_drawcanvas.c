@@ -3,6 +3,8 @@
 
 #include "carbon.inc"
 
+#include "carbon_drawcanvas_font.inl"
+
 #define CARBON_DRAWCANVAS__AA_RES 2
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
@@ -28,7 +30,7 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
 void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
   for (usz j = 0; j < dc.height; ++j) {
     for (usz i = 0; i < dc.width; ++i) {
-      CARBON_DRAWCANVAS_AT(dc, i, j) = color;
+      carbon_drawcanvas_at(dc, i, j) = color;
     }
   }
 }
@@ -89,7 +91,7 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
     for (usz i = lx; i <= hx; ++i) {
       i32 u1, u2, det;
       if (!carbon_drawcanvas__triangle_barycentric(v1, v2, v3, i, j, &u1, &u2, &det)) continue;
-      CARBON_DRAWCANVAS_AT(dc, i, j) = color;
+      carbon_drawcanvas_at(dc, i, j) = color;
     }
   }
 }
@@ -119,7 +121,7 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
   if (!carbon_drawcanvas__rect_normalize(dc, r, &x1, &x2, &y1, &y2)) return;
   for (i32 i = x1; i <= x2; ++i) {
     for (i32 j = y1; j <= y2; ++j) {
-      carbon_drawcanvas__alpha_blending(&CARBON_DRAWCANVAS_AT(dc, i, j), color);
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), color);
     }
   }
 }
@@ -140,9 +142,35 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
       }
       u32 aa_alpha = ((color >> 0) & 0xff) * (n / CARBON_DRAWCANVAS__AA_RES / CARBON_DRAWCANVAS__AA_RES);
       u32 aa_color = (color & 0xffffff00) | (aa_alpha << 0);
-      carbon_drawcanvas__alpha_blending(&CARBON_DRAWCANVAS_AT(dc, i, j), aa_color);
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), aa_color);
     }
   }
+}
+
+void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  static const char *glyphs = &carbon_drawcanvas__font[0][0][0];
+  for (usz i = 0; *txt; ++i, ++txt) {
+    i32 gx = position.x + (i * CARBON_DRAWCANVAS__FONT_WIDTH * size);
+    i32 gy = position.y;
+    const char *glyph = &glyphs[(*txt) * CARBON_DRAWCANVAS__FONT_WIDTH * CARBON_DRAWCANVAS__FONT_HEIGHT];
+    for (usz dy = 0; dy < CARBON_DRAWCANVAS__FONT_HEIGHT; ++dy) {
+      for (usz dx = 0; dx < CARBON_DRAWCANVAS__FONT_WIDTH; ++dx) {
+        i32 px = gx + dx*size;
+        i32 py = gy + dy*size;
+        if (0 <= px && px < (i32) dc.width && 0 <= py && py < (i32) dc.height && glyph[dy*CARBON_DRAWCANVAS__FONT_WIDTH + dx]) {
+          carbon_drawcanvas_rect(dc, CARBON_RECT_SQUARE(px, py, size), color);
+        }
+      }
+    }
+  }
+}
+
+usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
+  return CARBON_DRAWCANVAS__FONT_WIDTH * size * carbon_string_len(txt);
+}
+
+usz carbon_drawcanvas_get_text_height(usz size) {
+  return CARBON_DRAWCANVAS__FONT_HEIGHT * size;
 }
 
 u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v) {

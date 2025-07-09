@@ -56,6 +56,27 @@ typedef struct CBN_DrawCanvas {
    */
   void DrawCircle(CBN_Vec2 center, usz radius, u32 color);
   /**
+   * @brief carbon_drawcanvas_text
+   * @param txt The text to draw.
+   * @param position The position (top-left corner) to draw the text to.
+   * @param size The font size to use.
+   * @param color The color to draw the text with.
+   */
+  void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color);
+  /**
+   * @brief carbon_drawcanvas_get_text_width
+   * @param txt The text to measure.
+   * @param size The font size to use.
+   * @return The width of the given text using the specified font size.
+   */
+  static usz TextWidth(const char *txt, usz size);
+  /**
+   * @brief carbon_drawcanvas_get_text_height
+   * @param size The font size to use.
+   * @return The height of the text using the specified font size.
+   */
+  static usz TextHeight(usz size);
+  /**
    * @brief carbon_drawcanvas_hsv_to_rgb
    * @param h Hue, in [0..360] range.
    * @param s Saturation, in [0..1] range.
@@ -69,7 +90,7 @@ typedef struct CBN_DrawCanvas {
 #endif
 } CBN_DrawCanvas;
 
-#define CARBON_DRAWCANVAS_AT(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
+#define carbon_drawcanvas_at(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
 
 /**
  * @brief Creates a new DrawCanvas object.
@@ -118,6 +139,31 @@ CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color)
  * @param color The color to draw the circle with.
  */
 CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
+
+/**
+ * @brief Draws text to the canvas with a specific color (using a default font).
+ * @param dc The DrawCanvas object.
+ * @param txt The text to draw.
+ * @param position The position (top-left corner) to draw the text to.
+ * @param size The font size to use.
+ * @param color The color to draw the text with.
+ */
+CARBON_API void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
+
+/**
+ * @brief Measures text width (using a default font).
+ * @param txt The text to measure.
+ * @param size The font size to use.
+ * @return The width of the given text using the specified font size.
+ */
+CARBON_API usz carbon_drawcanvas_get_text_width(const char *txt, usz size);
+
+/**
+ * @brief Measures text height (using a default font).
+ * @param size The font size to use.
+ * @return The height of the text using the specified font size.
+ */
+CARBON_API usz carbon_drawcanvas_get_text_height(usz size);
 
 /**
  * @brief Transforms HSV color into RGB (A always set to 0xff).
