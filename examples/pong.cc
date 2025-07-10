@@ -73,13 +73,15 @@ namespace pong {
     {
       CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       cbn::audio::Init();
-      auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
-      auto [sound_serve, sound_p1, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg", "pong.assets.d/p1.ogg", "pong.assets.d/p2.ogg");
-      CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2);
-      m_Sound_Music = *sound_music;
-      m_Sound_Serve = *sound_serve;
-      m_Sound_P1 = *sound_p1;
-      m_Sound_P2 = *sound_p2;
+      {  // TODO: handle this in an AudioManager or something
+        auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
+        auto [sound_serve, sound_p1, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg", "pong.assets.d/p1.ogg", "pong.assets.d/p2.ogg");
+        CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2);
+        m_Sound_Music = *sound_music;
+        m_Sound_Serve = *sound_serve;
+        m_Sound_P1 = *sound_p1;
+        m_Sound_P2 = *sound_p2;
+      }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
       cbn::win::SetIcon(cbn::Image::make("pong.assets.d/icon.png"));
