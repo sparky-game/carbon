@@ -18,6 +18,7 @@ namespace pong {
   static constexpr auto c_BallSpeedMax        = c_BallSpeed * 2;
   static constexpr auto c_RacketPadding       = 100;
   static constexpr auto c_RacketLength        = 5;
+  static constexpr auto c_RacketHeight        = c_RacketLength * c_BallSize;
   static constexpr auto c_RacketSpeed         = 1100;
   static constexpr auto c_MaxReflectionAngle  = 75;
   static constexpr auto c_ScoreFontSize       = 8;
@@ -33,35 +34,39 @@ namespace pong {
   struct Entity {
     cbn::Vec2 position;
     cbn::Vec2 velocity;
-    explicit Entity(const cbn::Vec2 &p, const cbn::Vec2 &v) : position{p}, velocity{v} {}
+    explicit Entity(const cbn::Vec2 &p = CARBON_VEC2_ZERO, const cbn::Vec2 &v = CARBON_VEC2_ZERO) : position{p}, velocity{v} {}
     virtual ~Entity(void) = default;
-    virtual void Render(cbn::DrawCanvas &canvas) = 0;
+    virtual void Render(cbn::DrawCanvas &canvas) const = 0;
   };
 
   struct Ball : Entity {
-    Ball(const cbn::Vec2 &p, const cbn::Vec2 &v) : Entity{p, v} {}
-    virtual void Render(cbn::DrawCanvas &canvas) override {
+    Ball(void) {
+      using namespace cbn::math::const_literals;
+      auto angle = cbn::math::Rand(0, 2_pi);
+      position = CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2);
+      velocity = CARBON_VEC2(c_BallSpeed * cbn::math::Cos(angle), c_BallSpeed * cbn::math::Sin(angle));
+    }
+    virtual void Render(cbn::DrawCanvas &canvas) const override {
       canvas.DrawRect(CARBON_RECT_SQUARE_V(position, c_BallSize), c_ForegroundColor);
     }
   };
 
   struct Racket : Entity {
     Racket(const cbn::Vec2 &p, const cbn::Vec2 &v) : Entity{p, v} {}
-    virtual void Render(cbn::DrawCanvas &canvas) override {
-      canvas.DrawRect(CARBON_RECT_V(position, c_BallSize, c_RacketLength * c_BallSize), c_ForegroundColor);
+    virtual void Render(cbn::DrawCanvas &canvas) const override {
+      canvas.DrawRect(CARBON_RECT_V(position, c_BallSize, c_RacketHeight), c_ForegroundColor);
     }
   };
 
   struct Game {
     Game(void) : m_Canvas{cbn::DrawCanvas::make(c_ScreenWidth, c_ScreenHeight)},
                  m_Net{CARBON_RECT(c_ScreenWidth/2 - c_NetThickness + 1, 0, c_NetThickness, c_ScreenHeight)},
-                 m_Ball{GetRandomBall()},
                  m_Racket_1{
-                   CARBON_VEC2(c_RacketPadding, c_ScreenHeight/2 - (c_RacketLength * c_BallSize) / 2),
+                   CARBON_VEC2(c_RacketPadding, c_ScreenHeight/2 - c_RacketHeight/2),
                    CARBON_VEC2_1(c_RacketSpeed)
                  },
                  m_Racket_2{
-                   CARBON_VEC2(c_ScreenWidth - c_RacketPadding - c_BallSize, c_ScreenHeight/2 - (c_RacketLength * c_BallSize) / 2),
+                   CARBON_VEC2(c_ScreenWidth - c_RacketPadding - c_BallSize, c_ScreenHeight/2 - c_RacketHeight/2),
                    CARBON_VEC2_1(c_RacketSpeed)
                  }
     {
@@ -94,6 +99,21 @@ namespace pong {
     }
 
   private:
+    cbn::DrawCanvas m_Canvas;
+    const cbn::Rect m_Net;
+    Ball m_Ball;
+    Racket m_Racket_1;
+    Racket m_Racket_2;
+    bool m_Started {false};
+    bool m_StartScreen {true};
+    bool m_PlayingMusic {false};
+    cbn::audio::UID m_Sound_Music;
+    cbn::audio::UID m_Sound_Serve;
+    cbn::audio::UID m_Sound_P1;
+    cbn::audio::UID m_Sound_P2;
+    u8 m_Score_P1 {0};
+    u8 m_Score_P2 {0};
+
     void Update(const f64 dt) {
       if (!m_Started) {
         Update_PlayerWinner();
@@ -156,17 +176,15 @@ namespace pong {
     void Update_BallCollideWalls(void) {
       if (m_Ball.position.x < 0) {
         m_Started = false;
-        m_Ball = GetRandomBall();
+        m_Ball = Ball{};
         ++m_Score_P2;
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
         m_Started = false;
-        m_Ball = GetRandomBall();
+        m_Ball = Ball{};
         ++m_Score_P1;
       }
-      if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
-        m_Ball.velocity.y *= -1;
-      }
+      if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) m_Ball.velocity.y *= -1;
       cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
     }
 
@@ -177,10 +195,10 @@ namespace pong {
 
     bool Update_ResolveBallCollisionWithRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
       auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
-      if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketLength * c_BallSize).Overlaps(ball)) return false;
+      if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketHeight).Overlaps(ball)) return false;
       f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
-      f64 racket_center_y = r.position.y + (c_RacketLength * c_BallSize) / 2;
-      f64 relative_y = (ball_center_y - racket_center_y) / ((c_RacketLength * c_BallSize) / 2);
+      f64 racket_center_y = r.position.y + c_RacketHeight/2;
+      f64 relative_y = (ball_center_y - racket_center_y) / (c_RacketHeight/2);
       cbn::math::Clamp(relative_y, -1, 1);
       f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
       f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
@@ -193,44 +211,14 @@ namespace pong {
     }
 
     void Update_MoveRackets(const f64 dt) {
-      if (cbn::win::GetKeyDown(cbn::win::KeyCode::W)) {
-        m_Racket_1.position.y -= m_Racket_1.velocity.y * dt;
-      }
-      if (cbn::win::GetKeyDown(cbn::win::KeyCode::UpArrow)) {
-        m_Racket_2.position.y -= m_Racket_2.velocity.y * dt;
-      }
-      if (cbn::win::GetKeyDown(cbn::win::KeyCode::S)) {
-        m_Racket_1.position.y += m_Racket_1.velocity.y * dt;
-      }
-      if (cbn::win::GetKeyDown(cbn::win::KeyCode::DownArrow)) {
-        m_Racket_2.position.y += m_Racket_2.velocity.y * dt;
-      }
-      cbn::math::Clamp(m_Racket_1.position.y, 0, m_Canvas.height - (c_RacketLength * c_BallSize));
-      cbn::math::Clamp(m_Racket_2.position.y, 0, m_Canvas.height - (c_RacketLength * c_BallSize));
+      Update_MoveRacket(m_Racket_1, cbn::win::KeyCode::W, cbn::win::KeyCode::S, dt);
+      Update_MoveRacket(m_Racket_2, cbn::win::KeyCode::UpArrow, cbn::win::KeyCode::DownArrow, dt);
     }
 
-    cbn::DrawCanvas m_Canvas;
-    const cbn::Rect m_Net;
-    Ball m_Ball;
-    Racket m_Racket_1;
-    Racket m_Racket_2;
-    bool m_Started {false};
-    bool m_StartScreen {true};
-    bool m_PlayingMusic {false};
-    cbn::audio::UID m_Sound_Music;
-    cbn::audio::UID m_Sound_Serve;
-    cbn::audio::UID m_Sound_P1;
-    cbn::audio::UID m_Sound_P2;
-    u8 m_Score_P1 {0};
-    u8 m_Score_P2 {0};
-
-    static Ball GetRandomBall(void) {
-      using namespace cbn::math::const_literals;
-      auto angle = cbn::math::Rand(0, 2_pi);
-      return {
-        CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2),
-        CARBON_VEC2(c_BallSpeed * cbn::math::Cos(angle), c_BallSpeed * cbn::math::Sin(angle))
-      };
+    void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
+      if (cbn::win::GetKeyDown(up))   r.position.y -= r.velocity.y * dt;
+      if (cbn::win::GetKeyDown(down)) r.position.y += r.velocity.y * dt;
+      cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
     }
   };
 }
