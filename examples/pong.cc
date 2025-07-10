@@ -20,7 +20,8 @@ namespace pong {
   static constexpr auto c_RacketLength        = 5;
   static constexpr auto c_RacketHeight        = c_RacketLength * c_BallSize;
   static constexpr auto c_RacketSpeed         = 1100;
-  static constexpr auto c_MaxReflectionAngle  = 75;
+  static constexpr auto c_MaxReflectionAngle  = cbn::math::ToRadians(75);
+  static constexpr auto c_ScoreToWin          = 11;
   static constexpr auto c_ScoreFontSize       = 8;
   static constexpr auto c_ScoreFontPadding    = CARBON_VEC2(100, 50);
   static constexpr auto c_StartMsgText        = "Press SPACE to start";
@@ -41,7 +42,7 @@ namespace pong {
 
   struct Ball : Entity {
     Ball(void) {
-      using namespace cbn::math::const_literals;
+      using namespace cbn::math::literals;
       auto angle = cbn::math::Rand(0, 2_pi);
       position = CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2);
       velocity = CARBON_VEC2(c_BallSpeed * cbn::math::Cos(angle), c_BallSpeed * cbn::math::Sin(angle));
@@ -128,7 +129,7 @@ namespace pong {
     }
 
     void Update_PlayerWinner(void) {
-      if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
+      if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == c_ScoreToWin || m_Score_P2 == c_ScoreToWin)) {
         m_StartScreen = true;
         if (!m_PlayingMusic) cbn::audio::PlaySound(m_Sound_Music);
         m_PlayingMusic = true;
@@ -200,7 +201,7 @@ namespace pong {
       f64 racket_center_y = r.position.y + c_RacketHeight/2;
       f64 relative_y = (ball_center_y - racket_center_y) / (c_RacketHeight/2);
       cbn::math::Clamp(relative_y, -1, 1);
-      f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
+      f64 angle = relative_y * (c_MaxReflectionAngle);
       f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
       auto speed = m_Ball.velocity.Length() + d_speed;
       cbn::math::Clamp(speed, c_BallSpeedMin, c_BallSpeedMax);
