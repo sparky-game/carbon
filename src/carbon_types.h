@@ -25,6 +25,8 @@ typedef float f32;
 CARBON_STATIC_ASSERT(sizeof(f32) == 4, "Expected f32 to be 4 bytes");
 typedef double f64;
 CARBON_STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
+typedef long double flong;
+CARBON_STATIC_ASSERT(sizeof(flong) >= sizeof(f64), "Expected flong to be at least 8 bytes long");
 
 typedef u32 uint;
 typedef size_t usz;

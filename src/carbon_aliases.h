@@ -74,9 +74,9 @@ namespace cbn {
   }
   namespace math {
     constexpr auto pi = CARBON_PI;
-    namespace const_literals {
-      consteval f64 operator""_pi(const u64 n) { return n * CARBON_PI; }
-      consteval f64 operator""_pi(const long double n) { return n * CARBON_PI; }
+    namespace literals {
+      consteval f64 operator""_pi(const u64 n)   { return n * CARBON_PI; }
+      consteval f64 operator""_pi(const flong n) { return n * CARBON_PI; }
     }
     const auto Abs = carbon_math_abs;
     const auto Sin = carbon_math_sin;
@@ -88,6 +88,7 @@ namespace cbn {
     inline auto Rand(const i32 min, const i32 max) { return carbon_math_rand_between(min, max); }
     inline auto Rand(const f32 min, const f32 max) { return carbon_math_randf_between(min, max); }
     inline void Clamp(auto &x, const auto min, const auto max) { x = CARBON_CLAMP(x, min, max); }
+    inline constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
   }
   namespace crypto {
     namespace b64 {

@@ -78,6 +78,12 @@
 #define CARBON_SWAP(T, x, y) do { T z = x; x = y; y = z; } while (0)
 #define CARBON_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 
+/**
+ * @brief Converts degrees to radians.
+ * @param angle The angle in degrees.
+ */
+#define CARBON_TO_RADIANS(angle) ((angle) * CARBON_PI / 180)
+
 // TODO: somehow perform bounds checking `CBN_ASSERT(0 <= (i) && (i) < (m).rows && 0 <= (j) && (j) < (m).cols && "Matrix index out of bounds")`
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
 
