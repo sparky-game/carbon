@@ -22,6 +22,9 @@ namespace pong {
   static constexpr auto c_MaxReflectionAngle  = 75;
   static constexpr auto c_ScoreFontSize       = 8;
   static constexpr auto c_ScoreFontPadding    = CARBON_VEC2(100, 50);
+  static constexpr auto c_StartMsgText        = "Press SPACE to start";
+  static constexpr auto c_StartMsgFontSize    = 5;
+  static constexpr auto c_StartMsgFontColor   = 0xffdd33ff;
   static constexpr auto c_NetThickness        = 4;
   static constexpr auto c_NetColor            = 0x737373ff;
   static constexpr auto c_BackgroundColor     = 0x181818ff;
@@ -93,37 +96,52 @@ namespace pong {
   private:
     void Update(const f64 dt) {
       if (!m_Started) {
-        if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
-          CBN_DEBUG("[P1] %$ | %$ [P2]", $(m_Score_P1), $(m_Score_P2));
-          CBN_DEBUG("We have a WINNER !!!");
-          m_Score_P1 = m_Score_P2 = 0;
-          cbn::audio::PlaySound(m_Sound_Music);
-        }
-        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
-          m_Started = true;
-          cbn::audio::StopSound(m_Sound_Music);
-          cbn::audio::PlaySound(m_Sound_Serve);
-        }
+        Update_PlayerWinner();
+        Update_ServeBall();
       }
-      if (m_Started) {
+      else {
         m_Ball.position += m_Ball.velocity * dt;
-        BallCollideWalls();
-        BallCollideRackets();
+        Update_BallCollideWalls();
+        Update_BallCollideRackets();
       }
-      MoveRackets(dt);
+      Update_MoveRackets(dt);
+    }
+
+    void Update_PlayerWinner(void) {
+      if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == 11 || m_Score_P2 == 11)) {
+        m_StartScreen = true;
+        if (!m_PlayingMusic) cbn::audio::PlaySound(m_Sound_Music);
+        m_PlayingMusic = true;
+      }
+    }
+
+    void Update_ServeBall(void) {
+      if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
+        if (m_StartScreen) m_Score_P1 = m_Score_P2 = 0;
+        m_Started = true;
+        m_StartScreen = false;
+        cbn::audio::StopSound(m_Sound_Music);
+        cbn::audio::PlaySound(m_Sound_Serve);
+      }
     }
 
     void Render(void) {
       m_Canvas.Fill(c_BackgroundColor);
       m_Canvas.DrawRect(m_Net, c_NetColor);
-      RenderScoreboard();
+      Render_Scoreboard();
       m_Racket_1.Render(m_Canvas);
       m_Racket_2.Render(m_Canvas);
+      if (m_StartScreen) {
+        m_Canvas.DrawText(c_StartMsgText,
+                          CARBON_VEC2(c_ScreenWidth/2 - m_Canvas.TextWidth(c_StartMsgText, c_StartMsgFontSize)/2, c_ScreenHeight/2 + 100),
+                          c_StartMsgFontSize,
+                          c_StartMsgFontColor);
+      }
       if (m_Started) m_Ball.Render(m_Canvas);
       cbn::win::Update(m_Canvas);
     }
 
-    void RenderScoreboard(void) {
+    void Render_Scoreboard(void) {
       const auto score_p1_str = std::to_string(m_Score_P1);
       m_Canvas.DrawText(score_p1_str.c_str(),
                         CARBON_VEC2(c_ScreenWidth/2 - c_ScoreFontPadding.x - m_Canvas.TextWidth(score_p1_str.c_str(), c_ScoreFontSize), c_ScoreFontPadding.y),
@@ -135,7 +153,7 @@ namespace pong {
                         c_ForegroundColor);
     }
 
-    void BallCollideWalls(void) {
+    void Update_BallCollideWalls(void) {
       if (m_Ball.position.x < 0) {
         m_Started = false;
         m_Ball = GetRandomBall();
@@ -152,28 +170,29 @@ namespace pong {
       cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
     }
 
-    void BallCollideRackets(void) {
-      static auto resolve_collision = [this](const Racket &r, f64 dir, const cbn::audio::UID &sound) {
-        auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
-        if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketLength * c_BallSize).Overlaps(ball)) return false;
-        f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
-        f64 racket_center_y = r.position.y + (c_RacketLength * c_BallSize) / 2;
-        f64 relative_y = (ball_center_y - racket_center_y) / ((c_RacketLength * c_BallSize) / 2);
-        cbn::math::Clamp(relative_y, -1, 1);
-        f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
-        f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
-        auto speed = m_Ball.velocity.Length() + d_speed;
-        cbn::math::Clamp(speed, c_BallSpeedMin, c_BallSpeedMax);
-        m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
-        m_Ball.velocity.y = speed * cbn::math::Sin(angle);
-        cbn::audio::PlaySound(sound);
-        return true;
-      };
-      if (resolve_collision(m_Racket_1, 1, m_Sound_P1)) return;
-      resolve_collision(m_Racket_2, -1, m_Sound_P2);
+    void Update_BallCollideRackets(void) {
+      if (Update_ResolveBallCollisionWithRacket(m_Racket_1, 1, m_Sound_P1)) return;
+      Update_ResolveBallCollisionWithRacket(m_Racket_2, -1, m_Sound_P2);
     }
 
-    void MoveRackets(const f64 dt) {
+    bool Update_ResolveBallCollisionWithRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
+      auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
+      if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketLength * c_BallSize).Overlaps(ball)) return false;
+      f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
+      f64 racket_center_y = r.position.y + (c_RacketLength * c_BallSize) / 2;
+      f64 relative_y = (ball_center_y - racket_center_y) / ((c_RacketLength * c_BallSize) / 2);
+      cbn::math::Clamp(relative_y, -1, 1);
+      f64 angle = relative_y * (c_MaxReflectionAngle * cbn::math::pi / 180);
+      f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
+      auto speed = m_Ball.velocity.Length() + d_speed;
+      cbn::math::Clamp(speed, c_BallSpeedMin, c_BallSpeedMax);
+      m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
+      m_Ball.velocity.y = speed * cbn::math::Sin(angle);
+      cbn::audio::PlaySound(sound);
+      return true;
+    }
+
+    void Update_MoveRackets(const f64 dt) {
       if (cbn::win::GetKeyDown(cbn::win::KeyCode::W)) {
         m_Racket_1.position.y -= m_Racket_1.velocity.y * dt;
       }
@@ -196,6 +215,8 @@ namespace pong {
     Racket m_Racket_1;
     Racket m_Racket_2;
     bool m_Started {false};
+    bool m_StartScreen {true};
+    bool m_PlayingMusic {false};
     cbn::audio::UID m_Sound_Music;
     cbn::audio::UID m_Sound_Serve;
     cbn::audio::UID m_Sound_P1;
