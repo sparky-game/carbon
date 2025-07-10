@@ -107,7 +107,7 @@ namespace pong {
     Ball m_Ball;
     Racket m_Racket_1;
     Racket m_Racket_2;
-    bool m_Started {false};
+    bool m_Playing {false};
     bool m_StartScreen {true};
     bool m_PlayingMusic {false};
     cbn::audio::UID m_Sound_Music;
@@ -118,7 +118,7 @@ namespace pong {
     u8 m_Score_P2 {0};
 
     void Update(const f64 dt) {
-      if (!m_Started) {
+      if (!m_Playing) {
         Update_PlayerWinner();
         Update_ServeBall();
       }
@@ -141,7 +141,7 @@ namespace pong {
     void Update_ServeBall(void) {
       if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
         if (m_StartScreen) m_Score_P1 = m_Score_P2 = 0;
-        m_Started = true;
+        m_Playing = true;
         m_StartScreen = false;
         cbn::audio::StopSound(m_Sound_Music);
         cbn::audio::PlaySound(m_Sound_Serve);
@@ -160,7 +160,7 @@ namespace pong {
                           c_StartMsgFontSize,
                           c_StartMsgFontColor);
       }
-      if (m_Started) m_Ball.Render(m_Canvas);
+      if (m_Playing) m_Ball.Render(m_Canvas);
       cbn::win::Update(m_Canvas);
     }
 
@@ -178,12 +178,12 @@ namespace pong {
 
     void Update_BallCollideWalls(void) {
       if (m_Ball.position.x < 0) {
-        m_Started = false;
+        m_Playing = false;
         m_Ball = Ball{};
         ++m_Score_P2;
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
-        m_Started = false;
+        m_Playing = false;
         m_Ball = Ball{};
         ++m_Score_P1;
       }
