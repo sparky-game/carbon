@@ -172,7 +172,12 @@ __attribute__((constructor)) CARBON_INLINE void carbon_coroutine__init(void) {
   carbon_coroutine__dead   = carbon_list_create(sizeof(usz));
   carbon_coroutine__ctxs   = carbon_list_create(sizeof(CBN_Coroutine_CTX));
   carbon_coroutine__asleep = carbon_list_create(sizeof(usz));
+#ifdef _WIN32
+  CBN_WARN("Polling not implemented for Windows");
+  carbon_coroutine__polls  = carbon_list_create(sizeof(char));
+#else
   carbon_coroutine__polls  = carbon_list_create(sizeof(struct pollfd));
+#endif
   CBN_Coroutine_CTX ctx = {0, 0};
   usz i = 0;
   carbon_list_push(&carbon_coroutine__ctxs, &ctx);
@@ -199,6 +204,10 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     ++carbon_coroutine__current;
     break;
   case CBN_COROUTINE_SLEEP_MODE_READ: {
+#ifdef _WIN32
+    CBN_WARN("Polling not implemented for Windows");
+    CARBON_UNUSED(fd);
+#else
     carbon_list_push(&carbon_coroutine__asleep, &current_active_item);
     struct pollfd pfd = {
       .fd = fd,
@@ -207,9 +216,14 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     };
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
+#endif
     break;
   }
   case CBN_COROUTINE_SLEEP_MODE_WRITE: {
+#ifdef _WIN32
+    CBN_WARN("Polling not implemented for Windows");
+    CARBON_UNUSED(fd);
+#else
     carbon_list_push(&carbon_coroutine__asleep, &current_active_item);
     struct pollfd pfd = {
       .fd = fd,
@@ -218,11 +232,15 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
     };
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
+#endif
     break;
   }
   default: CARBON_UNREACHABLE;
   }
   if (carbon_coroutine__polls.size) {
+#ifdef _WIN32
+    CBN_WARN("Polling not implemented for Windows");
+#else
     i32 timeout = carbon_coroutine__active.size ? 0 : -1;
     i32 result = poll((struct pollfd *) carbon_coroutine__polls.items, carbon_coroutine__polls.size, timeout);
     // TODO: handle error if `poll` call returned -1
@@ -236,6 +254,7 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
       }
       else ++i;
     }
+#endif
   }
   CBN_ASSERT(carbon_coroutine__active.size);
   carbon_coroutine__current %= carbon_coroutine__active.size;
@@ -250,6 +269,9 @@ CARBON_INLINE void carbon_coroutine__finish_current(void) {
   carbon_list_push(&carbon_coroutine__dead, &current_active_item);
   carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
   if (carbon_coroutine__polls.size) {
+#ifdef _WIN32
+    CBN_WARN("Polling not implemented for Windows");
+#else
     i32 timeout = carbon_coroutine__active.size ? 0 : -1;
     i32 result = poll((struct pollfd *) carbon_coroutine__polls.items, carbon_coroutine__polls.size, timeout);
     // TODO: handle error if `poll` call returned -1
@@ -263,6 +285,7 @@ CARBON_INLINE void carbon_coroutine__finish_current(void) {
       }
       else ++i;
     }
+#endif
   }
   CBN_ASSERT(carbon_coroutine__active.size);
   carbon_coroutine__current %= carbon_coroutine__active.size;
