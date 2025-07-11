@@ -268,9 +268,9 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   } while (FindNextFile(h_find, &find_data));
   FindClose(h_find);
   out.count = counts[i];
+  out.files = results[i];
   ++i;
   if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
-  out.files = results[i];
   return out;
 #else
   static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS];
