@@ -29,6 +29,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>
 #include <windows.h>
+#include <windns.h>
 // POSIX
 #else
 #include <glob.h>
