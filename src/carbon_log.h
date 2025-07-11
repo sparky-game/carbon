@@ -32,10 +32,13 @@ struct CBN_Log_Color {
 #define CBN_ERROR(msg, ...) carbon_ceprintln(CARBON_COLOR_RED, carbon_string_fmt("[!] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
 
 #ifndef __cplusplus
+#ifdef _WIN32
+#define carbon_log__var_to_spec__platform_t
+#else
+#define carbon_log__var_to_spec__platform_t usz: "%zu", isz: "%zd",
+#endif
 #define carbon_log__var_to_spec(x)              \
   _Generic((x),                                 \
-           usz:          "%zu",                 \
-           isz:          "%zd",                 \
            u8:           "%hhu",                \
            i8:           "%hhd",                \
            u16:          "%hu",                 \
@@ -44,6 +47,7 @@ struct CBN_Log_Color {
            i32:          "%d",                  \
            u64:          "%llu",                \
            i64:          "%lld",                \
+           carbon_log__var_to_spec__platform_t  \
            f32:          "%f",                  \
            f64:          "%lf",                 \
            char:         "%c",                  \
@@ -52,10 +56,8 @@ struct CBN_Log_Color {
            default:      "<'Stuff' At %p>")
 #else
 template <typename T>
-constexpr auto carbon_log__var_to_spec(T) {
-  if constexpr      (CARBON_TYPE_IS_SAME(T, usz))          return "%zu";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, isz))          return "%zd";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, u8))           return "%hhu";
+consteval auto carbon_log__var_to_spec(T) {
+  if constexpr      (CARBON_TYPE_IS_SAME(T, u8))           return "%hhu";
   else if constexpr (CARBON_TYPE_IS_SAME(T, i8))           return "%hhd";
   else if constexpr (CARBON_TYPE_IS_SAME(T, u16))          return "%hu";
   else if constexpr (CARBON_TYPE_IS_SAME(T, i16))          return "%hd";
@@ -63,6 +65,10 @@ constexpr auto carbon_log__var_to_spec(T) {
   else if constexpr (CARBON_TYPE_IS_SAME(T, i32))          return "%d";
   else if constexpr (CARBON_TYPE_IS_SAME(T, u64))          return "%llu";
   else if constexpr (CARBON_TYPE_IS_SAME(T, i64))          return "%lld";
+#ifndef _WIN32
+  else if constexpr (CARBON_TYPE_IS_SAME(T, usz))          return "%zu";
+  else if constexpr (CARBON_TYPE_IS_SAME(T, isz))          return "%zd";
+#endif
   else if constexpr (CARBON_TYPE_IS_SAME(T, f32))          return "%f";
   else if constexpr (CARBON_TYPE_IS_SAME(T, f64))          return "%lf";
   else if constexpr (CARBON_TYPE_IS_SAME(T, char))         return "%c";
