@@ -4,6 +4,7 @@
 *.old
 *.tgz
 make
+make.exe
 carbon.h
 carbon-*/
 test/testentry

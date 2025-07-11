@@ -71,13 +71,7 @@ static void exec_cmd(char * const *argv) {
 
 // TODO: migrate this func to the lib itself
 static i32 fork_and_exec_cmd(char * const *argv) {
-#ifndef _WIN32
-  i32 status_code = 0;
-  pid_t child_pid = fork();
-  CBN_ASSERT(child_pid != -1 && "Failed to fork process");
-  if (child_pid == 0) exec_cmd(argv);
-  else waitpid(child_pid, &status_code, 0);
-#else
+#ifdef _WIN32
   CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, argv[0]);
   for (usz i = 1; argv[i]; ++i) {
@@ -94,6 +88,12 @@ static i32 fork_and_exec_cmd(char * const *argv) {
   GetExitCodeProcess(pi.hProcess, &status_code);
   CloseHandle(pi.hProcess);
   CloseHandle(pi.hThread);
+#else
+  i32 status_code = 0;
+  pid_t child_pid = fork();
+  CBN_ASSERT(child_pid != -1 && "Failed to fork process");
+  if (child_pid == 0) exec_cmd(argv);
+  else waitpid(child_pid, &status_code, 0);
 #endif
   return status_code;
 }
