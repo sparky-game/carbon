@@ -154,8 +154,10 @@ u8 carbon_fs_create_directories(const char *path) {
 char *carbon_fs_get_curr_directory(void) {
   static char dir[CARBON_FS_PATH_MAX_LEN];
   carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
+  char sep = '/';
 #ifdef _WIN32
   char *path = _getcwd(dir, CARBON_FS_PATH_MAX_LEN - 1);
+  sep = '\\';
 #else
   char *path = getcwd(dir, CARBON_FS_PATH_MAX_LEN - 1);
 #endif
@@ -164,8 +166,8 @@ char *carbon_fs_get_curr_directory(void) {
     return 0;
   }
   usz len = carbon_string_len(path);
-  if (len && len < CARBON_FS_PATH_MAX_LEN - 1 && path[len - 1] != '/') {
-    path[len] = '/';
+  if (len && len < CARBON_FS_PATH_MAX_LEN - 1 && path[len - 1] != sep) {
+    path[len] = sep;
     path[len + 1] = 0;
   }
   return path;
