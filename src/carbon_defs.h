@@ -107,8 +107,8 @@
 #endif
 
 #if defined(_WIN32) && defined(__MINGW64__)
-#define CARBON_C_COMPILER "x86_64-w64-mingw32-gcc"
-#define CARBON_CXX_COMPILER "x86_64-w64-mingw32-g++"
+#define CARBON_C_COMPILER "gcc.exe"
+#define CARBON_CXX_COMPILER "g++.exe"
 #define CARBON_COMPILER_VERSION __VERSION__
 #elif defined(_WIN32) && defined(_MSC_VER)
 #define CARBON_C_COMPILER "cl.exe"
