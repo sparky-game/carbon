@@ -106,21 +106,21 @@
 #error Target OS is not supported
 #endif
 
-#if defined(__clang__)
+#if defined(_WIN32) && defined(__MINGW64__)
+#define CARBON_C_COMPILER "x86_64-w64-mingw32-gcc"
+#define CARBON_CXX_COMPILER "x86_64-w64-mingw32-g++"
+#define CARBON_COMPILER_VERSION __VERSION__
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_C_COMPILER "cl.exe"
+#define CARBON_CXX_COMPILER "cl.exe"
+#define CARBON_COMPILER_VERSION _MSC_FULL_VER
+#elif defined(__clang__)
 #define CARBON_C_COMPILER "clang"
 #define CARBON_CXX_COMPILER "clang++"
 #define CARBON_COMPILER_VERSION __VERSION__
 #elif defined(__GNUC__)
 #define CARBON_C_COMPILER "gcc"
 #define CARBON_CXX_COMPILER "g++"
-#define CARBON_COMPILER_VERSION __VERSION__
-#elif defined(_WIN32) && defined(_MSC_VER)
-#define CARBON_C_COMPILER "cl.exe"
-#define CARBON_CXX_COMPILER "cl.exe"
-#define CARBON_COMPILER_VERSION _MSC_FULL_VER
-#elif defined(_WIN32) && defined(__MINGW64__)
-#define CARBON_C_COMPILER "x86_64-w64-mingw32-gcc"
-#define CARBON_CXX_COMPILER "x86_64-w64-mingw32-g++"
 #define CARBON_COMPILER_VERSION __VERSION__
 #else
 #warning Unrecognized compiler, using defaults.
