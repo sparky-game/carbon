@@ -20,7 +20,7 @@
 #define CARBON_WIN__DLSYM(lib, name)                    \
   if (!name ## _ptr) {                                  \
     name ## _ptr = (name ## _ptr_t) dlsym(lib, #name);  \
-    CBN_ASSERT(name ## _ptr && "Failed to load");    \
+    CBN_ASSERT(name ## _ptr && "Failed to load");       \
   }
 
 #define RGFW_ALLOC   CBN_MALLOC
@@ -158,7 +158,6 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
   // TODO: use `RGFW_window_initBuffer` instead, so the buffer isn't tied up to the initial window size.
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(carbon_win__handle->r.w, carbon_win__handle->r.h));
   CBN_INFO("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
-
   RGFW_setKeyCallback(carbon_win__key_callback);
 }
 
