@@ -240,11 +240,11 @@ static void build_compile_cxx_files(void) {
 }
 
 static void build_static_lib(void) {
-  CBN_StrBuilder cmd = {0};
   carbon_println("  AR      libcarbon.a");
 #ifndef _WIN32
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
 #else
+  CBN_StrBuilder cmd = {0};
   carbon_strbuilder_add_cstr(&cmd, "ar -rcs " WORKDIR "/libcarbon.a ");
   CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(WORKDIR "/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
