@@ -75,12 +75,18 @@ namespace pong {
       cbn::audio::Init();
       {  // TODO: handle this in an AudioManager or something
         auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
-        auto [sound_serve, sound_p1, sound_p2] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg", "pong.assets.d/p1.ogg", "pong.assets.d/p2.ogg");
-        CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2);
+        auto [sound_serve, sound_p1, sound_p2, sound_goal, sound_win] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg",
+                                                                                               "pong.assets.d/p1.ogg",
+                                                                                               "pong.assets.d/p2.ogg",
+                                                                                               "pong.assets.d/goal.ogg",
+                                                                                               "pong.assets.d/win.ogg");
+        CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2 and sound_goal and sound_win);
         m_Sound_Music = *sound_music;
         m_Sound_Serve = *sound_serve;
         m_Sound_P1 = *sound_p1;
         m_Sound_P2 = *sound_p2;
+        m_Sound_Goal = *sound_goal;
+        m_Sound_Win = *sound_win;
       }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
@@ -114,6 +120,8 @@ namespace pong {
     cbn::audio::UID m_Sound_Serve;
     cbn::audio::UID m_Sound_P1;
     cbn::audio::UID m_Sound_P2;
+    cbn::audio::UID m_Sound_Goal;
+    cbn::audio::UID m_Sound_Win;
     u8 m_Score_P1 {0};
     u8 m_Score_P2 {0};
 
@@ -133,7 +141,10 @@ namespace pong {
     void Update_PlayerWinner(void) {
       if (m_Score_P1 != m_Score_P2 && (m_Score_P1 == c_ScoreToWin || m_Score_P2 == c_ScoreToWin)) {
         m_StartScreen = true;
-        if (!m_PlayingMusic) cbn::audio::PlaySound(m_Sound_Music);
+        if (!m_PlayingMusic) {
+          cbn::audio::PlaySound(m_Sound_Win);
+          cbn::audio::PlaySound(m_Sound_Music);
+        }
         m_PlayingMusic = true;
       }
     }
@@ -143,6 +154,7 @@ namespace pong {
         if (m_StartScreen) m_Score_P1 = m_Score_P2 = 0;
         m_Playing = true;
         m_StartScreen = false;
+        m_PlayingMusic = false;
         cbn::audio::StopSound(m_Sound_Music);
         cbn::audio::PlaySound(m_Sound_Serve);
       }
@@ -176,15 +188,19 @@ namespace pong {
                         c_ForegroundColor);
     }
 
+    void Update_PlayerScoredGoal(void) {
+      m_Playing = false;
+      m_Ball = Ball{};
+      if (m_Score_P1 != c_ScoreToWin && m_Score_P2 != c_ScoreToWin) cbn::audio::PlaySound(m_Sound_Goal);
+    }
+
     void Update_BallCollideWalls(void) {
       if (m_Ball.position.x < 0) {
-        m_Playing = false;
-        m_Ball = Ball{};
+        Update_PlayerScoredGoal();
         ++m_Score_P2;
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
-        m_Playing = false;
-        m_Ball = Ball{};
+        Update_PlayerScoredGoal();
         ++m_Score_P1;
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) m_Ball.velocity.y *= -1;
