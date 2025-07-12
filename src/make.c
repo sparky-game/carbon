@@ -237,7 +237,17 @@ static void build(void) {
     carbon_strbuilder_free(&cmd);
   }
   carbon_println("  AR      libcarbon.a");
+#ifndef _WIN32
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
+#else
+  carbon_strbuilder_add_cstr(&cmd, "ar -rcs " WORKDIR "/libcarbon.a ");
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(WORKDIR "/*.o");
+  carbon_fs_pattern_match_foreach(o_files) {
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
+  }
+  call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+  carbon_strbuilder_free(&cmd);
+#endif
   carbon_println("  LD      libcarbon.so");
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -245,11 +255,20 @@ static void build(void) {
 #else
   carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
+#ifndef _WIN32
   carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
-#ifdef __APPLE__
-  carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+#else
+  carbon_fs_pattern_match_foreach(o_files) {
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
+  }
+  carbon_strbuilder_add_cstr(&cmd, "-shared ");
 #endif
-  carbon_strbuilder_add_cstr(&cmd, " -o " WORKDIR "/libcarbon.so");
+#if defined(__APPLE__)
+  carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+#elif defined (_WIN32)
+  carbon_strbuilder_add_cstr(&cmd, "-ldnsapi -lgdi32 -lntdll ");
+#endif
+  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.so");
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r(WORKDIR "/*.o");
