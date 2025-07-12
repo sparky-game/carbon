@@ -203,14 +203,10 @@ static void test(void) {
   call_cmd(TESTBIN " -n");
 }
 
-static void build(void) {
-  CBN_INFO("Building...");
-  carbon_println("  MKDIR   " WORKDIR);
-  if (!carbon_fs_create_directory(WORKDIR)) CARBON_UNREACHABLE;
-  CBN_PatternMatchedFiles c_files    = carbon_fs_pattern_match("src/carbon_*.c");
-  CBN_PatternMatchedFiles cxx_files  = carbon_fs_pattern_match("src/carbon_*.cc");
+static void build_compile_c_files(void) {
   CBN_StrBuilder cmd = {0};
-  carbon_fs_pattern_match_foreach(c_files) {
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("src/carbon_*.c");
+  carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CC      %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -223,7 +219,12 @@ static void build(void) {
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-  carbon_fs_pattern_match_foreach(cxx_files) {
+}
+
+static void build_compile_cxx_files(void) {
+  CBN_StrBuilder cmd = {0};
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("src/carbon_*.cc");
+  carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXX     %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -236,6 +237,10 @@ static void build(void) {
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
+}
+
+static void build_static_lib(void) {
+  CBN_StrBuilder cmd = {0};
   carbon_println("  AR      libcarbon.a");
 #ifndef _WIN32
   call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
@@ -248,6 +253,10 @@ static void build(void) {
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
 #endif
+}
+
+static void build_shared_lib(void) {
+  CBN_StrBuilder cmd = {0};
 #ifdef _WIN32
   carbon_println("  LD      libcarbon.dll");
 #else
@@ -262,6 +271,7 @@ static void build(void) {
 #ifndef _WIN32
   carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
 #else
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(WORKDIR "/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
   }
@@ -279,6 +289,16 @@ static void build(void) {
 #endif
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
+}
+
+static void build(void) {
+  CBN_INFO("Building...");
+  carbon_println("  MKDIR   " WORKDIR);
+  if (!carbon_fs_create_directory(WORKDIR)) CARBON_UNREACHABLE;
+  build_compile_c_files();
+  build_compile_cxx_files();
+  build_static_lib();
+  build_shared_lib();
   rm_dash_r(WORKDIR "/*.o");
 }
 
