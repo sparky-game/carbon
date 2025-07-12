@@ -127,8 +127,8 @@ static void clean(void) {
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
   rm_dash_r("examples/*.png");
-  rm_dash_r("carbon-*/");
-  rm_dash_r("carbon-*.tgz");
+  rm_dash_r(WORKDIR);
+  rm_dash_r(WORKDIR ".tgz");
 }
 
 static void hdrgen(void) {
@@ -275,7 +275,7 @@ static void build_shared_lib(void) {
   carbon_fs_pattern_match_foreach(o_files) {
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
   }
-  carbon_strbuilder_add_cstr(&cmd, "-shared ");
+  carbon_strbuilder_add_cstr(&cmd, "-shared -static ");
 #endif
 #if defined(__APPLE__)
   carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
@@ -396,7 +396,9 @@ int main(int argc, char **argv) {
     }
     if (!carbon_string_cmp(subcmd, "mrproper")) {
       clean();
+#ifndef _WIN32
       rm_dash_r(program_name);
+#endif
       return 0;
     }
     if (!carbon_string_cmp(subcmd, "build")) {
