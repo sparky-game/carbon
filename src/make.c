@@ -248,7 +248,11 @@ static void build(void) {
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
 #endif
+#ifdef _WIN32
+  carbon_println("  LD      libcarbon.dll");
+#else
   carbon_println("  LD      libcarbon.so");
+#endif
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
   carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
@@ -268,7 +272,11 @@ static void build(void) {
 #elif defined (_WIN32)
   carbon_strbuilder_add_cstr(&cmd, "-ldnsapi -lgdi32 -lntdll ");
 #endif
+#ifdef _WIN32
+  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.dll");
+#else
   carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.so");
+#endif
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
   rm_dash_r(WORKDIR "/*.o");
@@ -327,7 +335,9 @@ static void package(void) {
 
 int main(int argc, char **argv) {
   CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
+#ifndef _WIN32
   bootstrap(argv, false);
+#endif
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   CBN_INFO(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
