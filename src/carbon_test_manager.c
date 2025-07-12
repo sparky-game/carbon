@@ -50,6 +50,10 @@ void carbon_test_manager_argparse(i32 argc, char * const *argv) {
 }
 
 void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) {
+#ifdef _WIN32
+  // TODO: consider what to do regarding rebuilding this whole thing...
+  CARBON_UNUSED(src_file), CARBON_UNUSED(host_argv);
+#else
   const char *bin_file = host_argv[0];
   if (strstr(bin_file, ".old")) return;
   carbon_test_manager__test_suite.files = carbon_strlist_create(true);
@@ -111,6 +115,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
     CBN_ERROR("unable to execvp rebuilt binary");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
+#endif
 }
 
 CBN_Suite carbon_test_manager_spawn(void) {
