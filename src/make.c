@@ -27,6 +27,8 @@
 #define LIBS "-framework CoreFoundation -lobjc "
 #elif defined (_WIN32)
 #define LIBS "-ldnsapi -lgdi32 -lntdll -static "
+#else
+#define LIBS ""
 #endif
 
 static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
