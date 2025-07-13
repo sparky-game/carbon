@@ -23,6 +23,12 @@
 #define CXX_STD "-std=c++20"
 #define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
+#if defined(__APPLE__)
+#define LIBS "-framework CoreFoundation -lobjc "
+#elif defined (_WIN32)
+#define LIBS "-ldnsapi -lgdi32 -lntdll -static "
+#endif
+
 static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "\n"
   "Flags:\n"
@@ -232,13 +238,9 @@ static void build_shared_lib(void) {
   carbon_fs_pattern_match_foreach(o_files) {
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
   }
-  carbon_strbuilder_add_cstr(&cmd, "-shared -static ");
+  carbon_strbuilder_add_cstr(&cmd, "-shared ");
 #endif
-#if defined(__APPLE__)
-  carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
-#elif defined (_WIN32)
-  carbon_strbuilder_add_cstr(&cmd, "-ldnsapi -lgdi32 -lntdll ");
-#endif
+  carbon_strbuilder_add_cstr(&cmd, LIBS);
 #ifdef _WIN32
   carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.dll");
 #else
@@ -333,12 +335,10 @@ static void test(void) {
   call_cmd(TESTBIN " -n");
 }
 
-static void examples(void) {
-  CBN_INFO("Building examples...");
-  CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("examples/*.c");
-  CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("examples/*.cc");
+static void examples_c_files(void) {
   CBN_StrBuilder cmd = {0};
-  carbon_fs_pattern_match_foreach(c_files) {
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.c");
+  carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CCLD    %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -346,17 +346,25 @@ static void examples(void) {
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, it.f);
+    carbon_string_strip_substr(it.f, "examples/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
     carbon_string_strip_substr(it.f, ".c");
-    carbon_strbuilder_add_cstr(&cmd, " " WORKDIR "/libcarbon.a ");
-#ifdef __APPLE__
-    carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+    carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a ");
+    carbon_strbuilder_add_cstr(&cmd, LIBS);
+#ifdef _WIN32
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s", it.f));
+#else
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s.bin", it.f));
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
-  carbon_fs_pattern_match_foreach(cxx_files) {
+}
+
+static void examples_cxx_files(void) {
+  CBN_StrBuilder cmd = {0};
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.cc");
+  carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXXLD   %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
 #ifdef CARBON_MAKE_USE_SANITIZERS
@@ -364,16 +372,25 @@ static void examples(void) {
 #else
     carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
 #endif
-    carbon_strbuilder_add_cstr(&cmd, it.f);
+    carbon_string_strip_substr(it.f, "examples/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
     carbon_string_strip_substr(it.f, ".cc");
-    carbon_strbuilder_add_cstr(&cmd, " " WORKDIR "/libcarbon.a ");
-#ifdef __APPLE__
-    carbon_strbuilder_add_cstr(&cmd, "-framework CoreFoundation -lobjc ");
+    carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a ");
+    carbon_strbuilder_add_cstr(&cmd, LIBS);
+#ifdef _WIN32
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s", it.f));
+#else
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s.bin", it.f));
 #endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
+}
+
+static void examples(void) {
+  CBN_INFO("Building examples...");
+  examples_c_files();
+  examples_cxx_files();
 }
 
 static void package(void) {
