@@ -160,50 +160,6 @@ static void hdrgen(void) {
   carbon_strbuilder_free(&hdr);
 }
 
-static void test(void) {
-  CBN_INFO("Running tests...");
-  CBN_PatternMatchedFiles c_files = carbon_fs_pattern_match("test/*.c");
-  CBN_PatternMatchedFiles cxx_files = carbon_fs_pattern_match("test/*.cc");
-  CBN_StrBuilder cmd = {0};
-  carbon_fs_pattern_match_foreach(c_files) {
-    carbon_println("  CC      %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s -o %s.o", it.f, it.f));
-    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
-    carbon_strbuilder_free(&cmd);
-  }
-  carbon_fs_pattern_match_foreach(cxx_files) {
-    carbon_println("  CXX     %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c %s -o %s.o", it.f, it.f));
-    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
-    carbon_strbuilder_free(&cmd);
-  }
-  carbon_println("  LD      " TESTBIN);
-  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-  carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
-  carbon_strbuilder_add_cstr(&cmd, "test/*.o " WORKDIR "/libcarbon.a -o " TESTBIN);
-  call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
-  carbon_strbuilder_free(&cmd);
-  rm_dash_r("test/*.o");
-  carbon_println("+ " TESTBIN " -n");
-  call_cmd(TESTBIN " -n");
-}
-
 static void build_compile_c_files(void) {
   CBN_StrBuilder cmd = {0};
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("src/carbon_*.c");
@@ -300,7 +256,81 @@ static void build(void) {
   build_compile_cxx_files();
   build_static_lib();
   build_shared_lib();
+#ifndef _WIN32
+  // TODO: make this work on Windows (MinGW)...
   rm_dash_r(WORKDIR "/*.o");
+#endif
+}
+
+static void test_compile_c_files(void) {
+  CBN_StrBuilder cmd = {0};
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("test/*.c");
+  carbon_fs_pattern_match_foreach(files) {
+    carbon_println("  CC      %s", it.f);
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+    carbon_string_strip_substr(it.f, "test/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c test/%s -o test/%s.o", it.f, it.f));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
+  }
+}
+
+static void test_compile_cxx_files(void) {
+  CBN_StrBuilder cmd = {0};
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("test/*.cc");
+  carbon_fs_pattern_match_foreach(files) {
+    carbon_println("  CXX     %s", it.f);
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
+#else
+    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+    carbon_string_strip_substr(it.f, "test/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c test/%s -o test/%s.o", it.f, it.f));
+    call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+    carbon_strbuilder_free(&cmd);
+  }
+}
+
+static void test_link(void) {
+  CBN_StrBuilder cmd = {0};
+  carbon_println("  LD      " TESTBIN);
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
+#ifdef CARBON_MAKE_USE_SANITIZERS
+  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
+#else
+  carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
+#endif
+#ifdef _WIN32
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match("test/*.o");
+  carbon_fs_pattern_match_foreach(o_files) {
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("test/%s ", it.f));
+  }
+  carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a -static -o " TESTBIN);
+#else
+  carbon_strbuilder_add_cstr(&cmd, "test/*.o " WORKDIR "/libcarbon.a -o " TESTBIN);
+#endif
+  call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
+  carbon_strbuilder_free(&cmd);
+}
+
+static void test(void) {
+  CBN_INFO("Running tests...");
+  test_compile_c_files();
+  test_compile_cxx_files();
+  test_link();
+#ifndef _WIN32
+  // TODO: make this work on Windows (MinGW)...
+  rm_dash_r("test/*.o");
+#endif
+  carbon_println("+ " TESTBIN " -n");
+  call_cmd(TESTBIN " -n");
 }
 
 static void examples(void) {

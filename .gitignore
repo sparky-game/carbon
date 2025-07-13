@@ -8,12 +8,9 @@ make.exe
 carbon.h
 carbon-*/
 test/testentry
+test/testentry.exe
 examples/*
 !examples/*.c
 !examples/*.cc
 !examples/README.org
 !examples/pong.assets.d/
-
-testgen/build/
-testgen/build/testgen
-testgen/*.diff
