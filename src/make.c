@@ -21,7 +21,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
-#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage"
+#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "\n"
@@ -123,6 +123,7 @@ static void bootstrap(char * const *host_argv, u8 force) {
 static void clean(void) {
   rm_dash_r(HDRFILE);
   rm_dash_r(TESTBIN);
+  rm_dash_r(TESTBIN ".exe");
   rm_dash_r("test/*.o");
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
