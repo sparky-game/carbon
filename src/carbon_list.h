@@ -58,6 +58,10 @@ CARBON_TEMPLATE_CLASS(CBN_List_t) {
    */
   void Remove(usz idx);
   /**
+   * @brief carbon_list_shrink_to_fit
+   */
+  void ShrinkToFit(void);
+  /**
    * @brief Returns an iterator to the beginning.
    * @return The iterator.
    */
@@ -125,6 +129,12 @@ CARBON_API isz carbon_list_find(const CBN_List *l, const void *value);
  */
 CARBON_API void carbon_list_remove(CBN_List *l, usz idx);
 
+/**
+ * @brief Performs a non-binding request to remove the unused capacity, by reducing capacity to size.
+ * @param l The list container.
+ */
+CARBON_API void carbon_list_shrink_to_fit(CBN_List *l);
+
 // Because `CBN_List_t` is a templated class/struct, the definitions of all its
 // member functions need to be available at compile-time, not link-time; thus,
 // we define them here for the template instantiation to work properly.
@@ -173,6 +183,13 @@ isz CBN_List_t<T>::Find(const value_type &value) const {
 template <typename T>
 void CBN_List_t<T>::Remove(usz idx) {
   carbon_list_remove((CBN_List *) this, idx);
+}
+/**
+ * @brief CBN_List_t<T>.ShrinkToFit
+ */
+template <typename T>
+void CBN_List_t<T>::ShrinkToFit(void) {
+  carbon_list_shrink_to_fit((CBN_List *) this);
 }
 /**
  * @brief CBN_List_t<T>.begin

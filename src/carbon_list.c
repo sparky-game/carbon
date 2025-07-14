@@ -50,11 +50,6 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
   }
   carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
   --l->size;
-  if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= CARBON_LIST__RESIZE_FACTOR;
-    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
-    CBN_ASSERT(l->items && "failed to reallocate memory");
-  }
 }
 
 isz carbon_list_find(const CBN_List *l, const void *value) {
@@ -78,14 +73,15 @@ void carbon_list_remove(CBN_List *l, usz idx) {
     CBN_ERROR("idx out of bounds (size: %$, idx: %$)", $(l->size), $(idx));
     return;
   }
-  if (idx < l->size - 1) {
-    void *dst = (void *) ((u64) l->items + (idx * l->stride));
-    void *src = (void *) ((u64) l->items + ((idx + 1) * l->stride));
-    memmove(dst, src, (l->size - idx - 1) * l->stride);
-  }
+  void *dst = (void *) ((u64) l->items + (idx * l->stride));
+  void *src = (void *) ((u64) l->items + ((idx + 1) * l->stride));
+  memmove(dst, src, (l->size - idx - 1) * l->stride);
   --l->size;
+}
+
+void carbon_list_shrink_to_fit(CBN_List *l) {
   if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= CARBON_LIST__RESIZE_FACTOR;
+    l->capacity = l->size;
     l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
     CBN_ASSERT(l->items && "failed to reallocate memory");
   }
