@@ -7,10 +7,10 @@
 
 TEST(create_destroy) {
   CBN_List l = carbon_list_create(sizeof(i32));
-  carbon_should_be(1, l.capacity);
+  carbon_should_be(0, l.capacity);
   carbon_should_be(sizeof(i32), l.stride);
   carbon_should_be(0, l.size);
-  carbon_should_not_be_p(0, l.items);
+  carbon_should_be_p(0, l.items);
   carbon_list_destroy(&l);
   carbon_should_be(0, l.capacity);
   carbon_should_be(0, l.stride);

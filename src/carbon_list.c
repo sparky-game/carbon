@@ -3,14 +3,13 @@
 
 #include "carbon.inc"
 
-#define CARBON_LIST_RESIZE_FACTOR 2
+#define CARBON_LIST__RESIZE_FACTOR 2
+#define CARBON_LIST__FIRST_ALLOC_CAPACITY 2
 
 CBN_List carbon_list_create(usz stride) {
-  void *ptr = CBN_MALLOC(stride);
-  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_List) {
-    .items = ptr,
-    .capacity = 1,
+    .items = 0,
+    .capacity = 0,
     .stride = stride,
     .size = 0
   };
@@ -31,7 +30,8 @@ void carbon_list_push(CBN_List *l, void *value) {
     return;
   }
   if (l->size == l->capacity) {
-    l->capacity *= CARBON_LIST_RESIZE_FACTOR;
+    if (!l->capacity) l->capacity = CARBON_LIST__FIRST_ALLOC_CAPACITY;
+    else l->capacity *= CARBON_LIST__RESIZE_FACTOR;
     l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
     CBN_ASSERT(l->items && "failed to reallocate memory");
   }
@@ -51,7 +51,7 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
   carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
   --l->size;
   if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= CARBON_LIST_RESIZE_FACTOR;
+    l->capacity /= CARBON_LIST__RESIZE_FACTOR;
     l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
     CBN_ASSERT(l->items && "failed to reallocate memory");
   }
@@ -85,7 +85,7 @@ void carbon_list_remove(CBN_List *l, usz idx) {
   }
   --l->size;
   if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= CARBON_LIST_RESIZE_FACTOR;
+    l->capacity /= CARBON_LIST__RESIZE_FACTOR;
     l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
     CBN_ASSERT(l->items && "failed to reallocate memory");
   }

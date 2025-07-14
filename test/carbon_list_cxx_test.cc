@@ -7,10 +7,10 @@
 
 TEST(make_free) {
   auto l = cbn::List<i32>::make();
-  carbon_should_be(1, l.capacity);
+  carbon_should_be(0, l.capacity);
   carbon_should_be(sizeof(decltype(l)::value_type), l.stride);
   carbon_should_be(0, l.size);
-  carbon_should_not_be_p(0, l.items);
+  carbon_should_be_p(0, l.items);
   l.Free();
   carbon_should_be(0, l.capacity);
   carbon_should_be(0, l.stride);
