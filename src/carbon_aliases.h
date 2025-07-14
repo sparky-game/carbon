@@ -161,6 +161,7 @@ namespace cbn {
     const auto Update       = carbon_win_update;
     const auto ShouldClose  = carbon_win_shouldclose;
     const auto GetKeyDown   = carbon_win_get_key_down;
+    const auto GetKey       = carbon_win_get_key;
     const auto GetKeyUp     = carbon_win_get_key_up;
     template <typename T>
     auto ForFrame(T &&callback) {

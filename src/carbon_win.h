@@ -76,9 +76,16 @@ void carbon_win_forframe(T &&callback) {
 /**
  * @brief Returns true during the frame the user starts pressing down the specified key.
  * @param key The KeyCode to evaluate.
- * @return A boolean value representing whether the key is being pressed or not.
+ * @return A boolean value representing whether the key was pressed or not.
  */
 CARBON_API u8 carbon_win_get_key_down(const CBN_KeyCode key);
+
+/**
+ * @brief Returns true while the user holds down the specified key.
+ * @param key The KeyCode to evaluate.
+ * @return A boolean value representing whether the key is being pressed or not.
+ */
+CARBON_API u8 carbon_win_get_key(const CBN_KeyCode key);
 
 /**
  * @brief Returns true during the frame the user releases the specified key.

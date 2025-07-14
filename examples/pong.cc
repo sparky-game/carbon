@@ -235,8 +235,8 @@ namespace pong {
     }
 
     void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
-      if (cbn::win::GetKeyDown(up))   r.position.y -= r.velocity.y * dt;
-      if (cbn::win::GetKeyDown(down)) r.position.y += r.velocity.y * dt;
+      if (cbn::win::GetKey(up))   r.position.y -= r.velocity.y * dt;
+      if (cbn::win::GetKey(down)) r.position.y += r.velocity.y * dt;
       cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
     }
   };

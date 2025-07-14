@@ -220,6 +220,10 @@ u8 carbon_win_shouldclose(void) {
 }
 
 u8 carbon_win_get_key_down(const CBN_KeyCode key) {
+  return carbon_win__keys[carbon_win__map_keycodes(key)] && !carbon_win__prev_keys[carbon_win__map_keycodes(key)];
+}
+
+u8 carbon_win_get_key(const CBN_KeyCode key) {
   return carbon_win__keys[carbon_win__map_keycodes(key)];
 }
 
