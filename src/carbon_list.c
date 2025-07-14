@@ -3,6 +3,8 @@
 
 #include "carbon.inc"
 
+#define CARBON_LIST_RESIZE_FACTOR 2
+
 CBN_List carbon_list_create(usz stride) {
   void *ptr = CBN_MALLOC(stride);
   CBN_ASSERT(ptr && "failed to allocate memory");
@@ -29,15 +31,9 @@ void carbon_list_push(CBN_List *l, void *value) {
     return;
   }
   if (l->size == l->capacity) {
-    l->capacity *= 2;
-    void *prev_p = l->items;
-    usz size = l->capacity * l->stride;
-    l->items = CBN_REALLOC(l->items, size);
-    if (!l->items) {
-      CBN_ERROR("failed to reallocate memory (%zuB)", size);
-      CBN_FREE(prev_p);
-      return;
-    }
+    l->capacity *= CARBON_LIST_RESIZE_FACTOR;
+    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
+    CBN_ASSERT(l->items && "failed to reallocate memory");
   }
   carbon_memory_copy((void *) ((u64) l->items + (l->size * l->stride)), value, l->stride);
   ++l->size;
@@ -55,15 +51,9 @@ void carbon_list_pop(CBN_List *l, void *out_value) {
   carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
   --l->size;
   if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= 2;
-    void *prev_p = l->items;
-    usz size = l->capacity * l->stride;
-    l->items = CBN_REALLOC(l->items, size);
-    if (!l->items && l->size > 0) {
-      CBN_ERROR("failed to reallocate memory (%zuB)", size);
-      CBN_FREE(prev_p);
-      return;
-    }
+    l->capacity /= CARBON_LIST_RESIZE_FACTOR;
+    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
+    CBN_ASSERT(l->items && "failed to reallocate memory");
   }
 }
 
@@ -95,14 +85,8 @@ void carbon_list_remove(CBN_List *l, usz idx) {
   }
   --l->size;
   if (l->size > 0 && l->size < l->capacity / 4) {
-    l->capacity /= 2;
-    void *prev_p = l->items;
-    usz size = l->capacity * l->stride;
-    l->items = CBN_REALLOC(l->items, size);
-    if (!l->items && l->size > 0) {
-      CBN_ERROR("failed to reallocate memory (%zuB)", size);
-      CBN_FREE(prev_p);
-      return;
-    }
+    l->capacity /= CARBON_LIST_RESIZE_FACTOR;
+    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
+    CBN_ASSERT(l->items && "failed to reallocate memory");
   }
 }
