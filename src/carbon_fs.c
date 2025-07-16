@@ -242,8 +242,15 @@ char *carbon_fs_get_bin_directory(void) {
 }
 
 char *carbon_fs_get_directory(const char *path) {
-  extern char *dirname(const char *);
-  return dirname(path);
+  static char dir[CARBON_FS_PATH_MAX_LEN];
+  if (!path || !*path) return ".";
+  usz i = carbon_string_len(path) - 1;
+  for (; path[i] == '/'; i--) if (!i) return "/";
+  for (; path[i] != '/'; i--) if (!i) return ".";
+  for (; path[i] == '/'; i--) if (!i) return "/";
+  carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
+  carbon_memory_copy(dir, path, i + 1);
+  return dir;
 }
 
 CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
