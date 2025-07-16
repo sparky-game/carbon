@@ -174,6 +174,10 @@ void carbon_win_set_max_fps(u32 fps) {
 }
 
 void carbon_win_set_icon(CBN_Image img) {
+  if (!img.data) {
+    CBN_ERROR("`img` is not valid");
+    return;
+  }
   carbon_win__icon = img;
   RGFW_bool status = RGFW_window_setIcon(carbon_win__handle,
                                          carbon_win__icon.data,

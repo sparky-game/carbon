@@ -13,4 +13,4 @@ examples/*
 !examples/*.c
 !examples/*.cc
 !examples/README.org
-!examples/pong.assets.d/
+!examples/pong.d/

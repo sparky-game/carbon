@@ -34,7 +34,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
     line[strcspn(line, "\r")] = 0;
     line[strcspn(line, "\n")] = 0;
     CBN_SKAP_AssetGroup ag;
-    carbon_println("%s", line);  // DEBUG
+    // carbon_println("%s", line);  // DEBUG
     // Empty or commented line
     if (line[0] == 0 || (line[0] == '/' && line[1] == '/')) {
       ++line_n;
@@ -96,7 +96,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       ag.assets = carbon_strlist_create(true);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = true;
-      carbon_println("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);  // DEBUG
+      // carbon_println("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);  // DEBUG
     }
     // New asset in previous group
     else {
@@ -108,15 +108,17 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       carbon_strlist_push(&ag.assets, line);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = false;
-      carbon_println("  -> Asset: `%s`", line);  // DEBUG
+      // carbon_println("  -> Asset: `%s`", line);  // DEBUG
     }
     ++line_n;
   }
   return true;
 }
 
-CARBON_INLINE u8 carbon_skap__check_decl_assets(CBN_List *asset_groups) {
-  // TODO: cd to the dir which holds the decl file (e.g. `assets.txt`)
+CARBON_INLINE u8 carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_groups) {
+  // cd to the dir which holds the decl file (e.g. `assets.txt`)
+  const char *cwd = carbon_fs_get_curr_directory();
+  CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
   u8 status = true;
   carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
     CBN_SKAP_AssetGroup ag = it.var;
@@ -128,14 +130,15 @@ CARBON_INLINE u8 carbon_skap__check_decl_assets(CBN_List *asset_groups) {
       }
     }
   }
+  CBN_ASSERT(carbon_fs_change_directory(cwd));
   return status;
 }
 
 CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
-  CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
+  // CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
   if (asset_groups->size) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
+      // CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
       carbon_strlist_destroy(&it.var.assets);
     }
   }
@@ -185,12 +188,14 @@ CARBON_INLINE void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_g
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, CBN_List *asset_groups) {
+CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
       CBN_SKAP_AssetGroup ag = it.var;
       if (carbon_string_cmp(ag.type, carbon_skap__allowed_types[i])) continue;
       carbon_strlist_foreach(ag.assets) {
+        const char *cwd = carbon_fs_get_curr_directory();
+        CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
         const char *asset_name = carbon_string_fmt("%s%s", ag.path, carbon_strview_to_cstr(it.sv));
         CBN_SKAP_AssetIdx idx;
         carbon_memory_set(&idx, 0, sizeof(idx));
@@ -209,6 +214,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, CBN_List *asset_groups) {
         carbon_list_push(&carbon_skap__asset_idxs[i], &idx);
         usz idx_loc = ftell(fd);
         carbon_list_push(&carbon_skap__asset_idx_locs[i], &idx_loc);
+        CBN_ASSERT(carbon_fs_change_directory(cwd));
         fwrite(&idx, sizeof(idx), 1, fd);
       }
     }
@@ -251,7 +257,7 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
     return false;
   }
   fclose(decl_fd);
-  if (!carbon_skap__check_decl_assets(&asset_groups)) {
+  if (!carbon_skap__check_decl_assets(decl, &asset_groups)) {
     CBN_ERROR("SKAP declarations file (`%s`) has semantic errors and can't be interpreted correctly", decl);
     carbon_skap__destroy_asset_groups(&asset_groups);
     return false;
@@ -262,7 +268,7 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
   FILE *skap_fd = fopen(skap, "wb");
   carbon_skap__append_header(skap_fd);
   carbon_skap__append_type_counters(skap_fd, &asset_groups);
-  carbon_skap__append_idxs(skap_fd, &asset_groups);
+  carbon_skap__append_idxs(skap_fd, decl, &asset_groups);
   carbon_skap__append_blobs(skap_fd);
   fclose(skap_fd);
   // End
@@ -301,16 +307,16 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
     for (usz j = 0; j < out_handle->type_counters[i]; ++j) {
       CBN_SKAP_AssetIdx idx;
       fread(&idx, sizeof(idx), 1, out_handle->fd);
-      CBN_DEBUG("----------------------------------------");
-      CBN_DEBUG("idx.name = `%s`", idx.name);
-      CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
-      CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
-      CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
-      CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
-      CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
-      CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
-      CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
-      CBN_DEBUG("----------------------------------------");
+      // CBN_DEBUG("----------------------------------------");
+      // CBN_DEBUG("idx.name = `%s`", idx.name);
+      // CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
+      // CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
+      // CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
+      // CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
+      // CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
+      // CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
+      // CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
+      // CBN_DEBUG("----------------------------------------");
       carbon_hashmap_set(&out_handle->idxs[i], idx.name, &idx);
     }
   }

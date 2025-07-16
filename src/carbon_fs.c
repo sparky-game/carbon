@@ -241,6 +241,11 @@ char *carbon_fs_get_bin_directory(void) {
   return dir;
 }
 
+char *carbon_fs_get_directory(const char *path) {
+  extern char *dirname(const char *);
+  return dirname(path);
+}
+
 CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   static usz i = 0;
   CBN_PatternMatchedFiles out;

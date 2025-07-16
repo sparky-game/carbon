@@ -14,6 +14,9 @@
 #include "carbon_strview.c"
 #include "carbon_strlist.c"
 #include "carbon_fs.c"
+#include "carbon_skap.c"
+#include "carbon_crypto.c"
+#include "carbon_hashmap.c"
 
 #define HDRFILE "carbon.h"
 #define TESTBIN "./test/testentry"
@@ -52,6 +55,14 @@ static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
   "%s homepage: <https://github.com/sparky-game/carbon>\n";
+
+static const char * const version_msg = "%s %s\n"
+  "Copyright (C) Wasym A. Alonso. All Rights Reserved.\n"
+  "License AGPL-3.0-only: <https://www.gnu.org/licenses/agpl-3.0>.\n"
+  "This is free software: you are free to change and redistribute it.\n"
+  "There is NO WARRANTY, to the extent permitted by law.\n"
+  "\n"
+  "Written by Wasym A. Alonso\n";
 
 // TODO: migrate this func to the lib itself
 static void call_cmd(const char *cmd) {
@@ -133,6 +144,7 @@ static void clean(void) {
   rm_dash_r(TESTBIN);
   rm_dash_r(TESTBIN ".exe");
   rm_dash_r("test/*.o");
+  rm_dash_r("examples/*.exe");
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
   rm_dash_r("examples/*.png");
@@ -394,6 +406,9 @@ static void examples(void) {
   CBN_INFO("Building examples...");
   examples_c_files();
   examples_cxx_files();
+  const char *pong_skap = "examples/pong.skap";
+  CBN_INFO("Creating `%$`...", $(pong_skap));
+  CBN_ASSERT(carbon_skap_create("examples/pong.d/assets.txt", pong_skap));
 }
 
 static void package(void) {
@@ -408,9 +423,6 @@ int main(int argc, char **argv) {
   CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
 #ifndef _WIN32
   bootstrap(argv, false);
-#endif
-#ifdef CARBON_MAKE_ALREADY_REBUILT
-  CBN_INFO(CARBON_NAME " " CARBON_VERSION " (" CARBON_COMPILER_VERSION ") " __DATE__ " " __TIME__);
 #endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
   CBN_DEBUG("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
@@ -439,6 +451,10 @@ int main(int argc, char **argv) {
     const char *subcmd = flag;
     if (!carbon_string_cmp(subcmd, "help")) {
       carbon_print(help_msg, program_name, CARBON_NAME);
+      return 0;
+    }
+    if (!carbon_string_cmp(subcmd, "version")) {
+      carbon_print(version_msg, CARBON_NAME, CARBON_VERSION);
       return 0;
     }
     if (!carbon_string_cmp(subcmd, "clean")) {

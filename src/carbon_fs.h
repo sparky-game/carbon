@@ -90,6 +90,9 @@ CARBON_API u8 carbon_fs_create_directory(const char *path);
 CARBON_API u8 carbon_fs_create_directories(const char *path);
 CARBON_API char *carbon_fs_get_curr_directory(void);
 CARBON_API char *carbon_fs_get_bin_directory(void);
+
+CARBON_API char *carbon_fs_get_directory(const char *path);
+
 CARBON_API CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
 CARBON_API u32 carbon_fs_get_file_size(const char *file);
 

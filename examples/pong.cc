@@ -73,13 +73,18 @@ namespace pong {
     {
       CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       cbn::audio::Init();
+      {  // TODO: maybe handle this in a different way
+        auto skap = cbn::SKAP::make("pong.skap");
+        CBN_ASSERT(skap);
+        m_Assets = *skap;
+      }
       {  // TODO: handle this in an AudioManager or something
-        auto sound_music = cbn::audio::LoadSoundStreaming("pong.assets.d/music.ogg");
-        auto [sound_serve, sound_p1, sound_p2, sound_goal, sound_win] = cbn::audio::LoadSounds("pong.assets.d/serve.ogg",
-                                                                                               "pong.assets.d/p1.ogg",
-                                                                                               "pong.assets.d/p2.ogg",
-                                                                                               "pong.assets.d/goal.ogg",
-                                                                                               "pong.assets.d/win.ogg");
+        auto sound_music = cbn::audio::LoadSoundStreaming("pong.d/music.ogg");
+        auto [sound_serve, sound_p1, sound_p2, sound_goal, sound_win] = cbn::audio::LoadSounds("pong.d/serve.ogg",
+                                                                                               "pong.d/p1.ogg",
+                                                                                               "pong.d/p2.ogg",
+                                                                                               "pong.d/goal.ogg",
+                                                                                               "pong.d/win.ogg");
         CBN_ASSERT(sound_music and sound_serve and sound_p1 and sound_p2 and sound_goal and sound_win);
         m_Sound_Music = *sound_music;
         m_Sound_Serve = *sound_serve;
@@ -90,7 +95,11 @@ namespace pong {
       }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
-      cbn::win::SetIcon(cbn::Image::make("pong.assets.d/icon.png"));
+      {  // TODO: maybe handle this in a different way
+        auto icon = m_Assets.Lookup<cbn::Image>("./icon.png");
+        CBN_ASSERT(icon);
+        cbn::win::SetIcon(*icon);
+      }
       cbn::audio::PlaySound(m_Sound_Music);
     }
 
@@ -116,6 +125,7 @@ namespace pong {
     bool m_Playing {false};
     bool m_StartScreen {true};
     bool m_PlayingMusic {false};
+    cbn::SKAP m_Assets;
     cbn::audio::UID m_Sound_Music;
     cbn::audio::UID m_Sound_Serve;
     cbn::audio::UID m_Sound_P1;
