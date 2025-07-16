@@ -4,33 +4,36 @@
 #include <carbon.h>
 
 namespace pong {
-  static constexpr auto c_Name                = "PONG";
-  static constexpr auto c_MaxFPS              = 120;
-  static constexpr auto c_ScreenWidthRatio    = 16;
-  static constexpr auto c_ScreenHeightRatio   = 9;
-  static constexpr auto c_ScreenRatioFactor   = 80;
-  static constexpr auto c_ScreenWidth         = c_ScreenWidthRatio * c_ScreenRatioFactor;
-  static constexpr auto c_ScreenHeight        = c_ScreenHeightRatio * c_ScreenRatioFactor;
-  static constexpr auto c_BallSize            = 32;
-  static constexpr auto c_BallSpeed           = 1000;
-  static constexpr auto c_BallSpeedAdjustment = 400;
-  static constexpr auto c_BallSpeedMin        = c_BallSpeed * 0.9;
-  static constexpr auto c_BallSpeedMax        = c_BallSpeed * 2;
-  static constexpr auto c_RacketPadding       = 100;
-  static constexpr auto c_RacketLength        = 5;
-  static constexpr auto c_RacketHeight        = c_RacketLength * c_BallSize;
-  static constexpr auto c_RacketSpeed         = 1100;
-  static constexpr auto c_MaxReflectionAngle  = cbn::math::ToRadians(75);
-  static constexpr auto c_ScoreToWin          = 11;
-  static constexpr auto c_ScoreFontSize       = 8;
-  static constexpr auto c_ScoreFontPadding    = CARBON_VEC2(100, 50);
-  static constexpr auto c_StartMsgText        = "Press SPACE to start";
-  static constexpr auto c_StartMsgFontSize    = 5;
-  static constexpr auto c_StartMsgFontColor   = 0xffdd33ff;
-  static constexpr auto c_NetThickness        = 4;
-  static constexpr auto c_NetColor            = 0x737373ff;
-  static constexpr auto c_BackgroundColor     = 0x181818ff;
-  static constexpr auto c_ForegroundColor     = 0xdcdcdcff;
+  static constexpr auto c_Name                 = "PONG";
+  static constexpr auto c_MaxFPS               = 120;
+  static constexpr auto c_ScreenWidthRatio     = 16;
+  static constexpr auto c_ScreenHeightRatio    = 9;
+  static constexpr auto c_ScreenRatioFactor    = 80;
+  static constexpr auto c_ScreenWidth          = c_ScreenWidthRatio * c_ScreenRatioFactor;
+  static constexpr auto c_ScreenHeight         = c_ScreenHeightRatio * c_ScreenRatioFactor;
+  static constexpr auto c_BallSize             = 32;
+  static constexpr auto c_BallSpeed            = 1000;
+  static constexpr auto c_BallSpeedAdjustment  = 400;
+  static constexpr auto c_BallSpeedMin         = c_BallSpeed * 0.9;
+  static constexpr auto c_BallSpeedMax         = c_BallSpeed * 2;
+  static constexpr auto c_RacketPadding        = 100;
+  static constexpr auto c_RacketLength         = 5;
+  static constexpr auto c_RacketHeight         = c_RacketLength * c_BallSize;
+  static constexpr auto c_RacketSpeed          = 1100;
+  static constexpr auto c_MaxReflectionAngle   = cbn::math::ToRadians(75);
+  static constexpr auto c_ScoreToWin           = 11;
+  static constexpr auto c_ScoreFontSize        = 8;
+  static constexpr auto c_ScoreFontPadding     = CARBON_VEC2(100, 50);
+  static constexpr auto c_StartMsgText         = "Press SPACE to start";
+  static constexpr auto c_StartMsgFontSize     = 5;
+  static constexpr auto c_StartMsgFontColor    = 0xffdd33ff;
+  static constexpr auto c_HUDDebugTextPosition = CARBON_VEC2_1(10);
+  static constexpr auto c_HUDDebugFontSize     = 2;
+  static constexpr auto c_HUDDebugFontColor    = 0x737373ff;
+  static constexpr auto c_NetThickness         = 4;
+  static constexpr auto c_NetColor             = c_HUDDebugFontColor;
+  static constexpr auto c_BackgroundColor      = 0x181818ff;
+  static constexpr auto c_ForegroundColor      = 0xdcdcdcff;
 
   struct Entity {
     cbn::Vec2 position;
@@ -73,11 +76,8 @@ namespace pong {
     {
       CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       cbn::audio::Init();
-      {  // TODO: maybe handle this in a different way
-        auto skap = cbn::SKAP::make("pong.skap");
-        CBN_ASSERT(skap);
-        m_Assets = *skap;
-      }
+      m_Assets = cbn::SKAP::make("pong.skap");
+      CBN_ASSERT(m_Assets);
       {  // TODO: handle this in an AudioManager or something
         auto sound_music = cbn::audio::LoadSoundStreaming("pong.d/music.ogg");
         auto [sound_serve, sound_p1, sound_p2, sound_goal, sound_win] = cbn::audio::LoadSounds("pong.d/serve.ogg",
@@ -95,9 +95,7 @@ namespace pong {
       }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
-      {  // TODO: maybe handle this in a different way
-        auto icon = m_Assets.Lookup<cbn::Image>("./icon.png");
-        CBN_ASSERT(icon);
+      if (auto icon = m_Assets->Lookup<cbn::Image>("./icon.png")) {
         cbn::win::SetIcon(*icon);
       }
       cbn::audio::PlaySound(m_Sound_Music);
@@ -105,6 +103,7 @@ namespace pong {
 
     ~Game(void) {
       cbn::win::Close();
+      m_Assets->Free();
       cbn::audio::Shutdown();
       m_Canvas.Free();
     }
@@ -113,6 +112,7 @@ namespace pong {
       cbn::win::ForFrame([&](const auto dt){
         Update(dt);
         Render();
+        cbn::win::Update(m_Canvas);
       });
     }
 
@@ -125,7 +125,7 @@ namespace pong {
     bool m_Playing {false};
     bool m_StartScreen {true};
     bool m_PlayingMusic {false};
-    cbn::SKAP m_Assets;
+    cbn::Opt<cbn::SKAP> m_Assets;
     cbn::audio::UID m_Sound_Music;
     cbn::audio::UID m_Sound_Serve;
     cbn::audio::UID m_Sound_P1;
@@ -174,6 +174,7 @@ namespace pong {
       m_Canvas.Fill(c_BackgroundColor);
       m_Canvas.DrawRect(m_Net, c_NetColor);
       Render_Scoreboard();
+      Render_HUDDebug();
       m_Racket_1.Render(m_Canvas);
       m_Racket_2.Render(m_Canvas);
       if (m_StartScreen) {
@@ -183,7 +184,6 @@ namespace pong {
                           c_StartMsgFontColor);
       }
       if (m_Playing) m_Ball.Render(m_Canvas);
-      cbn::win::Update(m_Canvas);
     }
 
     void Render_Scoreboard(void) {
@@ -196,6 +196,21 @@ namespace pong {
                         CARBON_VEC2(c_ScreenWidth/2 + c_ScoreFontPadding.x, c_ScoreFontPadding.y),
                         c_ScoreFontSize,
                         c_ForegroundColor);
+    }
+
+    void Render_HUDDebug(void) {
+      m_Canvas.DrawText(cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
+                        c_HUDDebugTextPosition,
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", m_Assets->header.build_ver),
+                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + m_Canvas.TextHeight(c_HUDDebugFontSize)),
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+      m_Canvas.DrawText(cbn::str::fmt("%u fps", cbn::win::GetFPS()),
+                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 2*m_Canvas.TextHeight(c_HUDDebugFontSize)),
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
     }
 
     void Update_PlayerScoredGoal(void) {
