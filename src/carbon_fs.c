@@ -35,6 +35,7 @@ u8 carbon_fs_exists(const char *file) {
 }
 
 u8 carbon_fs_is_regular_file(const char *file) {
+  if (!carbon_fs_exists(file)) return false;
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
   if (attrs == INVALID_FILE_ATTRIBUTES) return false;
@@ -47,6 +48,7 @@ u8 carbon_fs_is_regular_file(const char *file) {
 }
 
 u8 carbon_fs_is_directory(const char *file) {
+  if (!carbon_fs_exists(file)) return false;
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
   if (attrs == INVALID_FILE_ATTRIBUTES) return false;
@@ -59,7 +61,6 @@ u8 carbon_fs_is_directory(const char *file) {
 }
 
 u8 carbon_fs_rename(const char *oldie, const char *newie) {
-  CBN_INFO("renaming file %s -> %s", oldie, newie);
   if (-1 == rename(oldie, newie)) {
     CBN_ERROR("unable to rename %s -> %s", oldie, newie);
     return false;
