@@ -34,7 +34,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
     line[strcspn(line, "\r")] = 0;
     line[strcspn(line, "\n")] = 0;
     CBN_SKAP_AssetGroup ag;
-    carbon_println("%s", line);  // DEBUG
+    // carbon_println("%s", line);  // DEBUG
     // Empty or commented line
     if (line[0] == 0 || (line[0] == '/' && line[1] == '/')) {
       ++line_n;
@@ -96,7 +96,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       ag.assets = carbon_strlist_create(true);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = true;
-      carbon_println("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);  // DEBUG
+      // carbon_println("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);  // DEBUG
     }
     // New asset in previous group
     else {
@@ -108,7 +108,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       carbon_strlist_push(&ag.assets, line);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = false;
-      carbon_println("  -> Asset: `%s`", line);  // DEBUG
+      // carbon_println("  -> Asset: `%s`", line);  // DEBUG
     }
     ++line_n;
   }
@@ -135,10 +135,10 @@ CARBON_INLINE u8 carbon_skap__check_decl_assets(const char *decl, CBN_List *asse
 }
 
 CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
-  CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
+  // CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
   if (asset_groups->size) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
+      // CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
       carbon_strlist_destroy(&it.var.assets);
     }
   }
@@ -307,16 +307,16 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
     for (usz j = 0; j < out_handle->type_counters[i]; ++j) {
       CBN_SKAP_AssetIdx idx;
       fread(&idx, sizeof(idx), 1, out_handle->fd);
-      CBN_DEBUG("----------------------------------------");
-      CBN_DEBUG("idx.name = `%s`", idx.name);
-      CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
-      CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
-      CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
-      CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
-      CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
-      CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
-      CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
-      CBN_DEBUG("----------------------------------------");
+      // CBN_DEBUG("----------------------------------------");
+      // CBN_DEBUG("idx.name = `%s`", idx.name);
+      // CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
+      // CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
+      // CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
+      // CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
+      // CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
+      // CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
+      // CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
+      // CBN_DEBUG("----------------------------------------");
       carbon_hashmap_set(&out_handle->idxs[i], idx.name, &idx);
     }
   }
