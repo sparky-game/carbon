@@ -148,6 +148,7 @@ static void clean(void) {
   rm_dash_r("examples/*.bin");
   rm_dash_r("examples/*.bin.old");
   rm_dash_r("examples/*.png");
+  rm_dash_r("examples/*.skap*");
   rm_dash_r(WORKDIR);
   rm_dash_r(WORKDIR ".tgz");
 }
