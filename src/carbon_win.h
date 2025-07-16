@@ -51,6 +51,9 @@ CARBON_API void carbon_win_set_max_fps(u32 fps);
 CARBON_API void carbon_win_set_icon(CBN_Image img);
 
 CARBON_API f64 carbon_win_get_deltatime(void);
+
+CARBON_API u32 carbon_win_get_fps(void);
+
 CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
 
 /**

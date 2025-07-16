@@ -46,6 +46,7 @@
 
 static RGFW_window *carbon_win__handle;
 static u32 carbon_win__max_fps;
+static u32 carbon_win__curr_fps;
 static CBN_Image carbon_win__icon;
 static u8 carbon_win__keys[RGFW_keyLast];
 static u8 carbon_win__prev_keys[RGFW_keyLast];
@@ -201,6 +202,10 @@ f64 carbon_win_get_deltatime(void) {
   return dt;
 }
 
+u32 carbon_win_get_fps(void) {
+  return carbon_win__curr_fps;
+}
+
 void carbon_win_update(CBN_DrawCanvas dc) {
   for (usz i = 0; i < dc.width * dc.height; ++i) {
     u32 color = dc.pixels[i];
@@ -214,7 +219,7 @@ void carbon_win_update(CBN_DrawCanvas dc) {
     carbon_win__handle->buffer[i * 4 + 3] = a;
   }
   RGFW_window_swapBuffers(carbon_win__handle);
-  RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
+  carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
 
 u8 carbon_win_shouldclose(void) {

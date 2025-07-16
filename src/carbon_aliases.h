@@ -163,6 +163,7 @@ namespace cbn {
     const auto SetMaxFPS    = carbon_win_set_max_fps;
     const auto SetIcon      = carbon_win_set_icon;
     const auto GetDeltaTime = carbon_win_get_deltatime;
+    const auto GetFPS       = carbon_win_get_fps;
     const auto Update       = carbon_win_update;
     const auto ShouldClose  = carbon_win_shouldclose;
     const auto GetKeyDown   = carbon_win_get_key_down;
