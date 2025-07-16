@@ -101,6 +101,11 @@ namespace cbn {
       const auto ToHexString = carbon_crypto_sha1_to_hex_cstr;
       const auto AsHexString = carbon_crypto_sha1_as_hex_cstr;
     }
+    namespace SHA256 {
+      const auto Compute     = carbon_crypto_sha256;
+      const auto ToHexString = carbon_crypto_sha256_to_hex_cstr;
+      const auto AsHexString = carbon_crypto_sha256_as_hex_cstr;
+    }
     namespace Keccak256 {
       const auto Compute     = carbon_crypto_keccak256;
       const auto ToHexString = carbon_crypto_keccak256_to_hex_cstr;
