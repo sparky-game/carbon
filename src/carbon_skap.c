@@ -239,7 +239,7 @@ CARBON_INLINE void carbon_skap__append_blobs(FILE *fd) {
 
 u8 carbon_skap_create(const char *decl, const char *skap) {
   // Input: DECL text file
-  if (!carbon_fs_exists(decl)) {
+  if (!carbon_fs_exists(decl) || !carbon_fs_is_regular_file(decl)) {
     CBN_ERROR("there is no SKAP declarations file named `%s`", decl);
     return false;
   }
