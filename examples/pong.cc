@@ -132,8 +132,8 @@ namespace pong {
     cbn::audio::UID m_Sound_P2;
     cbn::audio::UID m_Sound_Goal;
     cbn::audio::UID m_Sound_Win;
-    u8 m_Score_P1 {0};
-    u8 m_Score_P2 {0};
+    u8 m_Score_P1 {0}, m_Score_P2 {0};
+    std::string m_Score_P1_str {"0"}, m_Score_P2_str {"0"};
 
     void Update(const f64 dt) {
       if (!m_Playing) {
@@ -161,7 +161,10 @@ namespace pong {
 
     void Update_ServeBall(void) {
       if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
-        if (m_StartScreen) m_Score_P1 = m_Score_P2 = 0;
+        if (m_StartScreen) {
+          m_Score_P1 = m_Score_P2 = 0;
+          m_Score_P1_str = m_Score_P2_str = "0";
+        }
         m_Playing = true;
         m_StartScreen = false;
         m_PlayingMusic = false;
@@ -187,12 +190,11 @@ namespace pong {
     }
 
     void Render_Scoreboard(void) {
-      const auto score_p1_str = std::to_string(m_Score_P1);
-      m_Canvas.DrawText(score_p1_str.c_str(),
-                        CARBON_VEC2(c_ScreenWidth/2 - c_ScoreFontPadding.x - m_Canvas.TextWidth(score_p1_str.c_str(), c_ScoreFontSize), c_ScoreFontPadding.y),
+      m_Canvas.DrawText(m_Score_P1_str.c_str(),
+                        CARBON_VEC2(c_ScreenWidth/2 - c_ScoreFontPadding.x - m_Canvas.TextWidth(m_Score_P1_str.c_str(), c_ScoreFontSize), c_ScoreFontPadding.y),
                         c_ScoreFontSize,
                         c_ForegroundColor);
-      m_Canvas.DrawText(std::to_string(m_Score_P2).c_str(),
+      m_Canvas.DrawText(m_Score_P2_str.c_str(),
                         CARBON_VEC2(c_ScreenWidth/2 + c_ScoreFontPadding.x, c_ScoreFontPadding.y),
                         c_ScoreFontSize,
                         c_ForegroundColor);
@@ -223,10 +225,12 @@ namespace pong {
       if (m_Ball.position.x < 0) {
         Update_PlayerScoredGoal();
         ++m_Score_P2;
+        m_Score_P2_str = std::to_string(m_Score_P2);
       }
       if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
         Update_PlayerScoredGoal();
         ++m_Score_P1;
+        m_Score_P1_str = std::to_string(m_Score_P1);
       }
       if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) m_Ball.velocity.y *= -1;
       cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
