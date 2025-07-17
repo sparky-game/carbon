@@ -56,7 +56,7 @@ struct CBN_Log_Color {
            default:      "<'Stuff' At %p>")
 #else
 template <typename T>
-consteval auto carbon_log__var_to_spec(T) {
+constexpr auto carbon_log__var_to_spec(T) {
   if constexpr      (CARBON_TYPE_IS_SAME(T, u8))           return "%hhu";
   else if constexpr (CARBON_TYPE_IS_SAME(T, i8))           return "%hhd";
   else if constexpr (CARBON_TYPE_IS_SAME(T, u16))          return "%hu";
