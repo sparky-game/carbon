@@ -85,8 +85,8 @@ typedef struct CBN_DrawCanvas {
    */
   static u32 HSVToRGB(f32 h, f32 s, f32 v);
   // Overloaded Operators
-  u32 &operator()(usz i, usz j);
-  const u32 &operator()(usz i, usz j) const;
+  u32 &operator()(usz i, usz j) const;
+  explicit operator bool(void) const;
 #endif
 } CBN_DrawCanvas;
 

@@ -43,10 +43,10 @@ u32 CBN_DrawCanvas::HSVToRGB(f32 h, f32 s, f32 v) {
   return carbon_drawcanvas_hsv_to_rgb(h, s, v);
 }
 
-u32 &CBN_DrawCanvas::operator()(usz i, usz j) {
-  return const_cast<u32 &>(static_cast<const CBN_DrawCanvas &>(*this)(i, j));
+u32 &CBN_DrawCanvas::operator()(usz i, usz j) const {
+  return carbon_drawcanvas_at(*this, i, j);
 }
 
-const u32 &CBN_DrawCanvas::operator()(usz i, usz j) const {
-  return pixels[j * stride + i];
+CBN_DrawCanvas::operator bool(void) const {
+  return pixels ? true : false;
 }
