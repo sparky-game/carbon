@@ -75,9 +75,9 @@ namespace pong {
                  }
     {
       CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
-      cbn::audio::Init();
       m_Assets = cbn::SKAP::make("pong.skap");
       CBN_ASSERT(m_Assets);
+      cbn::audio::Init();
       {  // TODO: handle this in an AudioManager or something
         auto sound_music = cbn::audio::LoadSoundStreaming("pong.d/music.ogg");
         auto [sound_serve, sound_p1, sound_p2, sound_goal, sound_win] = cbn::audio::LoadSounds("pong.d/serve.ogg",
@@ -95,16 +95,14 @@ namespace pong {
       }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
-      if (auto icon = m_Assets->Lookup<cbn::Image>("./icon.png")) {
-        cbn::win::SetIcon(*icon);
-      }
+      if (auto icon = m_Assets->Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*icon);
       cbn::audio::PlaySound(m_Sound_Music);
     }
 
     ~Game(void) {
       cbn::win::Close();
-      m_Assets->Free();
       cbn::audio::Shutdown();
+      m_Assets->Free();
       m_Canvas.Free();
     }
 
