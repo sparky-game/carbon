@@ -222,7 +222,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__append_blobs(FILE *fd) {
+CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     CBN_Image *asset = &carbon_list_at_raw(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
     CBN_SKAP_AssetIdx *idx = &carbon_list_at_raw(CBN_SKAP_AssetIdx, carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
@@ -238,7 +238,7 @@ CARBON_INLINE void carbon_skap__append_blobs(FILE *fd) {
     fwrite(idx, sizeof(*idx), 1, fd);
     // Return and write the blob
     fseek(fd, blob_loc, SEEK_SET);
-    carbon_println("  WRITE   %-30s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, idx->blob_offset, idx->blob_size);
+    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
     fwrite(asset->data, idx->blob_size, 1, fd);
   }
 }
@@ -269,7 +269,7 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
   carbon_skap__append_header(skap_fd);
   carbon_skap__append_type_counters(skap_fd, &asset_groups);
   carbon_skap__append_idxs(skap_fd, decl, &asset_groups);
-  carbon_skap__append_blobs(skap_fd);
+  carbon_skap__append_blobs(skap, skap_fd);
   fclose(skap_fd);
   // End
   carbon_skap__destroy_global_lists();
