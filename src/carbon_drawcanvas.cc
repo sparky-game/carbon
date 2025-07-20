@@ -32,6 +32,10 @@ void CBN_DrawCanvas::DrawBox(CBN_Rect r) {
 }
 
 void CBN_DrawCanvas::DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  carbon_drawcanvas_text_with_shadow(*this, txt, position, size, color);
+}
+
+void CBN_DrawCanvas::DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color) {
   carbon_drawcanvas_text(*this, txt, position, size, color);
 }
 

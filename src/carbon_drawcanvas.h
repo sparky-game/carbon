@@ -61,13 +61,21 @@ typedef struct CBN_DrawCanvas {
    */
   void DrawBox(CBN_Rect r);
   /**
-   * @brief carbon_drawcanvas_text
+   * @brief carbon_drawcanvas_text_with_shadow
    * @param txt The text to draw.
    * @param position The position (top-left corner) to draw the text to.
    * @param size The font size to use.
    * @param color The color to draw the text with.
    */
   void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color);
+  /**
+   * @brief carbon_drawcanvas_text
+   * @param txt The text to draw.
+   * @param position The position (top-left corner) to draw the text to.
+   * @param size The font size to use.
+   * @param color The color to draw the text with.
+   */
+  void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color);
   /**
    * @brief carbon_drawcanvas_get_text_width
    * @param txt The text to measure.
@@ -161,6 +169,16 @@ CARBON_API void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r);
  * @param color The color to draw the text with.
  */
 CARBON_API void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
+
+/**
+ * @brief Draws text to the canvas with a specific color and a semi-transparent shadow (using a default font).
+ * @param dc The DrawCanvas object.
+ * @param txt The text to draw.
+ * @param position The position (top-left corner) to draw the text to.
+ * @param size The font size to use.
+ * @param color The color to draw the text with.
+ */
+CARBON_API void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
 /**
  * @brief Measures text width (using a default font).

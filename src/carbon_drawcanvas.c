@@ -280,6 +280,11 @@ void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 positio
   }
 }
 
+void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  carbon_drawcanvas_text(dc, txt, CARBON_VEC2(position.x + 1 * size, position.y + 1 * size), size, 0x33333380);
+  carbon_drawcanvas_text(dc, txt, position, size, color);
+}
+
 usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
   return CARBON_DRAWCANVAS__FONT_WIDTH * size * carbon_string_len(txt);
 }
