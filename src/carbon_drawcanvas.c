@@ -3,9 +3,13 @@
 
 #include "carbon.inc"
 
-#include "carbon_drawcanvas_font.inl"
+#define CARBON_DRAWCANVAS__AA_RES                2
+#define CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR     0x000000ff
+#define CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR     0xffffffff
+#define CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR 0x555555ff
+#define CARBON_DRAWCANVAS__BOX_INSIDE_COLOR      0xc6c6c6ff
 
-#define CARBON_DRAWCANVAS__AA_RES 2
+#include "carbon_drawcanvas_font.inl"
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
   u32 *ptr = (u32 *) CBN_MALLOC(width * height * sizeof(u32));
@@ -145,6 +149,117 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
       carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), aa_color);
     }
   }
+}
+
+void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r) {
+#define PX(i, j, c) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz)(i), (usz)(j)), (c));
+#define OUTLINE(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR)
+#define TOPLEFT(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR)
+#define BOTTOMRIGHT(i, j) PX(i, j, CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR)
+#define INSIDE(i, j)      PX(i, j, CARBON_DRAWCANVAS__BOX_INSIDE_COLOR)
+  // Header
+  for (usz j = r.y; j <= r.y + 1; ++j) {
+    for (usz i = r.x + 4; i <= r.w - 6; ++i) {
+      OUTLINE(i, j);
+    }
+  }
+  for (usz j = r.y + 2; j <= r.y + 3; ++j) {
+    OUTLINE(r.x + 2, j);
+    OUTLINE(r.x + 3, j);
+    for (usz i = r.x + 4; i <= r.w - 6; ++i) {
+      TOPLEFT(i, j);
+    }
+    OUTLINE(r.w - 5, j);
+    OUTLINE(r.w - 4, j);
+  }
+  for (usz j = r.y + 4; j <= r.y + 5; ++j) {
+    OUTLINE(r.x + 0, j);
+    OUTLINE(r.x + 1, j);
+    for (usz i = r.x + 2; i <= r.w - 6; ++i) {
+      TOPLEFT(i, j);
+    }
+    INSIDE(r.w - 5, j);
+    INSIDE(r.w - 4, j);
+    OUTLINE(r.w - 3, j);
+    OUTLINE(r.w - 2, j);
+  }
+  for (usz j = r.y + 6; j <= r.y + 7; ++j) {
+    OUTLINE(r.x + 0, j);
+    OUTLINE(r.x + 1, j);
+    for (usz i = r.x + 2; i <= r.x + 7; ++i) {
+      TOPLEFT(i, j);
+    }
+    for (usz i = r.x + 8; i <= r.w - 6; ++i) {
+      INSIDE(i, j);
+    }
+    for (usz i = r.w - 5; i <= r.w - 2; ++i) {
+      BOTTOMRIGHT(i, j);
+    }
+    OUTLINE(r.w - 1, j);
+    OUTLINE(r.w - 0, j);
+  }
+  // Content
+  for (usz j = r.y + 8; j <= r.h - 8; ++j) {
+    OUTLINE(r.x + 0, j);
+    OUTLINE(r.x + 1, j);
+    for (usz i = r.x + 2; i <= r.x + 5; ++i) {
+      TOPLEFT(i, j);
+    }
+    for (usz i = r.x + 6; i <= r.w - 6; ++i) {
+      INSIDE(i, j);
+    }
+    for (usz i = r.w - 5; i <= r.w - 2; ++i) {
+      BOTTOMRIGHT(i, j);
+    }
+    OUTLINE(r.w - 1, j);
+    OUTLINE(r.w - 0, j);
+  }
+  // Footer
+  for (usz j = r.h - 7; j <= r.h - 6; ++j) {
+    OUTLINE(r.x + 0, j);
+    OUTLINE(r.x + 1, j);
+    for (usz i = r.x + 2; i <= r.x + 5; ++i) {
+      TOPLEFT(i, j);
+    }
+    for (usz i = r.x + 6; i <= r.w - 8; ++i) {
+      INSIDE(i, j);
+    }
+    for (usz i = r.w - 7; i <= r.w - 2; ++i) {
+      BOTTOMRIGHT(i, j);
+    }
+    OUTLINE(r.w - 1, j);
+    OUTLINE(r.w - 0, j);
+  }
+  for (usz j = r.h - 5; j <= r.h - 4; ++j) {
+    OUTLINE(r.x + 2, j);
+    OUTLINE(r.x + 3, j);
+    INSIDE(r.x + 4, j);
+    INSIDE(r.x + 5, j);
+    for (usz i = r.x + 6; i <= r.w - 2; ++i) {
+      BOTTOMRIGHT(i, j);
+    }
+    OUTLINE(r.w - 1, j);
+    OUTLINE(r.w - 0, j);
+  }
+  for (usz j = r.h - 3; j <= r.h - 2; ++j) {
+    OUTLINE(r.x + 4, j);
+    OUTLINE(r.x + 5, j);
+    for (usz i = r.x + 6; i <= r.w - 4; ++i) {
+      BOTTOMRIGHT(i, j);
+    }
+    OUTLINE(r.w - 3, j);
+    OUTLINE(r.w - 2, j);
+  }
+  for (usz j = r.h - 1; j <= r.h; ++j) {
+    for (usz i = r.x + 6; i <= r.w - 4; ++i) {
+      OUTLINE(i, j);
+    }
+  }
+#undef PX
+#undef OUTLINE
+#undef TOPLEFT
+#undef BOTTOMRIGHT
+#undef INSIDE
 }
 
 void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {

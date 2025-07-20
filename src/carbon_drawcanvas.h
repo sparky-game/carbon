@@ -56,6 +56,11 @@ typedef struct CBN_DrawCanvas {
    */
   void DrawCircle(CBN_Vec2 center, usz radius, u32 color);
   /**
+   * @brief carbon_drawcanvas_box
+   * @param r The spec of the desired box as a rectangle.
+   */
+  void DrawBox(CBN_Rect r);
+  /**
    * @brief carbon_drawcanvas_text
    * @param txt The text to draw.
    * @param position The position (top-left corner) to draw the text to.
@@ -139,6 +144,13 @@ CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color)
  * @param color The color to draw the circle with.
  */
 CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
+
+/**
+ * @brief Draws a box to the canvas.
+ * @param dc The DrawCanvas object.
+ * @param r The spec of the desired box as a rectangle.
+ */
+CARBON_API void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r);
 
 /**
  * @brief Draws text to the canvas with a specific color (using a default font).
