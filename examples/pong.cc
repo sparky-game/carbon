@@ -27,6 +27,7 @@ namespace pong {
   static constexpr auto c_StartMsgText         = "Press SPACE to start";
   static constexpr auto c_StartMsgFontSize     = 5;
   static constexpr auto c_StartMsgFontColor    = 0xffdd33ff;
+  static constexpr auto c_StartMsgBoxPadding   = CARBON_VEC2(20, 15);
   static constexpr auto c_HUDDebugTextPosition = CARBON_VEC2_1(10);
   static constexpr auto c_HUDDebugFontSize     = 2;
   static constexpr auto c_HUDDebugFontColor    = 0x737373ff;
@@ -178,12 +179,7 @@ namespace pong {
       Render_HUDDebug();
       m_Racket_1.Render(m_Canvas);
       m_Racket_2.Render(m_Canvas);
-      if (m_StartScreen) {
-        m_Canvas.DrawText(c_StartMsgText,
-                          CARBON_VEC2(c_ScreenWidth/2 - m_Canvas.TextWidth(c_StartMsgText, c_StartMsgFontSize)/2, c_ScreenHeight/2 + 100),
-                          c_StartMsgFontSize,
-                          c_StartMsgFontColor);
-      }
+      Render_StartScreen();
       if (m_Playing) m_Ball.Render(m_Canvas);
     }
 
@@ -211,6 +207,22 @@ namespace pong {
                         CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 2*m_Canvas.TextHeight(c_HUDDebugFontSize)),
                         c_HUDDebugFontSize,
                         c_HUDDebugFontColor);
+    }
+
+    void Render_StartScreen(void) {
+      static const auto text_width = m_Canvas.TextWidth(c_StartMsgText, c_StartMsgFontSize);
+      static const auto text_height = m_Canvas.TextHeight(c_StartMsgFontSize);
+      static const auto text_pos = CARBON_VEC2(c_ScreenWidth/2 - text_width/2, c_ScreenHeight/2 + 100);
+      if (m_StartScreen) {
+        m_Canvas.DrawBox(CARBON_RECT(text_pos.x - c_StartMsgBoxPadding.x,
+                                     text_pos.y - c_StartMsgBoxPadding.y - 2*c_StartMsgFontSize,
+                                     text_pos.x + text_width + c_StartMsgBoxPadding.x,
+                                     text_pos.y + text_height + c_StartMsgBoxPadding.y));
+        m_Canvas.DrawText(c_StartMsgText,
+                          text_pos,
+                          c_StartMsgFontSize,
+                          c_StartMsgFontColor);
+      }
     }
 
     void Update_PlayerScoredGoal(void) {
