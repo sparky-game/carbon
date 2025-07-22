@@ -34,7 +34,7 @@
 #define CARBON_VERSION_MAJOR 0
 #define CARBON_VERSION_MINOR 15
 #define CARBON_VERSION_PATCH 0
-#define CARBON_VERSION_EXTRA "-dev"
+#define CARBON_VERSION_EXTRA "-alpha"
 
 /*
 **  Build options
