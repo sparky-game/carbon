@@ -157,21 +157,25 @@ namespace cbn {
     const auto StopSound = carbon_audio_stop_sound;
   }
   namespace win {
-    using KeyCode           = CBN_KeyCode;
-    const auto Open         = carbon_win_open;
-    const auto Close        = carbon_win_close;
-    const auto SetMaxFPS    = carbon_win_set_max_fps;
-    const auto SetIcon      = carbon_win_set_icon;
-    const auto GetDeltaTime = carbon_win_get_deltatime;
-    const auto GetFPS       = carbon_win_get_fps;
-    const auto Update       = carbon_win_update;
-    const auto ShouldClose  = carbon_win_shouldclose;
-    const auto GetKeyDown   = carbon_win_get_key_down;
-    const auto GetKey       = carbon_win_get_key;
-    const auto GetKeyUp     = carbon_win_get_key_up;
+    using KeyCode                 = CBN_KeyCode;
+    using MouseButton             = CBN_MouseButton;
+    const auto Open               = carbon_win_open;
+    const auto Close              = carbon_win_close;
+    const auto SetMaxFPS          = carbon_win_set_max_fps;
+    const auto SetIcon            = carbon_win_set_icon;
+    const auto GetDeltaTime       = carbon_win_get_deltatime;
+    const auto GetFPS             = carbon_win_get_fps;
+    const auto Update             = carbon_win_update;
+    const auto ShouldClose        = carbon_win_shouldclose;
+    const auto GetKeyDown         = carbon_win_get_key_down;
+    const auto GetKey             = carbon_win_get_key;
+    const auto GetKeyUp           = carbon_win_get_key_up;
+    const auto GetMouseButtonDown = carbon_win_get_mouse_button_down;
+    const auto GetMouseButton     = carbon_win_get_mouse_button;
+    const auto GetMouseButtonUp   = carbon_win_get_mouse_button_up;
     template <typename T>
-    auto ForFrame(T &&callback) {
-      return carbon_win_forframe(callback);
+    void ForFrame(T &&callback) {
+      carbon_win_forframe(callback);
     }
   }
 }

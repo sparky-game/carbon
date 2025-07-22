@@ -19,9 +19,18 @@
   x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)      \
   x(UpArrow) x(DownArrow) x(LeftArrow) x(RightArrow)
 
+#define CARBON_WIN_MOUSEBUTTONS                         \
+  x(Left) x(Right) x(Middle) x(ScrollUp) x(ScrollDown)
+
 enum CBN_KeyCode_t {
 #define x(name) CARBON_KEY_CODE_ ## name,
   CARBON_WIN_KEYCODES
+#undef x
+};
+
+enum CBN_MouseButton_t {
+#define x(name) CARBON_MOUSE_BUTTON_ ## name,
+  CARBON_WIN_MOUSEBUTTONS
 #undef x
 };
 
@@ -31,8 +40,14 @@ enum struct CBN_KeyCode {
   CARBON_WIN_KEYCODES
 #undef x
 };
+enum struct CBN_MouseButton {
+#define x(name) CARBON_MOUSE_BUTTON_ ## name,
+  CARBON_WIN_MOUSEBUTTONS
+#undef x
+};
 #else
 typedef enum CBN_KeyCode_t CBN_KeyCode;
+typedef enum CBN_MouseButton_t CBN_MouseButton;
 #endif
 
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
@@ -96,6 +111,27 @@ CARBON_API u8 carbon_win_get_key(const CBN_KeyCode key);
  * @return A boolean value representing whether the key was released or not.
  */
 CARBON_API u8 carbon_win_get_key_up(const CBN_KeyCode key);
+
+/**
+ * @brief Returns true during the frame the user starts pressing down the specified mouse button.
+ * @param btn The MouseButton to evaluate.
+ * @return A boolean value representing whether the mouse button was pressed or not.
+ */
+CARBON_API u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
+
+/**
+ * @brief Returns true while the user holds down the specified mouse button.
+ * @param btn The MouseButton to evaluate.
+ * @return A boolean value representing whether the mouse button is being pressed or not.
+ */
+CARBON_API u8 carbon_win_get_mouse_button(const CBN_MouseButton btn);
+
+/**
+ * @brief Returns true during the frame the user releases the specified mouse button.
+ * @param btn The MouseButton to evaluate.
+ * @return A boolean value representing whether the mouse button was released or not.
+ */
+CARBON_API u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
 
 // Local Variables:
 // mode: c++

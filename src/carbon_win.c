@@ -50,6 +50,30 @@ static u32 carbon_win__curr_fps;
 static CBN_Image carbon_win__icon;
 static u8 carbon_win__keys[RGFW_keyLast];
 static u8 carbon_win__prev_keys[RGFW_keyLast];
+static u8 carbon_win__mouse_buttons[RGFW_mouseFinal];
+static u8 carbon_win__prev_mouse_buttons[RGFW_mouseFinal];
+
+CARBON_INLINE void carbon_win__dl_open(void) {
+#if defined(__APPLE__)
+  CARBON_WIN__DLOPEN(carbon_win__dl_Cocoa, "/System/Library/Frameworks/Cocoa.framework/Cocoa");
+  CARBON_WIN__DLOPEN(carbon_win__dl_CoreVideo, "/System/Library/Frameworks/CoreVideo.framework/CoreVideo");
+  CARBON_WIN__DLOPEN(carbon_win__dl_IOKit, "/System/Library/Frameworks/IOKit.framework/IOKit");
+#elif defined(__linux__) || defined(__FreeBSD__)
+  CARBON_WIN__DLOPEN(carbon_win__dl_X11, "libX11.so");
+  CARBON_WIN__DLOPEN(carbon_win__dl_Xrandr, "libXrandr.so");
+#endif
+}
+
+CARBON_INLINE void carbon_win__dl_close(void) {
+#if defined(__APPLE__)
+  dlclose(carbon_win__dl_Cocoa);
+  dlclose(carbon_win__dl_CoreVideo);
+  dlclose(carbon_win__dl_IOKit);
+#elif defined(__linux__) || defined(__FreeBSD__)
+  dlclose(carbon_win__dl_X11);
+  dlclose(carbon_win__dl_Xrandr);
+#endif
+}
 
 CARBON_INLINE RGFW_key carbon_win__map_keycodes(const CBN_KeyCode key) {
   switch (key) {
@@ -123,33 +147,25 @@ CARBON_INLINE RGFW_key carbon_win__map_keycodes(const CBN_KeyCode key) {
   }
 }
 
-CARBON_INLINE void carbon_win__dl_open(void) {
-#if defined(__APPLE__)
-  CARBON_WIN__DLOPEN(carbon_win__dl_Cocoa, "/System/Library/Frameworks/Cocoa.framework/Cocoa");
-  CARBON_WIN__DLOPEN(carbon_win__dl_CoreVideo, "/System/Library/Frameworks/CoreVideo.framework/CoreVideo");
-  CARBON_WIN__DLOPEN(carbon_win__dl_IOKit, "/System/Library/Frameworks/IOKit.framework/IOKit");
-#elif defined(__linux__) || defined(__FreeBSD__)
-  CARBON_WIN__DLOPEN(carbon_win__dl_X11, "libX11.so");
-  CARBON_WIN__DLOPEN(carbon_win__dl_Xrandr, "libXrandr.so");
-#endif
-}
-
-CARBON_INLINE void carbon_win__dl_close(void) {
-#if defined(__APPLE__)
-  dlclose(carbon_win__dl_Cocoa);
-  dlclose(carbon_win__dl_CoreVideo);
-  dlclose(carbon_win__dl_IOKit);
-#elif defined(__linux__) || defined(__FreeBSD__)
-  dlclose(carbon_win__dl_X11);
-  dlclose(carbon_win__dl_Xrandr);
-#endif
+CARBON_INLINE RGFW_mouseButton carbon_win__map_mouse_buttons(const CBN_MouseButton btn) {
+  switch (btn) {
+  case CARBON_MOUSE_BUTTON_Left:       return RGFW_mouseLeft;
+  case CARBON_MOUSE_BUTTON_Right:      return RGFW_mouseRight;
+  case CARBON_MOUSE_BUTTON_Middle:     return RGFW_mouseMiddle;
+  case CARBON_MOUSE_BUTTON_ScrollUp:   return RGFW_mouseScrollUp;
+  case CARBON_MOUSE_BUTTON_ScrollDown: return RGFW_mouseScrollDown;
+  }
 }
 
 CARBON_INLINE void carbon_win__key_callback(RGFW_window *win, u8 key, char keyChar, RGFW_keymod keyMod, RGFW_bool pressed) {
   CARBON_UNUSED(keyChar), CARBON_UNUSED(keyMod);
   if (win != carbon_win__handle) return;
-  if (pressed) carbon_win__keys[key] = true;
-  else carbon_win__keys[key] = false;
+  carbon_win__keys[key] = pressed ? true : false;
+}
+
+CARBON_INLINE void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton button, double scroll, RGFW_bool pressed) {
+  if (win != carbon_win__handle) return;
+  carbon_win__mouse_buttons[button] = pressed ? true : false;
 }
 
 void carbon_win_open(u16 width, u16 height, const char *title) {
@@ -160,6 +176,7 @@ void carbon_win_open(u16 width, u16 height, const char *title) {
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(carbon_win__handle->r.w, carbon_win__handle->r.h));
   CBN_INFO("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
   RGFW_setKeyCallback(carbon_win__key_callback);
+  RGFW_setMouseButtonCallback(carbon_win__mouse_button_callback);
 }
 
 void carbon_win_close(void) {
@@ -223,7 +240,8 @@ void carbon_win_update(CBN_DrawCanvas dc) {
 }
 
 u8 carbon_win_shouldclose(void) {
-  for (u8 i = 0; i < RGFW_keyLast; ++i) carbon_win__prev_keys[i] = carbon_win__keys[i];
+  for (u8 i = 0; i < RGFW_keyLast; ++i)    carbon_win__prev_keys[i]          = carbon_win__keys[i];
+  for (u8 i = 0; i < RGFW_mouseFinal; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
   RGFW_window_checkEvent(carbon_win__handle);
   return RGFW_window_shouldClose(carbon_win__handle);
 }
@@ -238,4 +256,16 @@ u8 carbon_win_get_key(const CBN_KeyCode key) {
 
 u8 carbon_win_get_key_up(const CBN_KeyCode key) {
   return !carbon_win__keys[carbon_win__map_keycodes(key)] && carbon_win__prev_keys[carbon_win__map_keycodes(key)];
+}
+
+u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn) {
+  return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && !carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
+}
+
+u8 carbon_win_get_mouse_button(const CBN_MouseButton btn) {
+  return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)];
+}
+
+u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn) {
+  return !carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
 }
