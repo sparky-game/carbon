@@ -154,6 +154,9 @@ CARBON_INLINE RGFW_mouseButton carbon_win__map_mouse_buttons(const CBN_MouseButt
   case CARBON_MOUSE_BUTTON_Middle:     return RGFW_mouseMiddle;
   case CARBON_MOUSE_BUTTON_ScrollUp:   return RGFW_mouseScrollUp;
   case CARBON_MOUSE_BUTTON_ScrollDown: return RGFW_mouseScrollDown;
+  default:
+    CARBON_UNREACHABLE;
+    return RGFW_mouseFinal;
   }
 }
 
@@ -163,7 +166,8 @@ CARBON_INLINE void carbon_win__key_callback(RGFW_window *win, u8 key, char keyCh
   carbon_win__keys[key] = pressed ? true : false;
 }
 
-CARBON_INLINE void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton button, double scroll, RGFW_bool pressed) {
+CARBON_INLINE void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton button, f64 scroll, RGFW_bool pressed) {
+  CARBON_UNUSED(scroll);
   if (win != carbon_win__handle) return;
   carbon_win__mouse_buttons[button] = pressed ? true : false;
 }
