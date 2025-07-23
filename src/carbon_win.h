@@ -133,6 +133,12 @@ CARBON_API u8 carbon_win_get_mouse_button(const CBN_MouseButton btn);
  */
 CARBON_API u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
 
+/**
+ * @brief Returns the actual mouse position within the window.
+ * @return A Vec2 representing the position.
+ */
+CARBON_API CBN_Vec2 carbon_win_get_mouse_position(void);
+
 // Local Variables:
 // mode: c++
 // End:

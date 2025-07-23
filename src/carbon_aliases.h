@@ -167,16 +167,17 @@ namespace cbn {
     const auto GetFPS             = carbon_win_get_fps;
     const auto Update             = carbon_win_update;
     const auto ShouldClose        = carbon_win_shouldclose;
+    template <typename T>
+    void ForFrame(T &&callback) {
+      carbon_win_forframe(callback);
+    }
     const auto GetKeyDown         = carbon_win_get_key_down;
     const auto GetKey             = carbon_win_get_key;
     const auto GetKeyUp           = carbon_win_get_key_up;
     const auto GetMouseButtonDown = carbon_win_get_mouse_button_down;
     const auto GetMouseButton     = carbon_win_get_mouse_button;
     const auto GetMouseButtonUp   = carbon_win_get_mouse_button_up;
-    template <typename T>
-    void ForFrame(T &&callback) {
-      carbon_win_forframe(callback);
-    }
+    const auto GetMousePosition   = carbon_win_get_mouse_position;
   }
 }
 #endif  // __cplusplus
