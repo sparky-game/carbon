@@ -32,10 +32,8 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
-  for (usz j = 0; j < dc.height; ++j) {
-    for (usz i = 0; i < dc.width; ++i) {
-      carbon_drawcanvas_at(dc, i, j) = color;
-    }
+  for (usz i = 0; i < dc.width * dc.height; ++i) {
+    dc.pixels[i] = color;
   }
 }
 
