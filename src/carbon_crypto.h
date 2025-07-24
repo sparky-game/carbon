@@ -43,6 +43,13 @@ CARBON_API u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
 CARBON_API u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 
 /**
+ * @brief Computes the DJB2 non-cryptographic hash of the given null-terminated string.
+ * @param in The input string.
+ * @return The 64-bit non-cryptographic hash of the input string.
+ */
+CARBON_API u64 carbon_crypto_djb2(const char *in);
+
+/**
  * @brief Computes the SHA-1 hash of the given binary data.
  * @param in The input binary data.
  * @param in_size The size of the input binary data in bytes.

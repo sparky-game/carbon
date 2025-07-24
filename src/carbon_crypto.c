@@ -166,6 +166,13 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
   return ~out;
 }
 
+u64 carbon_crypto_djb2(const char *in) {
+  u64 hash = 5381;
+  i32 c = 0;
+  while ((c = *in++)) hash = ((hash << 5) + hash) + c;
+  return hash;
+}
+
 void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
   if (!out) {
     CBN_WARN("`out` is not a valid pointer, skipping computation");

@@ -96,6 +96,7 @@ namespace cbn {
       const auto Decode = carbon_crypto_base64_decode;
     }
     const auto CRC32 = carbon_crypto_crc32;
+    const auto DJB2 = carbon_crypto_djb2;
     namespace SHA1 {
       const auto Compute     = carbon_crypto_sha1;
       const auto ToHexString = carbon_crypto_sha1_to_hex_cstr;
