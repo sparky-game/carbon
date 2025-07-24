@@ -16,7 +16,6 @@ typedef struct CBN_DrawCanvas {
   u32 *pixels;
   usz width;
   usz height;
-  usz stride;
 #ifdef __cplusplus
   /**
    * @brief carbon_drawcanvas_create
@@ -103,7 +102,7 @@ typedef struct CBN_DrawCanvas {
 #endif
 } CBN_DrawCanvas;
 
-#define carbon_drawcanvas_at(dc, i, j) (dc).pixels[(j) * (dc).stride + (i)]
+#define carbon_drawcanvas_at(dc, i, j) (dc).pixels[(j) * (dc).width + (i)]
 
 /**
  * @brief Creates a new DrawCanvas object.

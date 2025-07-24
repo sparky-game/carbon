@@ -17,8 +17,7 @@ CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
   return (CBN_DrawCanvas) {
     .pixels = ptr,
     .width = width,
-    .height = height,
-    .stride = width
+    .height = height
   };
 }
 
