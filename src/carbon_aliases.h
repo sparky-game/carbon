@@ -112,6 +112,15 @@ namespace cbn {
       const auto AsHexString = carbon_crypto_keccak256_as_hex_cstr;
     }
   }
+  namespace time {
+    namespace literals {
+      consteval f64 operator""_s(const u64 n)     { return n; }
+      consteval f64 operator""_s(const flong n)   { return n; }
+      consteval f64 operator""_min(const u64 n)   { return n * 60; }
+      consteval f64 operator""_min(const flong n) { return n * 60; }
+    }
+    const auto Get = carbon_time_get, now = Get;
+  }
   namespace str {
     const auto Length     = carbon_string_len,   len  = Length;
     const auto Compare    = carbon_string_cmp,   cmp  = Compare;
