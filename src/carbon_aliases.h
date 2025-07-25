@@ -44,11 +44,11 @@ namespace cbn {
     carbon_eprint(msg, std::forward<Args>(args)...);
   }
   template <typename... Args>
-  constexpr void println(const char *msg, Args &&... args) {
+  constexpr void println(const char *msg = "", Args &&... args) {
     carbon_println(msg, std::forward<Args>(args)...);
   }
   template <typename... Args>
-  constexpr void eprintln(const char *msg, Args &&... args) {
+  constexpr void eprintln(const char *msg = "", Args &&... args) {
     carbon_eprintln(msg, std::forward<Args>(args)...);
   }
   template <typename... Args>
