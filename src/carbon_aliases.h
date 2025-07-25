@@ -26,6 +26,7 @@ namespace cbn {
   using RingBuffer = CircularQueue<T>;
   template <typename T>
   using SlotMap = CBN_SlotMap_t<T>;
+  using Chrono     = CBN_Chrono;
   using StrBuilder = CBN_StrBuilder;
   using StrView    = CBN_StrView;
   using Image      = CBN_Image;
@@ -116,6 +117,12 @@ namespace cbn {
   }
   namespace time {
     namespace literals {
+      consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
+      consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
+      consteval f64 operator""_us(const u64 n)    { return n * 1e-6; }
+      consteval f64 operator""_us(const flong n)  { return n * 1e-6; }
+      consteval f64 operator""_ms(const u64 n)    { return n * 1e-3; }
+      consteval f64 operator""_ms(const flong n)  { return n * 1e-3; }
       consteval f64 operator""_s(const u64 n)     { return n; }
       consteval f64 operator""_s(const flong n)   { return n; }
       consteval f64 operator""_min(const u64 n)   { return n * 60; }

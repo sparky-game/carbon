@@ -178,7 +178,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   carbon_println("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
-  CBN_Clock clk = carbon_clock_start();
+  CBN_Chrono chr = carbon_chrono_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 has_passed = s->tests[i].f();
     if (has_passed) {
@@ -197,29 +197,29 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
       carbon_list_push(&junit_testcase_infos, &tjc);
     }
   }
-  carbon_clock_update(&clk), carbon_clock_stop(&clk);
-  u32 total_time_micro = (u32) (clk.elapsed * 1e6);
+  carbon_chrono_update(&chr), carbon_chrono_stop(&chr);
+  u32 total_time_micro = (u32) (chr.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
   if (failed) {
-    if (!((i32) clk.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+    if (!((i32) chr.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
                                               failed,
                                               passed,
                                               total_time_micro);
     else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
                          failed,
                          passed,
-                         clk.elapsed);
+                         chr.elapsed);
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) clk.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+    if (!((i32) chr.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
                                              passed,
                                              total_time_micro);
     else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
                         passed,
-                        clk.elapsed);
+                        chr.elapsed);
   }
-  if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, clk.elapsed);
+  if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, chr.elapsed);
   carbon_list_destroy(&junit_testcase_infos);
   carbon_test_manager_cleanup(s);
   return status;

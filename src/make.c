@@ -165,7 +165,7 @@ static void hdrgen(void) {
     "src/carbon_test_entry.h",   "src/carbon_assert.h",     "src/carbon_memory.h",        "src/carbon_coroutine.h",
     "src/carbon_math.h",         "src/carbon_math_vec2.h",  "src/carbon_math_vec3.h",     "src/carbon_math_rect.h",
     "src/carbon_crypto.h",       "src/carbon_log.h",        "src/carbon_should.h",        "src/carbon_time.h",
-    "src/carbon_clock.h",        "src/carbon_list.h",       "src/carbon_circularqueue.h", "src/carbon_hashmap.h",
+    "src/carbon_chrono.h",       "src/carbon_list.h",       "src/carbon_circularqueue.h", "src/carbon_hashmap.h",
     "src/carbon_slotmap.h",      "src/carbon_string.h",     "src/carbon_strview.h",       "src/carbon_strbuilder.h",
     "src/carbon_strlist.h",      "src/carbon_sprite.h",     "src/carbon_drawcanvas.h",    "src/carbon_fs.h",
     "src/carbon_net.h",          "src/carbon_audio.h",      "src/carbon_nn.h",            "src/carbon_win.h",

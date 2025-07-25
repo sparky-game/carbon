@@ -3,18 +3,22 @@
 
 #include "carbon.inc"
 
-CBN_Clock carbon_clock_start(void) {
-  return (CBN_Clock) {
+CBN_Chrono carbon_chrono_start(void) {
+  return (CBN_Chrono) {
     .initial = carbon_time_get(),
     .elapsed = 0
   };
 }
 
-void carbon_clock_update(CBN_Clock *c) {
+void carbon_chrono_update(CBN_Chrono *c) {
   if (!c->initial) return;
   c->elapsed = carbon_time_get() - c->initial;
 }
 
-void carbon_clock_stop(CBN_Clock *c) {
+void carbon_chrono_stop(CBN_Chrono *c) {
   c->initial = 0;
+}
+
+void carbon_chrono_restart(CBN_Chrono *c) {
+  *c = carbon_chrono_start();
 }
