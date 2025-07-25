@@ -409,7 +409,7 @@ u8 *carbon_fs_img_linearize(CBN_List *img) {
 }
 
 u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height) {
-  u8 *bytes = (u8 *) CBN_MALLOC(width * height * 4 * sizeof(u8));
+  u8 *bytes = (u8 *) CBN_MALLOC(width * height * 4);
   for (usz i = 0; i < width * height; ++i) {
     u32 color = pixels[i];
     u8 r = (color >> 24) & 0xff;
@@ -422,6 +422,19 @@ u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz he
     bytes[i * 4 + 3] = a;
   }
   return bytes;
+}
+
+u32 *carbon_fs_img_8bit_to_32bit(const u8 *bytes, const usz width, const usz height) {
+  u32 *pixels = (u32 *) CBN_MALLOC(width * height * 4);
+  for (usz i = 0; i < width * height; ++i) {
+    u8 r = bytes[i * 4 + 0];
+    u8 g = bytes[i * 4 + 1];
+    u8 b = bytes[i * 4 + 2];
+    u8 a = bytes[i * 4 + 3];
+    u32 color = (r << 24) | (g << 16) | (b << 8) | a;
+    pixels[i] = color;
+  }
+  return pixels;
 }
 
 u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file) {

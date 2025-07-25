@@ -141,6 +141,19 @@ CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
 CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
 
 /**
+ * @brief Converts a linear buffer of 8-bit per channel RGBA bytes to a linear buffer of 32-bit RGBA pixels.
+ *
+ * This function allocates memory in the heap using `CBN_MALLOC`; thus, it's important to keep in mind the
+ * lifetime of that allocation and free it accordingly using `CBN_FREE`.
+ *
+ * @param bytes The pointer to the 8-bit per channel RGBA linear buffer of bytes.
+ * @param width The width of the image.
+ * @param height The height of the image.
+ * @return The pointer to the newly allocated linear buffer of 32-bit RGBA pixels.
+ */
+CARBON_API u32 *carbon_fs_img_8bit_to_32bit(const u8 *bytes, const usz width, const usz height);
+
+/**
  * @brief Writes an image to disk.
  * @param img The image object.
  * @param fmt The format of the image file to write to.
