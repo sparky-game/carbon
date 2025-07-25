@@ -322,6 +322,7 @@ u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   }
   // Write position of start of blob section
   out_handle->blob_section_start_pos = ftell(out_handle->fd);
+  CBN_INFO("SKAP (`%s`) opened successfully", skap);
   return true;
 }
 
@@ -374,7 +375,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
   CBN_SKAP_AssetIdx idx;
   carbon_hashmap_get(&handle->idxs[asset_type], asset_name, &idx);
   if (carbon_string_cmp(idx.name, asset_name)) {
-    CBN_ERROR("`idx.name` doesn't match the `asset_name` requested");
+    CBN_ERROR("idx.name (`%s`) doesn't match the asset_name (`%s`) requested", idx.name, asset_name);
     return false;
   }
   if (idx.metadata.type != asset_type) {
