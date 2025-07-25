@@ -18,3 +18,7 @@ void CBN_Chrono::Stop(void) {
 void CBN_Chrono::Restart(void) {
   carbon_chrono_restart(this);
 }
+
+bool CBN_Chrono::IsRunning(void) const {
+  return carbon_chrono_is_running(this);
+}

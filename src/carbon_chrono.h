@@ -33,6 +33,11 @@ typedef struct CBN_Chrono {
    * @brief carbon_chrono_restart
    */
   void Restart(void);
+  /**
+   * @brief carbon_chrono_is_running
+   * @return A boolean value indicating the state of the chrono.
+   */
+  bool IsRunning(void) const;
 #endif
 } CBN_Chrono;
 
@@ -59,3 +64,10 @@ CARBON_API void carbon_chrono_stop(CBN_Chrono *c);
  * @param c The Chrono object.
  */
 CARBON_API void carbon_chrono_restart(CBN_Chrono *c);
+
+/**
+ * @brief Checks whether the chrono is running or not.
+ * @param c The Chrono object.
+ * @return A boolean value indicating the state of the chrono.
+ */
+CARBON_API u8 carbon_chrono_is_running(const CBN_Chrono *c);
