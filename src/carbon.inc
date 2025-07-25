@@ -29,6 +29,7 @@
 #include "carbon_strview.h"
 #include "carbon_strbuilder.h"
 #include "carbon_strlist.h"
+#include "carbon_sprite.h"
 #include "carbon_drawcanvas.h"
 #include "carbon_fs.h"
 #include "carbon_net.h"

@@ -29,6 +29,7 @@ namespace cbn {
   using StrBuilder = CBN_StrBuilder;
   using StrView    = CBN_StrView;
   using Image      = CBN_Image;
+  using Sprite     = CBN_Sprite;
   using DrawCanvas = CBN_DrawCanvas;
   using SKAP       = CBN_SKAP;
   const auto Version = carbon_version;
