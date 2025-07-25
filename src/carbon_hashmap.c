@@ -61,5 +61,4 @@ void carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value)
     carbon_memory_copy(out_value, curr->value, hm->stride);
     return;
   }
-  CBN_ERROR("key (`%s`) not found", key);
 }
