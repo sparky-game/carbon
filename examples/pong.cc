@@ -76,8 +76,8 @@ namespace pong {
                  }
     {
       CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
-      m_Assets = cbn::SKAP::make("pong.skap");
-      CBN_ASSERT(m_Assets);
+      if (auto i = cbn::SKAP::make("pong.skap")) m_Assets = *i;
+      else CARBON_UNREACHABLE;
       cbn::audio::Init();
       {  // TODO: handle this in an AudioManager or something
         auto sound_music = cbn::audio::LoadSoundStreaming("pong.d/music.ogg");
@@ -96,14 +96,14 @@ namespace pong {
       }
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);
-      if (auto icon = m_Assets->Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*icon);
+      if (auto i = m_Assets.Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*i);
       cbn::audio::PlaySound(m_Sound_Music);
     }
 
     ~Game(void) {
       cbn::win::Close();
       cbn::audio::Shutdown();
-      m_Assets->Free();
+      m_Assets.Free();
       m_Canvas.Free();
     }
 
@@ -124,7 +124,7 @@ namespace pong {
     bool m_Playing {false};
     bool m_StartScreen {true};
     bool m_PlayingMusic {false};
-    cbn::Opt<cbn::SKAP> m_Assets;
+    cbn::SKAP m_Assets;
     cbn::audio::UID m_Sound_Music;
     cbn::audio::UID m_Sound_Serve;
     cbn::audio::UID m_Sound_P1;
@@ -199,7 +199,7 @@ namespace pong {
                         c_HUDDebugTextPosition,
                         c_HUDDebugFontSize,
                         c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", m_Assets->header.build_ver),
+      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", m_Assets.header.build_ver),
                         CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + m_Canvas.TextHeight(c_HUDDebugFontSize)),
                         c_HUDDebugFontSize,
                         c_HUDDebugFontColor);
