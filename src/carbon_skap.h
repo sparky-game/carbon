@@ -20,7 +20,7 @@ typedef enum {
 
 #ifdef __cplusplus
 template <typename T>
-concept CBN_SKAP_AssetType_t = cbn::TypeIsAllowed<T, CBN_Image>;
+concept CBN_SKAP_AssetType_t = cbn::AllowedTypes<T, CBN_Image>;
 #endif
 
 typedef struct {

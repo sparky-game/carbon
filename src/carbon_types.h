@@ -44,7 +44,7 @@ namespace cbn {
   template <typename T>
   using Ref = std::shared_ptr<T>;
   template <typename T, typename... Ts>
-  concept TypeIsAllowed = (std::same_as<T, Ts> or ...);
+  concept AllowedTypes = (std::same_as<T, Ts> or ...);
 }
 #endif
 
