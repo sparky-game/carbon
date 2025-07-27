@@ -148,6 +148,21 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
   }
 }
 
+void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, CBN_Sprite sprite, CBN_Vec2 position) {
+  if (!carbon_math_rect_contains_point(CARBON_RECT(0, 0, dc.width, dc.height), position)) return;
+  sprite.width = CARBON_MIN(sprite.width, dc.width - position.x);
+  sprite.height = CARBON_MIN(sprite.height, dc.height - position.y);
+  u32 *p_dc = dc.pixels + (usz)(position.y * dc.width + position.x);
+  const u32 *p_sp = sprite.pixels;
+  for (usz j = 0; j < sprite.height; ++j) {
+    for (usz i = 0; i < sprite.width; ++i) {
+      carbon_drawcanvas__alpha_blending(p_dc, *p_sp);
+      ++p_dc, ++p_sp;
+    }
+    p_dc += dc.width - sprite.width;
+  }
+}
+
 void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r) {
 #define PX(i, j, c) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz)(i), (usz)(j)), (c));
 #define OUTLINE(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR)

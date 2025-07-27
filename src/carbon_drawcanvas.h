@@ -55,6 +55,12 @@ typedef struct CBN_DrawCanvas {
    */
   void DrawCircle(CBN_Vec2 center, usz radius, u32 color);
   /**
+   * @brief carbon_drawcanvas_sprite
+   * @param sprite The sprite to draw.
+   * @param position The position (top-left corner) to draw the sprite to.
+   */
+  void DrawSprite(CBN_Sprite sprite, CBN_Vec2 position);
+  /**
    * @brief carbon_drawcanvas_box
    * @param r The spec of the desired box as a rectangle.
    */
@@ -151,6 +157,14 @@ CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color)
  * @param color The color to draw the circle with.
  */
 CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
+
+/**
+ * @brief Draws a sprite to the canvas.
+ * @param dc The DrawCanvas object.
+ * @param sprite The sprite to draw.
+ * @param position The position (top-left corner) to draw the sprite to.
+ */
+CARBON_API void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, CBN_Sprite sprite, CBN_Vec2 position);
 
 /**
  * @brief Draws a box to the canvas.
