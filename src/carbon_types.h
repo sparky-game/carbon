@@ -43,6 +43,8 @@ namespace cbn {
   using Scope = std::unique_ptr<T>;
   template <typename T>
   using Ref = std::shared_ptr<T>;
+  template <typename T>
+  concept Numeric = std::integral<T> or std::floating_point<T>;
   template <typename T, typename... Ts>
   concept AllowedTypes = (std::same_as<T, Ts> or ...);
 }
