@@ -12,6 +12,13 @@
 #define CARBON_NAME "SPARKY Carbon"
 #define CARBON_VERSION "v" CARBON_VERSION_RAW
 
+#if !defined(__cplusplus) && __STDC_VERSION__ < 201112L
+#error C11 standard or newer is needed
+#endif
+#if defined(__cplusplus) && __cplusplus < 202002L
+#error C++20 standard or newer is needed
+#endif
+
 #undef true
 #define true 1
 #undef false
