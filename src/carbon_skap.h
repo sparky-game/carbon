@@ -163,36 +163,6 @@ CARBON_API usz carbon_skap_count(const CBN_SKAP *handle);
  */
 CARBON_API usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type);
 
-// Because `CBN_SKAP` has some templated member functions, their definitions
-// need to be available at compile-time, not link-time; thus, we define them
-// here for the template instantiation to work properly.
-#ifdef __cplusplus
-/**
- * @brief CBN_SKAP.Lookup<T>
- */
-template <typename T>
-cbn::Opt<T> CBN_SKAP::Lookup(const char *asset_name) const {
-  T asset;
-  if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
-  return asset;
-}
-/**
- * @brief CBN_SKAP.CountOf<T>
- */
-template <typename T>
-usz CBN_SKAP::CountOf(void) const {
-  return carbon_skap_count_of(this, GetAssetType<T>());
-}
-/**
- * @brief CBN_SKAP::GetAssetType<T>
- */
-template <CBN_SKAP_AssetType_t T>
-consteval CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
-  if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
-  else return CARBON_SKAP_ASSET_TYPE_COUNT;
-}
-#endif  // __cplusplus
-
 // Local Variables:
 // mode: c++
 // End:

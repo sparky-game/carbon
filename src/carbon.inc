@@ -22,9 +22,12 @@
 #include "carbon_time.h"
 #include "carbon_chrono.h"
 #include "carbon_list.h"
+#include "carbon_list.tcc"
 #include "carbon_circularqueue.h"
+#include "carbon_circularqueue.tcc"
 #include "carbon_hashmap.h"
 #include "carbon_slotmap.h"
+#include "carbon_slotmap.tcc"
 #include "carbon_string.h"
 #include "carbon_strview.h"
 #include "carbon_strbuilder.h"
@@ -39,6 +42,7 @@
 #include "carbon_test_manager.h"
 #include "carbon_junit.h"
 #include "carbon_skap.h"
+#include "carbon_skap.tcc"
 
 // Local Variables:
 // mode: c
