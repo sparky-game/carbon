@@ -142,49 +142,49 @@ namespace cbn {
     const auto LevDist    = carbon_string_lev_dist;
   }
   namespace fs {
-    const auto Exists = carbon_fs_exists;
-    const auto IsFile = carbon_fs_is_regular_file;
-    const auto IsDir = carbon_fs_is_directory;
-    const auto LastMod = carbon_fs_mtime;
-    const auto Rename = carbon_fs_rename,                 mv      = Rename;
-    const auto Copy = carbon_fs_copy,                     cp      = Copy;
-    const auto Remove = carbon_fs_remove,                 rm      = Remove;
-    const auto RemoveAll = carbon_fs_remove_all,          rm_r    = RemoveAll;
-    const auto ChangeDir = carbon_fs_change_directory,    cd      = ChangeDir;
-    const auto CreateDir = carbon_fs_create_directory,    mkdir   = CreateDir;
+    const auto Exists     = carbon_fs_exists;
+    const auto IsFile     = carbon_fs_is_regular_file;
+    const auto IsDir      = carbon_fs_is_directory;
+    const auto LastMod    = carbon_fs_mtime;
+    const auto Rename     = carbon_fs_rename,             mv      = Rename;
+    const auto Copy       = carbon_fs_copy,               cp      = Copy;
+    const auto Remove     = carbon_fs_remove,             rm      = Remove;
+    const auto RemoveAll  = carbon_fs_remove_all,         rm_r    = RemoveAll;
+    const auto ChangeDir  = carbon_fs_change_directory,   cd      = ChangeDir;
+    const auto CreateDir  = carbon_fs_create_directory,   mkdir   = CreateDir;
     const auto CreateDirs = carbon_fs_create_directories, mkdir_p = CreateDirs;
-    const auto GetCWD = carbon_fs_get_curr_directory,     cwd     = GetCWD;
-    const auto GetBinDir = carbon_fs_get_bin_directory;
-    const auto Size = carbon_fs_get_file_size;
+    const auto GetCWD     = carbon_fs_get_curr_directory, cwd     = GetCWD;
+    const auto GetBinDir  = carbon_fs_get_bin_directory;
+    const auto Size       = carbon_fs_get_file_size;
   }
   namespace audio {
-    using UID                     = CBN_Audio_UID;
-    const auto Init               = carbon_audio_init;
-    const auto Shutdown           = carbon_audio_shutdown;
-    const auto LoadSound          = carbon_audio_load_sound;
-    const auto LoadSoundStreaming = carbon_audio_load_sound_streaming;
+    using UID           = CBN_Audio_UID;
+    const auto Init     = carbon_audio_init;
+    const auto Shutdown = carbon_audio_shutdown;
     template <typename... Args>
-    [[nodiscard]] auto LoadSounds(Args &&... files) {
-      return carbon_audio_load_sounds(std::forward<Args>(files)...);
+    [[nodiscard]] auto Load(Args &&... args) {
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load(std::forward<Args>(args))...);
+      else return carbon_audio_load(std::forward<Args>(args)...);
     }
     template <typename... Args>
-    [[nodiscard]] auto LoadSoundsStreaming(Args &&... files) {
-      return carbon_audio_load_sounds_streaming(std::forward<Args>(files)...);
+    [[nodiscard]] auto LoadStream(Args &&... args) {
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load_stream(std::forward<Args>(args))...);
+      else return carbon_audio_load_stream(std::forward<Args>(args)...);
     }
-    const auto PlaySound = carbon_audio_play_sound;
-    const auto StopSound = carbon_audio_stop_sound;
+    const auto Play = carbon_audio_play;
+    const auto Stop = carbon_audio_stop;
   }
   namespace win {
-    using KeyCode                 = CBN_KeyCode;
-    using MouseButton             = CBN_MouseButton;
-    const auto Open               = carbon_win_open;
-    const auto Close              = carbon_win_close;
-    const auto SetMaxFPS          = carbon_win_set_max_fps;
-    const auto SetIcon            = carbon_win_set_icon;
-    const auto GetDeltaTime       = carbon_win_get_deltatime;
-    const auto GetFPS             = carbon_win_get_fps;
-    const auto Update             = carbon_win_update;
-    const auto ShouldClose        = carbon_win_shouldclose;
+    using KeyCode           = CBN_KeyCode;
+    using MouseButton       = CBN_MouseButton;
+    const auto Open         = carbon_win_open;
+    const auto Close        = carbon_win_close;
+    const auto SetMaxFPS    = carbon_win_set_max_fps;
+    const auto SetIcon      = carbon_win_set_icon;
+    const auto GetDeltaTime = carbon_win_get_deltatime;
+    const auto GetFPS       = carbon_win_get_fps;
+    const auto Update       = carbon_win_update;
+    const auto ShouldClose  = carbon_win_shouldclose;
     template <typename T>
     void ForFrame(T &&callback) {
       carbon_win_forframe(callback);

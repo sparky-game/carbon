@@ -23,48 +23,40 @@ CARBON_API void carbon_audio_shutdown(void);
 
 /**
  * @brief ...
+ * @param file ...
+ * @param out_uid ... (output argument pointer).
  */
-CARBON_API u8 carbon_audio_load_sound_from_file(const char *file, CBN_Audio_UID *out_uid);
+CARBON_API u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
+ * @param file ...
+ * @param out_uid ... (output argument pointer).
  */
-CARBON_API u8 carbon_audio_load_sound_streaming_from_file(const char *file, CBN_Audio_UID *out_uid);
+CARBON_API u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 #ifdef __cplusplus
 /**
- * @brief carbon_audio_load_sound_from_file
+ * @see carbon_audio_load_sound_from_file
  */
-[[nodiscard]] cbn::Opt<CBN_Audio_UID> carbon_audio_load_sound(const char *file);
+[[nodiscard]] cbn::Opt<CBN_Audio_UID> carbon_audio_load(const char *file);
 /**
- * @brief carbon_audio_load_sound_streaming_from_file
+ * @see carbon_audio_load_sound_streaming_from_file
  */
-[[nodiscard]] cbn::Opt<CBN_Audio_UID> carbon_audio_load_sound_streaming(const char *file);
-/**
- * @brief carbon_audio_load_sound(...)
- */
-template <typename... Args>
-[[nodiscard]] auto carbon_audio_load_sounds(Args &&... files) {
-  return std::make_tuple(carbon_audio_load_sound(std::forward<Args>(files))...);
-}
-/**
- * @brief carbon_audio_load_sound_streaming(...)
- */
-template <typename... Args>
-[[nodiscard]] auto carbon_audio_load_sounds_streaming(Args &&... files) {
-  return std::make_tuple(carbon_audio_load_sound_streaming(std::forward<Args>(files))...);
-}
+[[nodiscard]] cbn::Opt<CBN_Audio_UID> carbon_audio_load_stream(const char *file);
 #endif
 
 /**
  * @brief ...
+ * @param uid ...
  */
-CARBON_API void carbon_audio_play_sound(const CBN_Audio_UID key);
+CARBON_API void carbon_audio_play(const CBN_Audio_UID uid);
 
 /**
  * @brief ...
+ * @param uid ...
  */
-CARBON_API void carbon_audio_stop_sound(const CBN_Audio_UID key);
+CARBON_API void carbon_audio_stop(const CBN_Audio_UID uid);
 
 // Local Variables:
 // mode: c++

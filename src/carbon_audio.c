@@ -45,7 +45,7 @@ void carbon_audio_shutdown(void) {
   CBN_INFO("Shutdowned audio subsystem successfully");
 }
 
-CARBON_INLINE u8 carbon_audio__load_sound_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
+CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
@@ -61,22 +61,22 @@ CARBON_INLINE u8 carbon_audio__load_sound_from_file_ex(const char *file, CBN_Aud
   return true;
 }
 
-u8 carbon_audio_load_sound_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_sound_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC);
+u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
+  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC);
 }
 
-u8 carbon_audio_load_sound_streaming_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_sound_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM);
+u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
+  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM);
 }
 
-void carbon_audio_play_sound(const CBN_Audio_UID uid) {
+void carbon_audio_play(const CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &sound)) return;
   ma_sound_seek_to_pcm_frame(sound, 0);
   ma_sound_start(sound);
 }
 
-void carbon_audio_stop_sound(const CBN_Audio_UID uid) {
+void carbon_audio_stop(const CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &sound)) return;
   ma_sound_stop(sound);
