@@ -1,5 +1,7 @@
 ["./" as images]
 icon.png
+yellow-card.png
+red-card.png
 
 // ["." as audio]
 // goal.ogg
@@ -8,3 +10,4 @@ icon.png
 // p2.ogg
 // serve.ogg
 // win.ogg
+// yellow-card.ogg
