@@ -24,3 +24,9 @@ void CBN_SKAP::Print(void) const {
 usz CBN_SKAP::Count(void) const {
   return carbon_skap_count(this);
 }
+
+cbn::Opt<CBN_Sprite_UID> CBN_SKAP::LoadSprite(const char *name) const {
+  CBN_Sprite_UID uid;
+  if (!carbon_sprite_manager_load_from_skap(name, this, &uid)) return {};
+  return uid;
+}

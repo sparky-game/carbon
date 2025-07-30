@@ -174,6 +174,17 @@ namespace cbn {
     const auto Play = carbon_audio_play;
     const auto Stop = carbon_audio_stop;
   }
+  namespace sprite_mgr {
+    using UID           = CBN_Sprite_UID;
+    const auto Init     = carbon_sprite_manager_init;
+    const auto Shutdown = carbon_sprite_manager_shutdown;
+    template <typename... Args>
+    [[nodiscard]] auto Load(Args &&... args) {
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_sprite_manager_load(std::forward<Args>(args))...);
+      else return carbon_sprite_manager_load(std::forward<Args>(args)...);
+    }
+    const auto Lookup = carbon_sprite_manager_lookup;
+  }
   namespace win {
     using KeyCode           = CBN_KeyCode;
     using MouseButton       = CBN_MouseButton;

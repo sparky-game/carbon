@@ -194,6 +194,7 @@ static void hdrgen(void) {
     "src/carbon_fs.h",
     "src/carbon_net.h",
     "src/carbon_audio.h",
+    "src/carbon_sprite_manager.h",
     "src/carbon_nn.h",
     "src/carbon_win.h",
     "src/carbon_test_manager.h",

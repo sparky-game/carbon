@@ -94,6 +94,10 @@ typedef struct CBN_SKAP {
    */
   template <typename T>
   usz CountOf(void) const;
+  /**
+   * @brief carbon_sprite_manager_load_from_skap
+   */
+  [[nodiscard]] cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const;
 private:
   template <CBN_SKAP_AssetType_t T>
   static consteval CBN_SKAP_AssetType GetAssetType(void);
