@@ -19,7 +19,7 @@ void carbon_math_srand(u64 seed) {
 }
 
 i32 carbon_math_rand(void) {
-  if (!carbon_math__rand_seed) carbon_math_srand(carbon_time_get());
+  if (!carbon_math__rand_seed) carbon_math_srand((u64)(carbon_time_get() * 1e6));
   carbon_math__rand_seed = CARBON_MATH__RAND_PCG_MAGIC * carbon_math__rand_seed + 1;
   return carbon_math__rand_seed >> 33;
 }
@@ -46,12 +46,13 @@ void carbon_math_mt19937_64_srand(u64 seed) {
 }
 
 u64 carbon_math_mt19937_64_rand(void) {
+  // NOTE: default seed was `5489ULL` and was changed to `carbon_time_get()` in ms
   static u64 mag[] = {0ULL, CARBON_MATH__MT19937_64_RAND_MATRIX_A};
   i32 i; u64 x;
   u64 *sv = carbon_math__mt19937_64_rand_state_vec;
   u64 *si = &carbon_math__mt19937_64_rand_state_idx;
   if (*si >= CARBON_MATH__MT19937_64_RAND_NN) {
-    if (*si == CARBON_MATH__MT19937_64_RAND_NN + 1) carbon_math_mt19937_64_srand(5489ULL);
+    if (*si == CARBON_MATH__MT19937_64_RAND_NN + 1) carbon_math_mt19937_64_srand((u64)(carbon_time_get() * 1e6));
     for (i = 0; i < CARBON_MATH__MT19937_64_RAND_NN - CARBON_MATH__MT19937_64_RAND_MM; ++i) {
       x = (sv[i] & CARBON_MATH__MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_MATH__MT19937_64_RAND_LM);
       sv[i] = sv[i + CARBON_MATH__MT19937_64_RAND_MM] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
