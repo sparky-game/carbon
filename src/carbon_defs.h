@@ -38,9 +38,9 @@
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
-#define CARBON_STATIC_UNREACHABLE CARBON_STATIC_ASSERT(false, "unreachable")
+#define CARBON_STATIC_UNREACHABLE CBN_STATIC_ASSERT(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")
-#define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
+#define CARBON_STATIC_NOTIMPLEMENTED CBN_STATIC_ASSERT(false, "not yet implemented")
 
 #ifdef __cplusplus
 #define CARBON_TYPE_OF(x) decltype(x)
@@ -74,9 +74,9 @@
 #endif
 
 #if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
-#define CARBON_STATIC_ASSERT _Static_assert
+#define CBN_STATIC_ASSERT _Static_assert
 #else
-#define CARBON_STATIC_ASSERT static_assert
+#define CBN_STATIC_ASSERT static_assert
 #endif
 
 #if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)

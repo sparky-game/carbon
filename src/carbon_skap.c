@@ -9,8 +9,8 @@
 static const char * const carbon_skap__allowed_types[] = {
   "images"
 };
-CARBON_STATIC_ASSERT(CARBON_SKAP_ASSET_TYPE_COUNT == CARBON_ARRAY_LEN(carbon_skap__allowed_types),
-                     "Amount of allowed asset types has changed");
+CBN_STATIC_ASSERT(CARBON_SKAP_ASSET_TYPE_COUNT == CARBON_ARRAY_LEN(carbon_skap__allowed_types),
+                  "Amount of allowed asset types has changed");
 
 static CBN_List carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
