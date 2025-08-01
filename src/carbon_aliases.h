@@ -75,22 +75,35 @@ namespace cbn {
     const auto Set     = carbon_memory_set,  set = Set;
   }
   namespace math {
-    constexpr auto pi = CARBON_PI;
-    namespace literals {
-      consteval f64 operator""_pi(const u64 n)   { return n * CARBON_PI; }
-      consteval f64 operator""_pi(const flong n) { return n * CARBON_PI; }
-    }
-    const auto Abs = carbon_math_abs;
     const auto Sin = carbon_math_sin;
     const auto Cos = carbon_math_cos;
-    template <std::integral T>
-    T Rand(void) { return carbon_math_rand(); }
-    template <std::floating_point T>
-    T Rand(void) { return carbon_math_randf(); }
-    inline auto Rand(const i32 min, const i32 max) { return carbon_math_rand_between(min, max); }
-    inline auto Rand(const f32 min, const f32 max) { return carbon_math_randf_between(min, max); }
-    inline void Clamp(auto &x, const auto min, const auto max) { x = CARBON_CLAMP(x, min, max); }
     inline constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
+    namespace literals {
+      consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
+      consteval f64 operator""_deg(const flong n) { return ToRadians(n); }
+      constexpr auto pi = CARBON_PI;
+      consteval f64 operator""_pi(const u64 n)   { return n * pi; }
+      consteval f64 operator""_pi(const flong n) { return n * pi; }
+    }
+    const auto Abs = carbon_math_abs;
+    template <Numeric T, Numeric U>
+    auto Mod(const T x, const U y) {
+      if constexpr (std::floating_point<T> or std::floating_point<U>) {
+        return static_cast<f32>(carbon_math_fmod(x, y));
+      }
+      else return static_cast<i32>(carbon_math_imod(x, y));
+    }
+    inline auto Rand(void) { return carbon_math_randf(); }
+    template <Numeric T, Numeric U>
+    auto Rand(const T min, const U max) {
+      if constexpr (std::floating_point<T> or std::floating_point<U>) {
+        return static_cast<f32>(carbon_math_randf_between(min, max));
+      }
+      else return static_cast<i32>(carbon_math_rand_between(min, max));
+    }
+    const auto MT19937 = carbon_math_mt19937_64_rand;
+    inline void Clamp(auto &x, const auto min, const auto max) { x = CARBON_CLAMP(x, min, max); }
+    inline void Lerp(auto &a, const auto b, const auto t) { a = CARBON_LERP(a, b, t); }
   }
   namespace crypto {
     namespace b64 {
@@ -98,7 +111,7 @@ namespace cbn {
       const auto Decode = carbon_crypto_base64_decode;
     }
     const auto CRC32 = carbon_crypto_crc32;
-    const auto DJB2 = carbon_crypto_djb2;
+    const auto DJB2  = carbon_crypto_djb2;
     namespace SHA1 {
       const auto Compute     = carbon_crypto_sha1;
       const auto ToHexString = carbon_crypto_sha1_to_hex_cstr;
