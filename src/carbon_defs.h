@@ -38,6 +38,7 @@
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
+#define CARBON_STATIC_UNREACHABLE CARBON_STATIC_ASSERT(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")
 #define CARBON_STATIC_NOTIMPLEMENTED CARBON_STATIC_ASSERT(false, "not yet implemented")
 

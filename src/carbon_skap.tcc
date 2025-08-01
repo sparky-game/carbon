@@ -20,7 +20,7 @@ usz CBN_SKAP::CountOf(void) const {
 template <CBN_SKAP_AssetType_t T>
 consteval CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
   if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
-  else return CARBON_SKAP_ASSET_TYPE_COUNT;
+  else CARBON_STATIC_UNREACHABLE;
 }
 
 #endif  // __cplusplus
