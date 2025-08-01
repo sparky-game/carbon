@@ -4,6 +4,8 @@
 #include <carbon.h>
 
 namespace pong {
+  using namespace cbn::math::literals;
+
   static constexpr auto c_Name                 = "PONG";
   static constexpr auto c_MaxFPS               = 120;
   static constexpr auto c_ScreenWidthRatio     = 16;
@@ -20,7 +22,7 @@ namespace pong {
   static constexpr auto c_RacketLength         = 5;
   static constexpr auto c_RacketHeight         = c_RacketLength * c_BallSize;
   static constexpr auto c_RacketSpeed          = 1100;
-  static constexpr auto c_MaxReflectionAngle   = cbn::math::ToRadians(75);
+  static constexpr auto c_MaxReflectionAngle   = 75_deg;
   static constexpr auto c_ScoreToWin           = 11;
   static constexpr auto c_ScoreFontSize        = 8;
   static constexpr auto c_ScoreFontPadding     = CARBON_VEC2(100, 50);
@@ -149,10 +151,10 @@ namespace pong {
   };
 
   struct Ball final : Entity {
-    explicit Ball(void) {
-      using namespace cbn::math::literals;
-      auto angle = cbn::math::Rand(0, 2_pi);
-      position = CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2);
+    explicit Ball(void) : Entity{CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2)}
+    {
+      auto angle = cbn::math::Mod((cbn::math::Rand(0, 120_deg) + 300_deg), 2_pi);
+      if (cbn::math::Rand() <= 0.5) angle += pi; /*angle = cbn::math::Mod(angle + pi, 2_pi)*/
       velocity = CARBON_VEC2(c_BallSpeed * cbn::math::Cos(angle), c_BallSpeed * cbn::math::Sin(angle));
     }
 
@@ -162,7 +164,7 @@ namespace pong {
   };
 
   struct Racket final : Entity {
-    explicit Racket(const cbn::Vec2 &p, const cbn::Vec2 &v) : Entity{p, v} {}
+    explicit Racket(const cbn::Vec2 &p) : Entity{p, CARBON_VEC2(0, c_RacketSpeed)} {}
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
       canvas.DrawRect(CARBON_RECT_V(position, c_BallSize, c_RacketHeight), c_ForegroundColor);
@@ -177,7 +179,7 @@ namespace pong {
     Stat<u8> score;
     u8 yellow_cards {0};
 
-    explicit Player(void) : racket{CARBON_VEC2(0, c_ScreenHeight/2 - c_RacketHeight/2), CARBON_VEC2_1(c_RacketSpeed)}
+    explicit Player(void) : racket{CARBON_VEC2(0, c_ScreenHeight/2 - c_RacketHeight/2)}
     {
       if constexpr (S == PlayerSide::Left) racket.position.x = c_RacketPadding;
       else racket.position.x = c_ScreenWidth - c_RacketPadding - c_BallSize;
@@ -252,9 +254,10 @@ namespace pong {
     Player<PlayerSide::Left> m_P1;
     Player<PlayerSide::Right> m_P2;
     cbn::Chrono m_StallingTimer {};
-    bool m_Playing {false};       // TODO: migrate to use a state-based approach
-    bool m_StartScreen {true};    // TODO: migrate to use a state-based approach
-    bool m_PlayingMusic {false};  // TODO: migrate to use a state-based approach
+    bool m_Playing {false};
+    bool m_StartScreen {true};
+    bool m_PlayingMusic {false};
+    bool m_AI {false};
 
     void Update(const f64 dt) {
       if (!m_Playing) {
@@ -302,45 +305,6 @@ namespace pong {
       }
     }
 
-    void Render(void) {
-      m_Canvas.Fill(c_BackgroundColor);
-      m_Canvas.DrawRect(m_Net, c_NetColor);
-      m_P1.Render(m_Canvas), m_P2.Render(m_Canvas);
-      Render_HUDDebug();
-      Render_StartScreen();
-      if (m_Playing) m_Ball.Render(m_Canvas);
-    }
-
-    void Render_HUDDebug(void) {
-      m_Canvas.DrawText(cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
-                        c_HUDDebugTextPosition,
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver),
-                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + m_Canvas.TextHeight(c_HUDDebugFontSize)),
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("%u fps", cbn::win::GetFPS()),
-                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 2*m_Canvas.TextHeight(c_HUDDebugFontSize)),
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-    }
-
-    void Render_StartScreen(void) {
-      if (!m_StartScreen) return;
-      static const auto text_width = m_Canvas.TextWidth(c_StartMsgText, c_StartMsgFontSize);
-      static const auto text_height = m_Canvas.TextHeight(c_StartMsgFontSize);
-      static const auto text_pos = CARBON_VEC2(c_ScreenWidth/2 - text_width/2, c_ScreenHeight/2 + 100);
-      m_Canvas.DrawBox(CARBON_RECT(text_pos.x - c_StartMsgBoxPadding.x,
-                                   text_pos.y - c_StartMsgBoxPadding.y - 2*c_StartMsgFontSize,
-                                   text_pos.x + text_width + c_StartMsgBoxPadding.x,
-                                   text_pos.y + text_height + c_StartMsgBoxPadding.y));
-      m_Canvas.DrawText(c_StartMsgText,
-                        text_pos,
-                        c_StartMsgFontSize,
-                        c_StartMsgFontColor);
-    }
-
     void Update_PlayerScoredGoal(void) {
       m_Playing = false;
       m_Ball = Ball{};
@@ -368,12 +332,12 @@ namespace pong {
     bool Update_ResolveBallCollisionWithRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
       auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
       if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketHeight).Overlaps(ball)) return false;
-      f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
-      f64 racket_center_y = r.position.y + c_RacketHeight/2;
+      const f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
+      const f64 racket_center_y = r.position.y + c_RacketHeight/2;
       f64 relative_y = (ball_center_y - racket_center_y) / (c_RacketHeight/2);
       cbn::math::Clamp(relative_y, -1, 1);
-      f64 angle = relative_y * (c_MaxReflectionAngle);
-      f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
+      const f64 angle = relative_y * (c_MaxReflectionAngle);
+      const f64 d_speed = c_BallSpeedAdjustment * (1 - 2 * cbn::math::Abs(relative_y));
       auto speed = m_Ball.velocity.Length() + d_speed;
       cbn::math::Clamp(speed, c_BallSpeedMin, c_BallSpeedMax);
       m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
@@ -383,8 +347,10 @@ namespace pong {
     }
 
     void Update_MoveRackets(const f64 dt) {
+      if (cbn::win::GetKeyDown(cbn::win::KeyCode::Tab)) m_AI = !m_AI;
       Update_MoveRacket(m_P1.racket, cbn::win::KeyCode::W, cbn::win::KeyCode::S, dt);
-      Update_MoveRacket(m_P2.racket, cbn::win::KeyCode::UpArrow, cbn::win::KeyCode::DownArrow, dt);
+      if (!m_AI) Update_MoveRacket(m_P2.racket, cbn::win::KeyCode::UpArrow, cbn::win::KeyCode::DownArrow, dt);
+      else Update_MoveRacketWithAI(m_P2.racket, dt);
     }
 
     void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
@@ -392,10 +358,73 @@ namespace pong {
       if (cbn::win::GetKey(down)) r.position.y += r.velocity.y * dt;
       cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
     }
+
+    void Update_MoveRacketWithAI(Racket &r, const f64 dt) {
+      static constexpr auto error_chance = 0.65;
+      static constexpr auto max_error = 110.0;
+      static constexpr auto deadzone = 30;
+      static constexpr auto smoothing_factor = 30;
+      static constexpr auto return_center_speed_factor = 0.25;
+      static constexpr auto center_y = c_ScreenHeight/2 - c_RacketHeight/2;
+      static f64 smooth_target = center_y;
+      f64 target = center_y;
+      f64 speed = r.velocity.y;
+      if (m_Ball.velocity.x < 0) speed *= return_center_speed_factor;
+      else {
+        const f64 t = m_Ball.position.y + c_BallSize/2 - c_RacketHeight/2;
+        target = cbn::math::Rand() < error_chance ? t + cbn::math::Rand(-max_error, max_error) : t;
+      }
+      cbn::math::Lerp(smooth_target, target, smoothing_factor * dt);
+      if (r.position.y + deadzone < smooth_target)      r.position.y += speed * dt;
+      else if (r.position.y - deadzone > smooth_target) r.position.y -= speed * dt;
+      cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
+    }
+
+    void Render(void) {
+      m_Canvas.Fill(c_BackgroundColor);
+      m_Canvas.DrawRect(m_Net, c_NetColor);
+      m_P1.Render(m_Canvas), m_P2.Render(m_Canvas);
+      Render_HUDDebug();
+      Render_StartScreen();
+      if (m_Playing) m_Ball.Render(m_Canvas);
+    }
+
+    void Render_HUDDebug(void) {
+      m_Canvas.DrawText(cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
+                        c_HUDDebugTextPosition,
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver),
+                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + m_Canvas.TextHeight(c_HUDDebugFontSize)),
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+      m_Canvas.DrawText(cbn::str::fmt("%u fps", cbn::win::GetFPS()),
+                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 2*m_Canvas.TextHeight(c_HUDDebugFontSize)),
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+      m_Canvas.DrawText(cbn::str::fmt("AI status: %s", m_AI ? "enabled" : "disabled"),
+                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 3*m_Canvas.TextHeight(c_HUDDebugFontSize)),
+                        c_HUDDebugFontSize,
+                        c_HUDDebugFontColor);
+    }
+
+    void Render_StartScreen(void) {
+      if (!m_StartScreen) return;
+      static const auto text_width = m_Canvas.TextWidth(c_StartMsgText, c_StartMsgFontSize);
+      static const auto text_height = m_Canvas.TextHeight(c_StartMsgFontSize);
+      static const auto text_pos = CARBON_VEC2(c_ScreenWidth/2 - text_width/2, c_ScreenHeight/2 + 100);
+      m_Canvas.DrawBox(CARBON_RECT(text_pos.x - c_StartMsgBoxPadding.x,
+                                   text_pos.y - c_StartMsgBoxPadding.y - 2*c_StartMsgFontSize,
+                                   text_pos.x + text_width + c_StartMsgBoxPadding.x,
+                                   text_pos.y + text_height + c_StartMsgBoxPadding.y));
+      m_Canvas.DrawText(c_StartMsgText,
+                        text_pos,
+                        c_StartMsgFontSize,
+                        c_StartMsgFontColor);
+    }
   };
 }
 
-// TODO: Add AI to the 2nd player, so you don't have to play against yourself.
 // TODO: If after serving the ball, the opponent doesn't respond, the point doesn't count,
 //       and it has to be repeated. If this happens 3 times in a row, the point counts and
 //       the opponent gets a yellow card.
@@ -403,7 +432,8 @@ namespace pong {
 //       direct expulsion and it will lose the game.
 // TODO: Add abilities that can be used during a game:
 //         - Slow down ball for 2s or so.
-//         - Dash with the racket.
+//         - Dash with the racket up and down.
+//         - Smash the ball forward (the racket goes up to the net to smash the ball and returns).
 
 int main(void) {
   pong::Game game;
