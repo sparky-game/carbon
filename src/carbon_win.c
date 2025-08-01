@@ -247,7 +247,7 @@ u8 carbon_win_shouldclose(void) {
   for (u8 i = 0; i < RGFW_keyLast; ++i)    carbon_win__prev_keys[i]          = carbon_win__keys[i];
   for (u8 i = 0; i < RGFW_mouseFinal; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
   RGFW_window_checkEvent(carbon_win__handle);
-  return RGFW_window_shouldClose(carbon_win__handle);
+  return carbon_win__handle->event.type == RGFW_quit;
 }
 
 u8 carbon_win_get_key_down(const CBN_KeyCode key) {
