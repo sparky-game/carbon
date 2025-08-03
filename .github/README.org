@@ -161,3 +161,4 @@ For more details and to acquire a copy of the *CRLE*, please visit <https://libc
 - Alexey Kutepov. (2025, February 3). /tsoding/coroutines: Custom coroutines implementation in GNU C/ [Code]. GitHub. <https://github.com/tsoding/coroutines>
 - OptumSoft. (2016, January 5). /Dangers of using dlsym() with RTLD_NEXT/ [Article]. OptumSoft. <https://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/>
 - Juan Cruz Viotti. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
+- Immisch, L., Wilstrup C. (2017, January 1). /PCM Terminology and Concepts/ [Article]. pyalsaaudio's Website. <https://larsimmisch.github.io/pyalsaaudio/terminology.html>
