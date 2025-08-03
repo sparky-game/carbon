@@ -86,7 +86,7 @@ namespace cbn {
       consteval f64 operator""_pi(const flong n) { return n * pi; }
     }
     const auto Abs = carbon_math_abs;
-    template <Numeric T, Numeric U>
+    template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
       if constexpr (std::floating_point<T> or std::floating_point<U>) {
         return static_cast<f32>(carbon_math_fmod(x, y));
@@ -94,7 +94,7 @@ namespace cbn {
       else return static_cast<i32>(carbon_math_imod(x, y));
     }
     inline auto Rand(void) { return carbon_math_randf(); }
-    template <Numeric T, Numeric U>
+    template <meta::Numeric T, meta::Numeric U>
     auto Rand(const T min, const U max) {
       if constexpr (std::floating_point<T> or std::floating_point<U>) {
         return static_cast<f32>(carbon_math_randf_between(min, max));

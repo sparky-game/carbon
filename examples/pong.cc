@@ -51,6 +51,7 @@ namespace pong {
     static cbn::audio::UID s_Sound_YellowCard;
 
     static void Init(void) {
+      CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       if (auto i = cbn::SKAP::make("pong.skap")) s_AssetPack = *i;
       else CARBON_UNREACHABLE;
       cbn::sprite_mgr::Init();
@@ -84,7 +85,7 @@ namespace pong {
     }
   }
 
-  template <cbn::Numeric T>
+  template <cbn::meta::Numeric T>
   struct Stat final {
     void Set(const T value) {
       m_Value = value;
@@ -220,7 +221,6 @@ namespace pong {
     explicit Game(void) : m_Canvas{cbn::DrawCanvas::make(c_ScreenWidth, c_ScreenHeight)},
                           m_Net{CARBON_RECT(c_ScreenWidth/2 - c_NetThickness + 1, 0, c_NetThickness, c_ScreenHeight)}
     {
-      CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
       res::Init();
       cbn::win::Open(m_Canvas.width, m_Canvas.height, c_Name);
       cbn::win::SetMaxFPS(c_MaxFPS);

@@ -164,6 +164,7 @@ static void hdrgen(void) {
     "src/carbon_deps.h",
     "src/carbon_defs.h",
     "src/carbon_types.h",
+    "src/carbon_metaprogramming.h",
     "src/carbon_version.h",
     "src/carbon_test_entry.h",
     "src/carbon_assert.h",

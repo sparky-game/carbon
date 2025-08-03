@@ -7,6 +7,7 @@
 #include "carbon_deps.h"
 #include "carbon_defs.h"
 #include "carbon_types.h"
+#include "carbon_metaprogramming.h"
 #include "carbon_version.h"
 #include "carbon_test_entry.h"
 #include "carbon_assert.h"
