@@ -19,7 +19,8 @@ usz CBN_SKAP::CountOf(void) const {
 
 template <CBN_SKAP_AssetType_t T>
 consteval CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
-  if constexpr (CARBON_TYPE_IS_SAME(T, CBN_Image)) return CARBON_SKAP_ASSET_TYPE_IMAGE;
+  if constexpr (cbn::meta::Same_v<T, CBN_Image>)       return CARBON_SKAP_ASSET_TYPE_IMAGE;
+  else if constexpr (cbn::meta::Same_v<T, CBN_Binary>) return CARBON_SKAP_ASSET_TYPE_BINARY;
   else static_assert(cbn::meta::AlwaysFalse<T>::value, "unsupported type");
 }
 

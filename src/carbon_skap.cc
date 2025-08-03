@@ -30,3 +30,15 @@ cbn::Opt<CBN_Sprite_UID> CBN_SKAP::LoadSprite(const char *name) const {
   if (!carbon_sprite_manager_load_from_skap(name, this, &uid)) return {};
   return uid;
 }
+
+cbn::Opt<CBN_Audio_UID> CBN_SKAP::LoadAudio(const char *name) const {
+  CBN_Audio_UID uid;
+  if (!carbon_audio_load_from_skap(name, this, &uid)) return {};
+  return uid;
+}
+
+cbn::Opt<CBN_Audio_UID> CBN_SKAP::LoadAudioStream(const char *name) const {
+  CBN_Audio_UID uid;
+  if (!carbon_audio_load_stream_from_skap(name, this, &uid)) return {};
+  return uid;
+}

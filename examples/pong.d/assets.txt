@@ -3,11 +3,11 @@ icon.png
 yellow-card.png
 red-card.png
 
-// ["." as audio]
-// goal.ogg
-// music.ogg
-// p1.ogg
-// p2.ogg
-// serve.ogg
-// win.ogg
-// yellow-card.ogg
+["./" as binaries]
+music.ogg
+goal.ogg
+p1.ogg
+p2.ogg
+serve.ogg
+win.ogg
+yellow-card.ogg

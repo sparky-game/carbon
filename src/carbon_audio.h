@@ -10,6 +10,7 @@
 #pragma once
 
 typedef CBN_SlotMap_Key CBN_Audio_UID;
+typedef struct CBN_SKAP CBN_SKAP;  // Forward declaration
 
 /**
  * @brief Initializes the audio subsystem.
@@ -34,6 +35,22 @@ CARBON_API u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_u
  * @param out_uid ... (output argument pointer).
  */
 CARBON_API u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
+
+/**
+ * @brief ...
+ * @param name ...
+ * @param skap_handle ...
+ * @param out_uid ... (output argument pointer).
+ */
+CARBON_API u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
+
+/**
+ * @brief ...
+ * @param name ...
+ * @param skap_handle ...
+ * @param out_uid ... (output argument pointer).
+ */
+CARBON_API u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
 
 #ifdef __cplusplus
 /**

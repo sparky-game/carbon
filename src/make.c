@@ -190,6 +190,7 @@ static void hdrgen(void) {
     "src/carbon_strview.h",
     "src/carbon_strbuilder.h",
     "src/carbon_strlist.h",
+    "src/carbon_binary.h",
     "src/carbon_sprite.h",
     "src/carbon_drawcanvas.h",
     "src/carbon_fs.h",
