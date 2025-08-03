@@ -60,19 +60,19 @@ namespace pong {
       if (auto i = s_AssetPack.LoadSprite("./red-card.png")) s_Sprite_RedCard = *i;
       else CARBON_UNREACHABLE;
       cbn::audio::Init();
-      if (auto i = cbn::audio::LoadStream("pong.d/music.ogg")) s_Sound_Music = *i;
+      if (auto i = s_AssetPack.LoadAudioStream("./music.ogg")) s_Sound_Music = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/serve.ogg")) s_Sound_Serve = *i;
+      if (auto i = s_AssetPack.LoadAudio("./serve.ogg")) s_Sound_Serve = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/p1.ogg")) s_Sound_P1 = *i;
+      if (auto i = s_AssetPack.LoadAudio("./p1.ogg")) s_Sound_P1 = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/p2.ogg")) s_Sound_P2 = *i;
+      if (auto i = s_AssetPack.LoadAudio("./p2.ogg")) s_Sound_P2 = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/goal.ogg")) s_Sound_Goal = *i;
+      if (auto i = s_AssetPack.LoadAudio("./goal.ogg")) s_Sound_Goal = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/win.ogg")) s_Sound_Win = *i;
+      if (auto i = s_AssetPack.LoadAudio("./win.ogg")) s_Sound_Win = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = cbn::audio::Load("pong.d/yellow-card.ogg")) s_Sound_YellowCard = *i;
+      if (auto i = s_AssetPack.LoadAudio("./yellow-card.ogg")) s_Sound_YellowCard = *i;
       else CARBON_UNREACHABLE;
       CBN_INFO("Initialized resource manager successfully");
     }
@@ -155,7 +155,7 @@ namespace pong {
     explicit Ball(void) : Entity{CARBON_VEC2(c_ScreenWidth/2 - c_BallSize/2, c_ScreenHeight/2 - c_BallSize/2)}
     {
       auto angle = cbn::math::Mod((cbn::math::Rand(0, 120_deg) + 300_deg), 2_pi);
-      if (cbn::math::Rand() <= 0.5) angle += pi; /*angle = cbn::math::Mod(angle + pi, 2_pi)*/
+      if (cbn::math::Rand() <= 0.5) angle += pi;
       velocity = CARBON_VEC2(c_BallSpeed * cbn::math::Cos(angle), c_BallSpeed * cbn::math::Sin(angle));
     }
 
@@ -207,11 +207,13 @@ namespace pong {
 
     void RenderCards(cbn::DrawCanvas &canvas) const {
       static constexpr auto padding = 10;
-      static const auto * const yc_sp = cbn::sprite_mgr::Lookup(res::s_Sprite_YellowCard);
-      canvas.DrawSprite(yc_sp, CARBON_VEC2(padding, c_ScreenHeight - padding - yc_sp->height));
+      static const auto * const sp = cbn::sprite_mgr::Lookup(res::s_Sprite_YellowCard);
+      static const auto sp_pos = CARBON_VEC2(padding, c_ScreenHeight - padding - sp->height);
+      static const auto text_height = canvas.TextHeight(c_HUDDebugFontSize);
+      static const auto text_pos = CARBON_VEC2(2*padding + sp->width, c_ScreenHeight - padding - text_height);
+      canvas.DrawSprite(sp, sp_pos);
       canvas.DrawText(cbn::str::fmt("x%hhu", yellow_cards),
-                      CARBON_VEC2(2*padding + yc_sp->width,
-                                  c_ScreenHeight - padding - canvas.TextHeight(c_HUDDebugFontSize)),
+                      text_pos,
                       c_HUDDebugFontSize,
                       c_ForegroundColor);
     }
@@ -361,7 +363,7 @@ namespace pong {
 
     void Update_MoveRacketWithAI(Racket &r, const f64 dt) {
       static constexpr auto error_chance = 0.65;
-      static constexpr auto max_error = 110.0;
+      static constexpr auto max_error = 80.0;
       static constexpr auto deadzone = 30;
       static constexpr auto smoothing_factor = 30;
       static constexpr auto return_center_speed_factor = 0.25;
@@ -390,22 +392,19 @@ namespace pong {
     }
 
     void Render_HUDDebug(void) {
-      m_Canvas.DrawText(cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
-                        c_HUDDebugTextPosition,
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver),
-                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + m_Canvas.TextHeight(c_HUDDebugFontSize)),
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("%u fps", cbn::win::GetFPS()),
-                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 2*m_Canvas.TextHeight(c_HUDDebugFontSize)),
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
-      m_Canvas.DrawText(cbn::str::fmt("AI status: %s", m_AI ? "enabled" : "disabled"),
-                        CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + 3*m_Canvas.TextHeight(c_HUDDebugFontSize)),
-                        c_HUDDebugFontSize,
-                        c_HUDDebugFontColor);
+      static const auto text_height = m_Canvas.TextHeight(c_HUDDebugFontSize);
+      const char *lines[] = {
+        cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
+        cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver),
+        cbn::str::fmt("%u fps", cbn::win::GetFPS()),
+        cbn::str::fmt("AI status: %s", m_AI ? "enabled" : "disabled")
+      };
+      for (usz i = 0; i < CARBON_ARRAY_LEN(lines); ++i) {
+        m_Canvas.DrawText(lines[i],
+                          CARBON_VEC2(c_HUDDebugTextPosition.x, c_HUDDebugTextPosition.y + i*text_height),
+                          c_HUDDebugFontSize,
+                          c_HUDDebugFontColor);
+      }
     }
 
     void Render_StartScreen(void) {
