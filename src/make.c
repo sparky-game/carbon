@@ -24,7 +24,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
-#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
+#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Werror=abstract-final-class -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 #if defined(__APPLE__)
 #define LIBS "-framework CoreFoundation -lobjc "
