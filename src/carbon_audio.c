@@ -83,7 +83,7 @@ u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
 }
 
 u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM);
+  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING);
 }
 
 CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
@@ -126,7 +126,7 @@ u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CB
 }
 
 u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM);
+  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING);
 }
 
 void carbon_audio_play(const CBN_Audio_UID uid) {
