@@ -71,10 +71,17 @@ We can get /Carbon/ in our preferred way of managing dependencies or external li
 
 Here are the main options of obtaining it:
 
+*Git Clone:*
+
+#+begin_src sh
+git clone --recursive https://github.com/sparky-game/carbon
+#+end_src
+
 *Git Submodule:*
 
 #+begin_src sh
 git submodule add https://github.com/sparky-game/carbon vendor/carbon
+git submodule update --init --recursive
 #+end_src
 
 *CMake FetchContent:*
