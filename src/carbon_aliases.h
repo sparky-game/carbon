@@ -178,6 +178,8 @@ namespace cbn {
     using UID           = CBN_Audio_UID;
     const auto Init     = carbon_audio_init;
     const auto Shutdown = carbon_audio_shutdown;
+    const auto GetVolume = carbon_audio_get_volume;
+    const auto SetVolume = carbon_audio_set_volume;
     template <typename... Args>
     [[nodiscard]] auto Load(Args &&... args) {
       if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load(std::forward<Args>(args))...);

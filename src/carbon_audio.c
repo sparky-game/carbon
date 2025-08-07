@@ -62,6 +62,14 @@ void carbon_audio_shutdown(void) {
   CBN_INFO("Shutdowned audio subsystem successfully");
 }
 
+f32 carbon_audio_get_volume(void) {
+  return ma_engine_get_volume(&carbon_audio__engine);
+}
+
+void carbon_audio_set_volume(f32 volume) {
+  ma_engine_set_volume(&carbon_audio__engine, volume);
+}
+
 CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
