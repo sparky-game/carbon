@@ -103,7 +103,9 @@ namespace cbn {
       else return static_cast<i32>(carbon_math_rand_between(min, max));
     }
     const auto MT19937 = carbon_math_mt19937_64_rand;
-    inline auto ToClamped(const auto x, const auto min, const auto max) { return CARBON_CLAMP(x, min, max); }
+    [[nodiscard]] auto ToClamped(const auto x, const auto min, const auto max) {
+      return CARBON_CLAMP(x, min, max);
+    }
     inline void Clamp(auto &x, const auto min, const auto max) { x = ToClamped(x, min, max); }
     inline void Lerp(auto &a, const auto b, const auto t) { a = CARBON_LERP(a, b, t); }
   }
