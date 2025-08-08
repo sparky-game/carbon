@@ -4753,9 +4753,9 @@ RGFW_bool RGFW_window_setIconEx(RGFW_window* win, u8* icon, RGFW_area a, i32 cha
 			u32 alpha = (channels == 4) ? icon[i * 4 + 3] : 0xFF;
 
 			target[i] = (unsigned long)((icon[i * 4 + 0]) << 16) |
-						(unsigned long)((icon[i * 4 + 1]) <<  8) |
-						(unsigned long)((icon[i * 4 + 2]) <<  0) |
-						(unsigned long)(alpha << 24);
+				    (unsigned long)((icon[i * 4 + 1]) <<  8) |
+				    (unsigned long)((icon[i * 4 + 2]) <<  0) |
+				    (unsigned long)(alpha << 24);
 		}
 	}
 
@@ -4776,7 +4776,9 @@ RGFW_bool RGFW_window_setIconEx(RGFW_window* win, u8* icon, RGFW_area a, i32 cha
 									depth, ZPixmap, 0, (char *)target, a.w, a.h, 32, 0);
 
 		wm_hints.icon_pixmap = XCreatePixmap(win->src.display, win->src.window, a.w, a.h, depth);
-		XPutImage(win->src.display, wm_hints.icon_pixmap, win->src.gc, image, 0, 0, 0, 0, a.w, a.h);
+                GC pixmap_gc = XCreateGC(win->src.display, wm_hints.icon_pixmap, 0, NULL);
+		XPutImage(win->src.display, wm_hints.icon_pixmap, pixmap_gc, image, 0, 0, 0, 0, a.w, a.h);
+                XFreeGC(win->src.display, pixmap_gc);
 		image->data = NULL;
 		XDestroyImage(image);
 
