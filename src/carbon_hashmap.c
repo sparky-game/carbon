@@ -4,8 +4,7 @@
 #include "carbon.inc"
 
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
-  CBN_HashMap_Node **buckets = (CBN_HashMap_Node **) CBN_MALLOC(capacity * sizeof(CBN_HashMap_Node *));
-  CBN_ASSERT(buckets && "failed to allocate memory");
+  CBN_HashMap_Node **buckets = (CBN_HashMap_Node **) carbon_memory_alloc(capacity * sizeof(CBN_HashMap_Node *));
   for (usz i = 0; i < capacity; ++i) buckets[i] = 0;
   return (CBN_HashMap) {
     .buckets = buckets,
@@ -23,12 +22,12 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
     CBN_HashMap_Node *curr = hm->buckets[i];
     while (curr) {
       CBN_HashMap_Node *next = curr->next;
-      CBN_FREE((void *) curr->key);
-      CBN_FREE(curr);
+      carbon_memory_free((void *) curr->key);
+      carbon_memory_free(curr);
       curr = next;
     }
   }
-  CBN_FREE(hm->buckets);
+  carbon_memory_free(hm->buckets);
   carbon_memory_set(hm, 0, sizeof(*hm));
 }
 
@@ -43,8 +42,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
     carbon_memory_copy(curr->value, value, hm->stride);
     return;
   }
-  CBN_HashMap_Node *new = (CBN_HashMap_Node *) CBN_MALLOC(sizeof(CBN_HashMap_Node) + hm->stride);
-  CBN_ASSERT(new && "failed to allocate memory");
+  CBN_HashMap_Node *new = (CBN_HashMap_Node *) carbon_memory_alloc(sizeof(CBN_HashMap_Node) + hm->stride);
   new->key = carbon_string_dup(key);
   carbon_memory_copy(new->value, value, hm->stride);
   new->next = *head;

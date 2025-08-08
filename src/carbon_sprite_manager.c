@@ -14,7 +14,7 @@ void carbon_sprite_manager_shutdown(void) {
   if (carbon_sprite__library.size) {
     carbon_slotmap_foreach(CBN_Sprite *, carbon_sprite__library) {
       carbon_sprite_destroy(it.var);
-      CBN_FREE(it.var);
+      carbon_memory_free(it.var);
     }
   }
   carbon_slotmap_destroy(&carbon_sprite__library);
@@ -26,8 +26,7 @@ u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_ui
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  CBN_Sprite *sprite = (CBN_Sprite *) CBN_MALLOC(sizeof(CBN_Sprite));
-  CBN_ASSERT(sprite && "failed to allocate memory");
+  CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
   CBN_Image img = carbon_fs_read_img_from_file(file);
   *sprite = carbon_sprite_from_img(&img);
   carbon_fs_destroy_img(&img);
@@ -40,8 +39,7 @@ u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_h
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  CBN_Sprite *sprite = (CBN_Sprite *) CBN_MALLOC(sizeof(CBN_Sprite));
-  CBN_ASSERT(sprite && "failed to allocate memory");
+  CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
   CBN_Image img;
   if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_IMAGE, name, &img)) return false;
   *sprite = carbon_sprite_from_img(&img);

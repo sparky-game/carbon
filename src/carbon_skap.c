@@ -170,7 +170,7 @@ CARBON_INLINE void carbon_skap__destroy_global_lists(void) {
   }
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
   carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
-    CBN_FREE(it.var.data);
+    carbon_memory_free(it.var.data);
   }
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_destroy(&carbon_skap__assets[i]);
@@ -225,8 +225,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List
             .data = 0,
             .metadata.size = carbon_fs_get_file_size(asset_name)
           };
-          asset.data = (u8 *) CBN_MALLOC(asset.metadata.size);
-          CBN_ASSERT(asset.data && "failed to allocate memory");
+          asset.data = (u8 *) carbon_memory_alloc(asset.metadata.size);
           FILE *fd = fopen(asset_name, "rb");
           fread(asset.data, asset.metadata.size, 1, fd);
           fclose(fd);
@@ -439,7 +438,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
   switch (asset_type) {
   case CARBON_SKAP_ASSET_TYPE_IMAGE: {
     CBN_Image asset = {
-      .data = (u8 *) CBN_MALLOC(idx.blob_size),
+      .data = (u8 *) carbon_memory_alloc(idx.blob_size),
       .metadata = idx.metadata.as_img
     };
     fseek(handle->fd, idx.blob_offset, SEEK_SET);
@@ -447,7 +446,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
       CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
-      CBN_FREE(asset.data);
+      carbon_memory_free(asset.data);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));
@@ -456,7 +455,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
   } break;
   case CARBON_SKAP_ASSET_TYPE_BINARY: {
     CBN_Binary asset = {
-      .data = (u8 *) CBN_MALLOC(idx.blob_size),
+      .data = (u8 *) carbon_memory_alloc(idx.blob_size),
       .metadata = idx.metadata.as_bin
     };
     fseek(handle->fd, idx.blob_offset, SEEK_SET);
@@ -464,7 +463,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
       CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
-      CBN_FREE(asset.data);
+      carbon_memory_free(asset.data);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));

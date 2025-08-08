@@ -23,8 +23,8 @@
     CBN_ASSERT(name ## _ptr && "Failed to load");       \
   }
 
-#define RGFW_ALLOC   CBN_MALLOC
-#define RGFW_FREE    CBN_FREE
+#define RGFW_ALLOC   carbon_memory_alloc
+#define RGFW_FREE    carbon_memory_free
 #define RGFW_ASSERT  CBN_ASSERT
 #define RGFW_MEMCPY  carbon_memory_copy
 #define RGFW_STRNCMP carbon_string_cmp_n

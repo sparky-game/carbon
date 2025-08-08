@@ -7,8 +7,7 @@ void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv) {
   if (sb->size + sv.size > sb->capacity) {
     if (!sb->capacity) sb->capacity = 256;
     while (sb->size + sv.size > sb->capacity) sb->capacity *= 2;
-    sb->items = (char *) CBN_REALLOC(sb->items, sb->capacity * sizeof(char));
-    CBN_ASSERT(sb->items && "failed to reallocate memory");
+    sb->items = (char *) carbon_memory_realloc(sb->items, sb->capacity * sizeof(char));
   }
   carbon_memory_copy(sb->items + sb->size, sv.data, sv.size * sizeof(char));
   sb->size += sv.size;
@@ -27,6 +26,6 @@ void carbon_strbuilder_free(CBN_StrBuilder *sb) {
     CBN_WARN("`sb` is not a valid pointer, skipping free");
     return;
   }
-  CBN_FREE(sb->items);
+  carbon_memory_free(sb->items);
   carbon_memory_set(sb, 0, sizeof(*sb));
 }

@@ -3,6 +3,24 @@
 
 #include "carbon.inc"
 
+void *carbon_memory_alloc(usz size) {
+  void *p = malloc(size);
+  CBN_ASSERT(p && "failed to allocate memory");
+  return p;
+}
+
+void *carbon_memory_zeroed(usz size) {
+  void *p = calloc(1, size);
+  CBN_ASSERT(p && "failed to allocate memory");
+  return p;
+}
+
+void *carbon_memory_realloc(void *p, usz size) {
+  void *new_p = realloc(p, size);
+  CBN_ASSERT(new_p && "failed to reallocate memory");
+  return new_p;
+}
+
 void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n) {
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;
@@ -20,4 +38,9 @@ void *carbon_memory_set(void *dst, i32 c, usz n) {
   u8 *d = (u8 *) dst;
   while (n--) *d++ = (u8) c;
   return dst;
+}
+
+void carbon_memory_free(void *p) {
+  if (!p) return;
+  free(p);
 }

@@ -4,10 +4,8 @@
 #include "carbon.inc"
 
 CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride) {
-  void *ptr = CBN_MALLOC(capacity * stride);
-  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_CircularQueue) {
-    .items = ptr,
+    .items = carbon_memory_alloc(capacity * stride),
     .capacity = capacity,
     .stride = stride,
     .size = 0,
@@ -21,7 +19,7 @@ void carbon_circularqueue_destroy(CBN_CircularQueue *cq) {
     CBN_WARN("`cq` is not a valid pointer, skipping destruction");
     return;
   }
-  if (cq->items) CBN_FREE(cq->items);
+  carbon_memory_free(cq->items);
   carbon_memory_set(cq, 0, sizeof(*cq));
 }
 

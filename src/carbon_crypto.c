@@ -59,8 +59,7 @@ char *carbon_crypto_base64_encode(const u8 *in, const usz in_size, usz *out_size
   };
   static const u8 modset[] = {0, 2, 1};
   *out_size = 4 * ((in_size + 2) / 3) + 1;
-  char *out = (char *) CBN_MALLOC(*out_size);
-  CBN_ASSERT(out && "failed to allocate memory");
+  char *out = (char *) carbon_memory_alloc(*out_size);
   for (usz i = 0, j = 0; i < in_size;) {
     u32 A = (i < in_size) ? (u8) in[i++] : 0;
     u32 B = (i < in_size) ? (u8) in[i++] : 0;
@@ -95,8 +94,7 @@ u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size) {
     else out_sz += 3;
   }
   ++out_sz;
-  u8 *out = (u8 *) CBN_MALLOC(out_sz);
-  CBN_ASSERT(out && "failed to allocate memory");
+  u8 *out = (u8 *) carbon_memory_alloc(out_sz);
   for (usz i = 0; i < out_sz / 3; ++i) {
     u8 A = codeset[in[4*i + 0]];
     u8 B = codeset[in[4*i + 1]];
@@ -180,8 +178,7 @@ void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
   }
   u32 h[] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
   usz pad_size = ((in_size + 8) / 64 + 1) * 64;
-  u8 *msg = (u8 *) CBN_CALLOC(pad_size, 1);
-  CBN_ASSERT(msg && "failed to allocate memory");
+  u8 *msg = (u8 *) carbon_memory_zeroed(pad_size);
   carbon_memory_copy(msg, in, in_size);
   msg[in_size] = 0x80;
   u64 bit_len = (u64) in_size * 8;
@@ -229,7 +226,7 @@ void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
     h[3] += d;
     h[4] += e;
   }
-  CBN_FREE(msg);
+  carbon_memory_free(msg);
   for (usz i = 0; i < CARBON_ARRAY_LEN(h); ++i) {
     out[i * 4 + 0] = (h[i] >> 24) & 0xff;
     out[i * 4 + 1] = (h[i] >> 16) & 0xff;

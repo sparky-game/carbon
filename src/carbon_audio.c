@@ -42,7 +42,7 @@ void carbon_audio_shutdown(void) {
   if (carbon_audio__sounds.size) {
     carbon_slotmap_foreach(ma_sound *, carbon_audio__sounds) {
       ma_sound_uninit(it.var);
-      CBN_FREE(it.var);
+      carbon_memory_free(it.var);
     }
   }
   if (carbon_audio__decoders.size) {
@@ -52,7 +52,7 @@ void carbon_audio_shutdown(void) {
   }
   if (carbon_audio__binaries.size) {
     carbon_list_foreach(CBN_Binary, carbon_audio__binaries) {
-      CBN_FREE(it.var.data);
+      carbon_memory_free(it.var.data);
     }
   }
   carbon_list_destroy(&carbon_audio__decoders);
@@ -75,11 +75,10 @@ CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  ma_sound *sound = (ma_sound *) CBN_MALLOC(sizeof(ma_sound));
-  CBN_ASSERT(sound && "failed to allocate memory");
+  ma_sound *sound = (ma_sound *) carbon_memory_alloc(sizeof(ma_sound));
   if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, sound)) {
     CBN_ERROR("Failed to load sound from file (`%s`)", file);
-    CBN_FREE(sound);
+    carbon_memory_free(sound);
     return false;
   }
   *out_uid = carbon_slotmap_push(&carbon_audio__sounds, &sound);
@@ -103,23 +102,20 @@ CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKA
   CBN_Binary bin;
   if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_BINARY, name, &bin)) return false;
   // Create decoder
-  ma_decoder *decoder = (ma_decoder *) CBN_MALLOC(sizeof(ma_decoder));
-  CBN_ASSERT(decoder && "failed to allocate memory");
-  // ma_decoder_config decoder_config = ma_decoder_config_init_default();
+  ma_decoder *decoder = (ma_decoder *) carbon_memory_alloc(sizeof(ma_decoder));
   if (MA_SUCCESS != ma_decoder_init_memory(bin.data, bin.metadata.size, 0, decoder)) {
     CBN_ERROR("Failed to create decoder");
-    CBN_FREE(decoder);
-    CBN_FREE(bin.data);
+    carbon_memory_free(decoder);
+    carbon_memory_free(bin.data);
     return false;
   }
   // Create sound
-  ma_sound *sound = (ma_sound *) CBN_MALLOC(sizeof(ma_sound));
-  CBN_ASSERT(sound && "failed to allocate memory");
+  ma_sound *sound = (ma_sound *) carbon_memory_alloc(sizeof(ma_sound));
   if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, decoder, flags, 0, sound)) {
     CBN_ERROR("Failed to load sound from audio buffer");
-    CBN_FREE(sound);
-    CBN_FREE(decoder);
-    CBN_FREE(bin.data);
+    carbon_memory_free(sound);
+    carbon_memory_free(decoder);
+    carbon_memory_free(bin.data);
     return false;
   }
   // Store decoder, binary and sound

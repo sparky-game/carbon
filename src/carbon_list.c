@@ -20,7 +20,7 @@ void carbon_list_destroy(CBN_List *l) {
     CBN_WARN("`l` is not a valid pointer, skipping destruction");
     return;
   }
-  if (l->items) CBN_FREE(l->items);
+  carbon_memory_free(l->items);
   carbon_memory_set(l, 0, sizeof(*l));
 }
 
@@ -32,8 +32,7 @@ void carbon_list_push(CBN_List *l, void *value) {
   if (l->size == l->capacity) {
     if (!l->capacity) l->capacity = CARBON_LIST__FIRST_ALLOC_CAPACITY;
     else l->capacity *= CARBON_LIST__RESIZE_FACTOR;
-    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
-    CBN_ASSERT(l->items && "failed to reallocate memory");
+    l->items = carbon_memory_realloc(l->items, l->capacity * l->stride);
   }
   carbon_memory_copy((void *) ((u64) l->items + (l->size * l->stride)), value, l->stride);
   ++l->size;
@@ -82,7 +81,6 @@ void carbon_list_remove(CBN_List *l, usz idx) {
 void carbon_list_shrink_to_fit(CBN_List *l) {
   if (l->size > 0 && l->size < l->capacity / 4) {
     l->capacity = l->size;
-    l->items = CBN_REALLOC(l->items, l->capacity * l->stride);
-    CBN_ASSERT(l->items && "failed to reallocate memory");
+    l->items = carbon_memory_realloc(l->items, l->capacity * l->stride);
   }
 }

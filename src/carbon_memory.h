@@ -9,10 +9,27 @@
 
 #pragma once
 
-#define CBN_MALLOC(sz)        malloc(sz)
-#define CBN_REALLOC(p, newsz) realloc(p, newsz)
-#define CBN_CALLOC(n, sz)     calloc(n, sz)
-#define CBN_FREE(p)           free(p)
+/**
+ * @brief ...
+ * @param size ...
+ * @return ...
+ */
+CARBON_API void *carbon_memory_alloc(usz size);
+
+/**
+ * @brief ...
+ * @param p ...
+ * @param size ...
+ * @return ...
+ */
+CARBON_API void *carbon_memory_realloc(void *p, usz size);
+
+/**
+ * @brief ...
+ * @param size ...
+ * @return ...
+ */
+CARBON_API void *carbon_memory_zeroed(usz size);
 
 /**
  * @brief Copies a set of bytes from a memory area to another one.
@@ -40,3 +57,9 @@ CARBON_API i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
  * @return The same `dst` value.
  */
 CARBON_API void *carbon_memory_set(void *dst, i32 c, usz n);
+
+/**
+ * @brief ...
+ * @param p ...
+ */
+CARBON_API void carbon_memory_free(void *p);

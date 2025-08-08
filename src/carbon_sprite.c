@@ -12,6 +12,6 @@ CBN_Sprite carbon_sprite_from_img(const CBN_Image *img) {
 }
 
 void carbon_sprite_destroy(CBN_Sprite *sprite) {
-  CBN_FREE((void *) sprite->pixels);
+  carbon_memory_free((void *) sprite->pixels);
   carbon_memory_set(sprite, 0, sizeof(*sprite));
 }

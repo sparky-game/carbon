@@ -379,10 +379,8 @@ f32 carbon_math_atan2(f32 y, f32 x) {
 }
 
 CBN_Matrix carbon_math_mat_create(usz rows, usz cols) {
-  f32 *ptr = (f32 *) CBN_MALLOC(rows * cols * sizeof(f32));
-  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_Matrix) {
-    .items = ptr,
+    .items = (f32 *) carbon_memory_alloc(rows * cols * sizeof(f32)),
     .rows = rows,
     .cols = cols
   };
@@ -393,7 +391,7 @@ void carbon_math_mat_destroy(CBN_Matrix *m) {
     CBN_WARN("`m` is not a valid pointer, skipping destruction");
     return;
   }
-  CBN_FREE(m->items);
+  carbon_memory_free(m->items);
   carbon_memory_set(m, 0, sizeof(*m));
 }
 
@@ -484,7 +482,7 @@ void carbon_math_row_destroy(CBN_Row *r) {
     CBN_WARN("`r` is not a valid pointer, skipping destruction");
     return;
   }
-  CBN_FREE(r->items);
+  carbon_memory_free(r->items);
   carbon_memory_set(r, 0, sizeof(*r));
 }
 

@@ -11,10 +11,8 @@ static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
 }
 
 CBN_StrList carbon_strlist_create(u8 unique) {
-  char **ptr = (char **) CBN_MALLOC(sizeof(char *));
-  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_StrList) {
-    .items = ptr,
+    .items = (char **) carbon_memory_alloc(sizeof(char *)),
     .size = 0,
     .capacity = 1,
     .unique = unique
@@ -33,7 +31,7 @@ CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) 
     start = found + delim_len;
   }
   if (*start) carbon_strlist_push(&sl, start);
-  CBN_FREE(s_copy);
+  carbon_memory_free(s_copy);
   return sl;
 }
 
@@ -43,9 +41,9 @@ void carbon_strlist_destroy(CBN_StrList *sl) {
     return;
   }
   for (usz i = 0; i < sl->size; ++i) {
-    CBN_FREE(sl->items[i]);
+    carbon_memory_free(sl->items[i]);
   }
-  CBN_FREE(sl->items);
+  carbon_memory_free(sl->items);
   carbon_memory_set(sl, 0, sizeof(*sl));
 }
 
@@ -57,14 +55,7 @@ void carbon_strlist_push(CBN_StrList *sl, const char *s) {
   if (sl->unique && carbon_strlist_contains(sl, s)) return;
   if (sl->size == sl->capacity) {
     sl->capacity *= 2;
-    char **prev_p = sl->items;
-    usz size = sl->capacity * sizeof(char *);
-    sl->items = (char **) CBN_REALLOC(sl->items, size);
-    if (!sl->items) {
-      CBN_ERROR("failed to reallocate memory (%zuB)", size);
-      CBN_FREE(prev_p);
-      return;
-    }
+    sl->items = (char **) carbon_memory_realloc(sl->items, sl->capacity * sizeof(char *));
   }
   sl->items[sl->size] = carbon_string_dup(s);
   ++sl->size;
@@ -80,21 +71,14 @@ void carbon_strlist_pop(CBN_StrList *sl, const char *s) {
     CBN_WARN("string `%s` not present in list", s);
     return;
   }
-  CBN_FREE(sl->items[idx]);
+  carbon_memory_free(sl->items[idx]);
   for (usz i = idx; i < sl->size - 1; ++i) {
     sl->items[i] = sl->items[i + 1];
   }
   --sl->size;
   if (sl->size > 0 && sl->size < sl->capacity / 4) {
     sl->capacity /= 2;
-    char **prev_p = sl->items;
-    usz size = sl->capacity * sizeof(char *);
-    sl->items = (char **) CBN_REALLOC(sl->items, size);
-    if (!sl->items && sl->size > 0) {
-      CBN_ERROR("failed to reallocate memory (%zuB)", size);
-      CBN_FREE(prev_p);
-      return;
-    }
+    sl->items = (char **) carbon_memory_realloc(sl->items, sl->capacity * sizeof(char *));
   }
 }
 

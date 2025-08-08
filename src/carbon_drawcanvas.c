@@ -12,10 +12,8 @@
 #include "carbon_drawcanvas_font.inl"
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
-  u32 *ptr = (u32 *) CBN_MALLOC(width * height * sizeof(u32));
-  CBN_ASSERT(ptr && "failed to allocate memory");
   return (CBN_DrawCanvas) {
-    .pixels = ptr,
+    .pixels = (u32 *) carbon_memory_alloc(width * height * sizeof(u32)),
     .width = width,
     .height = height
   };
@@ -26,7 +24,7 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
     CBN_WARN("`dc` is not a valid pointer, skipping destruction");
     return;
   }
-  CBN_FREE(dc->pixels);
+  carbon_memory_free(dc->pixels);
   carbon_memory_set(dc, 0, sizeof(*dc));
 }
 

@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
     carbon_hashmap_set(&hist, token, &freq);
   }
   carbon_println("Total amount of tokens: %$ (%$ are unique)", $(n_tokens), $(keys.size));
-  Point *points = CBN_CALLOC(keys.size, sizeof(Point));
+  Point *points = carbon_memory_zeroed(keys.size * sizeof(Point));
   carbon_strlist_foreach(keys) {
     points[it.i].token = it.sv;
     carbon_hashmap_get(&hist, carbon_strview_to_cstr(it.sv), &points[it.i].freq);
@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
   }
 
   // Cleanup
-  CBN_FREE(points);
+  carbon_memory_free(points);
   carbon_strlist_destroy(&keys);
   carbon_hashmap_destroy(&hist);
   carbon_strbuilder_free(&sb);

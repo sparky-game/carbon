@@ -71,9 +71,13 @@ namespace cbn {
     carbon_ceprintln(color, msg, std::forward<Args>(args)...);
   }
   namespace mem {
-    const auto Copy    = carbon_memory_copy, cp  = Copy;
-    const auto Compare = carbon_memory_cmp,  cmp = Compare;
-    const auto Set     = carbon_memory_set,  set = Set;
+    const auto Alloc   = carbon_memory_alloc;
+    const auto Realloc = carbon_memory_realloc;
+    const auto Zeroed  = carbon_memory_zeroed;
+    const auto Copy    = carbon_memory_copy,  cp  = Copy;
+    const auto Compare = carbon_memory_cmp,   cmp = Compare;
+    const auto Set     = carbon_memory_set;
+    const auto Free    = carbon_memory_free;
   }
   namespace math {
     const auto Sin = carbon_math_sin;
