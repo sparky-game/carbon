@@ -3,7 +3,7 @@
 
 #include "carbon.inc"
 
-void *carbon_memory_copy(void *dst, const void *src, usz n) {
+void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n) {
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;
   while (n--) *d++ = *s++;
@@ -18,6 +18,6 @@ i32 carbon_memory_cmp(const void *v1, const void *v2, usz n) {
 
 void *carbon_memory_set(void *dst, i32 c, usz n) {
   u8 *d = (u8 *) dst;
-  while (n--) *d++ = c;
+  while (n--) *d++ = (u8) c;
   return dst;
 }

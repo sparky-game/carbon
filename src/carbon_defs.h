@@ -62,6 +62,10 @@
 #define CARBON_API extern
 #endif
 
+#ifdef __cplusplus
+#define restrict __restrict
+#endif
+
 #if defined(__GNUC__) || defined(__clang__)
 #define CARBON_INLINE __attribute__((always_inline)) static inline
 #define CARBON_NOINLINE __attribute__((noinline))

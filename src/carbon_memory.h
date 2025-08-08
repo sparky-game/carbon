@@ -21,7 +21,7 @@
  * @param n The amount of bytes to copy from `src`.
  * @return The original value of `dst`.
  */
-CARBON_API void *carbon_memory_copy(void *dst, const void *src, usz n);
+CARBON_API void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n);
 
 /**
  * @brief Compares two sets of bytes from two different memory areas.
