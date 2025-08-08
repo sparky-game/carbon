@@ -5,7 +5,6 @@
 
 namespace pong {
   static constexpr auto c_Name                = "PONG";
-  static constexpr auto c_MaxFPS              = 120;
   static constexpr auto c_ScreenWidthRatio    = 16;
   static constexpr auto c_ScreenHeightRatio   = 9;
   static constexpr auto c_ScreenRatioFactor   = 80;
@@ -615,7 +614,7 @@ namespace pong {
           .width = c_ScreenWidth,
           .height = c_ScreenHeight,
           .name = c_Name,
-          .max_fps = c_MaxFPS
+          .max_fps = 0  // Set to unlimited for debug purposes
         }},
         m_Scene_1{*m_Window, [&](){
           m_Scene->OnExit();
