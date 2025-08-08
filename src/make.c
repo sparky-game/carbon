@@ -26,6 +26,12 @@
 #define CXX_STD "-std=c++20"
 #define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
+#ifndef CARBON_MAKE_USE_SANITIZERS
+#define OPTIMIZATIONS "-pipe -Os"
+#else
+#define OPTIMIZATIONS "-fsanitize=address,undefined -g"
+#endif
+
 #if defined(__APPLE__)
 #define LIBS "-framework CoreFoundation -lobjc "
 #elif defined (_WIN32)
@@ -221,12 +227,7 @@ static void build_compile_c_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("src/carbon_*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CC      %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "src/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c src/%s -o " WORKDIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
@@ -239,12 +240,7 @@ static void build_compile_cxx_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("src/carbon_*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXX     %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "src/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c src/%s -o " WORKDIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
@@ -275,12 +271,7 @@ static void build_shared_lib(void) {
 #else
   carbon_println("  LD      libcarbon.so");
 #endif
-  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-  carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " " OPTIMIZATIONS " ");
 #ifndef _WIN32
   carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
 #else
@@ -319,12 +310,7 @@ static void test_compile_c_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("test/*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CC      %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "test/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c test/%s -o test/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
@@ -337,12 +323,7 @@ static void test_compile_cxx_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("test/*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXX     %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "test/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c test/%s -o test/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
@@ -353,12 +334,7 @@ static void test_compile_cxx_files(void) {
 static void test_link(void) {
   CBN_StrBuilder cmd = {0};
   carbon_println("  LD      " TESTBIN);
-  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-  carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-  carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+  carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " " OPTIMIZATIONS " ");
 #ifdef _WIN32
   CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match("test/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
@@ -390,12 +366,7 @@ static void examples_c_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CCLD    %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "examples/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
     carbon_string_strip_substr(it.f, ".c");
@@ -416,12 +387,7 @@ static void examples_cxx_files(void) {
   CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXXLD   %s", it.f);
-    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE ");
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    carbon_strbuilder_add_cstr(&cmd, "-fsanitize=address,undefined -g ");
-#else
-    carbon_strbuilder_add_cstr(&cmd, "-pipe -Os ");
-#endif
+    carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE " OPTIMIZATIONS " ");
     carbon_string_strip_substr(it.f, "examples/");
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
     carbon_string_strip_substr(it.f, ".cc");
