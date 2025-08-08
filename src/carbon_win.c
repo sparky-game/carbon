@@ -47,6 +47,8 @@
 static RGFW_window *carbon_win__handle;
 static u32 carbon_win__max_fps;
 static u32 carbon_win__curr_fps;
+static u32 carbon_win__fps;
+static CBN_Chrono carbon_win__fps_timer;
 static CBN_Image carbon_win__icon;
 static u8 carbon_win__keys[RGFW_keyLast];
 static u8 carbon_win__prev_keys[RGFW_keyLast];
@@ -224,7 +226,13 @@ f64 carbon_win_get_deltatime(void) {
 }
 
 u32 carbon_win_get_fps(void) {
-  return carbon_win__curr_fps;
+  if (!carbon_chrono_is_running(&carbon_win__fps_timer)) carbon_chrono_restart(&carbon_win__fps_timer);
+  else carbon_chrono_update(&carbon_win__fps_timer);
+  if (carbon_win__fps_timer.elapsed >= 0.5) {
+    carbon_chrono_restart(&carbon_win__fps_timer);
+    carbon_win__fps = carbon_win__curr_fps;
+  }
+  return carbon_win__fps;
 }
 
 void carbon_win_update(CBN_DrawCanvas dc) {
