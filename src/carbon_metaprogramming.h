@@ -61,7 +61,8 @@ namespace cbn::meta {
   /**
    */
   template <usz N, typename... Ts>
-  struct Pick { static_assert(sizeof...(Ts) > 0); };
+  requires (sizeof...(Ts) > 0)
+  struct Pick;
   template <usz N, typename... Ts>
   using Pick_t = typename Pick<N, Ts...>::type;
   template <usz N, typename T, typename... Ts>
@@ -72,7 +73,8 @@ namespace cbn::meta {
   /**
    */
   template <typename T, typename... Ts>
-  struct Where { static_assert(sizeof...(Ts) > 0); };
+  requires (sizeof...(Ts) > 0)
+  struct Where;
   template <typename T, typename... Ts>
   constexpr usz Where_v = Where<T, Ts...>::value;
   template <typename T, typename U, typename... Ts>
@@ -94,8 +96,8 @@ namespace cbn::meta {
     /**
      */
     template <typename T>
+    requires (Contains<T>())
     static consteval usz Find(void) noexcept {
-      static_assert(Contains<T>());
       return Where_v<T, Ts...>;
     }
   };
