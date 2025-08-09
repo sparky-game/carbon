@@ -119,10 +119,14 @@ CARBON_INLINE u8 carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, cons
 void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
   i32 x1, x2, y1, y2;
   if (!carbon_drawcanvas__rect_normalize(dc, r, &x1, &x2, &y1, &y2)) return;
-  for (i32 i = x1; i <= x2; ++i) {
-    for (i32 j = y1; j <= y2; ++j) {
-      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), color);
+  u32 *p_dc = dc.pixels + (y1 * dc.width + x1);
+  usz row_offset = x2 - x1 + 1;
+  for (i32 j = y1; j <= y2; ++j) {
+    for (i32 i = x1; i <= x2; ++i) {
+      carbon_drawcanvas__alpha_blending(p_dc, color);
+      ++p_dc;
     }
+    p_dc += dc.width - row_offset;
   }
 }
 
@@ -141,7 +145,7 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
         }
       }
       u32 aa_alpha = ((color >> 0) & 0xff) * (n / CARBON_DRAWCANVAS__AA_RES / CARBON_DRAWCANVAS__AA_RES);
-      u32 aa_color = (color & 0xffffff00) | (aa_alpha << 0);
+      u32 aa_color = (color & 0xffffff00) | aa_alpha;
       carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), aa_color);
     }
   }
