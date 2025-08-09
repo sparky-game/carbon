@@ -130,6 +130,7 @@ namespace pong {
     cbn::Vec2 position;
     cbn::Vec2 velocity;
     explicit Entity(const cbn::Vec2 &p = CARBON_VEC2_ZERO, const cbn::Vec2 &v = CARBON_VEC2_ZERO) : position{p}, velocity{v} {}
+    virtual void Update([[maybe_unused]] const f64 dt) {}
   };
 
   struct Ball final : Entity {
@@ -141,11 +142,16 @@ namespace pong {
       velocity = CARBON_VEC2(c_Speed * cbn::math::Cos(angle), c_Speed * cbn::math::Sin(angle));
     }
 
+    virtual void Update(const f64 dt) final override {
+      position += velocity * dt;
+    }
+
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
       canvas.DrawRect(CARBON_RECT_SQUARE_V(position, c_BallSize), Color::White);
     }
 
-    static constexpr auto c_Speed = 1000;
+    static constexpr auto c_Speed {1000};
+    u8 wall_hits {0};
   };
 
   struct Racket final : Entity {
@@ -156,7 +162,7 @@ namespace pong {
     }
 
   private:
-    static constexpr auto c_Speed = 1100;
+    static constexpr auto c_Speed {1100};
   };
 
   enum struct PlayerSide { Left, Right };
@@ -379,18 +385,18 @@ namespace pong {
           m_SwitchToMenu{std::move(to_menu)}
       {}
 
+      virtual void OnEnter(void) final override {
+        m_P1.Reset(), m_P2.Reset();
+      }
+
       virtual void Update(const f64 dt) final override {
-        static bool is_first_time = true;
-        if (is_first_time) {
-          m_P1.Reset(), m_P2.Reset();
-          is_first_time = false;
-        }
         if (!m_Playing) {
           Update_CheckVictory();
-          Update_ServeBall();
+          Update_WaitForServe();
         }
         else {
-          m_Ball.position += m_Ball.velocity * dt;
+          m_Ball.Update(dt);
+          Update_BallEntersGoal();
           Update_BallCollideWalls();
           Update_BallCollideRackets();
         }
@@ -432,7 +438,7 @@ namespace pong {
         }
       }
 
-      void Update_ServeBall(void) {
+      void Update_WaitForServe(void) {
         using namespace cbn::time::literals;
         if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
           m_StallingTimer.Stop();
@@ -456,7 +462,7 @@ namespace pong {
         if (m_P1.points != c_PointsToWin && m_P2.points != c_PointsToWin) cbn::audio::Play(res::s_Sound_Goal);
       }
 
-      void Update_BallCollideWalls(void) {
+      void Update_BallEntersGoal(void) {
         if (m_Ball.position.x < 0) {
           Update_PlayerScoredGoal();
           ++m_P2.points;
@@ -465,33 +471,38 @@ namespace pong {
           Update_PlayerScoredGoal();
           ++m_P1.points;
         }
-        if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) m_Ball.velocity.y *= -1;
+      }
+
+      void Update_BallCollideWalls(void) {
+        if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
+          m_Ball.velocity.y *= -1;
+          ++m_Ball.wall_hits;
+        }
         cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
       }
 
       void Update_BallCollideRackets(void) {
-        if (Update_ResolveBallCollisionWithRacket(m_P1.racket, 1, res::s_Sound_P1)) m_P1.score += 10;
-        else if (Update_ResolveBallCollisionWithRacket(m_P2.racket, -1, res::s_Sound_P2)) m_P2.score += 10;
+        if (Update_BallCollideRacket(m_P1.racket, 1, res::s_Sound_P1)) m_P1.score += 10;
+        else if (Update_BallCollideRacket(m_P2.racket, -1, res::s_Sound_P2)) m_P2.score += 10;
       }
 
-      bool Update_ResolveBallCollisionWithRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
+      bool Update_BallCollideRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
         using namespace cbn::math::literals;
         static constexpr auto max_reflection_angle = 75_deg;
         static constexpr auto speed_adjustment = 400;
         static constexpr auto speed_min = Ball::c_Speed * 0.9;
         static constexpr auto speed_max = Ball::c_Speed * 2;
-        auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
+        const auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
         if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketHeight).Overlaps(ball)) return false;
         const f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
         const f64 racket_center_y = r.position.y + c_RacketHeight/2;
-        f64 relative_y = (ball_center_y - racket_center_y) / (c_RacketHeight/2);
-        cbn::math::Clamp(relative_y, -1, 1);
+        const f64 relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (c_RacketHeight/2), -1, 1);
         const f64 angle = relative_y * (max_reflection_angle);
         const f64 d_speed = speed_adjustment * (1 - 2 * cbn::math::Abs(relative_y));
-        auto speed = m_Ball.velocity.Length() + d_speed;
-        cbn::math::Clamp(speed, speed_min, speed_max);
+        const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, speed_min, speed_max);
         m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
         m_Ball.velocity.y = speed * cbn::math::Sin(angle);
+        m_Ball.wall_hits = 0;
         cbn::audio::Play(sound);
         return true;
       }
