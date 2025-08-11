@@ -29,6 +29,9 @@ static CBN_SlotMap carbon_audio__sounds;
 static CBN_List carbon_audio__decoders;
 static CBN_List carbon_audio__binaries;
 
+#define CARBON_AUDIO__SOUND_FLAGS (MA_SOUND_FLAG_ASYNC)
+#define CARBON_AUDIO__SOUND_STREAM_FLAGS (MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING | MA_SOUND_FLAG_NO_PITCH)
+
 void carbon_audio_init(void) {
   ma_result res = ma_engine_init(0, &carbon_audio__engine);
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
@@ -66,7 +69,7 @@ f32 carbon_audio_get_volume(void) {
   return ma_engine_get_volume(&carbon_audio__engine);
 }
 
-void carbon_audio_set_volume(f32 volume) {
+void carbon_audio_set_volume(const f32 volume) {
   ma_engine_set_volume(&carbon_audio__engine, volume);
 }
 
@@ -86,11 +89,11 @@ CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID
 }
 
 u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC);
+  return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_FLAGS);
 }
 
 u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_file_ex(file, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING);
+  return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 
 CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
@@ -126,11 +129,11 @@ CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKA
 }
 
 u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, MA_SOUND_FLAG_ASYNC);
+  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_FLAGS);
 }
 
 u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING);
+  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 
 void carbon_audio_play(const CBN_Audio_UID uid) {
@@ -144,4 +147,23 @@ void carbon_audio_stop(const CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
   ma_sound_stop(sound);
+}
+
+f32 carbon_audio_get_pitch(const CBN_Audio_UID uid) {
+  ma_sound *sound = 0;
+  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return 0;
+  return ma_sound_get_pitch(sound);
+}
+
+void carbon_audio_set_pitch(const CBN_Audio_UID uid, const f32 pitch) {
+  ma_sound *sound = 0;
+  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
+  ma_sound_set_pitch(sound, pitch);
+}
+
+void carbon_audio_shift_pitch(const CBN_Audio_UID uid) {
+  static const i8 semitones[] = {-4, -2, 0, 2, 4, 7, 9};
+  i8 semitone = semitones[carbon_math_rand_between(0, CARBON_ARRAY_LEN(semitones) - 1)];
+  f32 pitch = carbon_math_pow(2, (f32) semitone/12);
+  carbon_audio_set_pitch(uid, pitch);
 }

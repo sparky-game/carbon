@@ -194,8 +194,11 @@ namespace cbn {
       if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load_stream(std::forward<Args>(args))...);
       else return carbon_audio_load_stream(std::forward<Args>(args)...);
     }
-    const auto Play = carbon_audio_play;
-    const auto Stop = carbon_audio_stop;
+    const auto Play       = carbon_audio_play;
+    const auto Stop       = carbon_audio_stop;
+    const auto GetPitch   = carbon_audio_get_pitch;
+    const auto SetPitch   = carbon_audio_set_pitch;
+    const auto ShiftPitch = carbon_audio_shift_pitch;
   }
   namespace sprite_mgr {
     using UID           = CBN_Sprite_UID;
