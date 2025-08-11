@@ -49,14 +49,15 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   *head = new;
 }
 
-void carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
+u8 carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
   if (!hm || !key || !out_value) {
     CBN_ERROR("`hm`, `key` and `out_value` must be valid pointers");
-    return;
+    return false;
   }
   for (CBN_HashMap_Node *curr = hm->buckets[carbon_crypto_djb2(key) % hm->capacity]; curr; curr = curr->next) {
     if (carbon_string_cmp(curr->key, key)) continue;
     carbon_memory_copy(out_value, curr->value, hm->stride);
-    return;
+    return true;
   }
+  return false;
 }
