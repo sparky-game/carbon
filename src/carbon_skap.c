@@ -426,7 +426,10 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     return false;
   }
   CBN_SKAP_AssetIdx idx;
-  carbon_hashmap_get(&handle->idxs[asset_type], asset_name, &idx);
+  if (!carbon_hashmap_get(&handle->idxs[asset_type], asset_name, &idx)) {
+    CBN_ERROR("No asset with asset_name (`%s`) requested", asset_name);
+    return false;
+  }
   if (carbon_string_cmp(idx.name, asset_name)) {
     CBN_ERROR("idx.name (`%s`) doesn't match the asset_name (`%s`) requested", idx.name, asset_name);
     return false;
