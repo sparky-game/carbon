@@ -537,18 +537,16 @@ namespace pong {
       template <PlayerSide S>
       bool Update_BallCollideRacket(Player<S> &p) {
         using namespace cbn::math::literals;
-        static constexpr auto max_deflection_angle = 45_deg;
+        static constexpr auto dir = S == PlayerSide::Left ? 1 : -1;
         const auto racket = CARBON_RECT_SQUARE_V(p.racket.position, c_RacketSize);
         const auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
         if (!racket.Overlaps(ball)) return false;
         const auto ball_center_y = m_Ball.position.y + c_BallSize/2;
         const auto racket_center_y = p.racket.position.y + c_RacketSize/2;
         const auto relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (c_RacketSize/2), -1, 1);
-        const auto angle = relative_y * max_deflection_angle;
+        const auto angle = (relative_y * 45_deg) + cbn::math::Rand(-5_deg, 5_deg);
         const auto d_speed = m_Ball.speed_delta * (1 - 2 * cbn::math::Abs(relative_y));
         const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
-        i8 dir = 1;
-        if constexpr (S == PlayerSide::Right) dir = -1;
         m_Ball.velocity = CARBON_VEC2(dir * cbn::math::Abs(speed * cbn::math::Cos(angle)), speed * cbn::math::Sin(angle));
         m_Ball.wall_hits = 0;
         p.score += 10;
