@@ -4,10 +4,13 @@ yellow-card.png
 red-card.png
 
 ["./" as binaries]
-music.ogg
+menu-music.ogg
+menu-select.ogg
 goal.ogg
-p1.ogg
-p2.ogg
-serve.ogg
+point-up.ogg
+wall.ogg
+racket.ogg
+serve-1.ogg
+serve-2.ogg
 win.ogg
 yellow-card.ogg

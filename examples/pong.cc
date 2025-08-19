@@ -4,26 +4,29 @@
 #include <carbon.h>
 
 namespace pong {
-  static constexpr auto c_Name                = "PONG";
-  static constexpr auto c_ScreenWidthRatio    = 16;
-  static constexpr auto c_ScreenHeightRatio   = 9;
-  static constexpr auto c_ScreenRatioFactor   = 80;
-  static constexpr auto c_ScreenWidth         = c_ScreenWidthRatio * c_ScreenRatioFactor;
-  static constexpr auto c_ScreenHeight        = c_ScreenHeightRatio * c_ScreenRatioFactor;
-  static constexpr auto c_BallSize            = 32;
-  static constexpr auto c_RacketLength        = 5;
-  static constexpr auto c_RacketHeight        = c_RacketLength * c_BallSize;
-  static constexpr auto c_PointsToWin         = 11;
+  static constexpr auto c_Name              = "PONG";
+  static constexpr auto c_ScreenWidthRatio  = 16;
+  static constexpr auto c_ScreenHeightRatio = 9;
+  static constexpr auto c_ScreenRatioFactor = 80;
+  static constexpr auto c_ScreenWidth       = c_ScreenWidthRatio * c_ScreenRatioFactor;
+  static constexpr auto c_ScreenHeight      = c_ScreenHeightRatio * c_ScreenRatioFactor;
+  static constexpr auto c_BallSize          = 32;
+  static constexpr auto c_RacketSize        = c_BallSize * 2;
+  static constexpr auto c_PointsToWin       = 11;
+  static constexpr auto c_PointsDiffToWin   = 2;
 
   namespace res {
     static cbn::SKAP s_AssetPack;
     static cbn::sprite_mgr::UID s_Sprite_YellowCard;
     static cbn::sprite_mgr::UID s_Sprite_RedCard;
-    static cbn::audio::UID s_Sound_Music;
-    static cbn::audio::UID s_Sound_Serve;
-    static cbn::audio::UID s_Sound_P1;
-    static cbn::audio::UID s_Sound_P2;
+    static cbn::audio::UID s_Sound_MenuMusic;
+    static cbn::audio::UID s_Sound_MenuSelect;
+    static cbn::audio::UID s_Sound_Serve_1;
+    static cbn::audio::UID s_Sound_Serve_2;
+    static cbn::audio::UID s_Sound_Wall;
+    static cbn::audio::UID s_Sound_Racket;
     static cbn::audio::UID s_Sound_Goal;
+    static cbn::audio::UID s_Sound_PointUp;
     static cbn::audio::UID s_Sound_Win;
     static cbn::audio::UID s_Sound_YellowCard;
 
@@ -37,15 +40,21 @@ namespace pong {
       if (auto i = s_AssetPack.LoadSprite("./red-card.png")) s_Sprite_RedCard = *i;
       else CARBON_UNREACHABLE;
       cbn::audio::Init();
-      if (auto i = s_AssetPack.LoadAudioStream("./music.ogg")) s_Sound_Music = *i;
+      if (auto i = s_AssetPack.LoadAudioStream("./menu-music.ogg")) s_Sound_MenuMusic = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = s_AssetPack.LoadAudio("./serve.ogg")) s_Sound_Serve = *i;
+      if (auto i = s_AssetPack.LoadAudio("./menu-select.ogg")) s_Sound_MenuSelect = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = s_AssetPack.LoadAudio("./p1.ogg")) s_Sound_P1 = *i;
+      if (auto i = s_AssetPack.LoadAudio("./serve-1.ogg")) s_Sound_Serve_1 = *i;
       else CARBON_UNREACHABLE;
-      if (auto i = s_AssetPack.LoadAudio("./p2.ogg")) s_Sound_P2 = *i;
+      if (auto i = s_AssetPack.LoadAudio("./serve-2.ogg")) s_Sound_Serve_2 = *i;
+      else CARBON_UNREACHABLE;
+      if (auto i = s_AssetPack.LoadAudio("./wall.ogg")) s_Sound_Wall = *i;
+      else CARBON_UNREACHABLE;
+      if (auto i = s_AssetPack.LoadAudio("./racket.ogg")) s_Sound_Racket = *i;
       else CARBON_UNREACHABLE;
       if (auto i = s_AssetPack.LoadAudio("./goal.ogg")) s_Sound_Goal = *i;
+      else CARBON_UNREACHABLE;
+      if (auto i = s_AssetPack.LoadAudio("./point-up.ogg")) s_Sound_PointUp = *i;
       else CARBON_UNREACHABLE;
       if (auto i = s_AssetPack.LoadAudio("./win.ogg")) s_Sound_Win = *i;
       else CARBON_UNREACHABLE;
@@ -66,7 +75,9 @@ namespace pong {
     enum Value : u32 {
       Black = 0x181818ff,
       Grey = 0x737373ff,
-      White = 0xdcdcdcff
+      White = 0xdcdcdcff,
+      Blue = 0x469fd2ff,
+      Cream = 0xfffdd0ff
     };
     explicit constexpr operator bool(void) const = delete;
     constexpr operator Value(void) const { return m_Value; }
@@ -82,6 +93,10 @@ namespace pong {
       m_Value = value;
       UpdateString();
     }
+    auto GetInt(void) const { return m_Value; }
+    auto GetStr(void) const { return m_String.c_str(); }
+    auto operator+(const Stat &s) const { return m_Value + s.GetInt(); }
+    auto operator-(const Stat &s) const { return m_Value - s.GetInt(); }
     auto &operator++(void) {
       Set(m_Value + 1);
       return *this;
@@ -100,10 +115,8 @@ namespace pong {
       --*this;
       return tmp;
     }
-    auto GetInt(void) const { return m_Value; }
-    auto GetStr(void) const { return m_String.c_str(); }
-    bool operator==(const Stat &s) const { return m_Value == s.GetInt(); }
-    bool operator==(const T value) const { return m_Value == value; }
+    auto operator<=>(const Stat &s) const { return m_Value <=> s.GetInt(); }
+    auto operator<=>(const T value) const { return m_Value <=> value; }
   private:
     T m_Value {0};
     std::string m_String {"0"};
@@ -117,7 +130,7 @@ namespace pong {
 
   struct Net final : Drawable {
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
-      static constexpr auto color = Color::Grey;
+      static constexpr auto color = Color::Blue;
       canvas.DrawRect(m_Net, color);
     }
 
@@ -138,8 +151,8 @@ namespace pong {
     {
       using namespace cbn::math::literals;
       auto angle = cbn::math::Mod((cbn::math::Rand(0, 120_deg) + 300_deg), 2_pi);
-      if (cbn::math::Rand() <= 0.5) angle += pi;
-      velocity = CARBON_VEC2(c_Speed * cbn::math::Cos(angle), c_Speed * cbn::math::Sin(angle));
+      if (cbn::math::Rand() < 0.5) angle += pi;
+      velocity = CARBON_VEC2(speed_initial * cbn::math::Cos(angle), speed_initial * cbn::math::Sin(angle));
     }
 
     virtual void Update(const f64 dt) final override {
@@ -150,7 +163,10 @@ namespace pong {
       canvas.DrawRect(CARBON_RECT_SQUARE_V(position, c_BallSize), Color::White);
     }
 
-    static constexpr auto c_Speed {1000};
+    static constexpr auto speed_min {1500};
+    static constexpr auto speed_initial {speed_min / 2};
+    static constexpr auto speed_max {speed_min * 3};
+    static constexpr auto speed_delta {1000};
     u8 wall_hits {0};
   };
 
@@ -158,7 +174,7 @@ namespace pong {
     explicit Racket(const cbn::Vec2 &p) : Entity{p, CARBON_VEC2(0, c_Speed)} {}
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
-      canvas.DrawRect(CARBON_RECT_V(position, c_BallSize, c_RacketHeight), Color::White);
+      canvas.DrawRect(CARBON_RECT_SQUARE_V(position, c_RacketSize), Color::Cream);
     }
 
   private:
@@ -174,7 +190,7 @@ namespace pong {
     u32 score {0};
     u8 yellow_cards {0};
 
-    explicit Player(void) : racket{CARBON_VEC2(0, c_ScreenHeight/2 - c_RacketHeight/2)}
+    explicit Player(void) : racket{CARBON_VEC2(0, c_ScreenHeight/2 - c_RacketSize/2)}
     {
       static constexpr auto padding = 100;
       if constexpr (S == PlayerSide::Left) racket.position.x = padding;
@@ -225,32 +241,32 @@ namespace pong {
   };
 
   namespace scene {
-    struct IScene {
+    struct Scene {
       using OnSwitch = cbn::Func<void()>;
-      virtual ~IScene(void) = default;
+      virtual ~Scene(void) = default;
       virtual void OnEnter(void) {}
       virtual void OnExit(void) {}
       virtual void Update(const f64 dt) = 0;
       virtual void Render(void) = 0;
     };
 
-    struct MainMenu final : IScene {
+    struct MainMenu final : Scene {
       explicit MainMenu(cbn::DrawCanvas &canvas, OnSwitch to_match)
         : m_Canvas{canvas},
           m_SwitchToMatch{std::move(to_match)}
       {}
 
       virtual void OnEnter(void) final override {
-        cbn::audio::Play(res::s_Sound_Music);
+        cbn::audio::Play(res::s_Sound_MenuMusic);
       }
 
       virtual void OnExit(void) final override {
-        cbn::audio::Stop(res::s_Sound_Music);
+        cbn::audio::Stop(res::s_Sound_MenuMusic);
       }
 
       virtual void Update(const f64 dt) final override {
         if (!m_OptionsMenu) Update_MainMenu();
-        else Update_OptionsMenu();
+        else Update_OptionsMenu(dt);
       }
 
       virtual void Render(void) final override {
@@ -266,27 +282,36 @@ namespace pong {
       bool m_OptionsMenu {false};
 
       void Update_MainMenu(void) {
-        if (cbn::win::GetKeyDown(cbn::win::KeyCode::One)) m_SwitchToMatch();
-        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Two)) m_OptionsMenu = true;
+        if (cbn::win::GetKeyDown(cbn::win::KeyCode::One)) {
+          cbn::audio::Play(res::s_Sound_MenuSelect);
+          m_SwitchToMatch();
+        }
+        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Two)) {
+          cbn::audio::Play(res::s_Sound_MenuSelect);
+          m_OptionsMenu = true;
+        }
       }
 
-      void Update_OptionsMenuAdjustVolume(void) {
+      void Update_OptionsMenuAdjustVolume(const f64 dt) {
         f32 volume = cbn::audio::GetVolume();
         if (cbn::win::GetKey(cbn::win::KeyCode::LeftArrow) ||
             cbn::win::GetKey(cbn::win::KeyCode::DownArrow)) {
-          volume -= 0.01;
+          volume -= 0.25 * dt;
           cbn::audio::SetVolume(cbn::math::ToClamped(volume, 0, 1));
         }
         else if (cbn::win::GetKey(cbn::win::KeyCode::RightArrow) ||
                  cbn::win::GetKey(cbn::win::KeyCode::UpArrow)) {
-          volume += 0.01;
+          volume += 0.25 * dt;
           cbn::audio::SetVolume(cbn::math::ToClamped(volume, 0, 1));
         }
       }
 
-      void Update_OptionsMenu(void) {
-        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Escape)) m_OptionsMenu = false;
-        Update_OptionsMenuAdjustVolume();
+      void Update_OptionsMenu(const f64 dt) {
+        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Escape)) {
+          cbn::audio::Play(res::s_Sound_MenuSelect);
+          m_OptionsMenu = false;
+        }
+        Update_OptionsMenuAdjustVolume(dt);
       }
 
       void Render_MainMenu(void) {
@@ -379,7 +404,7 @@ namespace pong {
       }
     };
 
-    struct Match final : IScene {
+    struct Match final : Scene {
       explicit Match(cbn::DrawCanvas &canvas, OnSwitch to_menu)
         : m_Canvas{canvas},
           m_SwitchToMenu{std::move(to_menu)}
@@ -396,7 +421,7 @@ namespace pong {
         }
         else {
           m_Ball.Update(dt);
-          Update_BallEntersGoal();
+          Update_BallEntersGoalSlot();
           Update_BallCollideWalls();
           Update_BallCollideRackets();
         }
@@ -407,6 +432,7 @@ namespace pong {
         m_Canvas.Fill(Color::Black);
         m_Net.Render(m_Canvas);
         m_P1.Render(m_Canvas), m_P2.Render(m_Canvas);
+        Render_GoalSlots();
         Render_HUDDebug();
         if (m_Playing) m_Ball.Render(m_Canvas);
         Render_VictoryMsg();
@@ -426,7 +452,8 @@ namespace pong {
 
       void Update_CheckVictory(void) {
         using namespace cbn::time::literals;
-        if (m_P1.points != c_PointsToWin && m_P2.points != c_PointsToWin) return;
+        const bool is_win = (m_P1.points >= c_PointsToWin || m_P2.points >= c_PointsToWin) && cbn::math::Abs(m_P1.points - m_P2.points) >= c_PointsDiffToWin;
+        if (!is_win) return;
         if (!m_VictoryTimer.IsRunning()) {
           m_VictoryTimer.Restart();
           cbn::audio::Play(res::s_Sound_Win);
@@ -442,8 +469,7 @@ namespace pong {
         using namespace cbn::time::literals;
         if (cbn::win::GetKeyDown(cbn::win::KeyCode::Space)) {
           m_StallingTimer.Stop();
-          m_Playing = true;
-          cbn::audio::Play(res::s_Sound_Serve);
+          Update_ServeBall();
         }
         else {
           if (!m_StallingTimer.IsRunning()) m_StallingTimer.Restart();
@@ -456,54 +482,78 @@ namespace pong {
         }
       }
 
+      void Update_ServeBall(void) {
+        m_Playing = true;
+        const auto &sound = cbn::math::Rand() < 0.15 ? res::s_Sound_Serve_2 : res::s_Sound_Serve_1;
+        cbn::audio::ShiftPitch(sound);
+        cbn::audio::Play(sound);
+      }
+
       void Update_PlayerScoredGoal(void) {
         m_Playing = false;
         m_Ball = Ball{};
-        if (m_P1.points != c_PointsToWin && m_P2.points != c_PointsToWin) cbn::audio::Play(res::s_Sound_Goal);
+        cbn::audio::ShiftPitch(res::s_Sound_Goal);
+        cbn::audio::Play(res::s_Sound_Goal);
+        cbn::audio::Play(res::s_Sound_PointUp);
       }
 
-      void Update_BallEntersGoal(void) {
-        if (m_Ball.position.x < 0) {
+      void Update_BallEntersGoalSlot(void) {
+        static const auto slot_top = m_Canvas.height / 3;
+        static const auto slot_bottom = m_Canvas.height * (2.f/3.f);
+        if (m_Ball.position.x < 0 && m_Ball.position.y >= slot_top && m_Ball.position.y + c_BallSize < slot_bottom) {
           Update_PlayerScoredGoal();
           ++m_P2.points;
         }
-        if (m_Ball.position.x + c_BallSize >= m_Canvas.width) {
+        if (m_Ball.position.x + c_BallSize >= m_Canvas.width && m_Ball.position.y >= slot_top && m_Ball.position.y + c_BallSize < slot_bottom) {
           Update_PlayerScoredGoal();
           ++m_P1.points;
         }
       }
 
       void Update_BallCollideWalls(void) {
+        static const auto slot_top = m_Canvas.height / 3;
+        static const auto slot_bottom = m_Canvas.height * (2.f/3.f);
         if (m_Ball.position.y < 0 || m_Ball.position.y + c_BallSize >= m_Canvas.height) {
           m_Ball.velocity.y *= -1;
           ++m_Ball.wall_hits;
+          cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
+          cbn::audio::ShiftPitch(res::s_Sound_Wall);
+          cbn::audio::Play(res::s_Sound_Wall);
         }
-        cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - c_BallSize);
+        if ((m_Ball.position.x < 0 && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom)) ||
+            (m_Ball.position.x + c_BallSize >= m_Canvas.width && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom))) {
+          m_Ball.velocity.x *= -1;
+          cbn::math::Clamp(m_Ball.position.x, 0, m_Canvas.width - c_BallSize);
+          cbn::audio::ShiftPitch(res::s_Sound_Wall);
+          cbn::audio::Play(res::s_Sound_Wall);
+        }
       }
 
       void Update_BallCollideRackets(void) {
-        if (Update_BallCollideRacket(m_P1.racket, 1, res::s_Sound_P1)) m_P1.score += 10;
-        else if (Update_BallCollideRacket(m_P2.racket, -1, res::s_Sound_P2)) m_P2.score += 10;
+        if (Update_BallCollideRacket(m_P1)) return;
+        else (Update_BallCollideRacket(m_P2));
       }
 
-      bool Update_BallCollideRacket(const Racket &r, i8 dir, const cbn::audio::UID &sound) {
+      template <PlayerSide S>
+      bool Update_BallCollideRacket(Player<S> &p) {
         using namespace cbn::math::literals;
-        static constexpr auto max_reflection_angle = 75_deg;
-        static constexpr auto speed_adjustment = 400;
-        static constexpr auto speed_min = Ball::c_Speed * 0.9;
-        static constexpr auto speed_max = Ball::c_Speed * 2;
+        static constexpr auto max_deflection_angle = 45_deg;
+        const auto racket = CARBON_RECT_SQUARE_V(p.racket.position, c_RacketSize);
         const auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, c_BallSize);
-        if (!CARBON_RECT_V(r.position, c_BallSize, c_RacketHeight).Overlaps(ball)) return false;
-        const f64 ball_center_y = m_Ball.position.y + c_BallSize/2;
-        const f64 racket_center_y = r.position.y + c_RacketHeight/2;
-        const f64 relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (c_RacketHeight/2), -1, 1);
-        const f64 angle = relative_y * (max_reflection_angle);
-        const f64 d_speed = speed_adjustment * (1 - 2 * cbn::math::Abs(relative_y));
-        const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, speed_min, speed_max);
-        m_Ball.velocity.x = dir * cbn::math::Abs(speed * cbn::math::Cos(angle));
-        m_Ball.velocity.y = speed * cbn::math::Sin(angle);
+        if (!racket.Overlaps(ball)) return false;
+        const auto ball_center_y = m_Ball.position.y + c_BallSize/2;
+        const auto racket_center_y = p.racket.position.y + c_RacketSize/2;
+        const auto relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (c_RacketSize/2), -1, 1);
+        const auto angle = relative_y * max_deflection_angle;
+        const auto d_speed = m_Ball.speed_delta * (1 - 2 * cbn::math::Abs(relative_y));
+        const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
+        i8 dir = 1;
+        if constexpr (S == PlayerSide::Right) dir = -1;
+        m_Ball.velocity = CARBON_VEC2(dir * cbn::math::Abs(speed * cbn::math::Cos(angle)), speed * cbn::math::Sin(angle));
         m_Ball.wall_hits = 0;
-        cbn::audio::Play(sound);
+        p.score += 10;
+        cbn::audio::ShiftPitch(res::s_Sound_Racket);
+        cbn::audio::Play(res::s_Sound_Racket);
         return true;
       }
 
@@ -517,28 +567,25 @@ namespace pong {
       void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
         if (cbn::win::GetKey(up))   r.position.y -= r.velocity.y * dt;
         if (cbn::win::GetKey(down)) r.position.y += r.velocity.y * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
+        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketSize);
       }
 
       void Update_MoveRacketWithAI(Racket &r, const f64 dt) {
-        static constexpr auto error_chance = 0.65;
-        static constexpr auto max_error = 80.0;
         static constexpr auto deadzone = 30;
-        static constexpr auto smoothing_factor = 30;
-        static constexpr auto return_center_speed_factor = 0.25;
-        static constexpr auto center_y = c_ScreenHeight/2 - c_RacketHeight/2;
-        static f64 smooth_target = center_y;
-        f64 target = center_y;
-        f64 speed = r.velocity.y;
-        if (m_Ball.velocity.x < 0) speed *= return_center_speed_factor;
-        else {
-          const f64 t = m_Ball.position.y + c_BallSize/2 - c_RacketHeight/2;
-          target = cbn::math::Rand() < error_chance ? t + cbn::math::Rand(-max_error, max_error) : t;
-        }
-        cbn::math::Lerp(smooth_target, target, smoothing_factor * dt);
-        if (r.position.y + deadzone < smooth_target)      r.position.y += speed * dt;
-        else if (r.position.y - deadzone > smooth_target) r.position.y -= speed * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketHeight);
+        static auto target = c_ScreenHeight/2 - c_RacketSize/2;
+        const auto t = m_Ball.position.y + c_BallSize/2 - c_RacketSize/2;
+        const auto difficulty = cbn::math::Rand() < 0.5 ? 30 : 80;
+        cbn::math::Lerp(target, t, difficulty * dt);
+        if (r.position.y + deadzone < target)      r.position += r.velocity * dt;
+        else if (r.position.y - deadzone > target) r.position -= r.velocity * dt;
+        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - c_RacketSize);
+      }
+
+      void Render_GoalSlots(void) const {
+        static constexpr auto color = Color::Blue;
+        static constexpr auto thickness = 8;
+        m_Canvas.DrawRect(CARBON_RECT(0, m_Canvas.height/3, thickness, m_Canvas.height/3), color);
+        m_Canvas.DrawRect(CARBON_RECT(m_Canvas.width - thickness, m_Canvas.height/3, thickness, m_Canvas.height/3), color);
       }
 
       void Render_HUDDebug(void) const {
@@ -562,7 +609,7 @@ namespace pong {
 
       void Render_VictoryMsg(void) const {
         if (!m_VictoryTimer.IsRunning()) return;
-        static const auto text = m_P1.points == c_PointsToWin ? "PL1 WINS" : m_AI ? "CPU WINS" : "PL2 WINS";
+        static const auto text = m_P1.points > m_P2.points ? "PL1 WINS" : m_AI ? "CPU WINS" : "PL2 WINS";
         static constexpr auto text_size = 4;
         static constexpr auto text_color = Color::Black;
         static constexpr auto text_padding = CARBON_VEC2(20, 15);
@@ -655,7 +702,7 @@ namespace pong {
 
   private:
     Window m_Window;
-    scene::IScene *m_Scene {&m_Scene_1};
+    scene::Scene *m_Scene {&m_Scene_1};
     scene::MainMenu m_Scene_1;
     scene::Match m_Scene_2;
   };
@@ -665,7 +712,7 @@ namespace pong {
 //       and it has to be repeated. If this happens 3 times in a row, the point counts and
 //       the opponent gets a yellow card.
 // TODO: 4 yellow cards ==> red card, which is a direct expulsion and it will lose the game.
-// TODO: If after hitting the ball, it bounces off the walls (collides) 6 times or more,
+// TODO: If after hitting the ball, it bounces off the walls (collides) 7 times or more,
 //       the game stops (needs to be served again), and the player who did it gets a blue card.
 // TODO: 3 blue cards ==> yellow card, and +1 point to the opponent.
 // TODO: Add abilities that can be used during a game:
