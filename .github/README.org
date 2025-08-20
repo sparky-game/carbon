@@ -158,6 +158,7 @@ For more details and to acquire a copy of the *CRLE*, please visit <https://libc
 
 1. Alshahwan, N., Chheda, J., Finegenova, A., Gokkaya, B., Harman, M., Harper, I., Marginean, A., Sengupta, S., Wang, E. (2024, February 14). /Automated Unit Test Improvement using Large Language Models at Meta/ [Paper]. arXiv, Cornell University. <https://doi.org/10.48550/arXiv.2402.09171>
 2. Barrett, S. (2015, June 7). /Advice for Writing Small Programs in C/ [Video]. YouTube. <https://www.youtube.com/watch?v=eAhWIO1Ra6M>
+3. Catto, E. (2024, August 27). /Determinism/ [Article]. Box2D. <https://box2d.org/posts/2024/08/determinism/>
 3. Gallego Durán, F. J. (2021, December 7). /C++ Slotmap: qué es y por qué usarlo en tu motor de videojuegos/ [Video]. YouTube. <https://www.youtube.com/watch?v=GKfRDAUvFoE>
 4. Gallego Durán, F. J. (2021, December 10). /C++ Programamos un Slotmap para nuestro motor de videojuegos ECS/ [Video]. YouTube. <https://www.youtube.com/watch?v=ZfWF9tqQOh0>
 5. Gallego Durán, F. J. (2022, January 28). /C++ Template Metaprogramming: Introducción/ [Video]. YouTube. <https://www.youtube.com/watch?v=4NKbmCfZ9OI>
