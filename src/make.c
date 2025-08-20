@@ -164,61 +164,29 @@ static void hdrgen(void) {
   carbon_println("  GEN     " HDRFILE);
   CBN_StrBuilder hdr = {0};
   CBN_ASSERT(carbon_fs_read_entire_file(&hdr, HDRFILE ".in"));
-  // TODO: hardcoding this here is rubish; need to produce this ordered list somehow.
-  // I supose we should read the `carbon.inc` file, and extract the included file from there.
-  const char *hdrs[] = {
-    "src/carbon_deps.h",
-    "src/carbon_defs.h",
-    "src/carbon_types.h",
-    "src/carbon_metaprogramming.h",
-    "src/carbon_version.h",
-    "src/carbon_test_entry.h",
-    "src/carbon_assert.h",
-    "src/carbon_memory.h",
-    "src/carbon_coroutine.h",
-    "src/carbon_math.h",
-    "src/carbon_math_vec2.h",
-    "src/carbon_math_vec3.h",
-    "src/carbon_math_rect.h",
-    "src/carbon_crypto.h",
-    "src/carbon_log.h",
-    "src/carbon_should.h",
-    "src/carbon_time.h",
-    "src/carbon_chrono.h",
-    "src/carbon_list.h",
-    "src/carbon_list.tcc",
-    "src/carbon_circularqueue.h",
-    "src/carbon_circularqueue.tcc",
-    "src/carbon_hashmap.h",
-    "src/carbon_slotmap.h",
-    "src/carbon_slotmap.tcc",
-    "src/carbon_string.h",
-    "src/carbon_strview.h",
-    "src/carbon_strbuilder.h",
-    "src/carbon_strlist.h",
-    "src/carbon_binary.h",
-    "src/carbon_sprite.h",
-    "src/carbon_drawcanvas.h",
-    "src/carbon_fs.h",
-    "src/carbon_net.h",
-    "src/carbon_audio.h",
-    "src/carbon_sprite_manager.h",
-    "src/carbon_nn.h",
-    "src/carbon_win.h",
-    "src/carbon_test_manager.h",
-    "src/carbon_junit.h",
-    "src/carbon_skap.h",
-    "src/carbon_skap.tcc",
-  };
-  for (usz i = 0; i < CARBON_ARRAY_LEN(hdrs); ++i) {
+  CBN_StrList hdrs = carbon_strlist_create(true);
+  CBN_StrBuilder inc = {0};
+  CBN_ASSERT(carbon_fs_read_entire_file(&inc, "src/carbon.inc"));
+  CBN_StrView inc_sv = carbon_strview_from_strbuilder(&inc);
+  while (inc_sv.size) {
+    CBN_StrView line = carbon_strview_chop(&inc_sv, '\n');
+    if (!carbon_strview_starts_with(line, carbon_strview_from_cstr("#include")) ||
+        carbon_strview_are_equal(line, carbon_strview_from_cstr("#include \"../" HDRFILE ".in\""))) continue;
+    char *line_str = carbon_strview_to_cstr(line);
+    carbon_string_strip_substr(line_str, "#include \"");
+    carbon_string_strip_substr(line_str, "\"");
+    carbon_strlist_push(&hdrs, carbon_string_fmt("src/%s", line_str));
+  }
+  carbon_strlist_foreach(hdrs) {
     carbon_strbuilder_add_cstr(&hdr, "\n");
-    CBN_ASSERT(carbon_fs_read_entire_file(&hdr, hdrs[i]));
+    CBN_ASSERT(carbon_fs_read_entire_file(&hdr, carbon_strview_to_cstr(it.sv)));
   }
   carbon_strbuilder_add_cstr(&hdr, "\n");
   CBN_ASSERT(carbon_fs_read_entire_file(&hdr, "src/carbon_aliases.h"));
   FILE *hdr_fd = fopen(HDRFILE, "w");
   fwrite(hdr.items, hdr.size, 1, hdr_fd);
   fclose(hdr_fd);
+  carbon_strlist_destroy(&hdrs);
   carbon_strbuilder_free(&hdr);
 }
 
