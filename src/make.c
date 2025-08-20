@@ -27,9 +27,9 @@
 #define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 #ifndef CARBON_MAKE_USE_SANITIZERS
-#define OPTIMIZATIONS "-pipe -O3 -ffast-math "
+#define OPTIMIZATIONS "-ffp-contract=off -pipe -O3 "
 #else
-#define OPTIMIZATIONS "-fsanitize=address,undefined -g "
+#define OPTIMIZATIONS "-ffp-contract=off -fsanitize=address,undefined -g "
 #endif
 
 #if defined(__APPLE__)
