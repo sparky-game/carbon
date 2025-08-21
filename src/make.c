@@ -40,6 +40,12 @@
 #define LIBS ""
 #endif
 
+#ifdef _WIN32
+#define SHARED_LIB_FILE_EXT ".dll"
+#else
+#define SHARED_LIB_FILE_EXT ".so"
+#endif
+
 static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "\n"
   "Flags:\n"
@@ -125,6 +131,10 @@ static i32 fork_and_exec_cmd(char * const *argv) {
 }
 
 static void bootstrap(char * const *host_argv, u8 force) {
+#ifdef _WIN32
+  CBN_WARN("Bootstrapping is not supported on Windows");
+  return;
+#endif
 #ifdef CARBON_MAKE_ALREADY_REBUILT
   if (!force && carbon_fs_mtime(__FILE__) <= carbon_fs_mtime(host_argv[0])) return;
 #endif
@@ -234,11 +244,7 @@ static void build_static_lib(void) {
 
 static void build_shared_lib(void) {
   CBN_StrBuilder cmd = {0};
-#ifdef _WIN32
-  carbon_println("  LD      libcarbon.dll");
-#else
-  carbon_println("  LD      libcarbon.so");
-#endif
+  carbon_println("  LD      libcarbon" SHARED_LIB_FILE_EXT);
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " " OPTIMIZATIONS);
 #ifndef _WIN32
   carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
@@ -250,11 +256,7 @@ static void build_shared_lib(void) {
   carbon_strbuilder_add_cstr(&cmd, "-shared ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, LIBS);
-#ifdef _WIN32
-  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.dll");
-#else
-  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon.so");
-#endif
+  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/libcarbon" SHARED_LIB_FILE_EXT);
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
 }
@@ -390,9 +392,7 @@ static void package(void) {
 
 int main(int argc, char **argv) {
   CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
-#ifndef _WIN32
   bootstrap(argv, false);
-#endif
 #ifdef CARBON_MAKE_USE_SANITIZERS
   CBN_DEBUG("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
 #endif
