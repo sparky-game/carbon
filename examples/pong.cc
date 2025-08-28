@@ -4,7 +4,6 @@
 #include <carbon.h>
 
 namespace pong {
-  static constexpr auto c_Name              = "PONG";
   static constexpr auto c_ScreenWidthRatio  = 16;
   static constexpr auto c_ScreenHeightRatio = 9;
   static constexpr auto c_ScreenRatioFactor = 80;
@@ -243,19 +242,65 @@ namespace pong {
     }
   };
 
+  struct Window final {
+    const struct Spec final {
+      usz width, height;
+      std::string name;
+      u32 max_fps;
+    } spec;
+
+    explicit Window(Spec s) : spec{s},
+                              m_Canvas{cbn::DrawCanvas::make(spec.width, spec.height)}
+    {
+      res::Init();
+      cbn::win::Open(spec.width, spec.height, spec.name.c_str());
+      cbn::win::SetMaxFPS(spec.max_fps);
+      if (auto i = res::s_AssetPack.Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*i);
+      else CARBON_UNREACHABLE;
+    }
+
+    Window(const Window &) = delete;
+    Window(Window &&) = delete;
+    Window &operator=(const Window &) = delete;
+    Window &operator=(Window &&) = delete;
+
+    ~Window(void) {
+      cbn::win::Close();
+      res::Shutdown();
+      m_Canvas.Free();
+    }
+
+    cbn::DrawCanvas &operator*(void) { return m_Canvas; }
+    cbn::DrawCanvas *operator->(void) { return &m_Canvas; }
+
+    template <typename T>
+    void Loop(T &&callback) {
+      cbn::win::ForFrame([&](const auto dt){
+        callback(dt);
+        cbn::win::Update(m_Canvas);
+      });
+    }
+
+  private:
+    cbn::DrawCanvas m_Canvas {};
+  };
+
   namespace scene {
     struct Scene {
       using OnSwitch = cbn::Func<void()>;
+      explicit Scene(Window &win) : m_Window{win} {}
       virtual ~Scene(void) = default;
       virtual void OnEnter(void) {}
       virtual void OnExit(void) {}
       virtual void Update(const f64 dt) = 0;
       virtual void Render(void) = 0;
+    protected:
+      Window &m_Window;
     };
 
     struct MainMenu final : Scene {
-      explicit MainMenu(cbn::DrawCanvas &canvas, OnSwitch to_match)
-        : m_Canvas{canvas},
+      explicit MainMenu(Window &win, OnSwitch to_match)
+        : Scene{win},
           m_SwitchToMatch{std::move(to_match)}
       {}
 
@@ -273,14 +318,13 @@ namespace pong {
       }
 
       virtual void Render(void) final override {
-        m_Canvas.Fill(static_cast<u32>(Color::Black));
+        m_Window->Fill(static_cast<u32>(Color::Black));
         if (!m_OptionsMenu) Render_MainMenu();
         else Render_OptionsMenu();
         Render_Copyright();
       }
 
     private:
-      cbn::DrawCanvas &m_Canvas;
       OnSwitch m_SwitchToMatch;
       bool m_OptionsMenu {false};
 
@@ -330,12 +374,12 @@ namespace pong {
       }
 
       void Render_MainTitle(void) {
-        static constexpr auto text = c_Name;
+        static const auto text = m_Window.spec.name.c_str();
         static constexpr auto text_size = 14;
         static constexpr auto text_color = static_cast<u32>(Color::White);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, 50);
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 50);
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_StartButton(void) {
@@ -343,14 +387,14 @@ namespace pong {
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
         static constexpr auto text_padding = CARBON_VEC2(20, 15);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, 300);
-        m_Canvas.DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                     text_pos.y - text_padding.y - 2*text_size,
-                                     text_pos.x + text_width + text_padding.x,
-                                     text_pos.y + text_height + text_padding.y));
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 300);
+        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
+                                      text_pos.y - text_padding.y - 2*text_size,
+                                      text_pos.x + text_width + text_padding.x,
+                                      text_pos.y + text_height + text_padding.y));
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_OptionsButton(void) {
@@ -358,23 +402,23 @@ namespace pong {
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
         static constexpr auto text_padding = CARBON_VEC2(20, 15);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, 415);
-        m_Canvas.DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                     text_pos.y - text_padding.y - 2*text_size,
-                                     text_pos.x + text_width + text_padding.x,
-                                     text_pos.y + text_height + text_padding.y));
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 415);
+        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
+                                      text_pos.y - text_padding.y - 2*text_size,
+                                      text_pos.x + text_width + text_padding.x,
+                                      text_pos.y + text_height + text_padding.y));
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_OptionsTitle(void) {
         static constexpr auto text = "Options";
         static constexpr auto text_size = 8;
         static constexpr auto text_color = static_cast<u32>(Color::White);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, 50);
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 50);
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_OptionsGoBack(void) {
@@ -382,17 +426,17 @@ namespace pong {
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::White);
         static constexpr auto text_pos = CARBON_VEC2(25, 50);
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_OptionsVolume(void) {
         const auto text = cbn::str::fmt("Volume: %.2f", cbn::audio::GetVolume());
         static constexpr auto text_size = 3;
         static constexpr auto text_color = static_cast<u32>(Color::White);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, m_Canvas.height/2 - text_height/2);
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, m_Window->height/2 - text_height/2);
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
       void Render_Copyright(void) {
@@ -400,16 +444,16 @@ namespace pong {
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::Grey);
         static constexpr auto text_padding = 10;
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width - text_padding - text_width, m_Canvas.height - text_padding - text_height);
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width - text_padding - text_width, m_Window->height - text_padding - text_height);
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
     };
 
     struct Match final : Scene {
-      explicit Match(cbn::DrawCanvas &canvas, OnSwitch to_menu)
-        : m_Canvas{canvas},
+      explicit Match(Window &win, OnSwitch to_menu)
+        : Scene{win},
           m_SwitchToMenu{std::move(to_menu)}
       {}
 
@@ -432,17 +476,16 @@ namespace pong {
       }
 
       virtual void Render(void) final override {
-        m_Canvas.Fill(static_cast<u32>(Color::Black));
-        m_Net.Render(m_Canvas);
-        m_P1.Render(m_Canvas), m_P2.Render(m_Canvas);
+        m_Window->Fill(static_cast<u32>(Color::Black));
+        m_Net.Render(*m_Window);
+        m_P1.Render(*m_Window), m_P2.Render(*m_Window);
         Render_GoalSlots();
         Render_HUDDebug();
-        if (m_Playing) m_Ball.Render(m_Canvas);
+        if (m_Playing) m_Ball.Render(*m_Window);
         Render_VictoryMsg();
       }
 
     private:
-      cbn::DrawCanvas &m_Canvas;
       OnSwitch m_SwitchToMenu;
       Net m_Net;
       Ball m_Ball;
@@ -501,32 +544,32 @@ namespace pong {
       }
 
       void Update_BallEntersGoalSlot(void) {
-        static const auto slot_top = m_Canvas.height / 3;
-        static const auto slot_bottom = m_Canvas.height * (2.f/3.f);
+        static const auto slot_top = m_Window->height / 3;
+        static const auto slot_bottom = m_Window->height * (2.f/3.f);
         if (m_Ball.position.x < 0 && m_Ball.position.y >= slot_top && m_Ball.position.y + m_Ball.size < slot_bottom) {
           Update_PlayerScoredGoal();
           ++m_P2.points;
         }
-        if (m_Ball.position.x + m_Ball.size >= m_Canvas.width && m_Ball.position.y >= slot_top && m_Ball.position.y + m_Ball.size < slot_bottom) {
+        if (m_Ball.position.x + m_Ball.size >= m_Window->width && m_Ball.position.y >= slot_top && m_Ball.position.y + m_Ball.size < slot_bottom) {
           Update_PlayerScoredGoal();
           ++m_P1.points;
         }
       }
 
       void Update_BallCollideWalls(void) {
-        static const auto slot_top = m_Canvas.height / 3;
-        static const auto slot_bottom = m_Canvas.height * (2.f/3.f);
-        if (m_Ball.position.y < 0 || m_Ball.position.y + m_Ball.size >= m_Canvas.height) {
+        static const auto slot_top = m_Window->height / 3;
+        static const auto slot_bottom = m_Window->height * (2.f/3.f);
+        if (m_Ball.position.y < 0 || m_Ball.position.y + m_Ball.size >= m_Window->height) {
           m_Ball.velocity.y *= -1;
           ++m_Ball.wall_hits;
-          cbn::math::Clamp(m_Ball.position.y, 0, m_Canvas.height - m_Ball.size);
+          cbn::math::Clamp(m_Ball.position.y, 0, m_Window->height - m_Ball.size);
           cbn::audio::ShiftPitch(res::s_Sound_Wall);
           cbn::audio::Play(res::s_Sound_Wall);
         }
         if ((m_Ball.position.x < 0 && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom)) ||
-            (m_Ball.position.x + m_Ball.size >= m_Canvas.width && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom))) {
+            (m_Ball.position.x + m_Ball.size >= m_Window->width && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom))) {
           m_Ball.velocity.x *= -1;
-          cbn::math::Clamp(m_Ball.position.x, 0, m_Canvas.width - m_Ball.size);
+          cbn::math::Clamp(m_Ball.position.x, 0, m_Window->width - m_Ball.size);
           cbn::audio::ShiftPitch(res::s_Sound_Wall);
           cbn::audio::Play(res::s_Sound_Wall);
         }
@@ -568,30 +611,30 @@ namespace pong {
       void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
         if (cbn::win::GetKey(up))   r.position.y -= r.velocity.y * dt;
         if (cbn::win::GetKey(down)) r.position.y += r.velocity.y * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - r.size);
+        cbn::math::Clamp(r.position.y, 0, m_Window->height - r.size);
       }
 
       void Update_MoveRacketWithAI(Racket &r, const f64 dt) {
         static constexpr auto deadzone = 30;
-        static auto target = m_Canvas.height/2 - r.size/2;
+        static auto target = m_Window->height/2 - r.size/2;
         const auto t = m_Ball.position.y + m_Ball.size/2 - r.size/2;
         const auto difficulty = cbn::math::Rand() < 0.5 ? 30 : 80;
         cbn::math::Lerp(target, t, difficulty * dt);
         if (r.position.y + deadzone < target)      r.position += r.velocity * dt;
         else if (r.position.y - deadzone > target) r.position -= r.velocity * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Canvas.height - r.size);
+        cbn::math::Clamp(r.position.y, 0, m_Window->height - r.size);
       }
 
       void Render_GoalSlots(void) const {
         static constexpr auto color = static_cast<u32>(Color::Blue);
         static constexpr auto thickness = 8;
         {
-          static const auto rect = CARBON_RECT(0, m_Canvas.height/3, thickness, m_Canvas.height/3);
-          m_Canvas.DrawRect(rect, color);
+          static const auto rect = CARBON_RECT(0, m_Window->height/3, thickness, m_Window->height/3);
+          m_Window->DrawRect(rect, color);
         }
         {
-          static const auto rect = CARBON_RECT(m_Canvas.width - thickness, m_Canvas.height/3, thickness, m_Canvas.height/3);
-          m_Canvas.DrawRect(rect, color);
+          static const auto rect = CARBON_RECT(m_Window->width - thickness, m_Window->height/3, thickness, m_Window->height/3);
+          m_Window->DrawRect(rect, color);
         }
       }
 
@@ -599,7 +642,7 @@ namespace pong {
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::Grey);
         static constexpr auto text_pos = CARBON_VEC2_1(10);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
         static const std::string carbon_ver = cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0));
         static const std::string skap_ver = cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver);
         const char *text[] = {
@@ -610,7 +653,7 @@ namespace pong {
           cbn::str::fmt("Score: %06u", m_P1.score)
         };
         for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
-          m_Canvas.DrawText(text[i], CARBON_VEC2(text_pos.x, text_pos.y + i*text_height), text_size, text_color);
+          m_Window->DrawText(text[i], CARBON_VEC2(text_pos.x, text_pos.y + i*text_height), text_size, text_color);
         }
       }
 
@@ -620,73 +663,32 @@ namespace pong {
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
         static constexpr auto text_padding = CARBON_VEC2(20, 15);
-        static const auto text_width = m_Canvas.TextWidth(text, text_size);
-        static const auto text_height = m_Canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Canvas.width/2 - text_width/2, m_Canvas.height/2);
-        m_Canvas.DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                     text_pos.y - text_padding.y - 2*text_size,
-                                     text_pos.x + text_width + text_padding.x,
-                                     text_pos.y + text_height + text_padding.y));
-        m_Canvas.DrawText(text, text_pos, text_size, text_color);
+        static const auto text_width = m_Window->TextWidth(text, text_size);
+        static const auto text_height = m_Window->TextHeight(text_size);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, m_Window->height/2);
+        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
+                                      text_pos.y - text_padding.y - 2*text_size,
+                                      text_pos.x + text_width + text_padding.x,
+                                      text_pos.y + text_height + text_padding.y));
+        m_Window->DrawText(text, text_pos, text_size, text_color);
       }
     };
   }
-
-  struct Window final {
-    struct Spec final {
-      usz width, height;
-      std::string name;
-      u32 max_fps;
-    };
-
-    explicit Window(Spec spec) : m_Canvas{cbn::DrawCanvas::make(spec.width, spec.height)}
-    {
-      res::Init();
-      cbn::win::Open(spec.width, spec.height, spec.name.c_str());
-      cbn::win::SetMaxFPS(spec.max_fps);
-      if (auto i = res::s_AssetPack.Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*i);
-      else CARBON_UNREACHABLE;
-    }
-
-    Window(const Window &) = delete;
-    Window(Window &&) = delete;
-    Window &operator=(const Window &) = delete;
-    Window &operator=(Window &&) = delete;
-
-    ~Window(void) {
-      cbn::win::Close();
-      res::Shutdown();
-      m_Canvas.Free();
-    }
-
-    cbn::DrawCanvas &operator*(void) { return m_Canvas; }
-
-    template <typename T>
-    void Loop(T &&callback) {
-      cbn::win::ForFrame([&](const auto dt){
-        callback(dt);
-        cbn::win::Update(m_Canvas);
-      });
-    }
-
-  private:
-    cbn::DrawCanvas m_Canvas {};
-  };
 
   struct Game final {
     explicit Game(void)
       : m_Window{{
           .width = c_ScreenWidth,
           .height = c_ScreenHeight,
-          .name = c_Name,
+          .name = "PONG",
           .max_fps = 0  // Set to unlimited for debug purposes
         }},
-        m_Scene_1{*m_Window, [&](){
+        m_Scene_1{m_Window, [&](){
           m_Scene->OnExit();
           m_Scene = &m_Scene_2;
           m_Scene->OnEnter();
         }},
-        m_Scene_2{*m_Window, [&](){
+        m_Scene_2{m_Window, [&](){
           m_Scene->OnExit();
           m_Scene = &m_Scene_1;
           m_Scene->OnEnter();
