@@ -26,9 +26,7 @@
 #define CARBON_1_SQRT3  (1 / CARBON_SQRT3)
 #define CARBON_LOG2_E   1.4426950408889634074
 #define CARBON_LOG2_10  3.32192809488736234789
-#define CARBON_I32_MAX  0x7fffffff
-#define CARBON_RAND_MAX CARBON_I32_MAX
-#define CARBON_F32_EPS  1.1920928955078125e-07
+#define CARBON_EPS      1e-6
 
 /**
  * @brief Returns the smaller of two numbers.

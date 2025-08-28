@@ -33,9 +33,9 @@
                     "got '%llu', expected '%llu'",      \
                     (u64) (actual), (u64) (expected))
 
-#define carbon_should_be_f(expected, actual)                    \
-  CARBON_COMPARE(carbon_math_abs(expected - actual) > 1e-6,     \
-                 "got '%f', expected '%f'",                     \
+#define carbon_should_be_f(expected, actual)                            \
+  CARBON_COMPARE(carbon_math_abs(expected - actual) > CARBON_EPS,       \
+                 "got '%f', expected '%f'",                             \
                  (f32) (actual), (f32) (expected))
 
 #define carbon_should_not_be(expected, actual)          \

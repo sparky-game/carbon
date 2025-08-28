@@ -29,7 +29,7 @@ i32 carbon_math_rand_between(i32 min, i32 max) {
 }
 
 f32 carbon_math_randf(void) {
-  return (f32) carbon_math_rand() / (f32) CARBON_RAND_MAX;
+  return (f32) carbon_math_rand() / (f32) 0x7fffffff;
 }
 
 f32 carbon_math_randf_between(f32 min, f32 max) {
@@ -75,7 +75,7 @@ u64 carbon_math_mt19937_64_rand(void) {
 
 f32 carbon_math_abs(f32 x) {
   union { f32 f; u32 i; } u = {x};
-  u.i &= CARBON_I32_MAX;
+  u.i &= 0x7fffffff;
   return u.f;
 }
 
@@ -128,7 +128,7 @@ f32 carbon_math_ceil(f32 x) {
 }
 
 f32 carbon_math_snap(f32 x, f32 dx) {
-  f32 res = x + CARBON_SIGN(dx) * 1e-6;
+  f32 res = x + CARBON_SIGN(dx) * CARBON_EPS;
   if (dx > 0) return carbon_math_ceil(res);
   if (dx < 0) return carbon_math_floor(res);
   return x;
@@ -138,7 +138,7 @@ f32 carbon_math_sqrt(f32 x) {
   if (x == 2) return CARBON_SQRT2;
   if (x == 3) return CARBON_SQRT3;
   f32 s = x;
-  for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > 1e-6; ++i) {
+  for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > CARBON_EPS; ++i) {
     s -= (s*s - x) / (2*s);
   }
   return s;
@@ -319,9 +319,8 @@ f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
 }
 
 i8 carbon_math_cmp(f32 x, f32 y) {
-  f32 eps = 1e-6;
-  if ((x - eps) < y)      return -1;
-  else if ((x + eps) > y) return  1;
+  if ((x - CARBON_EPS) < y)      return -1;
+  else if ((x + CARBON_EPS) > y) return  1;
   else return 0;
 }
 
@@ -348,12 +347,13 @@ f32 carbon_math_cos(f32 x) {
 }
 
 f32 carbon_math_asin(f32 x) {
+  f32 eps = 1.1920928955078125e-07;
   f32 ys, yc, y = 0;
   for (;;) {
     ys = carbon_math_sin(y);
     yc = carbon_math_cos(y);
     if (-CARBON_PI_2 > y || y > CARBON_PI_2) y = carbon_math_fmod(y, CARBON_PI);
-    if (ys + CARBON_F32_EPS >= x && ys - CARBON_F32_EPS <= x) break;
+    if (ys + eps >= x && ys - eps <= x) break;
     y = y - (ys - x) / yc;
   }
   return y;
@@ -364,7 +364,7 @@ f32 carbon_math_atan(f32 x) {
 }
 
 f32 carbon_math_atan2(f32 y, f32 x) {
-  f32 r, phi, y_abs = carbon_math_abs(y) + 1e-10;
+  f32 r, phi, y_abs = carbon_math_abs(y) + CARBON_EPS;
   if (x < 0) {
     r = (x + y_abs) / (y_abs - x);
     phi = 0.75 * CARBON_PI;
