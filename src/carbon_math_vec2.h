@@ -59,8 +59,6 @@
  */
 #define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
 
-typedef union CBN_Vec3 CBN_Vec3;  // Forward declaration
-
 /**
  * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
  */
@@ -72,65 +70,68 @@ typedef union CBN_Vec2 {
   };
 #ifdef __cplusplus
   /**
-   * @brief carbon_math_vec2_clamp
-   * @param min The minimum value (as 2D vector).
-   * @param max The maximum value (as 2D vector).
+   * @see carbon_math_vec2_add
    */
-  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max);
-  /**
-   * @brief carbon_math_vec2_floor
-   * @return The rounded down 2D vector.
-   */
-  CBN_Vec2 Floor(void) const;
-  /**
-   * @brief carbon_math_vec2_len
-   * @return The 2D vector's length.
-   */
-  f32 Length(void) const;
-  /**
-   * @brief carbon_math_vec2_len_squared
-   * @return The 2D vector's length squared.
-   */
-  f32 LengthSquared(void) const;
-  /**
-   * @brief carbon_math_vec2_norm
-   * @return The normalized 2D vector.
-   */
-  CBN_Vec2 Normalize(void) const;
-  /**
-   * @brief carbon_math_vec2_lerp
-   * @param v The other 2D vector.
-   * @param t A value [0..1] indicating the weight of `v`.
-   * @return The interpolated 2D vector.
-   */
-  CBN_Vec2 Lerp(const CBN_Vec2 &v, f32 t) const;
-  /**
-   * @brief carbon_math_vec2_rotate
-   * @param angle The rotation to apply (in degrees).
-   * @return The rotated 2D vector.
-   */
-  CBN_Vec2 Rotate(f32 angle) const;
-  /**
-   * @brief carbon_math_vec2_to_cstr
-   * @return The serialized 2D vector as `(X, Y)`.
-   */
-  const char *ToString(void) const;
-  // Overloaded Operators
   CBN_Vec2 operator+(const CBN_Vec2 &v) const;
   CBN_Vec2 operator+(const f32 s) const;
   friend CBN_Vec2 operator+(const f32 s, const CBN_Vec2 &v);
   void operator+=(const CBN_Vec2 &v);
-  CBN_Vec2 operator-(void) const;
+  /**
+   * @see carbon_math_vec2_sub
+   */
   CBN_Vec2 operator-(const CBN_Vec2 &v) const;
   CBN_Vec2 operator-(const f32 s) const;
   friend CBN_Vec2 operator-(const f32 s, const CBN_Vec2 &v);
   void operator-=(const CBN_Vec2 &v);
+  /**
+   * @see carbon_math_vec2_dot
+   */
   f32 operator*(const CBN_Vec2 &v) const;
+  /**
+   * @see carbon_math_vec2_clamp
+   */
+  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max);
+  /**
+   * @see carbon_math_vec2_floor
+   */
+  CBN_Vec2 Floor(void) const;
+  /**
+   * @see carbon_math_vec2_len
+   */
+  f32 Length(void) const;
+  /**
+   * @see carbon_math_vec2_len_squared
+   */
+  f32 LengthSquared(void) const;
+  /**
+   * @see carbon_math_vec2_norm
+   */
+  CBN_Vec2 Normalize(void) const;
+  /**
+   * @see carbon_math_vec2_lerp
+   */
+  CBN_Vec2 Lerp(const CBN_Vec2 &v, f32 t) const;
+  /**
+   * @see carbon_math_vec2_scale
+   */
+  CBN_Vec2 operator-(void) const;
   CBN_Vec2 operator*(const f32 s) const;
   friend CBN_Vec2 operator*(const f32 s, const CBN_Vec2 &v);
   void operator*=(const f32 s);
   CBN_Vec2 operator/(const f32 s) const;
   void operator/=(const f32 s);
+  /**
+   * @see carbon_math_vec2_rotate
+   */
+  CBN_Vec2 Rotate(f32 angle) const;
+  /**
+   * @see carbon_math_vec2_rotate_around_pivot
+   */
+  CBN_Vec2 RotatePivot(f32 angle, const CBN_Vec2 &pivot) const;
+  /**
+   * @see carbon_math_vec2_to_cstr
+   */
+  const char *ToString(void) const;
   // Swizzling Operations
   constexpr auto xx(void)  const;
   constexpr auto xy(void)  const;

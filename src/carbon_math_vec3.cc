@@ -3,8 +3,28 @@
 
 #include "carbon.inc"
 
+CBN_Vec3 CBN_Vec3::Cross(const CBN_Vec3 &v) const {
+  return carbon_math_vec3_cross(*this, v);
+}
+
 const char *CBN_Vec3::ToString(void) const {
   return carbon_math_vec3_to_cstr(*this);
+}
+
+CBN_Vec3 CBN_Vec3::RotateX(f32 angle) const {
+  return carbon_math_vec3_rotate_x(*this, angle);
+}
+
+CBN_Vec3 CBN_Vec3::RotateY(f32 angle) const {
+  return carbon_math_vec3_rotate_y(*this, angle);
+}
+
+CBN_Vec3 CBN_Vec3::RotateZ(f32 angle) const {
+  return carbon_math_vec3_rotate_z(*this, angle);
+}
+
+CBN_Vec2 CBN_Vec3::Project2D(void) const {
+  return carbon_math_vec3_project_2d(*this);
 }
 
 CBN_Vec3 CBN_Vec3::operator+(const CBN_Vec3 &v) const {

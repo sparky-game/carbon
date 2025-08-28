@@ -31,6 +31,10 @@ CBN_Vec2 CBN_Vec2::Rotate(f32 angle) const {
   return carbon_math_vec2_rotate(*this, angle);
 }
 
+CBN_Vec2 CBN_Vec2::RotatePivot(f32 angle, const CBN_Vec2 &pivot) const {
+  return carbon_math_vec2_rotate_around_pivot(*this, angle, pivot);
+}
+
 const char *CBN_Vec2::ToString(void) const {
   return carbon_math_vec2_to_cstr(*this);
 }

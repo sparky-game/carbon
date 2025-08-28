@@ -82,14 +82,41 @@ typedef union CBN_Vec3 {
   };
 #ifdef __cplusplus
   /**
-   * @brief carbon_math_vec3_to_cstr
-   * @return The serialized 3D vector as `(X, Y, Z)`.
+   * @see carbon_math_vec3_add
+   */
+  CBN_Vec3 operator+(const CBN_Vec3 &v) const;
+  /**
+   * @see carbon_math_vec3_sub
+   */
+  CBN_Vec3 operator-(const CBN_Vec3 &v) const;
+  /**
+   * @see carbon_math_vec3_dot
+   */
+  f32 operator*(const CBN_Vec3 &v) const;
+  /**
+   * @see carbon_math_vec3_cross
+   */
+  CBN_Vec3 Cross(const CBN_Vec3 &v) const;
+  /**
+   * @see carbon_math_vec3_to_cstr
    */
   const char *ToString(void) const;
-  // Overloaded Operators
-  CBN_Vec3 operator+(const CBN_Vec3 &v) const;
-  CBN_Vec3 operator-(const CBN_Vec3 &v) const;
-  f32 operator*(const CBN_Vec3 &v) const;
+  /**
+   * @see carbon_math_vec3_rotate_x
+   */
+  CBN_Vec3 RotateX(f32 angle) const;
+  /**
+   * @see carbon_math_vec3_rotate_y
+   */
+  CBN_Vec3 RotateY(f32 angle) const;
+  /**
+   * @see carbon_math_vec3_rotate_z
+   */
+  CBN_Vec3 RotateZ(f32 angle) const;
+  /**
+   * @see carbon_math_vec3_project_2d
+   */
+  CBN_Vec2 Project2D(void) const;
   // Swizzling Operations
   constexpr auto xx(void)  const;
   constexpr auto xy(void)  const;
@@ -170,6 +197,14 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
  * @return The serialized 3D vector as `(X, Y, Z)`.
  */
 CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
+
+CARBON_API CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle);
+
+CARBON_API CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle);
+
+CARBON_API CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle);
+
+CARBON_API CBN_Vec2 carbon_math_vec3_project_2d(CBN_Vec3 v);
 
 // Local Variables:
 // mode: c++
