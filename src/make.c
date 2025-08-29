@@ -26,7 +26,7 @@
 #define CXX_STD "-std=c++20"
 #define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
-#ifndef CARBON_MAKE_USE_SANITIZERS
+#ifndef CARBON_MAKE_DEBUG
 #define OPTIMIZATIONS "-ffp-contract=off -pipe -O3 "
 #else
 #define OPTIMIZATIONS "-ffp-contract=off -fsanitize=address,undefined -g "
@@ -64,7 +64,7 @@ static const char * const help_msg = "usage: %s [FLAG...] [SUBCMD]\n"
   "If not provided any subcommand, it runs the full build pipeline:\n"
   "  [BUILDING] -> [TESTING] -> [EXAMPLES] -> [PACKAGING]\n"
   "\n"
-  "If compiled with `CARBON_MAKE_USE_SANITIZERS`, tests will run with sanitizers enabled.\n"
+  "If compiled with `CARBON_MAKE_DEBUG`, it will build and run in debug mode.\n"
   "\n"
   "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
   "%s homepage: <https://github.com/sparky-game/carbon>\n";
@@ -142,8 +142,8 @@ static void bootstrap(char * const *host_argv, u8 force) {
     CARBON_C_COMPILER,
     C_STD,
     "-DCARBON_MAKE_ALREADY_REBUILT",
-#ifdef CARBON_MAKE_USE_SANITIZERS
-    "-DCARBON_MAKE_USE_SANITIZERS",
+#ifdef CARBON_MAKE_DEBUG
+    "-DCARBON_MAKE_DEBUG",
 #endif
     "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
     "-fPIE", "-pipe", "-Os",
@@ -166,6 +166,7 @@ static void clean(void) {
   rm_dash_r("examples/*.bin.old");
   rm_dash_r("examples/*.png");
   rm_dash_r("examples/*.skap*");
+  rm_dash_r("examples/*.dSYM");
   rm_dash_r(WORKDIR);
   rm_dash_r(WORKDIR ".tgz");
 }
@@ -393,8 +394,8 @@ static void package(void) {
 int main(int argc, char **argv) {
   CBN_ASSERT(!carbon_string_cmp(carbon_fs_get_curr_directory(), carbon_fs_get_bin_directory()) && "Need to be in root dir");
   bootstrap(argv, false);
-#ifdef CARBON_MAKE_USE_SANITIZERS
-  CBN_DEBUG("Compile-time option `CARBON_MAKE_USE_SANITIZERS` is enabled");
+#ifdef CARBON_MAKE_DEBUG
+  CBN_DEBUG("Compile-time option `CARBON_MAKE_DEBUG` is enabled");
 #endif
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
   if (argc > 2) {
