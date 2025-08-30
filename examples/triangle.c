@@ -7,14 +7,14 @@ int main(void) {
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(640, 360);
   carbon_win_open(canvas.width, canvas.height, "Triangle");
   carbon_win_set_max_fps(60);
+  const usz size = 250;
+  const CBN_Vec2 center = {{canvas.width/2, canvas.height/2}};
+  const CBN_Vec2 v1 = {{center.x, center.y - (size / CARBON_SQRT3)}};
+  const CBN_Vec2 v2 = {{center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
+  const CBN_Vec2 v3 = {{center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
   f32 angle = 0;
-  usz size = 250;
-  CBN_Vec2 center = {{canvas.width/2, canvas.height/2}};
-  CBN_Vec2 v1 = {{center.x, center.y - (size / CARBON_SQRT3)}};
-  CBN_Vec2 v2 = {{center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
-  CBN_Vec2 v3 = {{center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3))}};
   while (!carbon_win_shouldclose()) {
-    f64 dt = carbon_win_get_deltatime();
+    const f64 dt = carbon_win_get_deltatime();
     carbon_drawcanvas_fill(canvas, 0x181818ff);
     carbon_drawcanvas_triangle(canvas,
                                carbon_math_vec2_rotate_around_pivot(v1, angle, center),
