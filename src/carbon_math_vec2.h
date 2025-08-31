@@ -162,10 +162,36 @@ typedef union CBN_Vec2 {
 #define CARBON_VEC_yyx(v) CARBON_VEC3((v).y, (v).y, (v).x)
 #define CARBON_VEC_yyy(v) CARBON_VEC3((v).y, (v).y, (v).y)
 
+/**
+ * @brief Adds two 2D vectors together (element-wise).
+ * @param u The first 2D vector.
+ * @param v The second 2D vector.
+ * @return The resultant 2D vector.
+ */
 CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
 
+/**
+ * @brief Subtracts one 2D vector from another one (element-wise).
+ * @param u The first 2D vector.
+ * @param v The second 2D vector.
+ * @return The resultant 2D vector.
+ */
 CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
 
+/**
+ * @brief Computes the Hadamard product (element-wise multiplication) between two 2D vectors.
+ * @param u The first 2D vector.
+ * @param v The second 2D vector.
+ * @return The resultant 2D vector.
+ */
+CARBON_API CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v);
+
+/**
+ * @brief Computes the dot product between two 2D vectors.
+ * @param u The first 2D vector.
+ * @param v The second 2D vector.
+ * @return The resultant scalar value.
+ */
 CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 
 /**

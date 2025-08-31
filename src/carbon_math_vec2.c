@@ -4,21 +4,19 @@
 #include "carbon.inc"
 
 CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v) {
-  return (CBN_Vec2) {
-    .x = u.x + v.x,
-    .y = u.y + v.y
-  };
+  return CARBON_VEC2(u.x + v.x, u.y + v.y);
 }
 
 CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v) {
-  return (CBN_Vec2) {
-    .x = u.x - v.x,
-    .y = u.y - v.y
-  };
+  return CARBON_VEC2(u.x - v.x, u.y - v.y);
+}
+
+CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v) {
+  return CARBON_VEC2(u.x * v.x, u.y * v.y);
 }
 
 f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v) {
-  return (u.x * v.x) + (u.y * v.y);
+  return u.x * v.x + u.y * v.y;
 }
 
 CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max) {
@@ -52,7 +50,7 @@ CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
 }
 
 CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
-  f32 rads = angle * (CARBON_PI / 180);
+  f32 rads = CARBON_TO_RADIANS(angle);
   f32 c = carbon_math_cos(rads), s = carbon_math_sin(rads);
   return (CBN_Vec2) {
     .x = (v.x * c) - (v.y * s),
