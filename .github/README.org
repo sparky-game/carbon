@@ -159,18 +159,19 @@ For more details and to acquire a copy of the *CRLE*, please visit <https://libc
 1. Alshahwan, N., Chheda, J., Finegenova, A., Gokkaya, B., Harman, M., Harper, I., Marginean, A., Sengupta, S., Wang, E. (2024, February 14). /Automated Unit Test Improvement using Large Language Models at Meta/ [Paper]. arXiv, Cornell University. <https://doi.org/10.48550/arXiv.2402.09171>
 2. Barrett, S. (2015, June 7). /Advice for Writing Small Programs in C/ [Video]. YouTube. <https://www.youtube.com/watch?v=eAhWIO1Ra6M>
 3. Catto, E. (2024, August 27). /Determinism/ [Article]. Box2D. <https://box2d.org/posts/2024/08/determinism/>
-3. Gallego Durán, F. J. (2021, December 7). /C++ Slotmap: qué es y por qué usarlo en tu motor de videojuegos/ [Video]. YouTube. <https://www.youtube.com/watch?v=GKfRDAUvFoE>
-4. Gallego Durán, F. J. (2021, December 10). /C++ Programamos un Slotmap para nuestro motor de videojuegos ECS/ [Video]. YouTube. <https://www.youtube.com/watch?v=ZfWF9tqQOh0>
-5. Gallego Durán, F. J. (2022, January 28). /C++ Template Metaprogramming: Introducción/ [Video]. YouTube. <https://www.youtube.com/watch?v=4NKbmCfZ9OI>
-6. Gallego Durán, F. J. (2022, March 2). /C++ Operadores: cómo programar un vector 3D/ [Video]. YouTube. <https://www.youtube.com/watch?v=cBMbhJPuw1w>
-7. Holden, D. (2021, April 16). /orangeduck/Cello: Higher level programming in C/ [Code]. GitHub. <https://github.com/orangeduck/Cello>
-8. Immisch, L., Wilstrup C. (2017, January 1). /PCM Terminology and Concepts/ [Article]. pyalsaaudio's Website. <https://larsimmisch.github.io/pyalsaaudio/terminology.html>
-9. Kutepov, A. (2023, June 30). /tsoding/nn.h: Simple stb-style header-only library for Neural Networks/ [Code]. GitHub. <https://github.com/tsoding/nn.h>
-10. Kutepov, A. (2024, November 5). /tsoding/nob.h: Next generation of the NoBuild idea/ [Code]. GitHub. <https://github.com/tsoding/nob.h>
-11. Kutepov, A. (2025, February 3). /tsoding/coroutines: Custom coroutines implementation in GNU C/ [Code]. GitHub. <https://github.com/tsoding/coroutines>
-12. Matsumoto, M., Nishimura, T. (1998, January 1). /Mersenne twister: a 623-dimensionally equidistributed uniform pseudo-random number generator/ [Paper]. Transactions on Modeling and Computer Simulation (TOMACS), Association for Computing Machinery (ACM). <https://doi.org/10.1145/272991.272995>
-13. Matsumoto, M., Nishimura, T. (2004, September 29). /A C-program for MT19937-64 (2004/9/29 version)/ [Code]. Department of Mathematics, Hiroshima University. <http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937-64.c>
-14. Nishimura, T. (2000, October 1). /Tables of 64-bit Mersenne twisters/ [Paper]. Transactions on Modeling and Computer Simulation (TOMACS), Association for Computing Machinery (ACM). <https://doi.org/10.1145/369534.369540>
-15. OptumSoft. (2016, January 5). /Dangers of using dlsym() with RTLD_NEXT/ [Article]. OptumSoft. <https://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/>
-16. Rice, B. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
-17. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
+4. Christensen, T. (2002, January 1). /The Cambridge History of Western Music Theory/ [Book]. Cambridge University Press. <https://doi.org/10.1017/CHOL9780521623711>
+5. Gallego Durán, F. J. (2021, December 7). /C++ Slotmap: qué es y por qué usarlo en tu motor de videojuegos/ [Video]. YouTube. <https://www.youtube.com/watch?v=GKfRDAUvFoE>
+6. Gallego Durán, F. J. (2021, December 10). /C++ Programamos un Slotmap para nuestro motor de videojuegos ECS/ [Video]. YouTube. <https://www.youtube.com/watch?v=ZfWF9tqQOh0>
+7. Gallego Durán, F. J. (2022, January 28). /C++ Template Metaprogramming: Introducción/ [Video]. YouTube. <https://www.youtube.com/watch?v=4NKbmCfZ9OI>
+8. Gallego Durán, F. J. (2022, March 2). /C++ Operadores: cómo programar un vector 3D/ [Video]. YouTube. <https://www.youtube.com/watch?v=cBMbhJPuw1w>
+9. Holden, D. (2021, April 16). /orangeduck/Cello: Higher level programming in C/ [Code]. GitHub. <https://github.com/orangeduck/Cello>
+10. Immisch, L., Wilstrup C. (2017, January 1). /PCM Terminology and Concepts/ [Article]. pyalsaaudio's Website. <https://larsimmisch.github.io/pyalsaaudio/terminology.html>
+11. Kutepov, A. (2023, June 30). /tsoding/nn.h: Simple stb-style header-only library for Neural Networks/ [Code]. GitHub. <https://github.com/tsoding/nn.h>
+12. Kutepov, A. (2024, November 5). /tsoding/nob.h: Next generation of the NoBuild idea/ [Code]. GitHub. <https://github.com/tsoding/nob.h>
+13. Kutepov, A. (2025, February 3). /tsoding/coroutines: Custom coroutines implementation in GNU C/ [Code]. GitHub. <https://github.com/tsoding/coroutines>
+14. Matsumoto, M., Nishimura, T. (1998, January 1). /Mersenne twister: a 623-dimensionally equidistributed uniform pseudo-random number generator/ [Paper]. Transactions on Modeling and Computer Simulation (TOMACS), Association for Computing Machinery (ACM). <https://doi.org/10.1145/272991.272995>
+15. Matsumoto, M., Nishimura, T. (2004, September 29). /A C-program for MT19937-64 (2004/9/29 version)/ [Code]. Department of Mathematics, Hiroshima University. <http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937-64.c>
+16. Nishimura, T. (2000, October 1). /Tables of 64-bit Mersenne twisters/ [Paper]. Transactions on Modeling and Computer Simulation (TOMACS), Association for Computing Machinery (ACM). <https://doi.org/10.1145/369534.369540>
+17. OptumSoft. (2016, January 5). /Dangers of using dlsym() with RTLD_NEXT/ [Article]. OptumSoft. <https://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/>
+18. Rice, B. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
+19. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
