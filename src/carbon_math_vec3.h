@@ -31,6 +31,12 @@
 #define CARBON_VEC3_V(v, z) CARBON_VEC3((v).x, (v).y, z)
 
 /**
+ * @brief Defines an inline 3D vector.
+ * @param q The quaternion to assign to the X, Y and Z fields.
+ */
+#define CARBON_VEC3_Q(q) CARBON_VEC3((q).x, (q).y, (q).z)
+
+/**
  * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
  */
 #define CARBON_VEC3_ZERO CARBON_VEC3(0, 0, 0)
@@ -69,6 +75,8 @@
  * @brief Defines an inline 3D vector whose 3 elements are equal to one.
  */
 #define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
+
+typedef union CBN_Quat CBN_Quat;  // Forward declaration
 
 /**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
@@ -114,9 +122,13 @@ typedef union CBN_Vec3 {
    */
   CBN_Vec3 RotateZ(f32 angle) const;
   /**
+   * @see carbon_math_vec3_rotate
+   */
+  CBN_Vec3 Rotate(CBN_Quat q) const;
+  /**
    * @see carbon_math_vec3_project_2d
    */
-  CBN_Vec2 Project2D(void) const;
+  cbn::Opt<CBN_Vec2> Project2D(f32 near_z) const;
   // Swizzling Operations
   constexpr auto xx(void)  const;
   constexpr auto xy(void)  const;
@@ -183,13 +195,53 @@ typedef union CBN_Vec3 {
 #define CARBON_VEC_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
 #define CARBON_VEC_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
 
+/**
+ * @brief Adds two 3D vectors together (element-wise).
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
 
+/**
+ * @brief Subtracts one 3D vector from another one (element-wise).
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 
+/**
+ * @brief Computes the Hadamard product (element-wise multiplication) between two 3D vectors.
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Computes the dot product between two 3D vectors.
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant scalar value.
+ */
 CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 
+/**
+ * @brief Computes the cross product between two 3D vectors.
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
+ * @brief Scales the 3D vector by the specified scalar value.
+ * @param v The 3D vector.
+ * @param s The scalar value.
+ * @return The scaled 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s);
 
 /**
  * @brief Returns the string representation of the 3D vector using default formatting.
@@ -198,13 +250,52 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
  */
 CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
 
+/**
+ * @brief Rotates the 3D vector around the X-axis by the specified angle (in degrees).
+ * @param v The 3D vector.
+ * @param angle X-axis rotation angle (in degrees).
+ * @return The rotated 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle);
 
+/**
+ * @brief Rotates the 3D vector around the Y-axis by the specified angle (in degrees).
+ * @param v The 3D vector.
+ * @param angle Y-axis rotation angle (in degrees).
+ * @return The rotated 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle);
 
+/**
+ * @brief Rotates the 3D vector around the Z-axis by the specified angle (in degrees).
+ * @param v The 3D vector.
+ * @param angle Z-axis rotation angle (in degrees).
+ * @return The rotated 3D vector.
+ */
 CARBON_API CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle);
 
-CARBON_API CBN_Vec2 carbon_math_vec3_project_2d(CBN_Vec3 v);
+/**
+ * @brief Rotates the 3D vector by the provided quaternion.
+ * @param v The 3D vector.
+ * @param q The rotation quaternion.
+ * @return The rotated 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
+
+/**
+ * @brief Projects a 3D point/vector into 2D Normalized Device Coordinates (NDC).
+ *
+ * It performs the perspective divide algorithm, mapping (x, y, z) in view space
+ * to (x/z, y/z) in NDC space. The resulting coordinates are in the [-1..1] range
+ * for objects inside the canonical view frustum. Z is not preserved; only the
+ * 2D projection is returned. The result is valid only for points in front of the camera.
+ *
+ * @param v The 3D vector.
+ * @param near_z The near-plane distance (Z-axis).
+ * @param out_v The projected vector in 2D space as NDC coordinates (output argument pointer).
+ * @return A boolean value indicating whether it projected the 3D vector successfully or not.
+ */
+CARBON_API u8 carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
 
 // Local Variables:
 // mode: c++

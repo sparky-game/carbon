@@ -23,8 +23,14 @@ CBN_Vec3 CBN_Vec3::RotateZ(f32 angle) const {
   return carbon_math_vec3_rotate_z(*this, angle);
 }
 
-CBN_Vec2 CBN_Vec3::Project2D(void) const {
-  return carbon_math_vec3_project_2d(*this);
+CBN_Vec3 CBN_Vec3::Rotate(CBN_Quat q) const {
+  return carbon_math_vec3_rotate(*this, q);
+}
+
+cbn::Opt<CBN_Vec2> CBN_Vec3::Project2D(f32 near_z) const {
+  CBN_Vec2 v;
+  if (!carbon_math_vec3_project_2d(*this, near_z, &v)) return {};
+  return v;
 }
 
 CBN_Vec3 CBN_Vec3::operator+(const CBN_Vec3 &v) const {

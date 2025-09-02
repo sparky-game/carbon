@@ -4,31 +4,31 @@
 #include "carbon.inc"
 
 CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v) {
-  return (CBN_Vec3) {
-    .x = u.x + v.x,
-    .y = u.y + v.y,
-    .z = u.z + v.z
-  };
+  return CARBON_VEC3(u.x + v.x, u.y + v.y, u.z + v.z);
 }
 
 CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v) {
-  return (CBN_Vec3) {
-    .x = u.x - v.x,
-    .y = u.y - v.y,
-    .z = u.z - v.z
-  };
+  return CARBON_VEC3(u.x - v.x, u.y - v.y, u.z - v.z);
+}
+
+CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v) {
+  return CARBON_VEC3(u.x * v.x, u.y * v.y, u.z * v.z);
 }
 
 f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
-  return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
+  return u.x * v.x + u.y * v.y + u.z * v.z;
 }
 
 CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v) {
   return (CBN_Vec3) {
-    .x = (u.y * v.z) - (u.z * v.y),
-    .y = (u.z * v.x) - (u.x * v.z),
-    .z = (u.x * v.y) - (u.y * v.x)
+    .x = u.y * v.z - u.z * v.y,
+    .y = u.z * v.x - u.x * v.z,
+    .z = u.x * v.y - u.y * v.x
   };
+}
+
+CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s) {
+  return CARBON_VEC3(v.x * s, v.y * s, v.z * s);
 }
 
 char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
@@ -50,8 +50,15 @@ CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle) {
   return CARBON_VEC3(r.x, r.y, v.z);
 }
 
-CBN_Vec2 carbon_math_vec3_project_2d(CBN_Vec3 v) {
-  if (v.z < 0) v.z = -v.z;
-  if (v.z < CARBON_EPS) v.z += CARBON_EPS;
-  return CARBON_VEC2(v.x / v.z, v.y / v.z);
+CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q) {
+  CBN_Vec3 u = CARBON_VEC3_Q(q);
+  CBN_Vec3 t = carbon_math_vec3_scale(carbon_math_vec3_cross(u, v), 2);
+  // NOTE: v + q.w * t + cross(u, t)
+  return carbon_math_vec3_add(v, carbon_math_vec3_add(carbon_math_vec3_scale(t, q.w), carbon_math_vec3_cross(u, t)));
+}
+
+u8 carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v) {
+  if (!out_v || v.z <= near_z) return false;
+  *out_v = CARBON_VEC2(v.x/v.z, v.y/v.z);
+  return true;
 }
