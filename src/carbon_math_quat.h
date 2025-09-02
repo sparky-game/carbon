@@ -19,6 +19,17 @@
 #define CARBON_QUAT(x, y, z, w) (CBN_Quat){{(f32)(x), (f32)(y), (f32)(z), (f32)(w)}}
 
 /**
+ * @brief Defines an inline quaternion being the conjugate of the provided one.
+ * @param q The quaternion.
+ */
+#define CARBON_QUAT_C(q) CARBON_QUAT(-q.x, -q.y, -q.z, q.w)
+
+/**
+ * @brief Defines an inline quaternion which represents identity.
+ */
+#define CARBON_QUAT_ID CARBON_QUAT(0, 0, 0, 1)
+
+/**
  * @brief Represents a 4D vector that is used to encode 3D physical rotations.
  *
  * Is used to efficiently rotate an object about the (x, y, z) 3D vector
@@ -56,3 +67,39 @@ CARBON_API f32 carbon_math_quat_dot(CBN_Quat p, CBN_Quat q);
  * @return The resultant quaternion.
  */
 CARBON_API CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v);
+
+/**
+ * @brief Scales the quaternion by the specified scalar value.
+ * @param q The quaternion.
+ * @param s The scalar value.
+ * @return The scaled quaternion.
+ */
+CARBON_API CBN_Quat carbon_math_quat_scale(CBN_Quat q, f32 s);
+
+/**
+ * @brief Returns the length of the quaternion squared.
+ * @param q The quaternion.
+ * @return The quaternion's length squared.
+ */
+CARBON_API f32 carbon_math_quat_len_squared(CBN_Quat q);
+
+/**
+ * @brief Returns the length of the quaternion.
+ * @param q The quaternion.
+ * @return The quaternion's length.
+ */
+CARBON_API f32 carbon_math_quat_len(CBN_Quat q);
+
+/**
+ * @brief Returns a quaternion with the same direction as the specified one, but with a length of `1`.
+ * @param q The quaternion.
+ * @return The normalized quaternion.
+ */
+CARBON_API CBN_Quat carbon_math_quat_norm(CBN_Quat q);
+
+/**
+ * @brief Returns the inverse of the provided quaternion.
+ * @param q The quaternion.
+ * @return The inverted quaternion.
+ */
+CARBON_API CBN_Quat carbon_math_quat_inv(CBN_Quat q);
