@@ -17,8 +17,7 @@ f32 carbon_math_quat_dot(CBN_Quat p, CBN_Quat q) {
 }
 
 CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v) {
-  const f32 r = CARBON_TO_RADIANS(0.5);
-  f32 hx = r * v.x, hy = r * v.y, hz = r * v.z;
+  f32 hx = CARBON_TO_RADIANS(v.x)/2, hy = CARBON_TO_RADIANS(v.y)/2, hz = CARBON_TO_RADIANS(v.z)/2;
   f32 sx = carbon_math_sin(hx), sy = carbon_math_sin(hy), sz = carbon_math_sin(hz);
   f32 cx = carbon_math_cos(hx), cy = carbon_math_cos(hy), cz = carbon_math_cos(hz);
   CBN_Quat qx = {{sx, 0, 0, cx}}, qy = {{0, sy, 0, cy}}, qz = {{0, 0, sz, cz}};
