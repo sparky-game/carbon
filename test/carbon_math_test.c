@@ -160,6 +160,32 @@ TEST(concat) {
   return CARBON_OK;
 }
 
+TEST(sin) {
+  carbon_should_be_f(0, carbon_math_sin(0));
+  carbon_should_be_f(0.5, carbon_math_sin(CARBON_PI_6));
+  carbon_should_be_f(CARBON_1_SQRT2, carbon_math_sin(CARBON_PI_4));
+  carbon_should_be_f(CARBON_SQRT3_2, carbon_math_sin(CARBON_PI_3));
+  carbon_should_be_f(1, carbon_math_sin(CARBON_PI_2));
+  return CARBON_OK;
+}
+
+TEST(cos) {
+  carbon_should_be_f(1, carbon_math_cos(0));
+  carbon_should_be_f(CARBON_SQRT3_2, carbon_math_cos(CARBON_PI_6));
+  carbon_should_be_f(CARBON_1_SQRT2, carbon_math_cos(CARBON_PI_4));
+  carbon_should_be_f(0.5, carbon_math_cos(CARBON_PI_3));
+  carbon_should_be_f(0, carbon_math_cos(CARBON_PI_2));
+  return CARBON_OK;
+}
+
+TEST(tan) {
+  carbon_should_be_f(0, carbon_math_tan(0));
+  carbon_should_be_f(CARBON_1_SQRT3, carbon_math_tan(CARBON_PI_6));
+  carbon_should_be_f(1, carbon_math_tan(CARBON_PI_4));
+  carbon_should_be_f(CARBON_SQRT3, carbon_math_tan(CARBON_PI_3));
+  return CARBON_OK;
+}
+
 TEST(asin) {
   carbon_should_be_f(-1.119769, carbon_math_asin(-0.90));
   carbon_should_be_f(-0.848062, carbon_math_asin(-0.75));

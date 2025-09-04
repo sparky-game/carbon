@@ -346,6 +346,12 @@ f32 carbon_math_cos(f32 x) {
   return 1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))));
 }
 
+f32 carbon_math_tan(f32 x) {
+  f32 c = carbon_math_cos(x);
+  if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_INF : -CARBON_INF;
+  return carbon_math_sin(x) / c;
+}
+
 f32 carbon_math_asin(f32 x) {
   f32 eps = 1.1920928955078125e-07;
   f32 ys, yc, y = 0;

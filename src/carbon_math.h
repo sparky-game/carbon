@@ -147,10 +147,47 @@ CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
  */
 CARBON_API u64 carbon_math_concat(u64 x, u64 y);
 
+/**
+ * @brief Returns the sine of the specified angle.
+ * @param The angle in radians.
+ * @return The sine of x.
+ */
 CARBON_API f32 carbon_math_sin(f32 x);
+
+/**
+ * @brief Returns the cosine of the specified angle.
+ * @param The angle in radians.
+ * @return The cosine of x.
+ */
 CARBON_API f32 carbon_math_cos(f32 x);
+
+/**
+ * @brief Returns the tangent of the specified angle.
+ * @param The angle in radians.
+ * @return The tangent of x.
+ */
+CARBON_API f32 carbon_math_tan(f32 x);
+
+/**
+ * @brief Returns the angle whose sine is the specified number.
+ * @param x The number representing a sine, such that -1 ≤ x ≤ 1.
+ * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
+ */
 CARBON_API f32 carbon_math_asin(f32 x);
+
+/**
+ * @brief Returns the angle whose tangent is the specified number.
+ * @param x The number representing a tangent.
+ * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
+ */
 CARBON_API f32 carbon_math_atan(f32 x);
+
+/**
+ * @brief Returns the angle whose tangent is the quotient of the two specified numbers.
+ * @param y The Y coordinate of a point.
+ * @param x The X coordinate of a point.
+ * @return An angle θ, in radians, such that tan(θ) = y/x, where (x, y) is a point in the Cartesian plane.
+ */
 CARBON_API f32 carbon_math_atan2(f32 y, f32 x);
 
 CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
