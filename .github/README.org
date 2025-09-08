@@ -174,4 +174,5 @@ For more details and to acquire a copy of the *CRLE*, please visit <https://libc
 16. Nishimura, T. (2000, October 1). /Tables of 64-bit Mersenne twisters/ [Paper]. Transactions on Modeling and Computer Simulation (TOMACS), Association for Computing Machinery (ACM). <https://doi.org/10.1145/369534.369540>
 17. OptumSoft. (2016, January 5). /Dangers of using dlsym() with RTLD_NEXT/ [Article]. OptumSoft. <https://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/>
 18. Rice, B. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
-19. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
+19. Santell, J. (2019, April 14). /Model View Projection/ [Article]. jsantell.com. <https://jsantell.com/model-view-projection/>
+20. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
