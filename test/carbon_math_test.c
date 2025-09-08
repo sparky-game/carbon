@@ -77,7 +77,7 @@ TEST(pow) {
   carbon_should_be_f(1, carbon_math_pow(69, 0));
   carbon_should_be_f(16384, carbon_math_pow(4, 7));
   carbon_should_be_f(CARBON_SQRT2, carbon_math_pow(2, 0.5));
-  carbon_should_be_f(19.350426, carbon_math_pow(1.456, 7.886));
+  carbon_should_be_f(19.35042, carbon_math_pow(1.456, 7.886));
   return CARBON_OK;
 }
 

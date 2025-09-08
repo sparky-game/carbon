@@ -261,7 +261,7 @@ f32 carbon_math_ldexp2(f32 x, i32 exp) {
 }
 
 f32 carbon_math_log(f32 x) {
-  return carbon_math_log2(x) / carbon_math_log2(CARBON_E);
+  return carbon_math_log2(x) / CARBON_LOG2_E;
 }
 
 f32 carbon_math_exp(f32 x) {
@@ -273,7 +273,7 @@ f32 carbon_math_ldexp(f32 x, i32 exp) {
 }
 
 f32 carbon_math_log10(f32 x) {
-  return carbon_math_log2(x) / carbon_math_log2(10);
+  return carbon_math_log2(x) / CARBON_LOG2_10;
 }
 
 f32 carbon_math_exp10(f32 x) {
