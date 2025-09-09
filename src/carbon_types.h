@@ -9,6 +9,7 @@
 
 #pragma once
 
+typedef void u0;  // Maybe we're all just birds staring at computer monitors.
 typedef unsigned char u8;
 typedef signed char i8;
 static_assert(sizeof(u8) == 1 && sizeof(i8) == 1, "Expected u8/i8 to be 1 byte");
