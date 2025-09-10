@@ -46,7 +46,38 @@ namespace cbn::meta {
   /**
    */
   template <typename T>
-  concept Numeric = std::integral<T> or std::floating_point<T>;
+  struct IsInt : Constant<bool, requires (T t, T *p, void (*f)(T)) {
+    reinterpret_cast<T>(t);
+    f(0);
+    p + t;
+  }> {};
+  template <typename T>
+  constexpr bool IsInt_v = IsInt<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct IsFloat : Constant<bool, requires (T t) {
+    {t + 0.5f} -> SameAs<T>;
+    {t / 2} -> SameAs<T>;
+  }> {};
+  template <typename T>
+  constexpr bool IsFloat_v = IsFloat<T>::value;
+
+  /**
+   */
+  template <typename T>
+  concept Int = IsInt_v<T>;
+
+  /**
+   */
+  template <typename T>
+  concept Float = IsFloat_v<T>;
+
+  /**
+   */
+  template <typename T>
+  concept Numeric = Int<T> or Float<T>;
 
   /**
    */
