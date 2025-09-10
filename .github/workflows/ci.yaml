@@ -56,7 +56,7 @@ jobs:
             libxrandr-dev         \
             libxi-dev
       - name: bootstrap
-        run: ${{ matrix.compiler }} -std=c11 src/make.c -o make
+        run: ${{ matrix.compiler }} -std=c11 src_build/make.c -o make
       - name: build
         run: ./make build
       - name: test

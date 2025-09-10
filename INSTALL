@@ -5,7 +5,7 @@ You can download a pre-compiled package for your CPU's architecture and OS from:
 
 However, if you prefer to build it from source, you can do it with:
 ```
-cc src/make.c -o make
+cc src_build/make.c -o make
 ./make
 ```
 

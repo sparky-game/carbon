@@ -112,7 +112,7 @@ If wanted to build /Carbon/ from source yourself, it can be done without any pro
 This custom build system can rebuild itself properly (using our preferred compilation flags), which means that you'll only need to bootstrap it once:
 
 #+begin_src sh
-cc src/make.c -o make
+cc src_build/make.c -o make
 #+end_src
 
 Once built, we can take a look at the available subcommands and options by issuing the command ~./make help~. To run the full build pipeline it's just as easy as:
