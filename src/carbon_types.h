@@ -27,9 +27,8 @@ static_assert(sizeof(f32) == 4, "Expected f32 to be 4 bytes");
 typedef double f64;
 static_assert(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 typedef long double flong;
-static_assert(sizeof(flong) >= sizeof(f64), "Expected flong to be at least 8 bytes long");
+static_assert(sizeof(flong) >= sizeof(f64), "Expected flong to be at least 8 bytes");
 
-typedef u32 uint;
 typedef size_t usz;
 typedef ssize_t isz;
 typedef uintptr_t uptr;
