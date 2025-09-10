@@ -23,6 +23,18 @@
 #define true 1
 #undef false
 #define false 0
+
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
+#define static_assert _Static_assert
+#endif
+
+#ifdef __cplusplus
+#define typeof(x) decltype(x)
+#define restrict __restrict
+#else
+#define typeof(x) __typeof__(x)
+#endif
+
 #define CARBON_OK true
 #define CARBON_KO false
 
@@ -43,10 +55,8 @@
 #define CARBON_STATIC_NOTIMPLEMENTED static_assert(false, "not yet implemented")
 
 #ifdef __cplusplus
-#define CARBON_TYPE_OF(x) decltype(x)
 #define CARBON_TYPE_IS_SAME(T, U) cbn::meta::Same_v<T, U>
 #else
-#define CARBON_TYPE_OF(x) __typeof__(x)
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
@@ -62,10 +72,6 @@
 #define CARBON_API extern
 #endif
 
-#ifdef __cplusplus
-#define restrict __restrict
-#endif
-
 #if defined(__GNUC__) || defined(__clang__)
 #define CARBON_INLINE __attribute__((always_inline)) static inline
 #define CARBON_NOINLINE __attribute__((noinline))
@@ -75,10 +81,6 @@
 #else
 #define CARBON_INLINE static inline
 #define CARBON_NOINLINE
-#endif
-
-#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
-#define static_assert _Static_assert
 #endif
 
 #if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)

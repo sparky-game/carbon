@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 #define CARBON_WIN__DLDECL(name)                \
-  typedef CARBON_TYPE_OF(&name) name ## _ptr_t; \
+  typedef typeof(&name) name ## _ptr_t; \
   static name ## _ptr_t name ## _ptr;
 
 #if defined(__linux__) || defined(__FreeBSD__)
