@@ -64,12 +64,12 @@
 /**
  * @brief Defines an inline 3D vector which represents -Z direction.
  */
-#define CARBON_VEC3_BACK CARBON_VEC3(0, 0, -1)
+#define CARBON_VEC3_FORWARD CARBON_VEC3(0, 0, -1)
 
 /**
  * @brief Defines an inline 3D vector which represents +Z direction.
  */
-#define CARBON_VEC3_FORWARD CARBON_VEC3(0, 0, 1)
+#define CARBON_VEC3_BACK CARBON_VEC3(0, 0, 1)
 
 /**
  * @brief Defines an inline 3D vector whose 3 elements are equal to one.
