@@ -24,6 +24,16 @@ CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v) {
   return carbon_math_quat_mult(qz, carbon_math_quat_mult(qy, qx));
 }
 
+CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle) {
+  const f32 ha = CARBON_TO_RADIANS(angle)/2;
+  f32 s = carbon_math_sin(ha), c = carbon_math_cos(ha);
+  return CARBON_QUAT(s * axis.x, s * axis.y, s * axis.z, c);
+}
+
+char *carbon_math_quat_to_cstr(CBN_Quat q) {
+  return carbon_math_vec4_to_cstr(q);
+}
+
 CBN_Quat carbon_math_quat_scale(CBN_Quat q, f32 s) {
   return CARBON_QUAT(q.x * s, q.y * s, q.z * s, q.w * s);
 }

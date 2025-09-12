@@ -68,6 +68,21 @@ CARBON_API f32 carbon_math_quat_dot(CBN_Quat p, CBN_Quat q);
 CARBON_API CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v);
 
 /**
+ * @brief Creates a quaternion from the given 3D axis and angle.
+ * @param axis The 3D axis.
+ * @param angle The angle of rotation.
+ * @return The resultant quaternion.
+ */
+CARBON_API CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
+
+/**
+ * @brief Returns the string representation of the quaternion using default formatting.
+ * @param q The quaternion.
+ * @return The serialized quaternion as `(X, Y, Z, W)`.
+ */
+CARBON_API char *carbon_math_quat_to_cstr(CBN_Quat q);
+
+/**
  * @brief Scales the quaternion by the specified scalar value.
  * @param q The quaternion.
  * @param s The scalar value.
