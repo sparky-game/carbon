@@ -641,7 +641,7 @@ namespace pong {
       void Render_HUDDebug(void) const {
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::Grey);
-        static constexpr auto text_pos = CARBON_VEC2_1(10);
+        static constexpr auto text_padding = 10;
         static const auto text_height = m_Window->TextHeight(text_size);
         static const std::string carbon_ver = cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0));
         static const std::string skap_ver = cbn::str::fmt("AssetPack %llu", res::s_AssetPack.header.build_ver);
@@ -653,7 +653,7 @@ namespace pong {
           cbn::str::fmt("Score: %06u", m_P1.score)
         };
         for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
-          m_Window->DrawText(text[i], CARBON_VEC2(text_pos.x, text_pos.y + i*text_height), text_size, text_color);
+          m_Window->DrawText(text[i], CARBON_VEC2(text_padding, text_padding + i*text_height), text_size, text_color);
         }
       }
 
