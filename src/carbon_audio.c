@@ -9,11 +9,9 @@
 CARBON_COMPILER_DIAG_BEGIN;
 CARBON_COMPILER_DIAG_IGNORE("-Wswitch-enum");
 CARBON_COMPILER_DIAG_IGNORE("-Wshadow");
-
 #include "../vendor/stb_vorbis/stb_vorbis.c"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../vendor/miniaudio/miniaudio.h"
-
 CARBON_COMPILER_DIAG_END;
 
 static ma_engine carbon_audio__engine;
