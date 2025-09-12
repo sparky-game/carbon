@@ -51,9 +51,8 @@ CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle) {
 }
 
 CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q) {
-  CBN_Vec3 u = CARBON_VEC3_Q(q);
+  CBN_Vec3 u = CARBON_VEC3_V(q);
   CBN_Vec3 t = carbon_math_vec3_scale(carbon_math_vec3_cross(u, v), 2);
-  // NOTE: v + q.w * t + cross(u, t)
   return carbon_math_vec3_add(v, carbon_math_vec3_add(carbon_math_vec3_scale(t, q.w), carbon_math_vec3_cross(u, t)));
 }
 

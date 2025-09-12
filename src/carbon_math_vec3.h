@@ -21,20 +21,26 @@
  * @brief Defines an inline 3D vector.
  * @param x The value to assign to the X, Y and Z fields.
  */
-#define CARBON_VEC3_1(x) CARBON_VEC3(x, x, x)
+#define CARBON_VEC3_1(x) CARBON_VEC3((x), (x), (x))
 
 /**
  * @brief Defines an inline 3D vector.
- * @param v The 2D vector to assign to the X and Y fields.
+ * @param v The ≥2D vector to assign to the X and Y fields.
  * @param z The value to assign to the Z field.
  */
-#define CARBON_VEC3_V(v, z) CARBON_VEC3((v).x, (v).y, z)
+#define CARBON_VEC3_2(v, z) CARBON_VEC3((v).x, (v).y, z)
 
 /**
  * @brief Defines an inline 3D vector.
- * @param q The quaternion to assign to the X, Y and Z fields.
+ * @param v The ≥3D vector to assign to the X, Y and Z fields.
  */
-#define CARBON_VEC3_Q(q) CARBON_VEC3((q).x, (q).y, (q).z)
+#define CARBON_VEC3_V(v) CARBON_VEC3((v).x, (v).y, (v).z)
+
+/**
+ * @brief Defines an inline 3D vector being the negated of the provided one.
+ * @param v The ≥3D vector.
+ */
+#define CARBON_VEC3_N(v) CARBON_VEC3(-(v).x, -(v).y, -(v).z)
 
 /**
  * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
@@ -76,7 +82,7 @@
  */
 #define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
 
-typedef union CBN_Quat CBN_Quat;  // Forward declaration
+typedef union CBN_Vec4 CBN_Quat;  // Forward declaration
 
 /**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
@@ -285,7 +291,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
 /**
  * @brief Projects a 3D point/vector into 2D Normalized Device Coordinates (NDC).
  *
- * It performs the perspective divide algorithm, mapping (x, y, z) in view space
+ * It performs the perspective divide algorithm, mapping (x, y, z) in clip space
  * to (x/z, y/z) in NDC space. The resulting coordinates are in the [-1..1] range
  * for objects inside the canonical view frustum. Z is not preserved; only the
  * 2D projection is returned. The result is valid only for points in front of the camera.
