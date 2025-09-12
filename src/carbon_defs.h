@@ -49,6 +49,13 @@
 #define CARBON_ARRAY_SHIFT(xs, xs_sz) (CBN_ASSERT((xs_sz) > 0 && "Array is empty"), --(xs_sz), *(xs)++)
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
+/**
+ * @brief Swaps the values of a pair of variables between each other.
+ * @param x The first variable.
+ * @param y The second variable.
+ */
+#define CARBON_SWAP(x, y) do { typeof(x) z = x; x = y; y = z; } while (0)
+
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
 #define CARBON_STATIC_UNREACHABLE static_assert(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")

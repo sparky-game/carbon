@@ -256,8 +256,8 @@ f32 carbon_math_exp2(f32 x) {
   return epart.f * x;
 }
 
-f32 carbon_math_ldexp2(f32 x, i32 exp) {
-  return x * (carbon_math_exp2(exp));
+f32 carbon_math_ldexp2(f32 x, i32 n) {
+  return x * (carbon_math_exp2(n));
 }
 
 f32 carbon_math_log(f32 x) {
@@ -268,8 +268,8 @@ f32 carbon_math_exp(f32 x) {
   return carbon_math_exp2(CARBON_LOG2_E * x);
 }
 
-f32 carbon_math_ldexp(f32 x, i32 exp) {
-  return x * (carbon_math_exp(exp));
+f32 carbon_math_ldexp(f32 x, i32 n) {
+  return x * (carbon_math_exp(n));
 }
 
 f32 carbon_math_log10(f32 x) {
@@ -284,19 +284,19 @@ f32 carbon_math_ldexp10(f32 x, i32 exp) {
   return x * (carbon_math_exp10(exp));
 }
 
-f32 carbon_math_frexp(f32 x, i32 *exp) {
+f32 carbon_math_frexp(f32 x, i32 *n) {
   union { f64 d; u64 i; } y = {x};
   i32 ee = y.i >> 52 & 0x7ff;
   if (!ee) {
     if (x) {
-      x = carbon_math_frexp(x * 0x1p64, exp);
-      *exp -= 64;
+      x = carbon_math_frexp(x * 0x1p64, n);
+      *n -= 64;
     }
-    else *exp = 0;
+    else *n = 0;
     return x;
   }
   else if (ee == 0x7ff) return x;
-  *exp = ee - 0x3fe;
+  *n = ee - 0x3fe;
   y.i &= 0x800fffffffffffffULL;
   y.i |= 0x3fe0000000000000ULL;
   return y.d;
@@ -304,12 +304,6 @@ f32 carbon_math_frexp(f32 x, i32 *exp) {
 
 f32 carbon_math_sigmoid(f32 x) {
   return 1 / (1 + carbon_math_exp(-x));
-}
-
-f32 carbon_math_tanh(f32 x) {
-  f32 ex = carbon_math_exp(x);
-  f32 enx = carbon_math_exp(-x);
-  return (ex - enx) / (ex + enx);
 }
 
 f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
@@ -350,6 +344,12 @@ f32 carbon_math_tan(f32 x) {
   f32 c = carbon_math_cos(x);
   if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_INF : -CARBON_INF;
   return carbon_math_sin(x) / c;
+}
+
+f32 carbon_math_tanh(f32 x) {
+  f32 ex = carbon_math_exp(x);
+  f32 enx = carbon_math_exp(-x);
+  return (ex - enx) / (ex + enx);
 }
 
 f32 carbon_math_asin(f32 x) {

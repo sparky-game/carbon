@@ -100,9 +100,9 @@ CARBON_INLINE u8 carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, cons
   i32 ox1 = r.x;
   i32 oy1 = r.y;
   i32 ox2 = ox1 + CARBON_SIGN(r.w) * (carbon_math_abs(r.w) - 1);
-  if (ox1 > ox2) CARBON_SWAP(i32, ox1, ox2);
+  if (ox1 > ox2) CARBON_SWAP(ox1, ox2);
   i32 oy2 = oy1 + CARBON_SIGN(r.h) * (carbon_math_abs(r.h) - 1);
-  if (oy1 > oy2) CARBON_SWAP(i32, oy1, oy2);
+  if (oy1 > oy2) CARBON_SWAP(oy1, oy2);
   if (ox1 >= (i32) dc.width || ox2 < 0 || oy1 >= (i32) dc.height || oy2 < 0) return false;
   *x1 = ox1;
   if (*x1 < 0) *x1 = 0;
