@@ -34,6 +34,27 @@ void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
   }
 }
 
+CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
+  u32 a2 = c2 & 0xff;
+  if (a2 == 0) return;
+  if (a2 == 255) {
+    *c1 = c2;
+    return;
+  }
+  u32 r1 = (*c1 >> 24) & 0xff;
+  u32 g1 = (*c1 >> 16) & 0xff;
+  u32 b1 = (*c1 >> 8)  & 0xff;
+  u32 a1 = (*c1 >> 0)  & 0xff;
+  u32 r2 = (c2  >> 24) & 0xff;
+  u32 g2 = (c2  >> 16) & 0xff;
+  u32 b2 = (c2  >> 8)  & 0xff;
+  u32 r = (r1 * (255 - a2) + r2 * a2) / 255;
+  u32 g = (g1 * (255 - a2) + g2 * a2) / 255;
+  u32 b = (b1 * (255 - a2) + b2 * a2) / 255;
+  u32 a = a2 + (a1 * (255 - a2)) / 255;
+  *c1 = (r << 24) | (g << 16) | (b << 8) | a;
+}
+
 CARBON_INLINE u8 carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
   *lx = *hx = v1.x;
   *ly = *hy = v1.y;
@@ -54,34 +75,12 @@ CARBON_INLINE u8 carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_V
 }
 
 CARBON_INLINE u8 carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
-  *det = ((v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y));
-  *u1  = ((v2.y - v3.y) * (x - v3.x)    + (v3.x - v2.x) * (y - v3.y));
-  *u2  = ((v3.y - v1.y) * (x - v3.x)    + (v1.x - v3.x) * (y - v3.y));
+  *det = (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
+  *u1  = (v2.y - v3.y) * (x - v3.x) + (v3.x - v2.x) * (y - v3.y);
+  *u2  = (v3.y - v1.y) * (x - v3.x) + (v1.x - v3.x) * (y - v3.y);
   i32 u3 = *det - *u1 - *u2;
-  return ((CARBON_SIGN(*u1) == CARBON_SIGN(*det) || *u1 == 0) &&
-          (CARBON_SIGN(*u2) == CARBON_SIGN(*det) || *u2 == 0) &&
-          (CARBON_SIGN(u3)  == CARBON_SIGN(*det) || u3  == 0));
-}
-
-CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
-  u32 a2 = c2 & 0xff;
-  if (a2 == 0) return;
-  if (a2 == 255) {
-    *c1 = c2;
-    return;
-  }
-  u32 r1 = (*c1 >> 24) & 0xff;
-  u32 g1 = (*c1 >> 16) & 0xff;
-  u32 b1 = (*c1 >> 8)  & 0xff;
-  u32 a1 = (*c1 >> 0)  & 0xff;
-  u32 r2 = (c2  >> 24) & 0xff;
-  u32 g2 = (c2  >> 16) & 0xff;
-  u32 b2 = (c2  >> 8)  & 0xff;
-  u32 r = (r1 * (255 - a2) + r2 * a2) / 255;
-  u32 g = (g1 * (255 - a2) + g2 * a2) / 255;
-  u32 b = (b1 * (255 - a2) + b2 * a2) / 255;
-  u32 a = a2 + (a1 * (255 - a2)) / 255;
-  *c1 = (r << 24) | (g << 16) | (b << 8) | a;
+  i8 det_sign = CARBON_SIGN(*det);
+  return (CARBON_SIGN(*u1) == det_sign || !*u1) && (CARBON_SIGN(*u2) == det_sign || !*u2) && (CARBON_SIGN(u3) == det_sign || !u3);
 }
 
 void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
