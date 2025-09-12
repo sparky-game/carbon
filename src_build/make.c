@@ -26,7 +26,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
-#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
+#define WARNS   "-Wall -Wextra -Werror=shadow -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 #ifndef CARBON_MAKE_DEBUG
 #define OPTIMIZATIONS "-ffp-contract=off -pipe -O3 "

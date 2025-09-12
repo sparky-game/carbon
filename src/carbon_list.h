@@ -85,7 +85,21 @@ typedef struct CBN_List_t CBN_List;
 
 #define carbon_list_at_raw(T, l, i) ((T *) (l).items)[(i)]
 #define carbon_list_at(T, l, i) (CBN_ASSERT((i) < (l).size && "List index out of bounds"), CBN_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), carbon_list_at_raw(T, l, i))
-#define carbon_list_foreach(T, l) for (struct { usz i; T var; } it = {0, carbon_list_at(T, l, 0)}; it.i < (l).size; ++it.i, it.i < (l).size ? it.var = carbon_list_at(T, l, it.i) : it.var)
+
+/**
+ * @brief Loops through the provided List with a custom-defined iterator.
+ *
+ * The iterator consists of the following elements:
+ *   - `i`  :: The index of the actual element being evaluated.
+ *   - `var` :: The actual element being evaluated, as an object of type T.
+ * @param T The underlying type the List was created to handle.
+ * @param name The name to give to the iterator (optional; default = `it`).
+ * @param l The List container.
+ */
+#define carbon_list_foreach__named(T, name, l) for (struct { usz i; T var; } name = {0, carbon_list_at(T, l, 0)}; name.i < (l).size; ++name.i, name.i < (l).size ? name.var = carbon_list_at(T, l, name.i) : name.var)
+#define carbon_list_foreach__default(T, l) carbon_list_foreach__named(T, it, l)
+#define carbon_list_foreach__dispatcher(_1, _2, _3, NAME, ...) NAME
+#define carbon_list_foreach(...) carbon_list_foreach__dispatcher(__VA_ARGS__, carbon_list_foreach__named, carbon_list_foreach__default)(__VA_ARGS__)
 
 /**
  * @brief Creates a new list container.

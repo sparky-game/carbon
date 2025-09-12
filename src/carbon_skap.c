@@ -126,11 +126,10 @@ CARBON_INLINE u8 carbon_skap__check_decl_assets(const char *decl, CBN_List *asse
   const char *cwd = carbon_fs_get_curr_directory();
   CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
   u8 status = true;
-  carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-    CBN_SKAP_AssetGroup ag = it.var;
-    if (!ag.assets.size) continue;
-    carbon_strlist_foreach(ag.assets) {
-      const char *asset_name = carbon_string_fmt("%s%s", ag.path, carbon_strview_to_cstr(it.sv));
+  carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
+    if (!ag_it.var.assets.size) continue;
+    carbon_strlist_foreach(ag_it.var.assets) {
+      const char *asset_name = carbon_string_fmt("%s%s", ag_it.var.path, carbon_strview_to_cstr(it.sv));
       if (!carbon_fs_exists(asset_name)) {
         CBN_ERROR("asset declared as `%s` doesn't exist", asset_name);
         status = false;
@@ -203,17 +202,16 @@ CARBON_INLINE void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_g
 // @type_dependant
 CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      CBN_SKAP_AssetGroup ag = it.var;
-      if (!ag.assets.size || carbon_string_cmp(ag.type, carbon_skap__allowed_types[i])) continue;
-      carbon_strlist_foreach(ag.assets) {
+    carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
+      if (!ag_it.var.assets.size || carbon_string_cmp(ag_it.var.type, carbon_skap__allowed_types[i])) continue;
+      carbon_strlist_foreach(ag_it.var.assets) {
         const char *cwd = carbon_fs_get_curr_directory();
         CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
-        const char *asset_name = carbon_string_fmt("%s%s", ag.path, carbon_strview_to_cstr(it.sv));
+        const char *asset_name = carbon_string_fmt("%s%s", ag_it.var.path, carbon_strview_to_cstr(it.sv));
         CBN_SKAP_AssetIdx idx;
         carbon_memory_set(&idx, 0, sizeof(idx));
         strncpy(idx.name, asset_name, sizeof(idx.name));
-        idx.metadata.type = carbon_skap__str2type(ag.type);
+        idx.metadata.type = carbon_skap__str2type(ag_it.var.type);
         switch (idx.metadata.type) {
         case CARBON_SKAP_ASSET_TYPE_IMAGE: {
           CBN_Image asset = carbon_fs_read_img_from_file(asset_name);
@@ -226,9 +224,9 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List
             .metadata.size = carbon_fs_get_file_size(asset_name)
           };
           asset.data = (u8 *) carbon_memory_alloc(asset.metadata.size);
-          FILE *fd = fopen(asset_name, "rb");
-          fread(asset.data, asset.metadata.size, 1, fd);
-          fclose(fd);
+          FILE *asset_fd = fopen(asset_name, "rb");
+          fread(asset.data, asset.metadata.size, 1, asset_fd);
+          fclose(asset_fd);
           carbon_list_push(&carbon_skap__assets[i], &asset);
           idx.metadata.as_bin = asset.metadata;
         } break;

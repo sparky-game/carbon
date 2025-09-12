@@ -59,7 +59,20 @@ typedef struct CBN_StrList {
 } CBN_StrList;
 
 #define carbon_strlist_at(sl, i) (CBN_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
-#define carbon_strlist_foreach(sl) for (struct { usz i; CBN_StrView sv; } it = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; it.i < (sl).size; ++it.i, it.i < (sl).size ? it.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, it.i)) : it.sv)
+
+/**
+ * @brief Loops through the provided StrList with a custom-defined iterator.
+ *
+ * The iterator consists of the following elements:
+ *   - `i`  :: The index of the actual element being evaluated.
+ *   - `sv` :: The actual element being evaluated, as a StrView object.
+ * @param name The name to give to the iterator (optional; default = `it`).
+ * @param sl The StrList container.
+ */
+#define carbon_strlist_foreach__named(name, sl) for (struct { usz i; CBN_StrView sv; } name = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; name.i < (sl).size; ++name.i, name.i < (sl).size ? name.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, name.i)) : name.sv)
+#define carbon_strlist_foreach__default(sl) carbon_strlist_foreach__named(it, sl)
+#define carbon_strlist_foreach__dispatcher(_1, _2, NAME, ...) NAME
+#define carbon_strlist_foreach(...) carbon_strlist_foreach__dispatcher(__VA_ARGS__, carbon_strlist_foreach__named, carbon_strlist_foreach__default)(__VA_ARGS__)
 
 /**
  * @brief Create a new StrList container, ready to hold strings.
@@ -78,7 +91,7 @@ CARBON_API CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const ch
 
 /**
  * @brief Destroy a StrList container.
- * @sl The StrList container.
+ * @param sl The StrList container.
  */
 CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
 

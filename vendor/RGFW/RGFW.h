@@ -7998,13 +7998,13 @@ void RGFW__osxInputValueChangedCallback(void *context, IOReturn result, void *se
 			if (intValue < logicalMin) intValue = logicalMin;
 			if (intValue > logicalMax) intValue = logicalMax;
 
-			i8 value = (i8)(-100.0 + ((intValue - logicalMin) * 200.0) / (logicalMax - logicalMin));
+			i8 val = (i8)(-100.0 + ((intValue - logicalMin) * 200.0) / (logicalMax - logicalMin));
 
 			switch (usage) {
-				case kHIDUsage_GD_X: RGFW_gamepadAxes[index][0].x = value; event.whichAxis = 0; break;
-				case kHIDUsage_GD_Y: RGFW_gamepadAxes[index][0].y = value; event.whichAxis = 0; break;
-				case kHIDUsage_GD_Z: RGFW_gamepadAxes[index][1].x = value; event.whichAxis = 1; break;
-				case kHIDUsage_GD_Rz: RGFW_gamepadAxes[index][1].y = value; event.whichAxis = 1; break;
+				case kHIDUsage_GD_X:  RGFW_gamepadAxes[index][0].x = val; event.whichAxis = 0; break;
+				case kHIDUsage_GD_Y:  RGFW_gamepadAxes[index][0].y = val; event.whichAxis = 0; break;
+				case kHIDUsage_GD_Z:  RGFW_gamepadAxes[index][1].x = val; event.whichAxis = 1; break;
+				case kHIDUsage_GD_Rz: RGFW_gamepadAxes[index][1].y = val; event.whichAxis = 1; break;
 				default: return;
 			}
 
@@ -9246,7 +9246,7 @@ RGFW_bool RGFW_monitor_requestMode(RGFW_monitor mon, RGFW_monitorMode mode, RGFW
 		foundMode.red = 8; foundMode.green = 8; foundMode.blue = 8;
 
 		if (RGFW_monitorModeCompare(mode, foundMode, request)) {
-				CGError err = CGDisplaySetDisplayMode(display, cmode, NULL);
+				err = CGDisplaySetDisplayMode(display, cmode, NULL);
 				if (err == kCGErrorSuccess)	{
 					CFRelease(allModes);
 					return RGFW_TRUE;
