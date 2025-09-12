@@ -42,15 +42,7 @@
  * Is used to efficiently rotate an object about the (x, y, z) 3D vector
  * by the angle θ, where `w = cos(θ/2)`.
  */
-typedef union CBN_Quat {
-  f32 items[4];
-  struct {
-    union { f32 x, r, s; };
-    union { f32 y, g, t; };
-    union { f32 z, b, p, width; };
-    union { f32 w, a, q, height; };
-  };
-} CBN_Quat;
+typedef CBN_Vec4 CBN_Quat;
 
 /**
  * @brief Computes the Hamilton product between two quaternions.

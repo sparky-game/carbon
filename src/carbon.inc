@@ -16,6 +16,7 @@
 #include "carbon_math.h"
 #include "carbon_math_vec2.h"
 #include "carbon_math_vec3.h"
+#include "carbon_math_vec4.h"
 #include "carbon_math_rect.h"
 #include "carbon_math_quat.h"
 #include "carbon_crypto.h"
