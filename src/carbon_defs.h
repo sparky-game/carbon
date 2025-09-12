@@ -125,6 +125,7 @@
 #error Target OS is not supported
 #endif
 
+#define CARBON_COMPILER_PRAGMA(x) _Pragma(#x)
 #if defined(_WIN32) && defined(__MINGW64__)
 #define CARBON_C_COMPILER "gcc.exe"
 #define CARBON_CXX_COMPILER "g++.exe"
@@ -137,10 +138,16 @@
 #define CARBON_C_COMPILER "clang"
 #define CARBON_CXX_COMPILER "clang++"
 #define CARBON_COMPILER_VERSION __VERSION__
+#define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(clang diagnostic push)
+#define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(clang diagnostic ignored w)
+#define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(clang diagnostic pop)
 #elif defined(__GNUC__)
 #define CARBON_C_COMPILER "gcc"
 #define CARBON_CXX_COMPILER "g++"
 #define CARBON_COMPILER_VERSION __VERSION__
+#define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(GCC diagnostic push)
+#define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(GCC diagnostic ignored w)
+#define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(GCC diagnostic pop)
 #else
 #warning Unrecognized compiler, using defaults.
 #define CARBON_C_COMPILER "cc"

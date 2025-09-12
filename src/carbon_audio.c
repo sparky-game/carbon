@@ -3,25 +3,18 @@
 
 #include "carbon.inc"
 
-// NOTE: we ignore here the `-Wswitch-enum` warning, because the
-// miniaudio library doesn't handle switch-cases rigorously.
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wswitch-enum"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wswitch-enum"
-#endif
+// NOTE: we ignore here these warnings because these dependencies
+// do strange things like shadowing variables, not handling
+// switch-cases rigorously, and such.
+CARBON_COMPILER_DIAG_BEGIN;
+CARBON_COMPILER_DIAG_IGNORE("-Wswitch-enum");
+CARBON_COMPILER_DIAG_IGNORE("-Wshadow");
 
 #include "../vendor/stb_vorbis/stb_vorbis.c"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../vendor/miniaudio/miniaudio.h"
 
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
+CARBON_COMPILER_DIAG_END;
 
 static ma_engine carbon_audio__engine;
 static CBN_SlotMap carbon_audio__sounds;

@@ -9,13 +9,8 @@ static void *carbon_win__dl_CoreVideo;
 // non-deprecated replacements were found for [`CVDisplayLinkCreateWithCGDisplay`,
 // `CVDisplayLinkGetNominalOutputVideoRefreshPeriod`]. These funcs were deprecated by
 // Apple from macOS 15.0 onwards.
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+CARBON_COMPILER_DIAG_BEGIN;
+CARBON_COMPILER_DIAG_IGNORE("-Wdeprecated-declarations");
 
 CARBON_WIN__DLDECL(CVDisplayLinkCreateWithCGDisplay);
 CVReturn CVDisplayLinkCreateWithCGDisplay(CGDirectDisplayID displayID, CVDisplayLinkRef *displayLinkOut) {
@@ -29,11 +24,7 @@ CVTime CVDisplayLinkGetNominalOutputVideoRefreshPeriod(CVDisplayLinkRef displayL
   return CVDisplayLinkGetNominalOutputVideoRefreshPeriod_ptr(displayLink);
 }
 
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
+CARBON_COMPILER_DIAG_END;
 
 // Local Variables:
 // mode: c
