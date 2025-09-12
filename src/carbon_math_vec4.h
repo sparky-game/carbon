@@ -44,10 +44,10 @@
 typedef union CBN_Vec4 {
   f32 items[4];
   struct {
-    union { f32 x, r, s; };
-    union { f32 y, g, t; };
-    union { f32 z, b, p, width; };
-    union { f32 w, a, q, height; };
+    union { f32 x, r; };
+    union { f32 y, g; };
+    union { f32 z, b; };
+    union { f32 w, a; };
   };
 } CBN_Vec4;
 

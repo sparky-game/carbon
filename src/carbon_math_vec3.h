@@ -90,9 +90,9 @@ typedef union CBN_Vec4 CBN_Quat;  // Forward declaration
 typedef union CBN_Vec3 {
   f32 items[3];
   struct {
-    union { f32 x, r, s, u; };
-    union { f32 y, g, t, v; };
-    union { f32 z, b, p, w; };
+    union { f32 x, r; };
+    union { f32 y, g; };
+    union { f32 z, b; };
   };
 #ifdef __cplusplus
   /**

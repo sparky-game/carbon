@@ -65,8 +65,8 @@
 typedef union CBN_Vec2 {
   f32 items[2];
   struct {
-    union { f32 x, r, s, u; };
-    union { f32 y, g, t, v; };
+    union { f32 x, r; };
+    union { f32 y, g; };
   };
 #ifdef __cplusplus
   /**
