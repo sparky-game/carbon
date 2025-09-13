@@ -13,6 +13,9 @@
 namespace cbn {
   using Vec2 = CBN_Vec2;
   using Vec3 = CBN_Vec3;
+  using Vec4 = CBN_Vec4;
+  using Quat = CBN_Quat;
+  using Mat4 = CBN_Mat4;
   using Rect = CBN_Rect;
   template <typename T>
   using List = CBN_List_t<T>;
