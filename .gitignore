@@ -7,8 +7,8 @@ make
 make.exe
 carbon.h
 carbon-*/
-test/testentry
-test/testentry.exe
+src_test/test
+src_test/test.exe
 examples/*
 !examples/*.c
 !examples/*.cc
