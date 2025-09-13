@@ -161,7 +161,7 @@ namespace cbn {
     const auto Duplicate  = carbon_string_dup,   dup  = Duplicate;
     const auto Format     = carbon_string_fmt,   fmt  = Format;
     const auto StartsWith = carbon_string_starts_with_substr;
-    const auto EndsWith   = carbon_string_starts_with_substr;
+    const auto EndsWith   = carbon_string_ends_with_substr;
     const auto IsNumber   = carbon_string_is_number;
     const auto LevDist    = carbon_string_lev_dist;
   }
