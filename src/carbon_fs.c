@@ -328,12 +328,12 @@ u32 carbon_fs_get_file_size(const char *file) {
 }
 
 u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
-  u32 n = carbon_fs_get_file_size(file);
   FILE *fd = fopen(file, "rb");
   if (!fd) {
     CBN_ERROR("unable to open file (`%s`)", file);
     return false;
   }
+  u32 n = carbon_fs_get_file_size(file);
   usz count = sb->size + n;
   if (count > sb->capacity) {
     sb->items = (char *) carbon_memory_realloc(sb->items, count);
