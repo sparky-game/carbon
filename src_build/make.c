@@ -20,8 +20,8 @@
 
 #define HDRFILE "carbon.h"
 #define SRCDIR "src"
-#define TESTDIR "test"
-#define TESTBIN "./" TESTDIR "/testentry"
+#define TESTDIR "src_test"
+#define TESTBIN "./" TESTDIR "/test"
 #define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
 #define C_STD   "-std=c11"
@@ -29,9 +29,9 @@
 #define WARNS   "-Wall -Wextra -Werror=shadow -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 #ifndef CARBON_MAKE_DEBUG
-#define OPTIMIZATIONS "-ffp-contract=off -pipe -O3 "
+#define OPTIMIZATIONS "-pipe -O3 "
 #else
-#define OPTIMIZATIONS "-ffp-contract=off -fsanitize=address,undefined -g "
+#define OPTIMIZATIONS "-fsanitize=address,undefined -g "
 #endif
 
 #if defined(__APPLE__)
