@@ -47,6 +47,9 @@ namespace cbn {
   template <typename T>
   using Ref = std::shared_ptr<T>;
 }
+#else
+#undef bool
+typedef _Bool bool;
 #endif
 
 // Local Variables:
