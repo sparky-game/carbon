@@ -79,17 +79,26 @@ CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv) {
   return new_sv;
 }
 
-u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y) {
+bool carbon_strview_are_equal(CBN_StrView x, CBN_StrView y) {
   if (x.size != y.size) return false;
   return !carbon_memory_cmp(x.data, y.data, x.size);
 }
 
-u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub) {
+bool carbon_strview_contains(CBN_StrView sv, CBN_StrView sub) {
+  if (!sub.size) return true;
+  if (sub.size > sv.size) return false;
+  for (usz i = 0; i <= sv.size - sub.size; ++i) {
+    if (!carbon_memory_cmp(sv.data + i, sub.data, sub.size)) return true;
+  }
+  return false;
+}
+
+bool carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub) {
   if (sub.size > sv.size) return false;
   return carbon_memory_cmp(sv.data, sub.data, sub.size) ? false : true;
 }
 
-u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub) {
+bool carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub) {
   if (sub.size > sv.size) return false;
   return carbon_memory_cmp(sv.data + (sv.size - sub.size), sub.data, sub.size) ? false : true;
 }

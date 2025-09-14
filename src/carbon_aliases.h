@@ -85,7 +85,7 @@ namespace cbn {
   namespace math {
     const auto Sin = carbon_math_sin;
     const auto Cos = carbon_math_cos;
-    inline constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
+    constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
     namespace literals {
       consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
       consteval f64 operator""_deg(const flong n) { return ToRadians(n); }
@@ -110,7 +110,7 @@ namespace cbn {
       else return static_cast<i32>(carbon_math_rand_between(min, max));
     }
     const auto MT19937 = carbon_math_mt19937_64_rand;
-    [[nodiscard]] auto ToClamped(const auto x, const auto min, const auto max) {
+    [[nodiscard]] inline auto ToClamped(const auto x, const auto min, const auto max) {
       return CARBON_CLAMP(x, min, max);
     }
     inline void Clamp(auto &x, const auto min, const auto max) { x = ToClamped(x, min, max); }
@@ -155,6 +155,11 @@ namespace cbn {
     const auto Get = carbon_time_get, now = Get;
   }
   namespace str {
+    namespace literals {
+      inline CBN_StrView operator""_sv(const char *s, usz len) {
+        return cbn::StrView::make(s, len);
+      }
+    }
     const auto Length     = carbon_string_len,   len  = Length;
     const auto Compare    = carbon_string_cmp,   cmp  = Compare;
     const auto Compare_n  = carbon_string_cmp_n, ncmp = Compare_n;

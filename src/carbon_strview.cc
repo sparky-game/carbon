@@ -39,6 +39,18 @@ CBN_StrView CBN_StrView::Chop(char c) {
   return carbon_strview_chop(this, c);
 }
 
+bool CBN_StrView::Contains(const CBN_StrView &sv) const {
+  return carbon_strview_contains(*this, sv);
+}
+
+bool CBN_StrView::StartsWith(const CBN_StrView &sv) const {
+  return carbon_strview_starts_with(*this, sv);
+}
+
+bool CBN_StrView::EndsWith(const CBN_StrView &sv) const {
+  return carbon_strview_ends_with(*this, sv);
+}
+
 usz CBN_StrView::LevDist(const CBN_StrView &sv) const {
   return carbon_string_lev_dist(c_str(), sv.c_str());
 }
@@ -65,8 +77,4 @@ bool CBN_StrView::operator!=(const char *s) const {
 
 bool operator!=(const char *s, const CBN_StrView &sv) {
   return !(s == sv);
-}
-
-CBN_StrView operator""_sv(const char *s, usz len) {
-  return CBN_StrView::make(s, len);
 }

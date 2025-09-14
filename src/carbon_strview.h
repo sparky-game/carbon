@@ -19,59 +19,55 @@ typedef struct CBN_StrView {
   usz size;
 #ifdef __cplusplus
   /**
-   * @brief carbon_strview_from_buf
-   * @param data The pointer to the char buffer.
-   * @param size The size of the char buffer.
-   * @return The StrView representing the provided char buffer.
+   * @see carbon_strview_from_buf
    */
   static CBN_StrView make(const char *data, usz size);
   /**
-   * @brief carbon_strview_from_cstr
-   * @param s The pointer to the standard C char array.
-   * @return The StrView representing the provided C-style string.
+   * @see carbon_strview_from_cstr
    */
   static CBN_StrView make(const char *s);
   /**
-   * @brief carbon_strview_from_strbuilder
-   * @param sb The StrBuilder holding the data.
-   * @return The StrView representing the provided StrBuilder object.
+   * @see carbon_strview_from_strbuilder
    */
   static CBN_StrView make(const CBN_StrBuilder &sb);
   /**
-   * @brief carbon_strview_to_cstr
-   * @return A pointer to a null-terminated char array with same data.
+   * @see carbon_strview_to_cstr
    */
   const char *c_str(void) const;
   /**
-   * @brief carbon_strview_trim_both
-   * @return The StrView that remains after all whitespace characters are removed from the start and the end.
+   * @see carbon_strview_trim_both
    */
   CBN_StrView Trim(void) const;
   /**
-   * @brief carbon_strview_trim_left
-   * @return The StrView that remains after all whitespace characters are removed from the start.
+   * @see carbon_strview_trim_left
    */
   CBN_StrView TrimStart(void) const;
   /**
-   * @brief carbon_strview_trim_right
-   * @return The StrView that remains after all whitespace characters are removed from the end.
+   * @see carbon_strview_trim_right
    */
   CBN_StrView TrimEnd(void) const;
   /**
-   * @brief carbon_strview_chop_by_space
-   * @return The StrView containing the data from the beginning up to the first occurrence of the whitespace character.
+   * @see carbon_strview_chop_by_space
    */
   CBN_StrView Chop(void);
   /**
-   * @brief carbon_strview_chop
-   * @param c The char delimiter to search for.
-   * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
+   * @see carbon_strview_chop
    */
   CBN_StrView Chop(char c);
   /**
-   * @brief carbon_string_lev_dist
-   * @param sv The other StrView.
-   * @return The Levenshtein distance between both StrViews.
+   * @see carbon_strview_contains
+   */
+  bool Contains(const CBN_StrView &sv) const;
+  /**
+   * @see carbon_strview_starts_with
+   */
+  bool StartsWith(const CBN_StrView &sv) const;
+  /**
+   * @see carbon_strview_ends_with
+   */
+  bool EndsWith(const CBN_StrView &sv) const;
+  /**
+   * @see carbon_string_lev_dist
    */
   usz LevDist(const CBN_StrView &sv) const;
   // Overloaded Operators
@@ -81,7 +77,6 @@ typedef struct CBN_StrView {
   bool operator!=(const CBN_StrView &sv) const;
   bool operator!=(const char *s) const;
   friend bool operator!=(const char *s, const CBN_StrView &sv);
-  friend CBN_StrView operator""_sv(const char *s, usz len);
 #endif
 } CBN_StrView;
 
@@ -162,10 +157,31 @@ CARBON_API CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
  * @param y The second StrView.
  * @return A boolean value representing the equality between them.
  */
-CARBON_API u8 carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
+CARBON_API bool carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
 
-CARBON_API u8 carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
-CARBON_API u8 carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
+/**
+ * @brief Checks whether a StrView is contained in another StrView.
+ * @param sv The main StrView.
+ * @param sub The sub StrView to search for.
+ * @return A boolean value representing whether sub ∈ sv.
+ */
+CARBON_API bool carbon_strview_contains(CBN_StrView sv, CBN_StrView sub);
+
+/**
+ * @brief Checks whether a StrView starts with a particular StrView.
+ * @param sv The main StrView.
+ * @param sub The sub StrView to search for.
+ * @return A boolean value representing whether `sv` starts with `sub`.
+ */
+CARBON_API bool carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
+
+/**
+ * @brief Checks whether a StrView ends with a particular StrView.
+ * @param sv The main StrView.
+ * @param sub The sub StrView to search for.
+ * @return A boolean value representing whether `sv` ends with `sub`.
+ */
+CARBON_API bool carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 
 // Local Variables:
 // mode: c++
