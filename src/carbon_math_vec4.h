@@ -49,6 +49,12 @@ typedef union CBN_Vec4 {
     union { f32 z, b; };
     union { f32 w, a; };
   };
+#ifdef __cplusplus
+  /**
+   * @see carbon_math_vec4_to_cstr
+   */
+  const char *ToString(void) const;
+#endif
 } CBN_Vec4;
 
 /**
