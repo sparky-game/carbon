@@ -15,7 +15,7 @@ static inline i32 compare_point_freqs(const void *a, const void *b) {
 int main(int argc, char **argv) {
   // CLI Arguments
   const char *program_name = CARBON_SHIFT_ARGS(argc, argv);
-  if (argc < 2) {
+  if (argc != 2) {
     CBN_ERROR("usage: %$ [FILE] [N_TOP_WORDS]", $(program_name));
     return 1;
   }
