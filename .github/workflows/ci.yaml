@@ -6,7 +6,8 @@ on:
     paths:
       - '.github/workflows/ci.yaml'
       - 'src/**'
-      - 'test/**'
+      - 'src_build/**'
+      - 'src_test/**'
       - 'vendor/**'
       - 'examples/**/*.c'
       - 'examples/**/*.cc'
@@ -17,7 +18,8 @@ on:
     paths:
       - '.github/workflows/ci.yaml'
       - 'src/**'
-      - 'test/**'
+      - 'src_build/**'
+      - 'src_test/**'
       - 'vendor/**'
       - 'examples/**/*.c'
       - 'examples/**/*.cc'
