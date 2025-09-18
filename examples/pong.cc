@@ -337,6 +337,9 @@ namespace pong {
           cbn::audio::Play(res::s_Sound_MenuSelect);
           m_OptionsMenu = true;
         }
+        if (cbn::win::GetKeyDown(cbn::win::KeyCode::Three)) {
+          cbn::win::Exit();
+        }
       }
 
       void Update_OptionsMenuAdjustVolume(const f64 dt) {
@@ -363,8 +366,9 @@ namespace pong {
 
       void Render_MainMenu(void) {
         Render_MainTitle();
-        Render_StartButton();
-        Render_OptionsButton();
+        Render_Button<"<1> Start", 300>();
+        Render_Button<"<2> Options", 415>();
+        Render_Button<"<3> Exit", 530>();
       }
 
       void Render_OptionsMenu(void) {
@@ -382,29 +386,15 @@ namespace pong {
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
-      void Render_StartButton(void) {
-        static constexpr auto text = "<1> Start";
+      template <cbn::meta::String Text, usz YPos>
+      void Render_Button(void) {
+        static constexpr auto text = Text.value;
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
         static constexpr auto text_padding = CARBON_VEC2(20, 15);
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 300);
-        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                      text_pos.y - text_padding.y - 2*text_size,
-                                      text_pos.x + text_width + text_padding.x,
-                                      text_pos.y + text_height + text_padding.y));
-        m_Window->DrawText(text, text_pos, text_size, text_color);
-      }
-
-      void Render_OptionsButton(void) {
-        static constexpr auto text = "<2> Options";
-        static constexpr auto text_size = 4;
-        static constexpr auto text_color = static_cast<u32>(Color::Black);
-        static constexpr auto text_padding = CARBON_VEC2(20, 15);
-        static const auto text_width = m_Window->TextWidth(text, text_size);
-        static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 415);
+        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, YPos);
         m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
                                       text_pos.y - text_padding.y - 2*text_size,
                                       text_pos.x + text_width + text_padding.x,
