@@ -264,6 +264,10 @@ u8 carbon_win_shouldclose(void) {
   return carbon_win__handle->event.type == RGFW_quit;
 }
 
+void carbon_win_exit(void) {
+  carbon_win__handle->event.type = RGFW_quit;
+}
+
 u8 carbon_win_get_key_down(const CBN_KeyCode key) {
   return carbon_win__keys[carbon_win__map_keycodes(key)] && !carbon_win__prev_keys[carbon_win__map_keycodes(key)];
 }

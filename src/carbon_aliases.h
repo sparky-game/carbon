@@ -234,6 +234,7 @@ namespace cbn {
     void ForFrame(T &&callback) {
       carbon_win_forframe(callback);
     }
+    const auto Exit               = carbon_win_exit;
     const auto GetKeyDown         = carbon_win_get_key_down;
     const auto GetKey             = carbon_win_get_key;
     const auto GetKeyUp           = carbon_win_get_key_up;

@@ -50,8 +50,16 @@ typedef enum CBN_KeyCode_t CBN_KeyCode;
 typedef enum CBN_MouseButton_t CBN_MouseButton;
 #endif
 
+/**
+ */
 CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
+
+/**
+ */
 CARBON_API void carbon_win_close(void);
+
+/**
+ */
 CARBON_API void carbon_win_set_max_fps(u32 fps);
 
 /**
@@ -90,6 +98,10 @@ void carbon_win_forframe(T &&callback) {
   }
 }
 #endif
+
+/**
+ */
+CARBON_API void carbon_win_exit(void);
 
 /**
  * @brief Returns true during the frame the user starts pressing down the specified key.
