@@ -36,7 +36,7 @@ namespace cbn::meta {
   template <typename T>
   struct Same<T, T> : True {};
   template <typename T, typename U>
-  constexpr bool Same_v = Same<T, U>::value;
+  constexpr auto Same_v = Same<T, U>::value;
 
   /**
    */
@@ -52,7 +52,7 @@ namespace cbn::meta {
     p + t;
   }> {};
   template <typename T>
-  constexpr bool IsInt_v = IsInt<T>::value;
+  constexpr auto IsInt_v = IsInt<T>::value;
 
   /**
    */
@@ -62,7 +62,7 @@ namespace cbn::meta {
     {t / 2} -> SameAs<T>;
   }> {};
   template <typename T>
-  constexpr bool IsFloat_v = IsFloat<T>::value;
+  constexpr auto IsFloat_v = IsFloat<T>::value;
 
   /**
    */
@@ -107,7 +107,7 @@ namespace cbn::meta {
   requires (sizeof...(Ts) > 0)
   struct Where;
   template <typename T, typename... Ts>
-  constexpr usz Where_v = Where<T, Ts...>::value;
+  constexpr auto Where_v = Where<T, Ts...>::value;
   template <typename T, typename U, typename... Ts>
   struct Where<T, U, Ts...> : Constant<usz, 1 + Where_v<T, Ts...>> {};
   template <typename T, typename... Ts>
@@ -119,18 +119,44 @@ namespace cbn::meta {
   struct List {
     /**
      */
-    static consteval usz Count(void) noexcept { return sizeof...(Ts); }
+    static consteval auto Count(void) noexcept { return sizeof...(Ts); }
     /**
      */
     template <typename T>
-    static consteval bool Contains(void) noexcept { return (false or ... or Same_v<T, Ts>); }
+    static consteval auto Contains(void) noexcept { return (false or ... or Same_v<T, Ts>); }
     /**
      */
     template <typename T>
     requires (Contains<T>())
-    static consteval usz Find(void) noexcept {
-      return Where_v<T, Ts...>;
+    static consteval auto Find(void) noexcept { return Where_v<T, Ts...>; }
+  };
+
+  /**
+   */
+  template <usz N>
+  struct String {
+    char value[N] {};
+    /**
+     */
+    consteval String(const char (&s)[N]) noexcept {
+      for (usz i = 0; i < N; ++i) value[i] = s[i];
     }
+    /**
+     */
+    consteval auto Size(void) const noexcept { return N; }
+    /**
+     */
+    template <usz M>
+    consteval bool operator==(const String<M> &s) const noexcept {
+      for (usz i = 0; i < N; ++i) {
+        if (value[i] != s.value[i]) return false;
+      }
+      return true;
+    }
+    /**
+     */
+    template <usz M>
+    consteval bool operator==(const char (&s)[M]) const noexcept { return *this == String<M>(s); }
   };
 
   /**

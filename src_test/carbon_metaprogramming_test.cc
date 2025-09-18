@@ -35,6 +35,19 @@ namespace List {
   static_assert(Types::Find<f64>() == 2 and Types::Find<char>() == Types::Count() - 1);
 }
 
+namespace String {
+  constexpr cbn::meta::String str1 = "Hello, World!";
+  static_assert(str1 == "Hello, World!");
+  static_assert(str1.Size() == 14);
+  static_assert(str1 != "Привет, Мир!");
+  static_assert(str1 == str1);
+  constexpr cbn::meta::String str2 = "Hello, Programmer!";
+  static_assert(str2 == "Hello, Programmer!");
+  static_assert(str2.Size() == 19);
+  static_assert(str2 != "Привет, Программист!");
+  static_assert(str2 != str1);
+}
+
 namespace Replace {
   using Result = cbn::meta::Replace_t<cbn::Tuple, Types>;
   using Expected = cbn::Tuple<i32, f32, f64, f32, f32, char>;
