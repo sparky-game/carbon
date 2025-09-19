@@ -55,6 +55,30 @@ CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
   *c1 = (r << 24) | (g << 16) | (b << 8) | a;
 }
 
+void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
+  i32 x1 = v1.x, y1 = v1.y, x2 = v2.x, y2 = v2.y;
+  i32 dx =  carbon_math_abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+  i32 dy = -carbon_math_abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
+  i32 err = dx + dy;
+  for (;;) {
+    if (0 <= x1 && x1 < (i32) dc.width && 0 <= y1 && y1 < (i32) dc.height) {
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz) x1, (usz) y1), color);
+    }
+    if (x1 == x2 && y1 == y2) break;
+    i32 e2 = 2 * err;
+    if (e2 >= dy) {
+      if (x1 == x2) break;
+      err += dy;
+      x1 += sx;
+    }
+    if (e2 <= dx) {
+      if (y1 == y2) break;
+      err += dx;
+      y1 += sy;
+    }
+  }
+}
+
 CARBON_INLINE u8 carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
   *lx = *hx = v1.x;
   *ly = *hy = v1.y;

@@ -15,6 +15,10 @@ void CBN_DrawCanvas::Fill(u32 color) {
   carbon_drawcanvas_fill(*this, color);
 }
 
+void CBN_DrawCanvas::DrawLine(CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
+  carbon_drawcanvas_line(*this, v1, v2, color);
+}
+
 void CBN_DrawCanvas::DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
   carbon_drawcanvas_triangle(*this, v1, v2, v3, color);
 }

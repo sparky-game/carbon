@@ -18,91 +18,64 @@ typedef struct CBN_DrawCanvas {
   usz height;
 #ifdef __cplusplus
   /**
-   * @brief carbon_drawcanvas_create
-   * @param width The width to set the canvas to.
-   * @param height The height to set the canvas to.
-   * @return The newly created DrawCanvas object.
+   * @see carbon_drawcanvas_create
    */
   static CBN_DrawCanvas make(usz width, usz height);
   /**
-   * @brief carbon_drawcanvas_destroy
+   * @see carbon_drawcanvas_destroy
    */
   void Free(void);
   /**
-   * @brief carbon_drawcanvas_fill
-   * @param color The color to fill the canvas with.
+   * @see carbon_drawcanvas_fill
    */
   void Fill(u32 color);
   /**
-   * @brief carbon_drawcanvas_triangle
-   * @param v1 The first vertex of the triangle.
-   * @param v2 The second vertex of the triangle.
-   * @param v3 The third vertex of the triangle.
-   * @param color The color to draw the triangle with.
+   * @see carbon_drawcanvas_line
+   */
+  void DrawLine(CBN_Vec2 v1, CBN_Vec2 v2, u32 color);
+  /**
+   * @see carbon_drawcanvas_triangle
    */
   void DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
   /**
-   * @brief carbon_drawcanvas_rect
-   * @param r The rectangle to draw.
-   * @param color The color to draw the rectangle with.
+   * @see carbon_drawcanvas_rect
    */
   void DrawRect(CBN_Rect r, u32 color);
   /**
-   * @brief carbon_drawcanvas_circle
-   * @param center The position of the center of the circle.
-   * @param radius The radius of the circle.
-   * @param color The color to draw the circle with.
+   * @see carbon_drawcanvas_circle
    */
   void DrawCircle(CBN_Vec2 center, usz radius, u32 color);
   /**
-   * @brief carbon_drawcanvas_sprite
-   * @param sprite The sprite to draw.
-   * @param position The position (top-left corner) to draw the sprite to.
+   * @see carbon_drawcanvas_sprite
    */
   void DrawSprite(const CBN_Sprite *sprite, CBN_Vec2 position);
   /**
-   * @brief carbon_drawcanvas_box
-   * @param r The spec of the desired box as a rectangle.
+   * @see carbon_drawcanvas_box
    */
   void DrawBox(CBN_Rect r);
   /**
-   * @brief carbon_drawcanvas_text_with_shadow
-   * @param txt The text to draw.
-   * @param position The position (top-left corner) to draw the text to.
-   * @param size The font size to use.
-   * @param color The color to draw the text with.
+   * @see carbon_drawcanvas_text_with_shadow
    */
   void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color);
   /**
-   * @brief carbon_drawcanvas_text
-   * @param txt The text to draw.
-   * @param position The position (top-left corner) to draw the text to.
-   * @param size The font size to use.
-   * @param color The color to draw the text with.
+   * @see carbon_drawcanvas_text
    */
   void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color);
   /**
-   * @brief carbon_drawcanvas_get_text_width
-   * @param txt The text to measure.
-   * @param size The font size to use.
-   * @return The width of the given text using the specified font size.
+   * @see carbon_drawcanvas_get_text_width
    */
   static usz TextWidth(const char *txt, usz size);
   /**
-   * @brief carbon_drawcanvas_get_text_height
-   * @param size The font size to use.
-   * @return The height of the text using the specified font size.
+   * @see carbon_drawcanvas_get_text_height
    */
   static usz TextHeight(usz size);
   /**
-   * @brief carbon_drawcanvas_hsv_to_rgb
-   * @param h Hue, in [0..360] range.
-   * @param s Saturation, in [0..1] range.
-   * @param v Value, in [0..1] range.
-   * @return 32-bit RGBA color value (A always set to 0xff).
+   * @see carbon_drawcanvas_hsv_to_rgb
    */
   static u32 HSVToRGB(f32 h, f32 s, f32 v);
-  // Overloaded Operators
+  /**
+   * @see carbon_drawcanvas_at
+   */
   u32 &operator()(usz i, usz j) const;
   explicit operator bool(void) const;
 #endif
@@ -130,6 +103,15 @@ CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
  * @param color The color to fill the canvas with.
  */
 CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
+
+/**
+ * @brief Draws a line to the canvas with a specific color.
+ * @param dc The DrawCanvas object.
+ * @param v1 The first point of the line.
+ * @param v2 The second point of the line.
+ * @param color The color to draw the line with.
+ */
+CARBON_API void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color);
 
 /**
  * @brief Draws a triangle to the canvas with a specific color.
