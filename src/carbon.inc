@@ -39,6 +39,7 @@
 #include "carbon_binary.h"
 #include "carbon_sprite.h"
 #include "carbon_drawcanvas.h"
+#include "carbon_camera.h"
 #include "carbon_fs.h"
 #include "carbon_net.h"
 #include "carbon_audio.h"
