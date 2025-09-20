@@ -39,7 +39,7 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc) {
   c->fov = 60;
   c->aspect = (f32) dc.width / dc.height;
   c->near = 0.1;
-  c->far = 5.0;
+  c->far = 100.0;
   c->proj = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
 }
 
