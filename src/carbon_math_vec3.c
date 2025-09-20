@@ -31,6 +31,20 @@ CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s) {
   return CARBON_VEC3(v.x * s, v.y * s, v.z * s);
 }
 
+f32 carbon_math_vec3_len_squared(CBN_Vec3 v) {
+  return carbon_math_vec3_dot(v, v);
+}
+
+f32 carbon_math_vec3_len(CBN_Vec3 v) {
+  return carbon_math_sqrt(carbon_math_vec3_len_squared(v));
+}
+
+CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v) {
+  f32 len = carbon_math_vec3_len(v);
+  if (!len) return v;
+  return carbon_math_vec3_scale(v, 1/len);
+}
+
 char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
   return carbon_string_fmt("(%.3f, %.3f, %.3f)", v.x, v.y, v.z);
 }

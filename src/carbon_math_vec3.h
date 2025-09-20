@@ -250,6 +250,27 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 CARBON_API CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s);
 
 /**
+ * @brief Returns the length of the 3D vector squared.
+ * @param v The 3D vector.
+ * @return The 3D vector's length squared.
+ */
+CARBON_API f32 carbon_math_vec3_len_squared(CBN_Vec3 v);
+
+/**
+ * @brief Returns the length of the 3D vector.
+ * @param v The 3D vector.
+ * @return The 3D vector's length.
+ */
+CARBON_API f32 carbon_math_vec3_len(CBN_Vec3 v);
+
+/**
+ * @brief Returns a 3D vector with the same direction as the specified one, but with a length of `1`.
+ * @param v The 3D vector.
+ * @return The normalized 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v);
+
+/**
  * @brief Returns the string representation of the 3D vector using default formatting.
  * @param v The 3D vector.
  * @return The serialized 3D vector as `(X, Y, Z)`.
