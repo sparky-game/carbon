@@ -28,7 +28,7 @@
 
 ~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑːbᵊn\slash{}]]/) is the ultimate *tiny* and *easy to use* high-level library for C/C++ (/с реализацией на этих языках/). @@html:<br>@@
 It even can be used to test any piece of C/C++ code; thus, working as a full-fledged *testing suite*. @@html:<br>@@
-If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[../SECURITY.md][instructions]] and our [[../CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
+If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[SECURITY.md][instructions]] and our [[CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! 👍
 
 -----
 
@@ -132,7 +132,7 @@ A good place to start learning and discovering all the things you can do with /C
 
 Furthermore, you can also take a look at the amalgamated distributable *header file* (~carbon.h~), where each module of the library is declared and documented. This is all the documentation you'll ever need, and it's also a good place to find new things /Carbon/ can do.
 
-Lastly, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
+Lastly, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../src_test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
 
 * Licensing
 
