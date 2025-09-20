@@ -38,7 +38,7 @@ CARBON_COMPILER_DIAG_IGNORE("-Wunused-label");
 // TODO: Support other rendering methods (e.g. Vulkan, Metal, DirectX, OpenGL).
 #define RGFW_BUFFER  // i.e. CPU software rendering
 #define RGFW_IMPLEMENTATION
-#include "../vendor/RGFW/RGFW.h"
+#include "../thirdparty/RGFW/RGFW.h"
 CARBON_COMPILER_DIAG_END;
 
 #if defined(__APPLE__)

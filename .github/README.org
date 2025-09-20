@@ -80,7 +80,7 @@ git clone --recursive https://github.com/sparky-game/carbon
 *Git Submodule:*
 
 #+begin_src sh
-git submodule add https://github.com/sparky-game/carbon vendor/carbon
+git submodule add https://github.com/sparky-game/carbon [...]
 git submodule update --init --recursive
 #+end_src
 

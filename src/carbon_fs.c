@@ -8,14 +8,14 @@
 #define STBI_FREE    carbon_memory_free
 #define STBI_ASSERT  CBN_ASSERT
 #define STB_IMAGE_IMPLEMENTATION
-#include "../vendor/stb_image/stb_image.h"
+#include "../thirdparty/stb_image/stb_image.h"
 
 #define STBIW_MALLOC  carbon_memory_alloc
 #define STBIW_REALLOC carbon_memory_realloc
 #define STBIW_FREE    carbon_memory_free
 #define STBIW_ASSERT  CBN_ASSERT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../vendor/stb_image_write/stb_image_write.h"
+#include "../thirdparty/stb_image_write/stb_image_write.h"
 
 #ifdef _WIN32
 #define CARBON_FS_PATH_MAX_LEN 256
