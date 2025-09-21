@@ -26,7 +26,7 @@ The ~-s~ switch is mandatory, as it automatically appends the *DCO-compliant* ~S
 
 #+begin_quote
 [!NOTE]
-If your PR were to resolve an open issue, please, link them together under the **Development** section of the aforementioned issue or PR.
+If your PR were to resolve an open issue, please, link them together under the *Development* section of the aforementioned issue or PR.
 #+end_quote
 
 * Coding conventions

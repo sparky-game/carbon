@@ -18,15 +18,3 @@ dir /O:-S
 #+end_src
 
 This essentially sorts the files by size in *descending order* (i.e. largest first; shortest last, *closer to the prompt*). In other operating systems and applications it's recommended to use equivalent or similar functionality.
-
-* Table of Contents :toc:
-  - [[#async-counter][Async counter]]
-  - [[#dns-lookup][DNS lookup]]
-
-** [[./async_counter.c][Async counter]]
-
-This example showcases ...
-
-** [[./dns_lookup.c][DNS lookup]]
-
-This example showcases ...
