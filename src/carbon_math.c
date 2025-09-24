@@ -324,6 +324,13 @@ u64 carbon_math_concat(u64 x, u64 y) {
   return n * x + y;
 }
 
+i32 carbon_math_egcd(i32 x, i32 y) {
+  if (!x) return y;
+  if (!y || x == y) return x;
+  if (x > y) return carbon_math_egcd(x - y, y);
+  return carbon_math_egcd(x, y - x);
+}
+
 f32 carbon_math_sin(f32 x) {
   return carbon_math_cos(x - CARBON_PI_2);
 }

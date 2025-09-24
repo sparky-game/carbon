@@ -160,6 +160,14 @@ TEST(concat) {
   return CARBON_OK;
 }
 
+TEST(egcd) {
+  carbon_should_be(60, carbon_math_egcd(960, 540));
+  carbon_should_be(80, carbon_math_egcd(1280, 720));
+  carbon_should_be(100, carbon_math_egcd(1600, 900));
+  carbon_should_be(120, carbon_math_egcd(1920, 1080));
+  return CARBON_OK;
+}
+
 TEST(sin) {
   carbon_should_be_f(0, carbon_math_sin(0));
   carbon_should_be_f(0.5, carbon_math_sin(CARBON_PI_6));

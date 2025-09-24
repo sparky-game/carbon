@@ -277,6 +277,14 @@ CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
 CARBON_API u64 carbon_math_concat(u64 x, u64 y);
 
 /**
+ * @brief Returns the Greatest Common Divisor (using Euclidean algorithm) of two integers.
+ * @param x The first integer.
+ * @param y The second integer.
+ * @return The GCD of `x` and `y`.
+ */
+CARBON_API i32 carbon_math_egcd(i32 x, i32 y);
+
+/**
  * @brief Returns the sine of the specified angle.
  * @param x The angle in radians.
  * @return The sine of x.
