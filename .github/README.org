@@ -176,4 +176,5 @@ For more details and to acquire a copy of the *CRLE*, please visit <https://libc
 18. OptumSoft. (2016, January 5). /Dangers of using dlsym() with RTLD_NEXT/ [Article]. OptumSoft. <https://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/>
 19. Rice, B. (2018, January 23). /You Can't Unit Test C, Right?/ [Video]. YouTube. <https://www.youtube.com/watch?v=z-uWt5wVVkU>
 20. Santell, J. (2019, April 14). /Model View Projection/ [Article]. jsantell.com. <https://jsantell.com/model-view-projection/>
-21. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
+21. Ten Bosch, M. (2020, January 30). /Let's remove Quaternions from every 3D Engine/ [Article]. marctenbosch.com. <https://marctenbosch.com/quaternions/>
+22. Viotti, J. C. (2023, December 1). /Understanding Objective-C by transpiling it to C++/ [Article]. jviotti.com. <https://www.jviotti.com/2023/12/01/understanding-objective-c-by-transpiling-it-to-cpp.html>
