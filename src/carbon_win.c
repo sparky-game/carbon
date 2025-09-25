@@ -24,10 +24,11 @@
   }
 
 // NOTE: we ignore here these warnings because RGFW do strange things
-// like shadowing variables, leaving labels unused, and such.
+// like shadowing variables, leaving labels unused, using deprecated functions, and such.
 CARBON_COMPILER_DIAG_BEGIN;
 CARBON_COMPILER_DIAG_IGNORE("-Wshadow");
 CARBON_COMPILER_DIAG_IGNORE("-Wunused-label");
+CARBON_COMPILER_DIAG_IGNORE("-Wdeprecated-declarations");
 #define RGFW_ALLOC   carbon_memory_alloc
 #define RGFW_FREE    carbon_memory_free
 #define RGFW_ASSERT  CBN_ASSERT
