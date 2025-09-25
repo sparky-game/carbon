@@ -59,7 +59,7 @@
 #ifdef __has_builtin
 #define CARBON_HAS_BUILTIN __has_builtin
 #else
-#define CARBON_HAS_BUILTIN(...)
+#define CARBON_HAS_BUILTIN(...) false
 #endif
 
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
