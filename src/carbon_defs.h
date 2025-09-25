@@ -56,6 +56,12 @@
  */
 #define CARBON_SWAP(x, y) do { typeof(x) z = x; x = y; y = z; } while (0)
 
+#ifdef __has_builtin
+#define CARBON_HAS_BUILTIN __has_builtin
+#else
+#define CARBON_HAS_BUILTIN(...)
+#endif
+
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
 #define CARBON_STATIC_UNREACHABLE static_assert(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")
@@ -149,7 +155,7 @@
 #define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(GCC diagnostic ignored w)
 #define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(GCC diagnostic pop)
 #else
-#warning Unrecognized compiler, using defaults.
+#warning Unrecognized compiler, using defaults
 #define CARBON_C_COMPILER "cc"
 #define CARBON_CXX_COMPILER "c++"
 #define CARBON_COMPILER_VERSION __VERSION__
