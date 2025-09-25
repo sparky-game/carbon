@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CARBON_NO_BUILTIN
 #include "../src/carbon.inc"
 // Needed sources for bootstrapping purposes
 #include "../src/carbon_assert.c"
@@ -147,8 +148,7 @@ static void bootstrap(char * const *host_argv, u8 force) {
 #ifdef CARBON_MAKE_DEBUG
     "-DCARBON_MAKE_DEBUG",
 #endif
-    "-Wall", "-Wextra", "-Wswitch-enum", "-Werror=format",
-    "-fPIE", "-pipe", "-Os",
+    "-Wall", "-Wextra", "-fPIE",
     __FILE__,
     "-o", host_argv[0], 0
   };

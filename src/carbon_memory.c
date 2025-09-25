@@ -25,7 +25,6 @@ void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n) 
 #if CARBON_HAS_BUILTIN(__builtin_memcpy)
   return __builtin_memcpy(dst, src, n);
 #else
-#warning `__builtin_memcpy` not available, using alternative slower implementation
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;
   while (n--) *d++ = *s++;
@@ -37,7 +36,6 @@ i32 carbon_memory_cmp(const void *v1, const void *v2, usz n) {
 #if CARBON_HAS_BUILTIN(__builtin_memcmp)
   return __builtin_memcmp(v1, v2, n);
 #else
-#warning `__builtin_memcmp` not available, using alternative slower implementation
   const u8 *l = (const u8 *) v1, *r = (const u8 *) v2;
   for (; n && *l == *r; --n, ++l, ++r);
   return n ? *l - *r : 0;
@@ -48,7 +46,6 @@ void *carbon_memory_set(void *dst, i32 c, usz n) {
 #if CARBON_HAS_BUILTIN(__builtin_memset)
   return __builtin_memset(dst, c, n);
 #else
-#warning `__builtin_memset` not available, using alternative slower implementation
   u8 *d = (u8 *) dst;
   while (n--) *d++ = (u8) c;
   return dst;

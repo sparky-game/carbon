@@ -77,7 +77,6 @@ u32 carbon_math_bswap32(u32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_bswap32)
   return __builtin_bswap32(x);
 #else
-#warning `__builtin_bswap32` not available, using alternative slower implementation
   return ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8) | ((x & 0x00ff0000) >> 8) | ((x & 0xff000000) >> 24);
 #endif
 }
@@ -86,7 +85,6 @@ f32 carbon_math_abs(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_fabsf)
   return __builtin_fabsf(x);
 #else
-#warning `__builtin_fabsf` not available, using alternative slower implementation
   union { f32 f; u32 i; } u = {x};
   u.i &= 0x7fffffff;
   return u.f;
@@ -97,7 +95,6 @@ f32 carbon_math_round(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_roundf)
   return __builtin_roundf(x);
 #else
-#warning `__builtin_roundf` not available, using alternative slower implementation
   return x >= 0 ? (i32) (x + 0.5) : (i32) (x - 0.5);
 #endif
 }
@@ -106,7 +103,6 @@ f32 carbon_math_floor(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_floorf)
   return __builtin_floorf(x);
 #else
-#warning `__builtin_floorf` not available, using alternative slower implementation
   union { f32 f; u32 i; } u = {x};
   i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
   u32 m;
@@ -133,7 +129,6 @@ f32 carbon_math_ceil(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_ceilf)
   return __builtin_ceilf(x);
 #else
-#warning `__builtin_ceilf` not available, using alternative slower implementation
   union { f32 f; u32 i; } u = {x};
   i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
   u32 m;
@@ -167,7 +162,6 @@ f32 carbon_math_sqrt(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_sqrtf)
   return __builtin_sqrtf(x);
 #else
-#warning `__builtin_sqrtf` not available, using alternative slower implementation
   if (x == 2) return CARBON_SQRT2;
   if (x == 3) return CARBON_SQRT3;
   f32 s = x;
@@ -195,7 +189,6 @@ f32 carbon_math_pow(f32 x, f32 y) {
 #if CARBON_HAS_BUILTIN(__builtin_powf)
   return __builtin_powf(x, y);
 #else
-#warning `__builtin_powf` not available, using alternative slower implementation
   if (y == 0) return 1;
   if (x == 0) {
     if (y < 0) CBN_ASSERT(0 && "division by 0 is not defined");
@@ -209,7 +202,6 @@ f32 carbon_math_log2(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_log2f)
   return __builtin_log2f(x);
 #else
-#warning `__builtin_log2f` not available, using alternative slower implementation
   static const f32 dinv = 6.4000000000e+1;
   static const f32 dsq6 = 4.0690105379e-5;
   __attribute__((aligned(16))) static const f32 q1[] = {
@@ -283,7 +275,6 @@ f32 carbon_math_exp2(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_exp2f)
   return __builtin_exp2f(x);
 #else
-#warning `__builtin_exp2f` not available, using alternative slower implementation
   __attribute__((aligned(16))) static const f32 p[] = {
     1.535336188319500e-4, 1.339887440266574e-3,
     9.618437357674640e-3, 5.550332471162809e-2,
@@ -309,7 +300,6 @@ f32 carbon_math_ldexp2(f32 x, i32 n) {
 #if CARBON_HAS_BUILTIN(__builtin_ldexpf)
   return __builtin_ldexpf(x, n);
 #else
-#warning `__builtin_ldexpf` not available, using alternative slower implementation
   return x * (carbon_math_exp2(n));
 #endif
 }
@@ -318,7 +308,6 @@ f32 carbon_math_log(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_logf)
   return __builtin_logf(x);
 #else
-#warning `__builtin_logf` not available, using alternative slower implementation
   return carbon_math_log2(x) / CARBON_LOG2_E;
 #endif
 }
@@ -327,7 +316,6 @@ f32 carbon_math_exp(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_expf)
   return __builtin_expf(x);
 #else
-#warning `__builtin_expf` not available, using alternative slower implementation
   return carbon_math_exp2(CARBON_LOG2_E * x);
 #endif
 }
@@ -340,7 +328,6 @@ f32 carbon_math_log10(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_log10f)
   return __builtin_log10f(x);
 #else
-#warning `__builtin_log10f` not available, using alternative slower implementation
   return carbon_math_log2(x) / CARBON_LOG2_10;
 #endif
 }
@@ -349,7 +336,6 @@ f32 carbon_math_exp10(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_exp10f)
   return __builtin_exp10f(x);
 #else
-#warning `__builtin_exp10f` not available, using alternative slower implementation
   return carbon_math_exp2(CARBON_LOG2_10 * x);
 #endif
 }
@@ -362,7 +348,6 @@ f32 carbon_math_frexp(f32 x, i32 *n) {
 #if CARBON_HAS_BUILTIN(__builtin_frexpf)
   return __builtin_frexpf(x, n);
 #else
-#warning `__builtin_frexpf` not available, using alternative slower implementation
   union { f64 d; u64 i; } y = {x};
   i32 ee = y.i >> 52 & 0x7ff;
   if (!ee) {
@@ -414,7 +399,6 @@ f32 carbon_math_sin(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_sinf)
   return __builtin_sinf(x);
 #else
-#warning `__builtin_sinf` not available, using alternative slower implementation
   return carbon_math_cos(x - CARBON_PI_2);
 #endif
 }
@@ -423,7 +407,6 @@ f32 carbon_math_cos(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_cosf)
   return __builtin_cosf(x);
 #else
-#warning `__builtin_cosf` not available, using alternative slower implementation
   if (x < 0) x = -x;
   if (0 <= carbon_math_cmp(x, CARBON_2PI)) {
     do { x -= CARBON_2PI; } while (0 <= carbon_math_cmp(x, CARBON_2PI));
@@ -440,7 +423,6 @@ f32 carbon_math_tan(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_tanf)
   return __builtin_tanf(x);
 #else
-#warning `__builtin_tanf` not available, using alternative slower implementation
   f32 c = carbon_math_cos(x);
   if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_INF : -CARBON_INF;
   return carbon_math_sin(x) / c;
@@ -451,7 +433,6 @@ f32 carbon_math_tanh(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_tanhf)
   return __builtin_tanhf(x);
 #else
-#warning `__builtin_tanhf` not available, using alternative slower implementation
   f32 ex = carbon_math_exp(x);
   f32 enx = carbon_math_exp(-x);
   return (ex - enx) / (ex + enx);
@@ -462,7 +443,6 @@ f32 carbon_math_asin(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_asinf)
   return __builtin_asinf(x);
 #else
-#warning `__builtin_asinf` not available, using alternative slower implementation
   f32 eps = 1.1920928955078125e-07;
   f32 ys, yc, y = 0;
   for (;;) {
@@ -480,7 +460,6 @@ f32 carbon_math_atan(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_atanf)
   return __builtin_atanf(x);
 #else
-#warning `__builtin_atanf` not available, using alternative slower implementation
   return carbon_math_asin(x / carbon_math_sqrt(x * x + 1));
 #endif
 }
@@ -489,7 +468,6 @@ f32 carbon_math_atan2(f32 y, f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_atan2f)
   return __builtin_atan2f(y, x);
 #else
-#warning `__builtin_atan2f` not available, using alternative slower implementation
   f32 r, phi, y_abs = carbon_math_abs(y) + CARBON_EPS;
   if (x < 0) {
     r = (x + y_abs) / (y_abs - x);

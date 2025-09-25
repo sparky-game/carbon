@@ -56,7 +56,7 @@
  */
 #define CARBON_SWAP(x, y) do { typeof(x) z = x; x = y; y = z; } while (0)
 
-#ifdef __has_builtin
+#if defined(__has_builtin) && !defined(CARBON_NO_BUILTIN)
 #define CARBON_HAS_BUILTIN __has_builtin
 #else
 #define CARBON_HAS_BUILTIN(...) false
