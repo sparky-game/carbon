@@ -4,13 +4,11 @@
 #include <carbon.h>
 
 namespace pong {
-  static constexpr auto c_ScreenWidthRatio  = 16;
-  static constexpr auto c_ScreenHeightRatio = 9;
-  static constexpr auto c_ScreenRatioFactor = 80;
-  static constexpr auto c_ScreenWidth       = c_ScreenWidthRatio * c_ScreenRatioFactor;
-  static constexpr auto c_ScreenHeight      = c_ScreenHeightRatio * c_ScreenRatioFactor;
-  static constexpr auto c_PointsToWin       = 11;
-  static constexpr auto c_PointsDiffToWin   = 2;
+  static constexpr auto c_ScreenFactor    = 80;
+  static constexpr auto c_ScreenWidth     = 16 * c_ScreenFactor;
+  static constexpr auto c_ScreenHeight    = 9 * c_ScreenFactor;
+  static constexpr auto c_PointsToWin     = 11;
+  static constexpr auto c_PointsDiffToWin = 2;
 
   namespace res {
     static cbn::SKAP s_AssetPack;
@@ -227,11 +225,11 @@ namespace pong {
     void Render_Cards(cbn::DrawCanvas &canvas) const {
       static constexpr auto padding = 10;
       static const auto * const sp = cbn::sprite_mgr::Lookup(res::s_Sprite_YellowCard);
-      {
+      {// Sprite
         static const auto sp_pos = CARBON_VEC2(padding, canvas.height - padding - sp->height);
         canvas.DrawSprite(sp, sp_pos);
       }
-      {
+      {// Text
         const auto text = cbn::str::fmt("x%hhu", yellow_cards);
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::White);
