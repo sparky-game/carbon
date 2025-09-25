@@ -73,6 +73,15 @@ u64 carbon_math_mt19937_64_rand(void) {
   return x;
 }
 
+u32 carbon_math_bswap32(u32 x) {
+#if CARBON_HAS_BUILTIN(__builtin_bswap32)
+  return __builtin_bswap32(x);
+#else
+#warning `__builtin_bswap32` not available, using alternative slower implementation
+  return ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8) | ((x & 0x00ff0000) >> 8) | ((x & 0xff000000) >> 24);
+#endif
+}
+
 f32 carbon_math_abs(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_fabsf)
   return __builtin_fabsf(x);

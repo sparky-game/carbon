@@ -101,6 +101,13 @@ CARBON_API void carbon_math_mt19937_64_srand(u64 seed);
 CARBON_API u64 carbon_math_mt19937_64_rand(void);
 
 /**
+ * @brief Reverses the order of the bytes in the provided 32-bit unsigned integer (e.g. 0xAABBCCDD -> 0xDDCCBBAA).
+ * @param x The 32-bit unsigned integer.
+ * @return The byte-reversed 32-bit unsigned integer.
+ */
+CARBON_API u32 carbon_math_bswap32(u32 x);
+
+/**
  * @brief Returns the absolute value of a specified number.
  * @param x The number.
  * @return The non-negative value of x without regard to its sign.
