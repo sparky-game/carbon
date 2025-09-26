@@ -55,16 +55,16 @@ void carbon_string_strip_substr(char *s, const char *sub) {
   while ((p = strstr(s, sub))) memmove(p, p + len, carbon_string_len(p + len) + 1);
 }
 
-u8 carbon_string_starts_with_substr(const char *s, const char *sub) {
+bool carbon_string_starts_with_substr(const char *s, const char *sub) {
   return carbon_string_cmp_n(s, sub, carbon_string_len(sub)) ? false : true;
 }
 
-u8 carbon_string_ends_with_substr(const char *s, const char *sub) {
+bool carbon_string_ends_with_substr(const char *s, const char *sub) {
   usz s_len = carbon_string_len(s), sub_len = carbon_string_len(sub);
   return (s_len >= sub_len) && (!carbon_string_cmp(s + (s_len - sub_len), sub));
 }
 
-u8 carbon_string_is_number(const char *s) {
+bool carbon_string_is_number(const char *s) {
   usz len = carbon_string_len(s);
   for (usz i = 0; i < len; ++i) {
     if (!isdigit(s[i])) return false;
@@ -72,7 +72,7 @@ u8 carbon_string_is_number(const char *s) {
   return true;
 }
 
-u8 carbon_string_has_char(const char *s, char c) {
+bool carbon_string_has_char(const char *s, char c) {
   const char *c_ptr = strchr(s, c);
   if (!c_ptr) return false;
   return true;
