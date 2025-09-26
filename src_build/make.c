@@ -27,7 +27,7 @@
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
-#define WARNS   "-Wall -Wextra -Werror=shadow -Werror=switch-enum -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
+#define WARNS   "-Wall -Wextra -Werror=switch-enum -Werror=shadow -Werror=format -Werror=return-type -Wno-return-type-c-linkage -Wno-strict-aliasing"
 
 #ifndef CARBON_MAKE_DEBUG
 #define OPTIMIZATIONS "-pipe -O3 "
@@ -40,7 +40,7 @@
 #elif defined (_WIN32)
 #define LIBS "-ldnsapi -lgdi32 -lntdll -static "
 #else
-#define LIBS ""
+#define LIBS "-lm "
 #endif
 
 #ifdef _WIN32
