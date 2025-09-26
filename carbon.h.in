@@ -32,9 +32,9 @@
 #pragma once
 
 #define CARBON_VERSION_MAJOR 0
-#define CARBON_VERSION_MINOR 16
+#define CARBON_VERSION_MINOR 17
 #define CARBON_VERSION_PATCH 0
-#define CARBON_VERSION_EXTRA "-alpha"
+#define CARBON_VERSION_EXTRA "-dev"
 
 /*
 **  Build options
