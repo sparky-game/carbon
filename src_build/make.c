@@ -19,11 +19,14 @@
 #include "../src/carbon_crypto.c"
 #include "../src/carbon_hashmap.c"
 
-#define HDRFILE "carbon.h"
-#define SRCDIR "src"
-#define TESTDIR "src_test"
-#define TESTBIN "./" TESTDIR "/test"
-#define WORKDIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
+#define HDR_FILE "carbon.h"
+#define HDR_FILE_TPL HDR_FILE ".in"
+#define LICENSE_FILE "LICENSE"
+#define SRC_DIR "src"
+#define TEST_DIR "src_test"
+#define TEST_BIN "./" TEST_DIR "/test"
+#define EXAMPLES_DIR "examples"
+#define BUILD_DIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
 #define C_STD   "-std=c11"
 #define CXX_STD "-std=c++20"
@@ -159,58 +162,61 @@ static void bootstrap(char * const *host_argv, u8 force) {
 }
 
 static void clean(void) {
-  rm_dash_r(HDRFILE);
-  rm_dash_r(TESTBIN);
-  rm_dash_r(TESTBIN ".exe");
-  rm_dash_r(TESTDIR "/*.o");
-  rm_dash_r("examples/*.exe");
-  rm_dash_r("examples/*.bin");
-  rm_dash_r("examples/*.bin.old");
-  rm_dash_r("examples/*.png");
-  rm_dash_r("examples/*.skap*");
-  rm_dash_r("examples/*.dSYM");
-  rm_dash_r(WORKDIR);
-  rm_dash_r(WORKDIR ".tgz");
+  rm_dash_r(HDR_FILE);
+  rm_dash_r(TEST_BIN);
+  rm_dash_r(TEST_BIN ".exe");
+  rm_dash_r(TEST_DIR "/*.o");
+  rm_dash_r(EXAMPLES_DIR "/*.exe");
+  rm_dash_r(EXAMPLES_DIR "/*.bin");
+  rm_dash_r(EXAMPLES_DIR "/*.bin.old");
+  rm_dash_r(EXAMPLES_DIR "/*.png");
+  rm_dash_r(EXAMPLES_DIR "/*.skap*");
+  rm_dash_r(EXAMPLES_DIR "/*.inl");
+  rm_dash_r(EXAMPLES_DIR "/*.dSYM");
+  rm_dash_r(BUILD_DIR);
+  rm_dash_r(BUILD_DIR ".tgz");
 }
 
 static void hdrgen(void) {
-  carbon_println("  GEN     " HDRFILE);
+  carbon_println("  GEN     " HDR_FILE);
   CBN_StrBuilder hdr = {0};
-  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, HDRFILE ".in"));
+  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, HDR_FILE_TPL));
   CBN_StrList hdrs = carbon_strlist_create(true);
   CBN_StrBuilder inc = {0};
-  CBN_ASSERT(carbon_fs_read_entire_file(&inc, SRCDIR "/carbon.inc"));
+  CBN_ASSERT(carbon_fs_read_entire_file(&inc, SRC_DIR "/carbon.inc"));
   CBN_StrView inc_sv = carbon_strview_from_strbuilder(&inc);
   while (inc_sv.size) {
     CBN_StrView line = carbon_strview_chop(&inc_sv, '\n');
     if (!carbon_strview_starts_with(line, carbon_strview_from_cstr("#include")) ||
-        carbon_strview_are_equal(line, carbon_strview_from_cstr("#include \"../" HDRFILE ".in\""))) continue;
+        carbon_strview_are_equal(line, carbon_strview_from_cstr("#include \"../" HDR_FILE_TPL "\""))) continue;
     char *line_str = carbon_strview_to_cstr(line);
     carbon_string_strip_substr(line_str, "#include \"");
     carbon_string_strip_substr(line_str, "\"");
-    carbon_strlist_push(&hdrs, carbon_string_fmt(SRCDIR "/%s", line_str));
+    carbon_strlist_push(&hdrs, carbon_string_fmt(SRC_DIR "/%s", line_str));
   }
   carbon_strlist_foreach(hdrs) {
     carbon_strbuilder_add_cstr(&hdr, "\n");
     CBN_ASSERT(carbon_fs_read_entire_file(&hdr, carbon_strview_to_cstr(it.sv)));
   }
   carbon_strbuilder_add_cstr(&hdr, "\n");
-  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, SRCDIR "/carbon_aliases.h"));
-  FILE *hdr_fd = fopen(HDRFILE, "w");
-  fwrite(hdr.items, hdr.size, 1, hdr_fd);
-  fclose(hdr_fd);
+  CBN_ASSERT(carbon_fs_read_entire_file(&hdr, SRC_DIR "/carbon_aliases.h"));
+  {// TODO: replace this with smth like `carbon_strbuilder_save_to_file(hdr, HDR_FILE);`.
+    FILE *fd = fopen(HDR_FILE, "w");
+    fwrite(hdr.items, hdr.size, 1, fd);
+    fclose(fd);
+  }
   carbon_strlist_destroy(&hdrs);
   carbon_strbuilder_free(&hdr);
 }
 
 static void build_compile_c_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(SRCDIR "/carbon_*.c");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(SRC_DIR "/carbon_*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CC      %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIC " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, SRCDIR "/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c " SRCDIR "/%s -o " WORKDIR "/%s.o", it.f, it.f));
+    carbon_string_strip_substr(it.f, SRC_DIR "/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c " SRC_DIR "/%s -o " BUILD_DIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -218,12 +224,12 @@ static void build_compile_c_files(void) {
 
 static void build_compile_cxx_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(SRCDIR "/carbon_*.cc");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(SRC_DIR "/carbon_*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXX     %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIC " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, SRCDIR "/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c " SRCDIR "/%s -o " WORKDIR "/%s.o", it.f, it.f));
+    carbon_string_strip_substr(it.f, SRC_DIR "/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(" -c " SRC_DIR "/%s -o " BUILD_DIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -232,13 +238,13 @@ static void build_compile_cxx_files(void) {
 static void build_static_lib(void) {
   carbon_println("  AR      libcarbon.a");
 #ifndef _WIN32
-  call_cmd("ar -rcs " WORKDIR "/libcarbon.a " WORKDIR "/*.o");
+  call_cmd("ar -rcs " BUILD_DIR "/libcarbon.a " BUILD_DIR "/*.o");
 #else
   CBN_StrBuilder cmd = {0};
-  carbon_strbuilder_add_cstr(&cmd, "ar -rcs " WORKDIR "/libcarbon.a ");
-  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(WORKDIR "/*.o");
+  carbon_strbuilder_add_cstr(&cmd, "ar -rcs " BUILD_DIR "/libcarbon.a ");
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(BUILD_DIR "/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(BUILD_DIR "/%s ", it.f));
   }
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
@@ -250,42 +256,42 @@ static void build_shared_lib(void) {
   carbon_println("  LD      " SHARED_LIB_FILE);
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " " OPTIMIZATIONS);
 #ifndef _WIN32
-  carbon_strbuilder_add_cstr(&cmd, WORKDIR "/*.o -shared ");
+  carbon_strbuilder_add_cstr(&cmd, BUILD_DIR "/*.o -shared ");
 #else
-  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(WORKDIR "/*.o");
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(BUILD_DIR "/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(WORKDIR "/%s ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(BUILD_DIR "/%s ", it.f));
   }
   carbon_strbuilder_add_cstr(&cmd, "-shared ");
 #endif
   carbon_strbuilder_add_cstr(&cmd, LIBS);
-  carbon_strbuilder_add_cstr(&cmd, "-o " WORKDIR "/" SHARED_LIB_FILE);
+  carbon_strbuilder_add_cstr(&cmd, "-o " BUILD_DIR "/" SHARED_LIB_FILE);
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
 }
 
 static void build(void) {
   CBN_INFO("Building...");
-  carbon_println("  MKDIR   " WORKDIR);
-  if (!carbon_fs_create_directory(WORKDIR)) CARBON_UNREACHABLE;
+  carbon_println("  MKDIR   " BUILD_DIR);
+  if (!carbon_fs_create_directory(BUILD_DIR)) CARBON_UNREACHABLE;
   build_compile_c_files();
   build_compile_cxx_files();
   build_static_lib();
   build_shared_lib();
 #ifndef _WIN32
   // TODO: make this work on Windows (MinGW)...
-  rm_dash_r(WORKDIR "/*.o");
+  rm_dash_r(BUILD_DIR "/*.o");
 #endif
 }
 
 static void test_compile_c_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(TESTDIR "/*.c");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(TEST_DIR "/*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CC      %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, TESTDIR "/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c " TESTDIR "/%s -o " TESTDIR "/%s.o", it.f, it.f));
+    carbon_string_strip_substr(it.f, TEST_DIR "/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c " TEST_DIR "/%s -o " TEST_DIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -293,12 +299,12 @@ static void test_compile_c_files(void) {
 
 static void test_compile_cxx_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(TESTDIR "/*.cc");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(TEST_DIR "/*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXX     %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, TESTDIR "/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c " TESTDIR "/%s -o " TESTDIR "/%s.o", it.f, it.f));
+    carbon_string_strip_substr(it.f, TEST_DIR "/");
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-c " TEST_DIR "/%s -o " TEST_DIR "/%s.o", it.f, it.f));
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
   }
@@ -306,16 +312,16 @@ static void test_compile_cxx_files(void) {
 
 static void test_link(void) {
   CBN_StrBuilder cmd = {0};
-  carbon_println("  LD      " TESTBIN);
+  carbon_println("  LD      " TEST_BIN);
   carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " " OPTIMIZATIONS);
 #ifdef _WIN32
-  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(TESTDIR "/*.o");
+  CBN_PatternMatchedFiles o_files = carbon_fs_pattern_match(TEST_DIR "/*.o");
   carbon_fs_pattern_match_foreach(o_files) {
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(TESTDIR "/%s ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt(TEST_DIR "/%s ", it.f));
   }
-  carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a -static -o " TESTBIN);
+  carbon_strbuilder_add_cstr(&cmd, BUILD_DIR "/libcarbon.a -static -o " TEST_BIN);
 #else
-  carbon_strbuilder_add_cstr(&cmd, TESTDIR "/*.o " WORKDIR "/libcarbon.a -o " TESTBIN);
+  carbon_strbuilder_add_cstr(&cmd, TEST_DIR "/*.o " BUILD_DIR "/libcarbon.a -o " TEST_BIN);
 #endif
   call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
   carbon_strbuilder_free(&cmd);
@@ -328,27 +334,26 @@ static void test(void) {
   test_link();
 #ifndef _WIN32
   // TODO: make this work on Windows (MinGW)...
-  rm_dash_r(TESTDIR "/*.o");
+  rm_dash_r(TEST_DIR "/*.o");
 #endif
-  carbon_println("+ " TESTBIN " -n");
-  call_cmd(TESTBIN " -n");
+  carbon_println("+ " TEST_BIN " -n");
+  call_cmd(TEST_BIN " -n");
 }
 
 static void examples_c_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.c");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(EXAMPLES_DIR "/*.c");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CCLD    %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, "examples/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".c");
-    carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a ");
+    carbon_strbuilder_add_cstr(&cmd, " " BUILD_DIR "/libcarbon.a ");
     carbon_strbuilder_add_cstr(&cmd, LIBS);
 #ifdef _WIN32
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s", it.f));
 #else
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
 #endif
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
@@ -357,19 +362,18 @@ static void examples_c_files(void) {
 
 static void examples_cxx_files(void) {
   CBN_StrBuilder cmd = {0};
-  CBN_PatternMatchedFiles files = carbon_fs_pattern_match("examples/*.cc");
+  CBN_PatternMatchedFiles files = carbon_fs_pattern_match(EXAMPLES_DIR "/*.cc");
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXXLD   %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE " OPTIMIZATIONS);
-    carbon_string_strip_substr(it.f, "examples/");
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("examples/%s ", it.f));
+    carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".cc");
-    carbon_strbuilder_add_cstr(&cmd, WORKDIR "/libcarbon.a ");
+    carbon_strbuilder_add_cstr(&cmd, " " BUILD_DIR "/libcarbon.a ");
     carbon_strbuilder_add_cstr(&cmd, LIBS);
 #ifdef _WIN32
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s", it.f));
 #else
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o examples/%s.bin", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
 #endif
     call_cmd(carbon_strview_to_cstr(carbon_strview_from_strbuilder(&cmd)));
     carbon_strbuilder_free(&cmd);
@@ -380,17 +384,21 @@ static void examples(void) {
   CBN_INFO("Building examples...");
   examples_c_files();
   examples_cxx_files();
-  const char *pong_skap = "examples/pong.skap";
-  CBN_INFO("Creating `%$`...", $(pong_skap));
-  CBN_ASSERT(carbon_skap_create("examples/pong.d/assets.txt", pong_skap));
+  {// Pong AssetPack
+    const char *skap = EXAMPLES_DIR "/pong.skap";
+    const char *decl = EXAMPLES_DIR "/pong.d/assets.txt";
+    CBN_INFO("Creating `%$`...", $(skap));
+    CBN_ASSERT(carbon_skap_create(decl, skap));
+  }
 }
 
 static void package(void) {
   CBN_INFO("Packaging...");
-  cp_dash_r("COPYING " HDRFILE, WORKDIR);
-  carbon_println("  GZIP    " WORKDIR ".tgz");
-  call_cmd("tar -zcf " WORKDIR ".tgz " WORKDIR);
-  CBN_INFO(WORKDIR ".tgz is ready");
+  cp_dash_r(HDR_FILE, BUILD_DIR);
+  cp_dash_r(LICENSE_FILE, BUILD_DIR);
+  carbon_println("  GZIP    " BUILD_DIR ".tgz");
+  call_cmd("tar -zcf " BUILD_DIR ".tgz " BUILD_DIR);
+  CBN_INFO(BUILD_DIR ".tgz is ready");
 }
 
 int main(int argc, char **argv) {
