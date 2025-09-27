@@ -162,11 +162,17 @@ f32 carbon_math_sqrt(f32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_sqrtf)
   return __builtin_sqrtf(x);
 #else
+  if (!x || x < 0) return 0;
+  if (x == 0.5) return CARBON_1_SQRT2;
+  if (x == 0.75) return CARBON_SQRT3_2;
+  if (x == 1) return 1;
   if (x == 2) return CARBON_SQRT2;
   if (x == 3) return CARBON_SQRT3;
-  f32 s = x;
-  for (usz i = 0; i < 1e3 && carbon_math_abs(s*s - x) > CARBON_EPS; ++i) {
-    s -= (s*s - x) / (2*s);
+  f32 s = x > 1 ? x : 1;
+  for (usz i = 0; i < 100; ++i) {
+    f32 prev_s = s;
+    s = (s + x / s) / 2;
+    if (carbon_math_abs(s - prev_s) < CARBON_EPS * carbon_math_abs(s)) break;
   }
   return s;
 #endif

@@ -47,8 +47,19 @@ TEST(ceil) {
 }
 
 TEST(sqrt) {
+  carbon_should_be_f(0, carbon_math_sqrt(0));
+  carbon_should_be_f(1, carbon_math_sqrt(1));
   carbon_should_be_f(CARBON_SQRT2, carbon_math_sqrt(2));
   carbon_should_be_f(CARBON_SQRT3, carbon_math_sqrt(3));
+  carbon_should_be_f(8.306623, carbon_math_sqrt(69));
+  carbon_should_be_f(27.876934, carbon_math_sqrt(777.1234));
+  carbon_should_be_f(0.5, carbon_math_sqrt(0.25));
+  carbon_should_be_f(CARBON_SQRT3_2, carbon_math_sqrt(0.75));
+  carbon_should_be_f(CARBON_1_SQRT2, carbon_math_sqrt(0.5));
+  carbon_should_be_f(0.1, carbon_math_sqrt(1e-2));
+  carbon_should_be_f(0.031622, carbon_math_sqrt(1e-3));
+  carbon_should_be_f(1e-3, carbon_math_sqrt(1e-6));
+  carbon_should_be_f(1e-5, carbon_math_sqrt(1e-10));
   return CARBON_OK;
 }
 
