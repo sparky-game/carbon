@@ -75,3 +75,15 @@ bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v) {
   *out_v = CARBON_VEC2(v.x/v.z, v.y/v.z);
   return true;
 }
+
+CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n) {
+  n = carbon_math_vec3_norm(n);
+  return carbon_math_vec3_sub(i, carbon_math_vec3_scale(n, 2 * carbon_math_vec3_dot(n, i)));
+}
+
+CBN_Vec3 carbon_math_vec3_refract(CBN_Vec3 i, CBN_Vec3 n, f32 idx) {
+  f32 d = carbon_math_vec3_dot(n, i);
+  f32 k = 1 - idx*idx * (1 - d*d);
+  if (k < 0) return CARBON_VEC3_ZERO;
+  return carbon_math_vec3_sub(carbon_math_vec3_scale(i, idx), carbon_math_vec3_scale(n, idx * d + carbon_math_sqrt(k)));
+}

@@ -324,6 +324,23 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
  */
 CARBON_API bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
 
+/**
+ * @brief Computes the reflection direction for an incident 3D vector.
+ * @param i The incident 3D vector.
+ * @param n The normal 3D vector.
+ * @return The reflection direction 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n);
+
+/**
+ * @brief Computes the refraction direction for an incident 3D vector.
+ * @param i The incident 3D vector.
+ * @param n The normal 3D vector.
+ * @param idx The refractive index of the medium.
+ * @return The refraction direction 3D vector.
+ */
+CARBON_API CBN_Vec3 carbon_math_vec3_refract(CBN_Vec3 i, CBN_Vec3 n, f32 idx);
+
 // Local Variables:
 // mode: c++
 // End:
