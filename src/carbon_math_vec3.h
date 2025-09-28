@@ -322,7 +322,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
  * @param out_v The projected vector in 2D space as NDC coordinates (output argument pointer).
  * @return A boolean value indicating whether it projected the 3D vector successfully or not.
  */
-CARBON_API u8 carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
+CARBON_API bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
 
 // Local Variables:
 // mode: c++
