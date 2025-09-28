@@ -24,6 +24,15 @@ typedef struct {
  */
 CARBON_API f64 carbon_time_get(void);
 
+/**
+ * @brief Returns the current timestamp in the ISO-8601 format.
+ *
+ * The aforementioned format (`YYYY-mm-ddTHH:MM:SSZ`) consists of:
+ * (YYYY = year; mm = month; dd = day; HH = hour; MM = minute; SS = second).
+ * (T = date and hour separator; Z = UTC timezone specifier, i.e. +00:00).
+ *
+ * @return The formatted timestamp as a C-string (static circular storage).
+ */
 CARBON_API char *carbon_time_get_iso8601(void);
 
 /**
