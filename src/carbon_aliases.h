@@ -83,6 +83,15 @@ namespace cbn {
     const auto Set     = carbon_memory_set;
     const auto Free    = carbon_memory_free;
   }
+  namespace crt {
+    const auto ID    = carbon_coroutine_id;
+    const auto Alive = carbon_coroutine_alive;
+    inline void Go(void (*f)(void *), void *arg = 0) { carbon_coroutine_go(f, arg); }
+    const auto Yield      = carbon_coroutine_yield;
+    const auto SleepRead  = carbon_coroutine_sleep_read;
+    const auto SleepWrite = carbon_coroutine_sleep_write;
+    const auto Wakeup     = carbon_coroutine_wakeup;
+  }
   namespace math {
     const auto Sin = carbon_math_sin;
     const auto Cos = carbon_math_cos;

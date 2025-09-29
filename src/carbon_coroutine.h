@@ -37,11 +37,7 @@ CBNDEF usz carbon_coroutine_alive(void);
  * @param f The function containing the body of the coroutine.
  * @param arg The arbitrary amount of arguments passed to `f`.
  */
-#ifdef __cplusplus
-CBNDEF void carbon_coroutine_go(void (*f)(void *), void *arg = 0);
-#else
 CBNDEF void carbon_coroutine_go(void (*f)(void *), void *arg);
-#endif
 
 CBNDEF void carbon_coroutine_yield(void);
 CBNDEF void carbon_coroutine_sleep_read(i32 fd);
