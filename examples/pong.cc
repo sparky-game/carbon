@@ -251,7 +251,7 @@ namespace pong {
                               m_Canvas{cbn::DrawCanvas::make(spec.width, spec.height)}
     {
       res::Init();
-      cbn::win::Open(spec.width, spec.height, spec.name.c_str());
+      cbn::win::Open(m_Canvas, spec.name.c_str());
       cbn::win::SetMaxFPS(spec.max_fps);
       if (auto i = res::s_AssetPack.Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*i);
       else CARBON_UNREACHABLE;

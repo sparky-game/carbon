@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 #define CARBON_WIN__DLDECL(name)                \
-  typedef typeof(&name) name ## _ptr_t; \
+  typedef typeof(&name) name ## _ptr_t;         \
   static name ## _ptr_t name ## _ptr;
 
 #if defined(__linux__) || defined(__FreeBSD__)
@@ -169,6 +169,12 @@ CARBON_INLINE RGFW_mouseButton carbon_win__map_mouse_buttons(const CBN_MouseButt
   }
 }
 
+CARBON_INLINE void carbon_win__resize_callback(RGFW_window *win, RGFW_rect r) {
+  // TODO: investigate the height offset thing (-28) in other systems
+  CBN_DEBUG("r = (%d, %d, %d, %d - 28)", r.x, r.y, r.w, r.h);
+  win->r.h -= 28;
+}
+
 CARBON_INLINE void carbon_win__key_callback(RGFW_window *win, u8 key, char keyChar, RGFW_keymod keyMod, RGFW_bool pressed) {
   CARBON_UNUSED(keyChar), CARBON_UNUSED(keyMod);
   if (win != carbon_win__handle) return;
@@ -181,13 +187,17 @@ CARBON_INLINE void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mous
   carbon_win__mouse_buttons[button] = pressed ? true : false;
 }
 
-void carbon_win_open(u16 width, u16 height, const char *title) {
+void carbon_win_open(const CBN_DrawCanvas dc, const char *title) {
   carbon_win__dl_open();
-  // TODO: let user resize the window.
-  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, width, height), RGFW_windowNoResize);
-  // TODO: use `RGFW_window_initBuffer` instead, so the buffer isn't tied up to the initial window size.
-  RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(carbon_win__handle->r.w, carbon_win__handle->r.h));
-  CBN_INFO("Opened a %$x%$ window", $(carbon_win__handle->r.w), $(carbon_win__handle->r.h));
+  const usz w = dc.width, h = dc.height;
+  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter);
+  RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(w, h));
+  // TODO: investigate the height offset thing (+28) in other systems
+  RGFW_window_setMinSize(carbon_win__handle, RGFW_AREA(w, h + 28));
+  i32 gcd = carbon_math_egcd(w, h);
+  RGFW_window_setAspectRatio(carbon_win__handle, RGFW_AREA(w/gcd, h/gcd));
+  CBN_INFO("Opened a %$x%$ window", $(w), $(h));
+  RGFW_setWindowResizeCallback(carbon_win__resize_callback);
   RGFW_setKeyCallback(carbon_win__key_callback);
   RGFW_setMouseButtonCallback(carbon_win__mouse_button_callback);
 }
@@ -242,18 +252,36 @@ u32 carbon_win_get_fps(void) {
   return carbon_win__fps;
 }
 
-void carbon_win_update(CBN_DrawCanvas dc) {
-  for (usz i = 0; i < dc.width * dc.height; ++i) {
-    u32 color = dc.pixels[i];
-    u8 r = (color >> 24) & 0xff;
-    u8 g = (color >> 16) & 0xff;
-    u8 b = (color >> 8)  & 0xff;
-    u8 a = (color >> 0)  & 0xff;
-    carbon_win__handle->buffer[i * 4 + 0] = r;
-    carbon_win__handle->buffer[i * 4 + 1] = g;
-    carbon_win__handle->buffer[i * 4 + 2] = b;
-    carbon_win__handle->buffer[i * 4 + 3] = a;
+CARBON_INLINE void carbon_win__resize_buf(void) {
+  RGFW_window *w = carbon_win__handle;
+  if (w->bufferSize.w == (u32) w->r.w && w->bufferSize.h == (u32) w->r.h) return;
+  w->bufferSize.w = w->r.w;
+  w->bufferSize.h = w->r.h;
+  CBN_DEBUG("buffer = %zux%zu", w->bufferSize.w, w->bufferSize.h);
+  const usz sz = w->bufferSize.w * w->bufferSize.h * 4;
+  w->buffer = (u8 *) carbon_memory_realloc(w->buffer, sz);
+  carbon_memory_set(w->buffer, 0, sz);
+}
+
+CARBON_INLINE void carbon_win__write_buf(const CBN_DrawCanvas dc) {
+  const u32 * restrict src = dc.pixels;
+  const usz src_w = dc.width, src_h = dc.height;
+  u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
+  const usz dst_w = carbon_win__handle->bufferSize.w, dst_h = carbon_win__handle->bufferSize.h;
+  const f32 sf = (f32) src_h / dst_h;
+  for (usz j = 0; j < dst_h; ++j) {
+    const usz y = CARBON_MIN(j * sf, src_h - 1);
+    const u32 *r = src + y * src_w;
+    for (usz i = 0; i < dst_w; ++i) {
+      const usz x = CARBON_MIN(i * sf, src_w - 1);
+      *dst++ = carbon_math_bswap32(r[x]);
+    }
   }
+}
+
+void carbon_win_update(const CBN_DrawCanvas dc) {
+  carbon_win__resize_buf();
+  carbon_win__write_buf(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }

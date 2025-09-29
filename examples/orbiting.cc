@@ -5,7 +5,7 @@
 
 int main(void) {
   auto canvas = cbn::DrawCanvas::make(600, 600);
-  cbn::win::Open(canvas.width, canvas.height, "Orbiting");
+  cbn::win::Open(canvas, "Orbiting");
   cbn::win::SetMaxFPS(60);
   constexpr auto radius = 50;
   auto rotation = 0.0f;

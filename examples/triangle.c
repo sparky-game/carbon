@@ -5,7 +5,7 @@
 
 int main(void) {
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(640, 360);
-  carbon_win_open(canvas.width, canvas.height, "Triangle");
+  carbon_win_open(canvas, "Triangle");
   carbon_win_set_max_fps(60);
   const usz size = 250;
   const CBN_Vec2 center = {{canvas.width/2, canvas.height/2}};

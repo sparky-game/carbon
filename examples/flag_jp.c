@@ -11,7 +11,7 @@ int main(void) {
                                              canvas.height/2 - flag_size.y/2,
                                              flag_size.x, flag_size.y), 0xffffffff);
   carbon_drawcanvas_circle(canvas, CARBON_VEC2(canvas.width/2, canvas.height/2), 180, 0xbc002dff);
-  carbon_win_open(canvas.width, canvas.height, "Flag of Japan");
+  carbon_win_open(canvas, "Flag of Japan");
   carbon_win_set_max_fps(60);
   while (!carbon_win_shouldclose()) carbon_win_update(canvas);
   carbon_win_close();

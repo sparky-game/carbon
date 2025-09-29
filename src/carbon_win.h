@@ -52,7 +52,7 @@ typedef enum CBN_MouseButton_t CBN_MouseButton;
 
 /**
  */
-CBNDEF void carbon_win_open(u16 width, u16 height, const char *title);
+CBNDEF void carbon_win_open(const CBN_DrawCanvas dc, const char *title);
 
 /**
  */
