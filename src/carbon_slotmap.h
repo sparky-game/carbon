@@ -37,7 +37,10 @@ typedef struct CBN_SlotMap_Key {
  *
  * @param T Type information of what will be stored in the container.
  */
-CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
+#ifdef __cplusplus
+template <typename T>
+#endif
+struct CBN_SlotMap_t {
   usz stride;
   u64 size;
   u64 freelist;
@@ -88,7 +91,6 @@ CARBON_TEMPLATE_CLASS(CBN_SlotMap_t) {
   cbn::Opt<const value_type> operator[](const CBN_SlotMap_Key key) const;
 #endif
 };
-
 #ifdef __cplusplus
 using CBN_SlotMap = CBN_SlotMap_t<void *>;
 #else

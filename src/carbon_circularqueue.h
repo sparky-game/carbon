@@ -19,7 +19,10 @@
  *
  * @param T Type information of what will be stored in the container.
  */
-CARBON_TEMPLATE_CLASS(CBN_CircularQueue_t) {
+#ifdef __cplusplus
+template <typename T>
+#endif
+struct CBN_CircularQueue_t {
   void *items;
   usz capacity;
   usz stride;
@@ -68,7 +71,6 @@ CARBON_TEMPLATE_CLASS(CBN_CircularQueue_t) {
   const value_type &operator[](usz idx) const;
 #endif
 };
-
 #ifdef __cplusplus
 using CBN_CircularQueue = CBN_CircularQueue_t<void *>;
 #else

@@ -74,12 +74,6 @@
 #endif
 
 #ifdef __cplusplus
-#define CARBON_TEMPLATE_CLASS(name) template <typename T> struct name
-#else
-#define CARBON_TEMPLATE_CLASS(name) struct name
-#endif
-
-#ifdef __cplusplus
 #define CARBON_API extern "C"
 #else
 #define CARBON_API extern
