@@ -89,20 +89,20 @@ typedef struct CBN_DrawCanvas {
  * @param height The height to set the canvas to.
  * @return The newly created DrawCanvas object.
  */
-CARBON_API CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
+CBNDEF CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
 
 /**
  * @brief Destroys a DrawCanvas object.
  * @param dc The DrawCanvas to destroy.
  */
-CARBON_API void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
+CBNDEF void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
 
 /**
  * @brief Fills the DrawCanvas with the specified color.
  * @param dc The DrawCanvas object.
  * @param color The color to fill the canvas with.
  */
-CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
+CBNDEF void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
 
 /**
  * @brief Draws a line to the canvas with a specific color.
@@ -111,7 +111,7 @@ CARBON_API void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color);
  * @param v2 The second point of the line.
  * @param color The color to draw the line with.
  */
-CARBON_API void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color);
+CBNDEF void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color);
 
 /**
  * @brief Draws a triangle to the canvas with a specific color.
@@ -121,7 +121,7 @@ CARBON_API void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 
  * @param v3 The third vertex of the triangle.
  * @param color The color to draw the triangle with.
  */
-CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
+CBNDEF void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
 
 /**
  * @brief Draws a rectangle to the canvas with a specific color.
@@ -129,7 +129,7 @@ CARBON_API void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_V
  * @param r The rectangle to draw.
  * @param color The color to draw the rectangle with.
  */
-CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color);
+CBNDEF void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color);
 
 /**
  * @brief Draws a circle to the canvas with a specific color.
@@ -138,7 +138,7 @@ CARBON_API void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color)
  * @param radius The radius of the circle.
  * @param color The color to draw the circle with.
  */
-CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
+CBNDEF void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color);
 
 /**
  * @brief Draws a sprite to the canvas.
@@ -146,14 +146,14 @@ CARBON_API void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz
  * @param sprite The sprite to draw.
  * @param position The position (top-left corner) to draw the sprite to.
  */
-CARBON_API void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *sprite, CBN_Vec2 position);
+CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *sprite, CBN_Vec2 position);
 
 /**
  * @brief Draws a box to the canvas.
  * @param dc The DrawCanvas object.
  * @param r The spec of the desired box as a rectangle.
  */
-CARBON_API void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r);
+CBNDEF void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r);
 
 /**
  * @brief Draws text to the canvas with a specific color (using a default font).
@@ -163,7 +163,7 @@ CARBON_API void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r);
  * @param size The font size to use.
  * @param color The color to draw the text with.
  */
-CARBON_API void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
+CBNDEF void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
 /**
  * @brief Draws text to the canvas with a specific color and a semi-transparent shadow (using a default font).
@@ -173,7 +173,7 @@ CARBON_API void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_V
  * @param size The font size to use.
  * @param color The color to draw the text with.
  */
-CARBON_API void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
+CBNDEF void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
 /**
  * @brief Measures text width (using a default font).
@@ -181,14 +181,14 @@ CARBON_API void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char
  * @param size The font size to use.
  * @return The width of the given text using the specified font size.
  */
-CARBON_API usz carbon_drawcanvas_get_text_width(const char *txt, usz size);
+CBNDEF usz carbon_drawcanvas_get_text_width(const char *txt, usz size);
 
 /**
  * @brief Measures text height (using a default font).
  * @param size The font size to use.
  * @return The height of the text using the specified font size.
  */
-CARBON_API usz carbon_drawcanvas_get_text_height(usz size);
+CBNDEF usz carbon_drawcanvas_get_text_height(usz size);
 
 /**
  * @brief Transforms HSV color into RGB (A always set to 0xff).
@@ -197,7 +197,7 @@ CARBON_API usz carbon_drawcanvas_get_text_height(usz size);
  * @param v Value, in [0..1] range.
  * @return 32-bit RGBA color value (A always set to 0xff).
  */
-CARBON_API u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
+CBNDEF u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
 
 // Local Variables:
 // mode: c++

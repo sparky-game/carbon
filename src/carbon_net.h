@@ -14,4 +14,4 @@
  * @param domain The domain name to resolve.
  * @return A string representing the resolved IP address.
  */
-CARBON_API char *carbon_net_resolve_dns_to_ip(const char *domain);
+CBNDEF char *carbon_net_resolve_dns_to_ip(const char *domain);

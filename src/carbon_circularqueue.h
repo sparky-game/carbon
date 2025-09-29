@@ -87,34 +87,34 @@ typedef struct CBN_CircularQueue_t CBN_CircularQueue;
  * @param stride Size in bytes of the elements it will hold.
  * @return The CircularQueue/ring container.
  */
-CARBON_API CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride);
+CBNDEF CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride);
 
 /**
  * @brief Destroy a CircularQueue/ring container.
  * @param cq The CircularQueue/ring container.
  */
-CARBON_API void carbon_circularqueue_destroy(CBN_CircularQueue *cq);
+CBNDEF void carbon_circularqueue_destroy(CBN_CircularQueue *cq);
 
 /**
  * @brief Appends a copy of the value to the end of the CircularQueue/ring.
  * @param cq The CircularQueue/ring container.
  * @param value The value to append.
  */
-CARBON_API void carbon_circularqueue_push(CBN_CircularQueue *cq, void *value);
+CBNDEF void carbon_circularqueue_push(CBN_CircularQueue *cq, void *value);
 
 /**
  * @brief Removes the first element from the CircularQueue/ring (FIFO).
  * @param cq The CircularQueue/ring container.
  * @param out_value The value of the element popped out.
  */
-CARBON_API void carbon_circularqueue_pop(CBN_CircularQueue *cq, void *out_value);
+CBNDEF void carbon_circularqueue_pop(CBN_CircularQueue *cq, void *out_value);
 
 /**
  * @brief Gets the first element from the CircularQueue/ring (FIFO) as if it were actually popped out.
  * @param cq The CircularQueue/ring container.
  * @param out_value The value of the element peeked at.
  */
-CARBON_API void carbon_circularqueue_peek(const CBN_CircularQueue *cq, void *out_value);
+CBNDEF void carbon_circularqueue_peek(const CBN_CircularQueue *cq, void *out_value);
 
 // Local Variables:
 // mode: c++

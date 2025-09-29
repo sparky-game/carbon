@@ -16,4 +16,4 @@ typedef struct {
   u8 has_failed;
 } CBN_JUnitTestcase;
 
-CARBON_API void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, const usz failed, const f64 runtime);
+CBNDEF void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, const usz failed, const f64 runtime);

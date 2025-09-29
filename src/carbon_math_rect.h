@@ -81,7 +81,7 @@ typedef struct CBN_Rect {
  * @param p The point to check.
  * @return A boolean value representing whether the point is contained within this rectangle or not.
  */
-CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
+CBNDEF u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
 
 /**
  * @brief Determines whether the rectangles collide/overlap/intersect with each other.
@@ -89,14 +89,14 @@ CARBON_API u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
  * @param r2 The second rectangle.
  * @return A boolean value representing whether they overlap (also touching).
  */
-CARBON_API u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
+CBNDEF u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
 
 /**
  * @brief Scales the rectangle by the specified value.
  * @param r The rectangle.
  * @param s The scale factor value.
  */
-CARBON_API void carbon_math_rect_scale(CBN_Rect *r, const f32 s);
+CBNDEF void carbon_math_rect_scale(CBN_Rect *r, const f32 s);
 
 // Local Variables:
 // mode: c++

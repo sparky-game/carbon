@@ -79,7 +79,7 @@ typedef struct CBN_StrList {
  * @param unique A boolean to configure whether we want the StrList to hold repeated strings or not.
  * @return The new StrList, configured to your liking.
  */
-CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
+CBNDEF CBN_StrList carbon_strlist_create(u8 unique);
 
 /**
  * @brief Splits a C-style string into a StrList, based on a delimiter.
@@ -87,23 +87,23 @@ CARBON_API CBN_StrList carbon_strlist_create(u8 unique);
  * @param delim The delimiter as a C-style string.
  * @return The StrList containing the resulting strings.
  */
-CARBON_API CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim);
+CBNDEF CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim);
 
 /**
  * @brief Destroy a StrList container.
  * @param sl The StrList container.
  */
-CARBON_API void carbon_strlist_destroy(CBN_StrList *sl);
+CBNDEF void carbon_strlist_destroy(CBN_StrList *sl);
 
 /**
  * @brief Appends a copy of the string to the end of the container.
  * @param sl The StrList container.
  * @param s The pointer to the standard C char array.
  */
-CARBON_API void carbon_strlist_push(CBN_StrList *sl, const char *s);
+CBNDEF void carbon_strlist_push(CBN_StrList *sl, const char *s);
 
-CARBON_API void carbon_strlist_pop(CBN_StrList *sl, const char *s);
-CARBON_API u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
+CBNDEF void carbon_strlist_pop(CBN_StrList *sl, const char *s);
+CBNDEF u8 carbon_strlist_contains(CBN_StrList *sl, const char *s);
 
 // Local Variables:
 // mode: c++

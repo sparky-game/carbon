@@ -52,15 +52,15 @@ typedef enum CBN_MouseButton_t CBN_MouseButton;
 
 /**
  */
-CARBON_API void carbon_win_open(u16 width, u16 height, const char *title);
+CBNDEF void carbon_win_open(u16 width, u16 height, const char *title);
 
 /**
  */
-CARBON_API void carbon_win_close(void);
+CBNDEF void carbon_win_close(void);
 
 /**
  */
-CARBON_API void carbon_win_set_max_fps(u32 fps);
+CBNDEF void carbon_win_set_max_fps(u32 fps);
 
 /**
  * @brief Set the window icon to a specific image object.
@@ -71,19 +71,19 @@ CARBON_API void carbon_win_set_max_fps(u32 fps);
  *
  * @param img The image object of the icon.
  */
-CARBON_API void carbon_win_set_icon(CBN_Image img);
+CBNDEF void carbon_win_set_icon(CBN_Image img);
 
-CARBON_API f64 carbon_win_get_deltatime(void);
+CBNDEF f64 carbon_win_get_deltatime(void);
 
-CARBON_API u32 carbon_win_get_fps(void);
+CBNDEF u32 carbon_win_get_fps(void);
 
-CARBON_API void carbon_win_update(CBN_DrawCanvas dc);
+CBNDEF void carbon_win_update(const CBN_DrawCanvas dc);
 
 /**
  * @brief Checks if the window should close or not.
  * @return A boolean value representing whether the window should close or not.
  */
-CARBON_API u8 carbon_win_shouldclose(void);
+CBNDEF u8 carbon_win_shouldclose(void);
 
 #ifdef __cplusplus
 /**
@@ -101,55 +101,55 @@ void carbon_win_forframe(T &&callback) {
 
 /**
  */
-CARBON_API void carbon_win_exit(void);
+CBNDEF void carbon_win_exit(void);
 
 /**
  * @brief Returns true during the frame the user starts pressing down the specified key.
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was pressed or not.
  */
-CARBON_API u8 carbon_win_get_key_down(const CBN_KeyCode key);
+CBNDEF u8 carbon_win_get_key_down(const CBN_KeyCode key);
 
 /**
  * @brief Returns true while the user holds down the specified key.
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key is being pressed or not.
  */
-CARBON_API u8 carbon_win_get_key(const CBN_KeyCode key);
+CBNDEF u8 carbon_win_get_key(const CBN_KeyCode key);
 
 /**
  * @brief Returns true during the frame the user releases the specified key.
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was released or not.
  */
-CARBON_API u8 carbon_win_get_key_up(const CBN_KeyCode key);
+CBNDEF u8 carbon_win_get_key_up(const CBN_KeyCode key);
 
 /**
  * @brief Returns true during the frame the user starts pressing down the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was pressed or not.
  */
-CARBON_API u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
+CBNDEF u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
 
 /**
  * @brief Returns true while the user holds down the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button is being pressed or not.
  */
-CARBON_API u8 carbon_win_get_mouse_button(const CBN_MouseButton btn);
+CBNDEF u8 carbon_win_get_mouse_button(const CBN_MouseButton btn);
 
 /**
  * @brief Returns true during the frame the user releases the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was released or not.
  */
-CARBON_API u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
+CBNDEF u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
 
 /**
  * @brief Returns the actual mouse position within the window.
  * @return A Vec2 representing the position.
  */
-CARBON_API CBN_Vec2 carbon_win_get_mouse_position(void);
+CBNDEF CBN_Vec2 carbon_win_get_mouse_position(void);
 
 // Local Variables:
 // mode: c++

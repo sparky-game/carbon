@@ -108,27 +108,27 @@ typedef struct CBN_List_t CBN_List;
  * @param stride Size in bytes of the elements the list will hold.
  * @return The list container.
  */
-CARBON_API CBN_List carbon_list_create(usz stride);
+CBNDEF CBN_List carbon_list_create(usz stride);
 
 /**
  * @brief Destroys a list container.
  * @param l The list container.
  */
-CARBON_API void carbon_list_destroy(CBN_List *l);
+CBNDEF void carbon_list_destroy(CBN_List *l);
 
 /**
  * @brief Appends a copy of the value to the end of the list.
  * @param l The list container.
  * @param value The value to append.
  */
-CARBON_API void carbon_list_push(CBN_List *l, void *value);
+CBNDEF void carbon_list_push(CBN_List *l, void *value);
 
 /**
  * @brief Removes the last element from the list (LIFO).
  * @param l The list container.
  * @param out_value The value of the element popped out (output argument pointer).
  */
-CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
+CBNDEF void carbon_list_pop(CBN_List *l, void *out_value);
 
 /**
  * @brief Obtains the index of the provided element, or -1 if not present.
@@ -136,20 +136,20 @@ CARBON_API void carbon_list_pop(CBN_List *l, void *out_value);
  * @param value The value of the element to check.
  * @return The index of the provided element, or -1 if not present.
  */
-CARBON_API isz carbon_list_find(const CBN_List *l, const void *value);
+CBNDEF isz carbon_list_find(const CBN_List *l, const void *value);
 
 /**
  * @brief Removes the element specified by the provided index from the list.
  * @param l The list container.
  * @param idx The index of the element to remove.
  */
-CARBON_API void carbon_list_remove(CBN_List *l, usz idx);
+CBNDEF void carbon_list_remove(CBN_List *l, usz idx);
 
 /**
  * @brief Performs a non-binding request to remove the unused capacity, by reducing capacity to size.
  * @param l The list container.
  */
-CARBON_API void carbon_list_shrink_to_fit(CBN_List *l);
+CBNDEF void carbon_list_shrink_to_fit(CBN_List *l);
 
 // Local Variables:
 // mode: c++

@@ -22,7 +22,7 @@ typedef struct {
  *
  * @return The obtained timestamp in seconds.
  */
-CARBON_API f64 carbon_time_get(void);
+CBNDEF f64 carbon_time_get(void);
 
 /**
  * @brief Returns the current timestamp in the ISO-8601 format.
@@ -33,7 +33,7 @@ CARBON_API f64 carbon_time_get(void);
  *
  * @return The formatted timestamp as a C-string (static circular storage).
  */
-CARBON_API char *carbon_time_get_iso8601(void);
+CBNDEF char *carbon_time_get_iso8601(void);
 
 /**
  * @brief Returns the current timestamp in the `YYYYmmddHHMMSS` format.
@@ -43,8 +43,8 @@ CARBON_API char *carbon_time_get_iso8601(void);
  *
  * @return The formatted timestamp as 64-bit uint number, e.g. `20250511205156`.
  */
-CARBON_API u64 carbon_time_get_yyyymmddhhmmss(void);
+CBNDEF u64 carbon_time_get_yyyymmddhhmmss(void);
 
-CARBON_API void carbon_time_sleep(u64 ms);
-CARBON_API u64 carbon_time_snowflake_get(void);
-CARBON_API CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake);
+CBNDEF void carbon_time_sleep(u64 ms);
+CBNDEF u64 carbon_time_snowflake_get(void);
+CBNDEF CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake);

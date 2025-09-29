@@ -22,15 +22,15 @@ typedef struct {
   CBN_Row *as;
 } CBN_NeuralNet;
 
-CARBON_API CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count);
-CARBON_API void carbon_nn_destroy(CBN_NeuralNet *nn);
-CARBON_API void carbon_nn_fill(CBN_NeuralNet nn, f32 x);
-CARBON_API void carbon_nn_zero(CBN_NeuralNet nn);
-CARBON_API void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
-CARBON_API void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
-CARBON_API void carbon_nn_forward(CBN_NeuralNet nn);
-CARBON_API f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m);
-CARBON_API CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m);
-CARBON_API void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr);
-CARBON_API void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr);
-CARBON_API void carbon_nn_print(CBN_NeuralNet nn, const char *name);
+CBNDEF CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count);
+CBNDEF void carbon_nn_destroy(CBN_NeuralNet *nn);
+CBNDEF void carbon_nn_fill(CBN_NeuralNet nn, f32 x);
+CBNDEF void carbon_nn_zero(CBN_NeuralNet nn);
+CBNDEF void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
+CBNDEF void carbon_nn_rand(CBN_NeuralNet nn, f32 min, f32 max);
+CBNDEF void carbon_nn_forward(CBN_NeuralNet nn);
+CBNDEF f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m);
+CBNDEF CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m);
+CBNDEF void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr);
+CBNDEF void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr);
+CBNDEF void carbon_nn_print(CBN_NeuralNet nn, const char *name);

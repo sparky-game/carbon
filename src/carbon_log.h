@@ -99,9 +99,9 @@ typedef enum {
   CBN_LOG_TIME_FORMAT_CURR_TIMESTAMP
 } CBN_Log_TimeFormat;
 
-CARBON_API void carbon_log_init_timer(CBN_Log_TimeFormat tf);
+CBNDEF void carbon_log_init_timer(CBN_Log_TimeFormat tf);
 
-CARBON_API void carbon_log_print(FILE *stream, const char *fmt, ...);
+CBNDEF void carbon_log_print(FILE *stream, const char *fmt, ...);
 
 // Local Variables:
 // mode: c++

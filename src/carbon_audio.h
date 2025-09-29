@@ -15,24 +15,24 @@ typedef struct CBN_SKAP CBN_SKAP;  // Forward declaration
 /**
  * @brief Initializes the audio subsystem.
  */
-CARBON_API void carbon_audio_init(void);
+CBNDEF void carbon_audio_init(void);
 
 /**
  * @brief Shutdowns the audio subsystem.
  */
-CARBON_API void carbon_audio_shutdown(void);
+CBNDEF void carbon_audio_shutdown(void);
 
 /**
  * @brief Gets the current global engine volume level.
  * @return 32-bit float in [0..1] for normal levels, or in [1..+inf) if amplified.
  */
-CARBON_API f32 carbon_audio_get_volume(void);
+CBNDEF f32 carbon_audio_get_volume(void);
 
 /**
  * @brief Sets the desired global engine volume level.
  * @param volume 32-bit float in [0..1] for normal levels, or in [1..+inf] for amplification.
  */
-CARBON_API void carbon_audio_set_volume(const f32 volume);
+CBNDEF void carbon_audio_set_volume(const f32 volume);
 
 /**
  * @brief ...
@@ -40,7 +40,7 @@ CARBON_API void carbon_audio_set_volume(const f32 volume);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
+CBNDEF u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -48,7 +48,7 @@ CARBON_API u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_u
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
+CBNDEF u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -57,7 +57,7 @@ CARBON_API u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
+CBNDEF u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -66,7 +66,7 @@ CARBON_API u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
+CBNDEF u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
 
 #ifdef __cplusplus
 /**
@@ -83,33 +83,33 @@ CARBON_API u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKA
  * @brief ...
  * @param uid ...
  */
-CARBON_API void carbon_audio_play(const CBN_Audio_UID uid);
+CBNDEF void carbon_audio_play(const CBN_Audio_UID uid);
 
 /**
  * @brief ...
  * @param uid ...
  */
-CARBON_API void carbon_audio_stop(const CBN_Audio_UID uid);
+CBNDEF void carbon_audio_stop(const CBN_Audio_UID uid);
 
 /**
  * @brief ...
  * @param uid ...
  * @return ... in (0..+inf) ...
  */
-CARBON_API f32 carbon_audio_get_pitch(const CBN_Audio_UID uid);
+CBNDEF f32 carbon_audio_get_pitch(const CBN_Audio_UID uid);
 
 /**
  * @brief ...
  * @param uid ...
  * @param pitch ... in (0..+inf) ...
  */
-CARBON_API void carbon_audio_set_pitch(const CBN_Audio_UID uid, const f32 pitch);
+CBNDEF void carbon_audio_set_pitch(const CBN_Audio_UID uid, const f32 pitch);
 
 /**
  * @brief ...
  * @param uid ...
  */
-CARBON_API void carbon_audio_shift_pitch(const CBN_Audio_UID uid);
+CBNDEF void carbon_audio_shift_pitch(const CBN_Audio_UID uid);
 
 // Local Variables:
 // mode: c++

@@ -74,9 +74,9 @@
 #endif
 
 #ifdef __cplusplus
-#define CARBON_API extern "C"
+#define CBNDEF extern "C"
 #else
-#define CARBON_API extern
+#define CBNDEF extern
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)

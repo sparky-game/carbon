@@ -16,4 +16,4 @@
  * @param patch The patch component of the version (output argument pointer).
  * @return The full version string formatted as `vX.Y.Z[-EXTRA]`.
  */
-CARBON_API char *carbon_version(usz *major, usz *minor, usz *patch);
+CBNDEF char *carbon_version(usz *major, usz *minor, usz *patch);

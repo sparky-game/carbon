@@ -45,29 +45,29 @@ typedef struct CBN_Chrono {
  * @brief Creates and starts the chrono.
  * @return The Chrono object.
  */
-CARBON_API CBN_Chrono carbon_chrono_start(void);
+CBNDEF CBN_Chrono carbon_chrono_start(void);
 
 /**
  * @brief Updates the chrono by accumulating the elapsed time.
  * @param c The Chrono object.
  */
-CARBON_API void carbon_chrono_update(CBN_Chrono *c);
+CBNDEF void carbon_chrono_update(CBN_Chrono *c);
 
 /**
  * @brief Stops the chrono by zeroing the initial time.
  * @param c The Chrono object.
  */
-CARBON_API void carbon_chrono_stop(CBN_Chrono *c);
+CBNDEF void carbon_chrono_stop(CBN_Chrono *c);
 
 /**
  * @brief Restarts the chrono.
  * @param c The Chrono object.
  */
-CARBON_API void carbon_chrono_restart(CBN_Chrono *c);
+CBNDEF void carbon_chrono_restart(CBN_Chrono *c);
 
 /**
  * @brief Checks whether the chrono is running or not.
  * @param c The Chrono object.
  * @return A boolean value indicating the state of the chrono.
  */
-CARBON_API u8 carbon_chrono_is_running(const CBN_Chrono *c);
+CBNDEF u8 carbon_chrono_is_running(const CBN_Chrono *c);

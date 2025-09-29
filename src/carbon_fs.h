@@ -77,24 +77,24 @@ typedef struct CBN_Image {
 #endif
 } CBN_Image;
 
-CARBON_API u8 carbon_fs_exists(const char *file);
-CARBON_API u8 carbon_fs_is_regular_file(const char *file);
-CARBON_API u8 carbon_fs_is_directory(const char *file);
-CARBON_API u8 carbon_fs_rename(const char *oldie, const char *newie);
-CARBON_API i32 carbon_fs_mtime(const char *file);
-CARBON_API void carbon_fs_copy(const char *from, const char *to, u8 recursive);
-CARBON_API u8 carbon_fs_remove(const char *file);
-CARBON_API u8 carbon_fs_remove_all(const char *file);
-CARBON_API u8 carbon_fs_change_directory(const char *path);
-CARBON_API u8 carbon_fs_create_directory(const char *path);
-CARBON_API u8 carbon_fs_create_directories(const char *path);
-CARBON_API char *carbon_fs_get_curr_directory(void);
-CARBON_API char *carbon_fs_get_bin_directory(void);
+CBNDEF u8 carbon_fs_exists(const char *file);
+CBNDEF u8 carbon_fs_is_regular_file(const char *file);
+CBNDEF u8 carbon_fs_is_directory(const char *file);
+CBNDEF u8 carbon_fs_rename(const char *oldie, const char *newie);
+CBNDEF i32 carbon_fs_mtime(const char *file);
+CBNDEF void carbon_fs_copy(const char *from, const char *to, u8 recursive);
+CBNDEF u8 carbon_fs_remove(const char *file);
+CBNDEF u8 carbon_fs_remove_all(const char *file);
+CBNDEF u8 carbon_fs_change_directory(const char *path);
+CBNDEF u8 carbon_fs_create_directory(const char *path);
+CBNDEF u8 carbon_fs_create_directories(const char *path);
+CBNDEF char *carbon_fs_get_curr_directory(void);
+CBNDEF char *carbon_fs_get_bin_directory(void);
 
-CARBON_API char *carbon_fs_get_directory(const char *path);
+CBNDEF char *carbon_fs_get_directory(const char *path);
 
-CARBON_API CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
-CARBON_API u32 carbon_fs_get_file_size(const char *file);
+CBNDEF CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
+CBNDEF u32 carbon_fs_get_file_size(const char *file);
 
 /**
  * @brief Reads all the text data from the given file into a StrBuilder object.
@@ -102,16 +102,16 @@ CARBON_API u32 carbon_fs_get_file_size(const char *file);
  * @param file The filename to read the data from.
  * @return A boolean value representing the success of the operation.
  */
-CARBON_API u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
+CBNDEF u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
 
 /**
  * @brief Reads an image from disk.
  * @param file The filename to read the image from.
  * @return The image object.
  */
-CARBON_API CBN_Image carbon_fs_read_img_from_file(const char *file);
+CBNDEF CBN_Image carbon_fs_read_img_from_file(const char *file);
 
-CARBON_API CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file);
+CBNDEF CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file);
 
 /**
  * @brief Reads an image from disk as a linear buffer of 8-bit per channel RGBA bytes.
@@ -121,11 +121,11 @@ CARBON_API CBN_List carbon_fs_read_img_from_file_as_tensor(const char *file);
  * @param out_chs The number of channels of the read image (output argument pointer).
  * @return The pointer to the newly allocated linear buffer of 8-bit per channel RGBA bytes.
  */
-CARBON_API u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
+CBNDEF u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz *out_height, usz *out_chs);
 
-CARBON_API CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs);
+CBNDEF CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs);
 
-CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
+CBNDEF u8 *carbon_fs_img_linearize(CBN_List *img);
 
 /**
  * @brief Converts a linear buffer of 32-bit RGBA pixels to a linear buffer of 8-bit per channel RGBA bytes.
@@ -138,7 +138,7 @@ CARBON_API u8 *carbon_fs_img_linearize(CBN_List *img);
  * @param height The height of the image.
  * @return The pointer to the newly allocated linear buffer of 8-bit per channel RGBA bytes.
  */
-CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
+CBNDEF u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz height);
 
 /**
  * @brief Converts a linear buffer of 8-bit per channel RGBA bytes to a linear buffer of 32-bit RGBA pixels.
@@ -151,7 +151,7 @@ CARBON_API u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, c
  * @param height The height of the image.
  * @return The pointer to the newly allocated linear buffer of 32-bit RGBA pixels.
  */
-CARBON_API u32 *carbon_fs_img_8bit_to_32bit(const u8 *bytes, const usz width, const usz height);
+CBNDEF u32 *carbon_fs_img_8bit_to_32bit(const u8 *bytes, const usz width, const usz height);
 
 /**
  * @brief Writes an image to disk.
@@ -160,19 +160,19 @@ CARBON_API u32 *carbon_fs_img_8bit_to_32bit(const u8 *bytes, const usz width, co
  * @param file The filename to write the image to.
  * @return A boolean value representing the success of the operation.
  */
-CARBON_API u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file);
+CBNDEF u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const char *file);
 
-CARBON_API u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
+CBNDEF u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file);
 
-CARBON_API u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
+CBNDEF u8 carbon_fs_write_img_to_file_linearly(u8 *pixels, CBN_FileFormat fmt, usz width, usz height, usz chs, const char *file);
 
 /**
  * @brief Destroy an image object.
  * @param img The image object.
  */
-CARBON_API void carbon_fs_destroy_img(CBN_Image *img);
+CBNDEF void carbon_fs_destroy_img(CBN_Image *img);
 
-CARBON_API void carbon_fs_destroy_tensor_img(CBN_List *img);
+CBNDEF void carbon_fs_destroy_tensor_img(CBN_List *img);
 
 // Local Variables:
 // mode: c++

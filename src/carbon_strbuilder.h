@@ -57,26 +57,26 @@ typedef struct CBN_StrBuilder {
  * @param sb The StrBuilder object.
  * @param sv The StrView to append.
  */
-CARBON_API void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv);
+CBNDEF void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv);
 
 /**
  * @brief Appends a copy of the string to the end of the StrBuilder's buffer.
  * @param sb The StrBuilder object.
  * @param s The string to append.
  */
-CARBON_API void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s);
+CBNDEF void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s);
 
 /**
  * @brief Appends an empty string (null terminator) to the end of the StrBuilder's buffer.
  * @param sb The StrBuilder object.
  */
-CARBON_API void carbon_strbuilder_add_null(CBN_StrBuilder *sb);
+CBNDEF void carbon_strbuilder_add_null(CBN_StrBuilder *sb);
 
 /**
  * @brief Frees (deallocates) and cleans up the CBN_StrBuilder object.
  * @param sb The StrBuilder object.
  */
-CARBON_API void carbon_strbuilder_free(CBN_StrBuilder *sb);
+CBNDEF void carbon_strbuilder_free(CBN_StrBuilder *sb);
 
 // Local Variables:
 // mode: c++

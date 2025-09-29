@@ -192,11 +192,11 @@ __attribute__((destructor)) CARBON_INLINE void carbon_coroutine__shutdown(void) 
   carbon_list_destroy(&carbon_coroutine__polls);
 }
 
-__attribute__((naked)) void carbon_coroutine_restore_ctx(__attribute__((unused)) void *rsp) {
+__attribute__((naked)) CARBON_INLINE void carbon_coroutine__restore_ctx(__attribute__((unused)) void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
 
-CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd) {
+void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd) {
   usz current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item).rsp = rsp;
   switch (sm) {
@@ -260,7 +260,7 @@ CARBON_API void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode 
   carbon_coroutine__current %= carbon_coroutine__active.size;
   current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   CBN_Coroutine_CTX current_ctx_item = carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item);
-  carbon_coroutine_restore_ctx(current_ctx_item.rsp);
+  carbon_coroutine__restore_ctx(current_ctx_item.rsp);
 }
 
 CARBON_INLINE void carbon_coroutine__finish_current(void) {
@@ -291,7 +291,7 @@ CARBON_INLINE void carbon_coroutine__finish_current(void) {
   carbon_coroutine__current %= carbon_coroutine__active.size;
   current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   CBN_Coroutine_CTX current_ctx_item = carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, current_active_item);
-  carbon_coroutine_restore_ctx(current_ctx_item.rsp);
+  carbon_coroutine__restore_ctx(current_ctx_item.rsp);
 }
 
 usz carbon_coroutine_id(void) {

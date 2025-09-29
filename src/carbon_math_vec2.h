@@ -168,7 +168,7 @@ typedef union CBN_Vec2 {
  * @param v The second 2D vector.
  * @return The resultant 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
 
 /**
  * @brief Subtracts one 2D vector from another one (element-wise).
@@ -176,7 +176,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_add(CBN_Vec2 u, CBN_Vec2 v);
  * @param v The second 2D vector.
  * @return The resultant 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
 
 /**
  * @brief Computes the Hadamard product (element-wise multiplication) between two 2D vectors.
@@ -184,7 +184,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_sub(CBN_Vec2 u, CBN_Vec2 v);
  * @param v The second 2D vector.
  * @return The resultant 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v);
 
 /**
  * @brief Computes the dot product between two 2D vectors.
@@ -192,7 +192,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v);
  * @param v The second 2D vector.
  * @return The resultant scalar value.
  */
-CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
+CBNDEF f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 
 /**
  * @brief Restricts a 2D vector between a minimum and a maximum value.
@@ -201,35 +201,35 @@ CARBON_API f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
  * @param max The maximum value (as 2D vector).
  * @return The restricted 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
+CBNDEF CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
 
 /**
  * @brief Rounds down the components of the 2D vector.
  * @param v The 2D vector.
  * @return The rounded down 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
 
 /**
  * @brief Returns the length of the 2D vector squared.
  * @param v The 2D vector.
  * @return The 2D vector's length squared.
  */
-CARBON_API f32 carbon_math_vec2_len_squared(CBN_Vec2 v);
+CBNDEF f32 carbon_math_vec2_len_squared(CBN_Vec2 v);
 
 /**
  * @brief Returns the length of the 2D vector.
  * @param v The 2D vector.
  * @return The 2D vector's length.
  */
-CARBON_API f32 carbon_math_vec2_len(CBN_Vec2 v);
+CBNDEF f32 carbon_math_vec2_len(CBN_Vec2 v);
 
 /**
  * @brief Returns a 2D vector with the same direction as the specified one, but with a length of `1`.
  * @param v The 2D vector.
  * @return The normalized 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
 
 /**
  * @brief Performs a linear interpolation between two 2D vectors based on the given weighting.
@@ -238,7 +238,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
  * @param t A value [0..1] indicating the weight of `v`.
  * @return The interpolated 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t);
+CBNDEF CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t);
 
 /**
  * @brief Scales the 2D vector by the specified scalar value.
@@ -246,7 +246,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t);
  * @param s The scalar value.
  * @return The scaled 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
+CBNDEF CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
 
 /**
  * @brief Rotates the 2D vector by the specified rotation value (in degrees).
@@ -254,7 +254,7 @@ CARBON_API CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
  * @param angle The rotation to apply (in degrees).
  * @return The rotated 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
+CBNDEF CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
 
 /**
  * @brief Rotates the 2D vector around a given pivot point by the specified rotation value (in degrees).
@@ -263,14 +263,14 @@ CARBON_API CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
  * @param pivot The pivot point around which to rotate the 2D vector.
  * @return The rotated 2D vector.
  */
-CARBON_API CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
+CBNDEF CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
 
 /**
  * @brief Returns the string representation of the 2D vector using default formatting.
  * @param v The 2D vector.
  * @return The serialized 2D vector as `(X, Y)`.
  */
-CARBON_API char *carbon_math_vec2_to_cstr(CBN_Vec2 v);
+CBNDEF char *carbon_math_vec2_to_cstr(CBN_Vec2 v);
 
 // Local Variables:
 // mode: c++

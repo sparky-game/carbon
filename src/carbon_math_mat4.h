@@ -20,13 +20,13 @@ typedef struct CBN_Mat4 {
  * @brief Creates a zeroed-out 4x4 matrix.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_zero(void);
+CBNDEF CBN_Mat4 carbon_math_mat4_zero(void);
 
 /**
  * @brief Creates an identity 4x4 matrix.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_id(void);
+CBNDEF CBN_Mat4 carbon_math_mat4_id(void);
 
 /**
  * @brief Multiplies two 4x4 matrices together.
@@ -34,7 +34,7 @@ CARBON_API CBN_Mat4 carbon_math_mat4_id(void);
  * @param b The second 4x4 matrix.
  * @return The resultant 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_mult(CBN_Mat4 a, CBN_Mat4 b);
+CBNDEF CBN_Mat4 carbon_math_mat4_mult(CBN_Mat4 a, CBN_Mat4 b);
 
 /**
  * @brief Multiplies a 4x4 matrix with a 3D vector (x, y, z, 1).
@@ -42,7 +42,7 @@ CARBON_API CBN_Mat4 carbon_math_mat4_mult(CBN_Mat4 a, CBN_Mat4 b);
  * @param v The 3D vector.
  * @return The resultant 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_mat4_mult_vec3(CBN_Mat4 m, CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_mat4_mult_vec3(CBN_Mat4 m, CBN_Vec3 v);
 
 /**
  * @brief Multiplies a 4x4 matrix with a 4D vector.
@@ -50,28 +50,28 @@ CARBON_API CBN_Vec3 carbon_math_mat4_mult_vec3(CBN_Mat4 m, CBN_Vec3 v);
  * @param v The 4D vector.
  * @return The resultant 4D vector.
  */
-CARBON_API CBN_Vec4 carbon_math_mat4_mult_vec4(CBN_Mat4 m, CBN_Vec4 v);
+CBNDEF CBN_Vec4 carbon_math_mat4_mult_vec4(CBN_Mat4 m, CBN_Vec4 v);
 
 /**
  * @brief Creates a 4x4 rotation matrix from the given quaternion.
  * @param q The quaternion.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_from_quat(CBN_Quat q);
+CBNDEF CBN_Mat4 carbon_math_mat4_from_quat(CBN_Quat q);
 
 /**
  * @brief Creates a 4x4 translation matrix from the given 3D position vector.
  * @param position The 3D vector.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_translation(CBN_Vec3 position);
+CBNDEF CBN_Mat4 carbon_math_mat4_translation(CBN_Vec3 position);
 
 /**
  * @brief Creates a 4x4 scale matrix from the given 3D scale vector.
  * @param scale The 3D vector.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_scale(CBN_Vec3 scale);
+CBNDEF CBN_Mat4 carbon_math_mat4_scale(CBN_Vec3 scale);
 
 /**
  * @brief Creates a 4x4 model matrix from the given translation, rotation and scale (TRS).
@@ -80,7 +80,7 @@ CARBON_API CBN_Mat4 carbon_math_mat4_scale(CBN_Vec3 scale);
  * @param s The 3D scale vector.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_model(CBN_Vec3 t, CBN_Quat r, CBN_Vec3 s);
+CBNDEF CBN_Mat4 carbon_math_mat4_model(CBN_Vec3 t, CBN_Quat r, CBN_Vec3 s);
 
 /**
  * @brief Creates a 4x4 view matrix.
@@ -88,7 +88,7 @@ CARBON_API CBN_Mat4 carbon_math_mat4_model(CBN_Vec3 t, CBN_Quat r, CBN_Vec3 s);
  * @param rotation The camera rotation quaternion.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation);
+CBNDEF CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation);
 
 /**
  * @brief Creates a 4x4 perspective projection matrix.
@@ -98,4 +98,4 @@ CARBON_API CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation);
  * @param far The far clipping plane distance.
  * @return The 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 far);
+CBNDEF CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 far);

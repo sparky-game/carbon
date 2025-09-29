@@ -15,12 +15,12 @@ typedef struct CBN_SKAP CBN_SKAP;  // Forward declaration
 /**
  * @brief Initializes the sprite subsystem.
  */
-CARBON_API void carbon_sprite_manager_init(void);
+CBNDEF void carbon_sprite_manager_init(void);
 
 /**
  * @brief Shutdowns the sprite subsystem.
  */
-CARBON_API void carbon_sprite_manager_shutdown(void);
+CBNDEF void carbon_sprite_manager_shutdown(void);
 
 /**
  * @brief ...
@@ -28,7 +28,7 @@ CARBON_API void carbon_sprite_manager_shutdown(void);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
+CBNDEF u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
 
 /**
  * @param name ...
@@ -36,7 +36,7 @@ CARBON_API u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CARBON_API u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
+CBNDEF u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
 
 #ifdef __cplusplus
 /**
@@ -50,7 +50,7 @@ CARBON_API u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_S
  * @param uid ...
  * @return ...
  */
-CARBON_API CBN_Sprite *carbon_sprite_manager_lookup(const CBN_Sprite_UID uid);
+CBNDEF CBN_Sprite *carbon_sprite_manager_lookup(const CBN_Sprite_UID uid);
 
 // Local Variables:
 // mode: c++

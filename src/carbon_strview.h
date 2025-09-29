@@ -86,49 +86,49 @@ typedef struct CBN_StrView {
  * @param size The size of the char buffer.
  * @return The StrView representing the provided char buffer.
  */
-CARBON_API CBN_StrView carbon_strview_from_buf(const char *data, usz size);
+CBNDEF CBN_StrView carbon_strview_from_buf(const char *data, usz size);
 
 /**
  * @brief Creates a StrView from a null-terminated C-style string.
  * @param s The pointer to the standard C char array.
  * @return The StrView representing the provided C-style string.
  */
-CARBON_API CBN_StrView carbon_strview_from_cstr(const char *s);
+CBNDEF CBN_StrView carbon_strview_from_cstr(const char *s);
 
 /**
  * @brief Creates a StrView from a StrBuilder object holding some data.
  * @param sb The StrBuilder holding the data.
  * @return The StrView representing the provided StrBuilder object.
  */
-CARBON_API CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb);
+CBNDEF CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb);
 
 /**
  * @brief Returns a non-modifiable standard C char array version of the string.
  * @param sv The StrView holding the data.
  * @return A pointer to a null-terminated char array with same data.
  */
-CARBON_API char *carbon_strview_to_cstr(CBN_StrView sv);
+CBNDEF char *carbon_strview_to_cstr(CBN_StrView sv);
 
 /**
  * @brief Removes all the leading whitespace characters from the current StrView.
  * @param sv The StrView holding the data.
  * @return The StrView that remains after all whitespace characters are removed from the start.
  */
-CARBON_API CBN_StrView carbon_strview_trim_left(CBN_StrView sv);
+CBNDEF CBN_StrView carbon_strview_trim_left(CBN_StrView sv);
 
 /**
  * @brief Removes all the trailing whitespace characters from the current StrView.
  * @param sv The StrView holding the data.
  * @return The StrView that remains after all whitespace characters are removed from the end.
  */
-CARBON_API CBN_StrView carbon_strview_trim_right(CBN_StrView sv);
+CBNDEF CBN_StrView carbon_strview_trim_right(CBN_StrView sv);
 
 /**
  * @brief Removes all leading and trailing whitespace characters from the current StrView.
  * @param sv The StrView holding the data.
  * @return The StrView that remains after all whitespace characters are removed from the start and the end.
  */
-CARBON_API CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
+CBNDEF CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
 
 /**
  * @brief Returns the leading portion of the current StrView just before the first occurrence of a delimiter.
@@ -139,7 +139,7 @@ CARBON_API CBN_StrView carbon_strview_trim_both(CBN_StrView sv);
  * @param c The char delimiter to search for.
  * @return The StrView containing the data from the beginning up to the first occurrence of the delimiter.
  */
-CARBON_API CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
+CBNDEF CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
 
 /**
  * @brief Returns the leading portion of the current StrView just before the first occurrence of a whitespace character.
@@ -149,7 +149,7 @@ CARBON_API CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c);
  * @param sv The StrView holding the data.
  * @return The StrView containing the data from the beginning up to the first occurrence of the whitespace character.
  */
-CARBON_API CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
+CBNDEF CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
 
 /**
  * @brief Compares two StrViews and returns whether they're equal.
@@ -157,7 +157,7 @@ CARBON_API CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv);
  * @param y The second StrView.
  * @return A boolean value representing the equality between them.
  */
-CARBON_API bool carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
+CBNDEF bool carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
 
 /**
  * @brief Checks whether a StrView is contained in another StrView.
@@ -165,7 +165,7 @@ CARBON_API bool carbon_strview_are_equal(CBN_StrView x, CBN_StrView y);
  * @param sub The sub StrView to search for.
  * @return A boolean value representing whether sub ∈ sv.
  */
-CARBON_API bool carbon_strview_contains(CBN_StrView sv, CBN_StrView sub);
+CBNDEF bool carbon_strview_contains(CBN_StrView sv, CBN_StrView sub);
 
 /**
  * @brief Checks whether a StrView starts with a particular StrView.
@@ -173,7 +173,7 @@ CARBON_API bool carbon_strview_contains(CBN_StrView sv, CBN_StrView sub);
  * @param sub The sub StrView to search for.
  * @return A boolean value representing whether `sv` starts with `sub`.
  */
-CARBON_API bool carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
+CBNDEF bool carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
 
 /**
  * @brief Checks whether a StrView ends with a particular StrView.
@@ -181,7 +181,7 @@ CARBON_API bool carbon_strview_starts_with(CBN_StrView sv, CBN_StrView sub);
  * @param sub The sub StrView to search for.
  * @return A boolean value representing whether `sv` ends with `sub`.
  */
-CARBON_API bool carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
+CBNDEF bool carbon_strview_ends_with(CBN_StrView sv, CBN_StrView sub);
 
 // Local Variables:
 // mode: c++

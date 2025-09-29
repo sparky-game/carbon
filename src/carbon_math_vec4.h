@@ -62,7 +62,7 @@ typedef union CBN_Vec4 {
  * @param v The 4D vector.
  * @return The serialized 4D vector as `(X, Y, Z, W)`.
  */
-CARBON_API char *carbon_math_vec4_to_cstr(CBN_Vec4 v);
+CBNDEF char *carbon_math_vec4_to_cstr(CBN_Vec4 v);
 
 /**
  * @brief Projects a 4D point/vector into 3D Normalized Device Coordinates (NDC).
@@ -76,4 +76,4 @@ CARBON_API char *carbon_math_vec4_to_cstr(CBN_Vec4 v);
  * @param out_v The projected vector in 3D space as NDC coordinates (output argument pointer).
  * @return A boolean value indicating whether it projected the 4D vector successfully or not.
  */
-CARBON_API bool carbon_math_vec4_project_3d(CBN_Vec4 v, CBN_Vec3 *out_v);
+CBNDEF bool carbon_math_vec4_project_3d(CBN_Vec4 v, CBN_Vec3 *out_v);

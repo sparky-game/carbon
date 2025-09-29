@@ -92,48 +92,48 @@
  */
 #define CARBON_TO_RADIANS(angle) ((angle) * CARBON_PI / 180)
 
-CARBON_API void carbon_math_srand(u64 seed);
-CARBON_API i32 carbon_math_rand(void);
-CARBON_API i32 carbon_math_rand_between(i32 min, i32 max);
-CARBON_API f32 carbon_math_randf(void);
-CARBON_API f32 carbon_math_randf_between(f32 min, f32 max);
-CARBON_API void carbon_math_mt19937_64_srand(u64 seed);
-CARBON_API u64 carbon_math_mt19937_64_rand(void);
+CBNDEF void carbon_math_srand(u64 seed);
+CBNDEF i32 carbon_math_rand(void);
+CBNDEF i32 carbon_math_rand_between(i32 min, i32 max);
+CBNDEF f32 carbon_math_randf(void);
+CBNDEF f32 carbon_math_randf_between(f32 min, f32 max);
+CBNDEF void carbon_math_mt19937_64_srand(u64 seed);
+CBNDEF u64 carbon_math_mt19937_64_rand(void);
 
 /**
  * @brief Reverses the order of the bytes in the provided 32-bit unsigned integer (e.g. 0xAABBCCDD -> 0xDDCCBBAA).
  * @param x The 32-bit unsigned integer.
  * @return The byte-reversed 32-bit unsigned integer.
  */
-CARBON_API u32 carbon_math_bswap32(u32 x);
+CBNDEF u32 carbon_math_bswap32(u32 x);
 
 /**
  * @brief Returns the absolute value of a specified number.
  * @param x The number.
  * @return The non-negative value of x without regard to its sign.
  */
-CARBON_API f32 carbon_math_abs(f32 x);
+CBNDEF f32 carbon_math_abs(f32 x);
 
 /**
  * @brief Rounds a number to the nearest integral value.
  * @param x The number.
  * @return The rounded integral value of x.
  */
-CARBON_API f32 carbon_math_round(f32 x);
+CBNDEF f32 carbon_math_round(f32 x);
 
 /**
  * @brief Returns the largest integral value less than or equal to the specified number.
  * @param x The number.
  * @return The largest integral value ≤ x.
  */
-CARBON_API f32 carbon_math_floor(f32 x);
+CBNDEF f32 carbon_math_floor(f32 x);
 
 /**
  * @brief Returns the smallest integral value great than or equal to the specified number.
  * @param x The number.
  * @return The smallest integral value ≥ x.
  */
-CARBON_API f32 carbon_math_ceil(f32 x);
+CBNDEF f32 carbon_math_ceil(f32 x);
 
 /**
  * @brief Snaps a number to the next integer up or down, depending on whether Δx is positive or negative.
@@ -141,14 +141,14 @@ CARBON_API f32 carbon_math_ceil(f32 x);
  * @param dx A directional delta (Δ). Only its sign is used to determine the direction of the snap.
  * @return The snapped number.
  */
-CARBON_API f32 carbon_math_snap(f32 x, f32 dx);
+CBNDEF f32 carbon_math_snap(f32 x, f32 dx);
 
 /**
  * @brief Returns the square root of a specified number.
  * @param x The number.
  * @return The positive square root of x, provided x ≥ 0.
  */
-CARBON_API f32 carbon_math_sqrt(f32 x);
+CBNDEF f32 carbon_math_sqrt(f32 x);
 
 /**
  * @brief Performs a true modulo operation for integers.
@@ -156,7 +156,7 @@ CARBON_API f32 carbon_math_sqrt(f32 x);
  * @param y The divisor.
  * @return The remainder r of x/y, such that 0 ≤ r < |y|.
  */
-CARBON_API i32 carbon_math_imod(i32 x, i32 y);
+CBNDEF i32 carbon_math_imod(i32 x, i32 y);
 
 /**
  * @brief Performs a true modulo operation for floating-point numbers.
@@ -164,7 +164,7 @@ CARBON_API i32 carbon_math_imod(i32 x, i32 y);
  * @param y The divisor.
  * @return The remainder r of x/y, such that 0 ≤ r < |y|.
  */
-CARBON_API f32 carbon_math_fmod(f32 x, f32 y);
+CBNDEF f32 carbon_math_fmod(f32 x, f32 y);
 
 /**
  * @brief Returns a specified number raised to the specified power.
@@ -172,21 +172,21 @@ CARBON_API f32 carbon_math_fmod(f32 x, f32 y);
  * @param y The power.
  * @return The result of x^y.
  */
-CARBON_API f32 carbon_math_pow(f32 x, f32 y);
+CBNDEF f32 carbon_math_pow(f32 x, f32 y);
 
 /**
  * @brief Returns the base-2 logarithm of the specified number.
  * @param x The number.
  * @return The result of log₂(x).
  */
-CARBON_API f32 carbon_math_log2(f32 x);
+CBNDEF f32 carbon_math_log2(f32 x);
 
 /**
  * @brief Returns 2 raised to the specified power.
  * @param x The power.
  * @return The result of 2^x.
  */
-CARBON_API f32 carbon_math_exp2(f32 x);
+CBNDEF f32 carbon_math_exp2(f32 x);
 
 /**
  * @brief Multiplies a number by an integer power of 2.
@@ -194,21 +194,21 @@ CARBON_API f32 carbon_math_exp2(f32 x);
  * @param n The power.
  * @return The result of x * 2^n.
  */
-CARBON_API f32 carbon_math_ldexp2(f32 x, i32 n);
+CBNDEF f32 carbon_math_ldexp2(f32 x, i32 n);
 
 /**
  * @brief Returns the base-e (natural) logarithm of the specified number.
  * @param x The number.
  * @return The result of ln(x).
  */
-CARBON_API f32 carbon_math_log(f32 x);
+CBNDEF f32 carbon_math_log(f32 x);
 
 /**
  * @brief Returns e raised to the specified power.
  * @param x The power.
  * @return The result of e^x.
  */
-CARBON_API f32 carbon_math_exp(f32 x);
+CBNDEF f32 carbon_math_exp(f32 x);
 
 /**
  * @brief Multiplies a number by an integer power of e.
@@ -216,21 +216,21 @@ CARBON_API f32 carbon_math_exp(f32 x);
  * @param n The power.
  * @return The result of x * e^n.
  */
-CARBON_API f32 carbon_math_ldexp(f32 x, i32 n);
+CBNDEF f32 carbon_math_ldexp(f32 x, i32 n);
 
 /**
  * @brief Returns the base-10 logarithm of the specified number.
  * @param x The number.
  * @return The result of log₁₀(x).
  */
-CARBON_API f32 carbon_math_log10(f32 x);
+CBNDEF f32 carbon_math_log10(f32 x);
 
 /**
  * @brief Returns 10 raised to the specified power.
  * @param x The power.
  * @return The result of 10^x.
  */
-CARBON_API f32 carbon_math_exp10(f32 x);
+CBNDEF f32 carbon_math_exp10(f32 x);
 
 /**
  * @brief Multiplies a number by an integer power of 10.
@@ -238,7 +238,7 @@ CARBON_API f32 carbon_math_exp10(f32 x);
  * @param n The power.
  * @return The result of x * 10^n.
  */
-CARBON_API f32 carbon_math_ldexp10(f32 x, i32 exp);
+CBNDEF f32 carbon_math_ldexp10(f32 x, i32 exp);
 
 /**
  * @brief Breaks a number into a normalized fraction and an integer power of 2.
@@ -246,14 +246,14 @@ CARBON_API f32 carbon_math_ldexp10(f32 x, i32 exp);
  * @param n The power (output argument pointer).
  * @return A number y, such that 1/2 ≤ y < 1 and x = y * 2^n.
  */
-CARBON_API f32 carbon_math_frexp(f32 x, i32 *n);
+CBNDEF f32 carbon_math_frexp(f32 x, i32 *n);
 
 /**
  * @brief Computes the logistic function (S-shaped sigmoid function/curve), mapping a number to a value in [0..1].
  * @param x The number.
  * @return The result of the application of the function.
  */
-CARBON_API f32 carbon_math_sigmoid(f32 x);
+CBNDEF f32 carbon_math_sigmoid(f32 x);
 
 /**
  * @brief Generates a smooth interpolation between two values, using the cubic Hermite polynomial.
@@ -262,7 +262,7 @@ CARBON_API f32 carbon_math_sigmoid(f32 x);
  * @param t The value to be interpolated.
  * @return The interpolated value between a and b.
  */
-CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
+CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
 
 /**
  * @brief Compares two numbers with a floating-point tolerance (ε).
@@ -273,7 +273,7 @@ CARBON_API f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
  *           - If x > y, then +1.
  *           - If x ± ε ≈ y, then 0.
  */
-CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
+CBNDEF i8 carbon_math_cmp(f32 x, f32 y);
 
 /**
  * @brief Concatenates two unsigned integers together (e.g. `10` || `69` :: `1069`).
@@ -281,7 +281,7 @@ CARBON_API i8 carbon_math_cmp(f32 x, f32 y);
  * @param y The second unsigned integer.
  * @return The unsigned integer representing their concatenation.
  */
-CARBON_API u64 carbon_math_concat(u64 x, u64 y);
+CBNDEF u64 carbon_math_concat(u64 x, u64 y);
 
 /**
  * @brief Returns the Greatest Common Divisor (using Euclidean algorithm) of two integers.
@@ -289,49 +289,49 @@ CARBON_API u64 carbon_math_concat(u64 x, u64 y);
  * @param y The second integer.
  * @return The GCD of `x` and `y`.
  */
-CARBON_API i32 carbon_math_egcd(i32 x, i32 y);
+CBNDEF i32 carbon_math_egcd(i32 x, i32 y);
 
 /**
  * @brief Returns the sine of the specified angle.
  * @param x The angle in radians.
  * @return The sine of x.
  */
-CARBON_API f32 carbon_math_sin(f32 x);
+CBNDEF f32 carbon_math_sin(f32 x);
 
 /**
  * @brief Returns the cosine of the specified angle.
  * @param x The angle in radians.
  * @return The cosine of x.
  */
-CARBON_API f32 carbon_math_cos(f32 x);
+CBNDEF f32 carbon_math_cos(f32 x);
 
 /**
  * @brief Returns the tangent of the specified angle.
  * @param x The angle in radians.
  * @return The tangent of x.
  */
-CARBON_API f32 carbon_math_tan(f32 x);
+CBNDEF f32 carbon_math_tan(f32 x);
 
 /**
  * @brief Returns the hyperbolic tangent of the specified angle.
  * @param x The angle in radians.
  * @return The hyperbolic tangent of x.
  */
-CARBON_API f32 carbon_math_tanh(f32 x);
+CBNDEF f32 carbon_math_tanh(f32 x);
 
 /**
  * @brief Returns the angle whose sine is the specified number.
  * @param x The number representing a sine, such that -1 ≤ x ≤ 1.
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
-CARBON_API f32 carbon_math_asin(f32 x);
+CBNDEF f32 carbon_math_asin(f32 x);
 
 /**
  * @brief Returns the angle whose tangent is the specified number.
  * @param x The number representing a tangent.
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
-CARBON_API f32 carbon_math_atan(f32 x);
+CBNDEF f32 carbon_math_atan(f32 x);
 
 /**
  * @brief Returns the angle whose tangent is the quotient of the two specified numbers.
@@ -339,7 +339,7 @@ CARBON_API f32 carbon_math_atan(f32 x);
  * @param x The X coordinate of a point.
  * @return An angle θ, in radians, such that tan(θ) = y/x, where (x, y) is a point in the Cartesian plane.
  */
-CARBON_API f32 carbon_math_atan2(f32 y, f32 x);
+CBNDEF f32 carbon_math_atan2(f32 y, f32 x);
 
 // TODO: somehow perform bounds checking `CBN_ASSERT(0 <= (i) && (i) < (m).rows && 0 <= (j) && (j) < (m).cols && "Matrix index out of bounds")`
 #define CARBON_MAT_AT(m, i, j) (m).items[(i) * (m).cols + (j)]
@@ -361,24 +361,24 @@ typedef struct {
   usz cols;
 } CBN_Row;
 
-CARBON_API CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
-CARBON_API void carbon_math_mat_destroy(CBN_Matrix *m);
-CARBON_API void carbon_math_mat_fill(CBN_Matrix m, f32 x);
-CARBON_API void carbon_math_mat_rand(CBN_Matrix m, f32 min, f32 max);
-CARBON_API CBN_Row carbon_math_mat_row(CBN_Matrix m, usz row);
-CARBON_API void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src);
-CARBON_API void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m);
-CARBON_API void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b);
-CARBON_API void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32));
-CARBON_API void carbon_math_mat_print(CBN_Matrix m, const char *name);
-CARBON_API CBN_Row carbon_math_row_create(usz cols);
-CARBON_API void carbon_math_row_destroy(CBN_Row *r);
-CARBON_API CBN_Matrix carbon_math_row_to_mat(CBN_Row r);
-CARBON_API CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);
-CARBON_API void carbon_math_row_fill(CBN_Row r, f32 x);
-CARBON_API void carbon_math_row_rand(CBN_Row r, f32 min, f32 max);
-CARBON_API void carbon_math_row_copy(CBN_Row dst, CBN_Row src);
-CARBON_API void carbon_math_row_print(CBN_Row r, const char *name);
+CBNDEF CBN_Matrix carbon_math_mat_create(usz rows, usz cols);
+CBNDEF void carbon_math_mat_destroy(CBN_Matrix *m);
+CBNDEF void carbon_math_mat_fill(CBN_Matrix m, f32 x);
+CBNDEF void carbon_math_mat_rand(CBN_Matrix m, f32 min, f32 max);
+CBNDEF CBN_Row carbon_math_mat_row(CBN_Matrix m, usz row);
+CBNDEF void carbon_math_mat_copy(CBN_Matrix dst, CBN_Matrix src);
+CBNDEF void carbon_math_mat_add(CBN_Matrix dst, CBN_Matrix m);
+CBNDEF void carbon_math_mat_dot(CBN_Matrix dst, CBN_Matrix a, CBN_Matrix b);
+CBNDEF void carbon_math_mat_map(CBN_Matrix m, f32 (*f)(f32));
+CBNDEF void carbon_math_mat_print(CBN_Matrix m, const char *name);
+CBNDEF CBN_Row carbon_math_row_create(usz cols);
+CBNDEF void carbon_math_row_destroy(CBN_Row *r);
+CBNDEF CBN_Matrix carbon_math_row_to_mat(CBN_Row r);
+CBNDEF CBN_Row carbon_math_row_slice(CBN_Row r, usz i, usz cols);
+CBNDEF void carbon_math_row_fill(CBN_Row r, f32 x);
+CBNDEF void carbon_math_row_rand(CBN_Row r, f32 min, f32 max);
+CBNDEF void carbon_math_row_copy(CBN_Row dst, CBN_Row src);
+CBNDEF void carbon_math_row_print(CBN_Row r, const char *name);
 
 // Local Variables:
 // mode: c++

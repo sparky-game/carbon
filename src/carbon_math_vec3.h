@@ -207,7 +207,7 @@ typedef union CBN_Vec3 {
  * @param v The second 3D vector.
  * @return The resultant 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Subtracts one 3D vector from another one (element-wise).
@@ -215,7 +215,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v);
  * @param v The second 3D vector.
  * @return The resultant 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Computes the Hadamard product (element-wise multiplication) between two 3D vectors.
@@ -223,7 +223,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v);
  * @param v The second 3D vector.
  * @return The resultant 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Computes the dot product between two 3D vectors.
@@ -231,7 +231,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v);
  * @param v The second 3D vector.
  * @return The resultant scalar value.
  */
-CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
+CBNDEF f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Computes the cross product between two 3D vectors.
@@ -239,7 +239,7 @@ CARBON_API f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v);
  * @param v The second 3D vector.
  * @return The resultant 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
 
 /**
  * @brief Scales the 3D vector by the specified scalar value.
@@ -247,35 +247,35 @@ CARBON_API CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
  * @param s The scalar value.
  * @return The scaled 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s);
+CBNDEF CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s);
 
 /**
  * @brief Returns the length of the 3D vector squared.
  * @param v The 3D vector.
  * @return The 3D vector's length squared.
  */
-CARBON_API f32 carbon_math_vec3_len_squared(CBN_Vec3 v);
+CBNDEF f32 carbon_math_vec3_len_squared(CBN_Vec3 v);
 
 /**
  * @brief Returns the length of the 3D vector.
  * @param v The 3D vector.
  * @return The 3D vector's length.
  */
-CARBON_API f32 carbon_math_vec3_len(CBN_Vec3 v);
+CBNDEF f32 carbon_math_vec3_len(CBN_Vec3 v);
 
 /**
  * @brief Returns a 3D vector with the same direction as the specified one, but with a length of `1`.
  * @param v The 3D vector.
  * @return The normalized 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v);
+CBNDEF CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v);
 
 /**
  * @brief Returns the string representation of the 3D vector using default formatting.
  * @param v The 3D vector.
  * @return The serialized 3D vector as `(X, Y, Z)`.
  */
-CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
+CBNDEF char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
 
 /**
  * @brief Rotates the 3D vector around the X-axis by the specified angle (in degrees).
@@ -283,7 +283,7 @@ CARBON_API char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
  * @param angle X-axis rotation angle (in degrees).
  * @return The rotated 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle);
+CBNDEF CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle);
 
 /**
  * @brief Rotates the 3D vector around the Y-axis by the specified angle (in degrees).
@@ -291,7 +291,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle);
  * @param angle Y-axis rotation angle (in degrees).
  * @return The rotated 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle);
+CBNDEF CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle);
 
 /**
  * @brief Rotates the 3D vector around the Z-axis by the specified angle (in degrees).
@@ -299,7 +299,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle);
  * @param angle Z-axis rotation angle (in degrees).
  * @return The rotated 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle);
+CBNDEF CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle);
 
 /**
  * @brief Rotates the 3D vector by the provided quaternion.
@@ -307,7 +307,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle);
  * @param q The rotation quaternion.
  * @return The rotated 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
+CBNDEF CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
 
 /**
  * @brief Projects a 3D point/vector into 2D Normalized Device Coordinates (NDC).
@@ -322,7 +322,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q);
  * @param out_v The projected vector in 2D space as NDC coordinates (output argument pointer).
  * @return A boolean value indicating whether it projected the 3D vector successfully or not.
  */
-CARBON_API bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
+CBNDEF bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v);
 
 /**
  * @brief Computes the reflection direction for an incident 3D vector.
@@ -330,7 +330,7 @@ CARBON_API bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *ou
  * @param n The normal 3D vector.
  * @return The reflection direction 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n);
+CBNDEF CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n);
 
 /**
  * @brief Computes the refraction direction for an incident 3D vector.
@@ -339,7 +339,7 @@ CARBON_API CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n);
  * @param idx The refractive index of the medium.
  * @return The refraction direction 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_math_vec3_refract(CBN_Vec3 i, CBN_Vec3 n, f32 idx);
+CBNDEF CBN_Vec3 carbon_math_vec3_refract(CBN_Vec3 i, CBN_Vec3 n, f32 idx);
 
 // Local Variables:
 // mode: c++

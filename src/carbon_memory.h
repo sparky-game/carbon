@@ -14,7 +14,7 @@
  * @param size ...
  * @return ...
  */
-CARBON_API void *carbon_memory_alloc(usz size);
+CBNDEF void *carbon_memory_alloc(usz size);
 
 /**
  * @brief ...
@@ -22,14 +22,14 @@ CARBON_API void *carbon_memory_alloc(usz size);
  * @param size ...
  * @return ...
  */
-CARBON_API void *carbon_memory_realloc(void *p, usz size);
+CBNDEF void *carbon_memory_realloc(void *p, usz size);
 
 /**
  * @brief ...
  * @param size ...
  * @return ...
  */
-CARBON_API void *carbon_memory_zeroed(usz size);
+CBNDEF void *carbon_memory_zeroed(usz size);
 
 /**
  * @brief Copies a set of bytes from a memory area to another one.
@@ -38,7 +38,7 @@ CARBON_API void *carbon_memory_zeroed(usz size);
  * @param n The amount of bytes to copy from `src`.
  * @return The original value of `dst`.
  */
-CARBON_API void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n);
+CBNDEF void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n);
 
 /**
  * @brief Compares two sets of bytes from two different memory areas.
@@ -47,7 +47,7 @@ CARBON_API void *carbon_memory_copy(void * restrict dst, const void * restrict s
  * @param n The amount of bytes to compare from both `v1` and `v2`.
  * @return The difference between the first two differing bytes.
  */
-CARBON_API i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
+CBNDEF i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
 
 /**
  * @brief Fills a set of bytes from a memory area with a specific value.
@@ -56,10 +56,10 @@ CARBON_API i32 carbon_memory_cmp(const void *v1, const void *v2, usz n);
  * @param n The amount of bytes to fill from `dst`.
  * @return The same `dst` value.
  */
-CARBON_API void *carbon_memory_set(void *dst, i32 c, usz n);
+CBNDEF void *carbon_memory_set(void *dst, i32 c, usz n);
 
 /**
  * @brief ...
  * @param p ...
  */
-CARBON_API void carbon_memory_free(void *p);
+CBNDEF void carbon_memory_free(void *p);

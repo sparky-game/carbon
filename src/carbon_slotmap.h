@@ -104,13 +104,13 @@ typedef struct CBN_SlotMap_t CBN_SlotMap;
  * @param stride Size in bytes of the elements the SlotMap will hold.
  * @return The SlotMap container.
  */
-CARBON_API CBN_SlotMap carbon_slotmap_create(usz stride);
+CBNDEF CBN_SlotMap carbon_slotmap_create(usz stride);
 
 /**
  * @brief Destroys a SlotMap container.
  * @param sm The SlotMap container.
  */
-CARBON_API void carbon_slotmap_destroy(CBN_SlotMap *sm);
+CBNDEF void carbon_slotmap_destroy(CBN_SlotMap *sm);
 
 /**
  * @brief Inserts a copy of the value into the SlotMap.
@@ -118,7 +118,7 @@ CARBON_API void carbon_slotmap_destroy(CBN_SlotMap *sm);
  * @param value The value to insert.
  * @return The generated unique key for the inserted value.
  */
-CARBON_API CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value);
+CBNDEF CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value);
 
 /**
  * @brief Removes an element using its key from the SlotMap.
@@ -126,7 +126,7 @@ CARBON_API CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value);
  * @param key The key of the element to be removed.
  * @return A boolean value indicating whether it removed the element successfully or not.
  */
-CARBON_API u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
+CBNDEF u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
 
 /**
  * @brief Requests the retrieval or acquisition of an element from the SlotMap.
@@ -135,14 +135,14 @@ CARBON_API u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
  * @param out_value The value of the retrieved element (output argument pointer).
  * @return A boolean value indicating whether it retrieved the element successfully or not.
  */
-CARBON_API u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value);
+CBNDEF u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value);
 
 /**
  * @brief Returns the string representation of the key using default formatting.
  * @param key The key to be serialized.
  * @return The serialized key as `(id, gen)`.
  */
-CARBON_API char *carbon_slotmap_key_to_cstr(const CBN_SlotMap_Key key);
+CBNDEF char *carbon_slotmap_key_to_cstr(const CBN_SlotMap_Key key);
 
 // Local Variables:
 // mode: c++

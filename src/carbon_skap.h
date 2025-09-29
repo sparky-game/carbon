@@ -125,7 +125,7 @@ private:
  * @param skap The filename that the resulting SKAP file should have in disk.
  * @return A boolean value indicating whether it created the SKAP successfully or not.
  */
-CARBON_API u8 carbon_skap_create(const char *decl, const char *skap);
+CBNDEF u8 carbon_skap_create(const char *decl, const char *skap);
 
 /**
  * @brief Opens a SKAP from disk.
@@ -138,19 +138,19 @@ CARBON_API u8 carbon_skap_create(const char *decl, const char *skap);
  * @param out_handle The handle info object of the opened SKAP (output argument pointer).
  * @return A boolean value indicating whether it opened the SKAP successfully or not.
  */
-CARBON_API u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle);
+CBNDEF u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle);
 
 /**
  * @brief Closes a previously opened SKAP.
  * @param handle The handle info object of the opened SKAP.
  */
-CARBON_API void carbon_skap_close(CBN_SKAP *handle);
+CBNDEF void carbon_skap_close(CBN_SKAP *handle);
 
 /**
  * @brief Prints out the metadata or global info of a SKAP.
  * @param handle The handle info object of the opened SKAP.
  */
-CARBON_API void carbon_skap_print(const CBN_SKAP *handle);
+CBNDEF void carbon_skap_print(const CBN_SKAP *handle);
 
 /**
  * @brief Requests the retrieval or acquisition of an asset from a SKAP.
@@ -160,14 +160,14 @@ CARBON_API void carbon_skap_print(const CBN_SKAP *handle);
  * @param out_blob The retrieved asset from the SKAP (output argument pointer).
  * @return A boolean value indicating whether it retrieved the requested asset from the SKAP successfully or not.
  */
-CARBON_API u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
+CBNDEF u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
 
 /**
  * @brief Counts how many assets are stored in a SKAP.
  * @param handle The handle info object of the opened SKAP.
  * @return The number of assets stored in the opened SKAP.
  */
-CARBON_API usz carbon_skap_count(const CBN_SKAP *handle);
+CBNDEF usz carbon_skap_count(const CBN_SKAP *handle);
 
 /**
  * @brief Counts how many assets of a specific type are stored in a SKAP.
@@ -175,7 +175,7 @@ CARBON_API usz carbon_skap_count(const CBN_SKAP *handle);
  * @param type The asset type you're interested in.
  * @return The number of assets of the specified type stored in the opened SKAP.
  */
-CARBON_API usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type);
+CBNDEF usz carbon_skap_count_of(const CBN_SKAP *handle, const CBN_SKAP_AssetType type);
 
 // Local Variables:
 // mode: c++

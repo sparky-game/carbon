@@ -42,12 +42,12 @@ typedef struct {
   char *output;
 } CBN_CmdArgs;
 
-CARBON_API void carbon_test_manager_argparse(int argc, char * const *argv);
-CARBON_API void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv);
-CARBON_API CBN_Suite carbon_test_manager_spawn(void);
-CARBON_API CBN_Test *carbon_test_manager_alloc(CBN_Suite *s);
-CARBON_API void carbon_test_manager_cleanup(CBN_Suite *s);
-CARBON_API void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, const char *name, const char *filename);
-CARBON_API void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, const char *filename);
-CARBON_API u8 carbon_test_manager_run_s(CBN_Suite *s);
-CARBON_API u8 carbon_test_manager_run(void);
+CBNDEF void carbon_test_manager_argparse(int argc, char * const *argv);
+CBNDEF void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv);
+CBNDEF CBN_Suite carbon_test_manager_spawn(void);
+CBNDEF CBN_Test *carbon_test_manager_alloc(CBN_Suite *s);
+CBNDEF void carbon_test_manager_cleanup(CBN_Suite *s);
+CBNDEF void carbon_test_manager_register_s(CBN_Suite *s, CBN_TestFunc test_func, const char *name, const char *filename);
+CBNDEF void carbon_test_manager_register(CBN_TestFunc test_func, const char *name, const char *filename);
+CBNDEF u8 carbon_test_manager_run_s(CBN_Suite *s);
+CBNDEF u8 carbon_test_manager_run(void);

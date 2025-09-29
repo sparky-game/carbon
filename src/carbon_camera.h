@@ -80,90 +80,90 @@ struct CBN_Camera {
  * @param dc The DrawCanvas to get the needed info from.
  * @return The newly created Camera object.
  */
-CARBON_API CBN_Camera *carbon_camera_create(const CBN_DrawCanvas dc);
+CBNDEF CBN_Camera *carbon_camera_create(const CBN_DrawCanvas dc);
 
 /**
  * @brief Destroys a Camera object.
  * @param c The Camera to destroy.
  */
-CARBON_API void carbon_camera_destroy(CBN_Camera *c);
+CBNDEF void carbon_camera_destroy(CBN_Camera *c);
 
 /**
  * @brief Re-creates the Camera, resetting it as if it was newly created.
  * @param c The Camera object.
  * @param dc The DrawCanvas to get the needed info from.
  */
-CARBON_API void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc);
+CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc);
 
 /**
  * @brief Obtains the current position of the Camera as 3D vector.
  * @param c The Camera object.
  * @return The Camera position 3D vector.
  */
-CARBON_API CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c);
+CBNDEF CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c);
 
 /**
  * @brief Obtains the current rotation of the Camera as quaternion.
  * @param c The Camera object.
  * @return The Camera rotation quaternion.
  */
-CARBON_API CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c);
+CBNDEF CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c);
 
 /**
  * @brief Obtains the current view 4x4 matrix of the Camera.
  * @param c The Camera object.
  * @return The Camera view 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c);
+CBNDEF CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c);
 
 /**
  * @brief Obtains the current projection 4x4 matrix of the Camera.
  * @param c The Camera object.
  * @return The Camera projection 4x4 matrix.
  */
-CARBON_API CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c);
+CBNDEF CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c);
 
 /**
  * @brief Moves the Camera forward (-Z) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_move_forward(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_move_forward(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Moves the Camera backward (+Z) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_move_backward(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_move_backward(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Moves the Camera left (-X) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_move_left(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_move_left(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Moves the Camera right (+X) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_move_right(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_move_right(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Adjusts the Camera's yaw (Y-axis) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_yaw(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_yaw(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Adjusts the Camera's pitch (X-axis) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
  */
-CARBON_API void carbon_camera_pitch(CBN_Camera *c, f32 amount);
+CBNDEF void carbon_camera_pitch(CBN_Camera *c, f32 amount);
 
 // Local Variables:
 // mode: c++

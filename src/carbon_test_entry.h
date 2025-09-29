@@ -19,4 +19,4 @@
   int carbon_main(__VA_ARGS__)
 #endif  // CARBON_TESTING_ENTRY
 
-CARBON_API int carbon_main(void);
+CBNDEF int carbon_main(void);
