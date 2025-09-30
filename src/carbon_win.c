@@ -263,7 +263,7 @@ CARBON_INLINE void carbon_win__resize_buf(void) {
   carbon_memory_set(w->buffer, 0, sz);
 }
 
-CARBON_INLINE void carbon_win__write_buf(const CBN_DrawCanvas dc) {
+CARBON_INLINE void carbon_win__upscale_nearest_neighbor(const CBN_DrawCanvas dc) {
   const u32 * restrict src = dc.pixels;
   const usz src_w = dc.width, src_h = dc.height;
   u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
@@ -281,7 +281,7 @@ CARBON_INLINE void carbon_win__write_buf(const CBN_DrawCanvas dc) {
 
 void carbon_win_update(const CBN_DrawCanvas dc) {
   carbon_win__resize_buf();
-  carbon_win__write_buf(dc);
+  carbon_win__upscale_nearest_neighbor(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
