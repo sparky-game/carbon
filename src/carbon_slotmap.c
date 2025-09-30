@@ -10,8 +10,7 @@ CARBON_INLINE u8 carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_S
 
 CARBON_INLINE u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
   u64 slot_id = sm->freelist;
-  u64 idx = slot_id + 1;
-  carbon_list_push(&sm->indices, &idx);
+  carbon_list_push(&sm->indices, &(CBN_SlotMap_Key){.id = slot_id + 1, .gen = 0});
   sm->freelist = carbon_list_at(CBN_SlotMap_Key, sm->indices, slot_id).id;
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, slot_id);
   slot->id = sm->size;
