@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 cbn::Opt<CBN_StrBuilder> CBN_StrBuilder::make(const char *file) {
-  CBN_StrBuilder sb;
+  CBN_StrBuilder sb = {};
   if (!carbon_fs_read_entire_file(&sb, file)) return {};
   return sb;
 }
