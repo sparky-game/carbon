@@ -406,14 +406,10 @@ u8 *carbon_fs_img_32bit_to_8bit(const u32 *pixels, const usz width, const usz he
   u8 *bytes = (u8 *) carbon_memory_alloc(width * height * 4);
   for (usz i = 0; i < width * height; ++i) {
     u32 color = pixels[i];
-    u8 r = (color >> 24) & 0xff;
-    u8 g = (color >> 16) & 0xff;
-    u8 b = (color >> 8)  & 0xff;
-    u8 a = (color >> 0)  & 0xff;
-    bytes[i * 4 + 0] = r;
-    bytes[i * 4 + 1] = g;
-    bytes[i * 4 + 2] = b;
-    bytes[i * 4 + 3] = a;
+    bytes[i * 4 + 0] = (color >> 24) & 0xff;
+    bytes[i * 4 + 1] = (color >> 16) & 0xff;
+    bytes[i * 4 + 2] = (color >> 8)  & 0xff;
+    bytes[i * 4 + 3] = (color >> 0)  & 0xff;
   }
   return bytes;
 }
