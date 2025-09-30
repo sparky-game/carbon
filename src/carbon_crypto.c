@@ -256,7 +256,7 @@ char *carbon_crypto_sha1_as_hex_cstr(const u8 *in, const usz in_size) {
 CARBON_INLINE void carbon_crypto_sha256__transform(CBN_SHA256_CTX *ctx, const u8 *data) {
   u32 a, b, c, d, e, f, g, h, i, j, t1, t2, m[64];
   for (i = 0, j = 0; i < 16; ++i, j += 4) {
-    m[i] = (data[j + 0] << 24) | (data[j + 1] << 16) | (data[j + 2] << 8) | (data[j + 3] << 0);
+    m[i] = ((u32) data[j + 0] << 24) | ((u32) data[j + 1] << 16) | ((u32) data[j + 2] << 8) | ((u32) data[j + 3] << 0);
   }
   for (; i < 64; ++i) {
     m[i] = CARBON_CRYPTO_SHA256__SIG1(m[i - 2]) + m[i - 7] + CARBON_CRYPTO_SHA256__SIG0(m[i - 15]) + m[i - 16];
