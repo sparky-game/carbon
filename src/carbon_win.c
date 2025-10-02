@@ -36,8 +36,7 @@ CARBON_COMPILER_DIAG_IGNORE("-Wdeprecated-declarations");
 #define RGFW_STRNCMP carbon_string_cmp_n
 #define RGFW_STRTOL  strtol
 #define RGFW_NO_TYPES
-// TODO: Support other rendering methods (e.g. Vulkan, Metal, DirectX, OpenGL).
-#define RGFW_BUFFER  // i.e. CPU software rendering
+#define RGFW_BUFFER
 #define RGFW_IMPLEMENTATION
 #include "../thirdparty/RGFW/RGFW.h"
 CARBON_COMPILER_DIAG_END;
