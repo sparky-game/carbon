@@ -28,7 +28,7 @@ CBNDEF void carbon_sprite_manager_shutdown(void);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
+CBNDEF bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
 
 /**
  * @param name ...
@@ -36,7 +36,7 @@ CBNDEF u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID 
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
+CBNDEF bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
 
 #ifdef __cplusplus
 /**

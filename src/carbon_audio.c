@@ -64,7 +64,7 @@ void carbon_audio_set_volume(const f32 volume) {
   ma_engine_set_volume(&carbon_audio__engine, volume);
 }
 
-CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
+CARBON_INLINE bool carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
@@ -79,15 +79,15 @@ CARBON_INLINE u8 carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID
   return true;
 }
 
-u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
+bool carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_FLAGS);
 }
 
-u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
+bool carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 
-CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
+CARBON_INLINE bool carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
@@ -119,11 +119,11 @@ CARBON_INLINE u8 carbon_audio__load_from_skap_ex(const char *name, const CBN_SKA
   return true;
 }
 
-u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
+bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_FLAGS);
 }
 
-u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
+bool carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 

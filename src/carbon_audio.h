@@ -40,7 +40,7 @@ CBNDEF void carbon_audio_set_volume(const f32 volume);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
+CBNDEF bool carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -48,7 +48,7 @@ CBNDEF u8 carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
+CBNDEF bool carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -57,7 +57,7 @@ CBNDEF u8 carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *ou
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
+CBNDEF bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
 
 /**
  * @brief ...
@@ -66,7 +66,7 @@ CBNDEF u8 carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_han
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF u8 carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
+CBNDEF bool carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid);
 
 #ifdef __cplusplus
 /**

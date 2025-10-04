@@ -21,7 +21,7 @@ void carbon_sprite_manager_shutdown(void) {
   CBN_INFO("Shutdowned sprite subsystem successfully");
 }
 
-u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid) {
+bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
@@ -34,7 +34,7 @@ u8 carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_ui
   return true;
 }
 
-u8 carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid) {
+bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
