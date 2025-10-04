@@ -20,13 +20,11 @@ typedef struct CBN_Sprite {
   usz height;
 #ifdef __cplusplus
   /**
-   * @brief carbon_sprite_from_img
-   * @param img The Image object.
-   * @return The newly allocated Sprite object.
+   * @see carbon_sprite_from_img
    */
   static const CBN_Sprite make(const CBN_Image &img);
   /**
-   * @brief carbon_sprite_destroy
+   * @see carbon_sprite_destroy
    */
   void Free(void);
 #endif
