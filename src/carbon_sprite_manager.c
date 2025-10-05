@@ -41,7 +41,10 @@ bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap
   }
   CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
   CBN_Image img;
-  if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_IMAGE, name, &img)) return false;
+  if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_IMAGE, name, &img)) {
+    carbon_memory_free(sprite);
+    return false;
+  }
   *sprite = carbon_sprite_from_img(&img);
   carbon_fs_destroy_img(&img);
   *out_uid = carbon_slotmap_push(&carbon_sprite__library, &sprite);
