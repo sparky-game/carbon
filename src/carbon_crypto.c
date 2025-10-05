@@ -164,6 +164,37 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
   return ~out;
 }
 
+CARBON_INLINE u32 carbon_crypto_crc32__gf2_mult(const u32 *m, u32 v) {
+  u32 s = 0;
+  for (u32 i = 0; v; ++i, v >>= 1) {
+    if (v & 1) s ^= m[i];
+  }
+  return s;
+}
+
+CARBON_INLINE void carbon_crypto_crc32__gf2_square(u32 *dest, const u32 *src) {
+  for (u32 i = 0; i < 32; ++i) dest[i] = carbon_crypto_crc32__gf2_mult(src, src[i]);
+}
+
+u32 carbon_crypto_crc32_combine(u32 c1, u32 c2, usz n2) {
+  u32 odd[32], even[32];
+  odd[0] = 0xedb88320;
+  for (u32 i = 1; i < 32; ++i) odd[i] = 1 << (i - 1);
+  carbon_crypto_crc32__gf2_square(even, odd);
+  u32 c = c1;
+  while (n2) {
+    carbon_crypto_crc32__gf2_square(odd, even);
+    if (n2 & 1) c = carbon_crypto_crc32__gf2_mult(odd, c);
+    n2 >>= 1;
+    if (!n2) break;
+    carbon_crypto_crc32__gf2_square(even, odd);
+    if (n2 & 1) c = carbon_crypto_crc32__gf2_mult(even, c);
+    n2 >>= 1;
+  }
+  c ^= c2;
+  return c;
+}
+
 u64 carbon_crypto_djb2(const char *in) {
   u64 hash = 5381;
   i32 c = 0;

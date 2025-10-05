@@ -43,6 +43,15 @@ CBNDEF u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
 CBNDEF u32 carbon_crypto_crc32(const u8 *in, const usz in_size);
 
 /**
+ * @brief Combines two CRC32 checksums into one.
+ * @param c1 The first checksum.
+ * @param c2 The second checksum.
+ * @param n2 The size of the data used to compute `c2`.
+ * @return The 32-bit CRC32 checksum result of combining `c1` and `c2`.
+ */
+CBNDEF u32 carbon_crypto_crc32_combine(u32 c1, u32 c2, usz n2);
+
+/**
  * @brief Computes the DJB2 non-cryptographic hash of the given null-terminated string.
  * @param in The input string.
  * @return The 64-bit non-cryptographic hash of the input string.

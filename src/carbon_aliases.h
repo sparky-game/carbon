@@ -131,7 +131,10 @@ namespace cbn {
       const auto Encode = carbon_crypto_base64_encode;
       const auto Decode = carbon_crypto_base64_decode;
     }
-    const auto CRC32 = carbon_crypto_crc32;
+    namespace CRC32 {
+      const auto Compute = carbon_crypto_crc32;
+      const auto Combine = carbon_crypto_crc32_combine;
+    }
     const auto DJB2  = carbon_crypto_djb2;
     namespace SHA1 {
       const auto Compute     = carbon_crypto_sha1;
