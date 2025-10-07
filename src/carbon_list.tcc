@@ -55,14 +55,7 @@ typename CBN_List_t<T>::iterator CBN_List_t<T>::end(void) const {
 
 template <typename T>
 typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) {
-  return const_cast<value_type &>(static_cast<const CBN_List_t &>(*this)[idx]);
-}
-
-template <typename T>
-const typename CBN_List_t<T>::value_type &CBN_List_t<T>::operator[](usz idx) const {
-  CBN_ASSERT(idx < size && "List index out of bounds");
-  CBN_ASSERT(sizeof(value_type) == stride && "List type doesn't match");
-  return ((value_type *) items)[idx];
+  return carbon_list_at(value_type, *this, idx);
 }
 
 #endif  // __cplusplus

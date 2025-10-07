@@ -31,37 +31,31 @@ struct CBN_List_t {
   using value_type = T;
   using iterator = value_type *;
   /**
-   * @brief carbon_list_create
-   * @return The list container.
+   * @see carbon_list_create
    */
   static CBN_List_t make(void);
   /**
-   * @brief carbon_list_destroy
+   * @see carbon_list_destroy
    */
   void Free(void);
   /**
-   * @brief carbon_list_push
-   * @param value The value to append.
+   * @see carbon_list_push
    */
   void Push(const value_type &value);
   /**
-   * @brief carbon_list_pop
-   * @return The value of the element popped out.
+   * @see carbon_list_pop
    */
   value_type Pop(void);
   /**
-   * @brief carbon_list_find
-   * @param value The value of the element to check.
-   * @return The index of the provided element, or -1 if not present.
+   * @see carbon_list_find
    */
   isz Find(const value_type &value) const;
   /**
-   * @brief carbon_list_remove
-   * @param idx The index of the element to remove.
+   * @see carbon_list_remove
    */
   void Remove(usz idx);
   /**
-   * @brief carbon_list_shrink_to_fit
+   * @see carbon_list_shrink_to_fit
    */
   void ShrinkToFit(void);
   /**
@@ -74,9 +68,10 @@ struct CBN_List_t {
    * @return The iterator.
    */
   iterator end(void) const;
-  // Overloaded Operators
+  /**
+   * @see carbon_list_at
+   */
   value_type &operator[](usz idx);
-  const value_type &operator[](usz idx) const;
 #endif
 };
 #ifdef __cplusplus
@@ -85,6 +80,12 @@ using CBN_List = CBN_List_t<void *>;
 typedef struct CBN_List_t CBN_List;
 #endif
 
+/**
+ * @brief Gets the element in the provided List at a specific index.
+ * @param T The underlying type the List was created to handle.
+ * @param l The List container.
+ * @param i The index to access.
+ */
 #define carbon_list_at_raw(T, l, i) ((T *) (l).items)[(i)]
 #define carbon_list_at(T, l, i) (CBN_ASSERT((i) < (l).size && "List index out of bounds"), CBN_ASSERT(sizeof(T) == (l).stride && "List type doesn't match"), carbon_list_at_raw(T, l, i))
 
