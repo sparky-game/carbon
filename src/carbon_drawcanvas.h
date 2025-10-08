@@ -48,7 +48,7 @@ typedef struct CBN_DrawCanvas {
   /**
    * @see carbon_drawcanvas_sprite
    */
-  void DrawSprite(const CBN_Sprite *sprite, CBN_Vec2 position);
+  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position);
   /**
    * @see carbon_drawcanvas_box
    */
@@ -146,7 +146,7 @@ CBNDEF void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz rad
  * @param sprite The sprite to draw.
  * @param position The position (top-left corner) to draw the sprite to.
  */
-CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *sprite, CBN_Vec2 position);
+CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position);
 
 /**
  * @brief Draws a box to the canvas.

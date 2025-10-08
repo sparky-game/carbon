@@ -31,8 +31,8 @@ void CBN_DrawCanvas::DrawCircle(CBN_Vec2 center, usz radius, u32 color) {
   carbon_drawcanvas_circle(*this, center, radius, color);
 }
 
-void CBN_DrawCanvas::DrawSprite(const CBN_Sprite *sprite, CBN_Vec2 position) {
-  carbon_drawcanvas_sprite(*this, sprite, position);
+void CBN_DrawCanvas::DrawSprite(const CBN_Sprite *s, CBN_Vec2 position) {
+  carbon_drawcanvas_sprite(*this, s, position);
 }
 
 void CBN_DrawCanvas::DrawBox(CBN_Rect r) {

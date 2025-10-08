@@ -174,18 +174,18 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
   }
 }
 
-void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *sprite, CBN_Vec2 position) {
+void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position) {
   if (!carbon_math_rect_contains_point(CARBON_RECT(0, 0, dc.width, dc.height), position)) return;
-  usz sp_w = CARBON_MIN(sprite->width, dc.width - position.x);
-  usz sp_h = CARBON_MIN(sprite->height, dc.height - position.y);
+  usz sw = CARBON_MIN(s->width, dc.width - position.x);
+  usz sh = CARBON_MIN(s->height, dc.height - position.y);
   u32 *p_dc = dc.pixels + (usz)(position.y * dc.width + position.x);
-  const u32 *p_sp = sprite->pixels;
-  for (usz j = 0; j < sp_h; ++j) {
-    for (usz i = 0; i < sp_w; ++i) {
-      carbon_drawcanvas__alpha_blending(p_dc, *p_sp);
-      ++p_dc, ++p_sp;
+  const u32 *p_s = s->pixels;
+  for (usz j = 0; j < sh; ++j) {
+    for (usz i = 0; i < sw; ++i) {
+      carbon_drawcanvas__alpha_blending(p_dc, *p_s);
+      ++p_dc, ++p_s;
     }
-    p_dc += dc.width - sp_w;
+    p_dc += dc.width - sw;
   }
 }
 
