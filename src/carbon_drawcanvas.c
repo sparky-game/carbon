@@ -79,7 +79,7 @@ void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 col
   }
 }
 
-CARBON_INLINE u8 carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
+CARBON_INLINE bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
   *lx = *hx = v1.x;
   *ly = *hy = v1.y;
   if (*lx > v2.x) *lx = v2.x;
@@ -98,7 +98,7 @@ CARBON_INLINE u8 carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_V
   return true;
 }
 
-CARBON_INLINE u8 carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
+CARBON_INLINE bool carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
   *det = (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
   *u1  = (v2.y - v3.y) * (x - v3.x) + (v3.x - v2.x) * (y - v3.y);
   *u2  = (v3.y - v1.y) * (x - v3.x) + (v1.x - v3.x) * (y - v3.y);
@@ -119,7 +119,7 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
   }
 }
 
-CARBON_INLINE u8 carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
+CARBON_INLINE bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
   i32 oy1 = r.y;
