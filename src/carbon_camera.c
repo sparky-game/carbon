@@ -71,6 +71,9 @@ CARBON_INLINE void carbon_camera__update_view(CBN_Camera *c) {
 CARBON_INLINE void carbon_camera__translate(CBN_Camera *c, CBN_Vec3 axis, f32 amount) {
   if (!c || !amount) return;
   CBN_Vec3 r = carbon_math_vec3_rotate(axis, c->rotation);
+  r.y = 0;
+  if (carbon_math_vec3_len_squared(r) <= CARBON_EPS) r = CARBON_VEC3_FORWARD;
+  else r = carbon_math_vec3_norm(r);
   CBN_Vec3 v = carbon_math_vec3_scale(r, amount);
   c->position = carbon_math_vec3_add(c->position, v);
   carbon_camera__update_view(c);
@@ -104,5 +107,6 @@ void carbon_camera_yaw(CBN_Camera *c, f32 amount) {
 }
 
 void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
-  carbon_camera__rotate(c, CARBON_VEC3_RIGHT, amount);
+  CBN_Vec3 v = carbon_math_vec3_rotate(CARBON_VEC3_RIGHT, c->rotation);
+  carbon_camera__rotate(c, v, amount);
 }
