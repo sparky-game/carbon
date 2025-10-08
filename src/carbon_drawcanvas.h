@@ -74,6 +74,14 @@ typedef struct CBN_DrawCanvas {
    */
   static u32 HSVToRGB(f32 h, f32 s, f32 v);
   /**
+   * @see carbon_drawcanvas_color_scale
+   */
+  static u32 ColorScale(u32 color, f32 s);
+  /**
+   * @see carbon_drawcanvas_color_add
+   */
+  static u32 ColorAdd(u32 c1, u32 c2);
+  /**
    * @see carbon_drawcanvas_at
    */
   u32 &operator()(usz i, usz j) const;
@@ -198,6 +206,22 @@ CBNDEF usz carbon_drawcanvas_get_text_height(usz size);
  * @return 32-bit RGBA color value (A always set to 0xff).
  */
 CBNDEF u32 carbon_drawcanvas_hsv_to_rgb(f32 h, f32 s, f32 v);
+
+/**
+ * @brief Scales the 32-bit RGBA color by the specified scalar value (A is left untouched).
+ * @param color The color.
+ * @param s The scalar value.
+ * @return The scaled 32-bit RGBA color.
+ */
+CBNDEF u32 carbon_drawcanvas_color_scale(u32 color, f32 s);
+
+/**
+ * @brief Adds up two 32-bit RGBA colors together.
+ * @param c1 The first color.
+ * @param c2 The second color.
+ * @return The resultant 32-bit RGBA color.
+ */
+CBNDEF u32 carbon_drawcanvas_color_add(u32 c1, u32 c2);
 
 // Local Variables:
 // mode: c++
