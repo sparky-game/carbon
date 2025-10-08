@@ -7,6 +7,10 @@ CBN_Vec3 CBN_Vec3::Cross(const CBN_Vec3 &v) const {
   return carbon_math_vec3_cross(*this, v);
 }
 
+CBN_Vec3 CBN_Vec3::Lerp(const CBN_Vec3 &v, f32 t) const {
+  return carbon_math_vec3_lerp(*this, v, t);
+}
+
 const char *CBN_Vec3::ToString(void) const {
   return carbon_math_vec3_to_cstr(*this);
 }

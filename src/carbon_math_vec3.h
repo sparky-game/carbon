@@ -112,6 +112,10 @@ typedef union CBN_Vec3 {
    */
   CBN_Vec3 Cross(const CBN_Vec3 &v) const;
   /**
+   * @see carbon_math_vec3_lerp
+   */
+  CBN_Vec3 Lerp(const CBN_Vec3 &v, f32 t) const;
+  /**
    * @see carbon_math_vec3_to_cstr
    */
   const char *ToString(void) const;
@@ -276,6 +280,15 @@ CBNDEF CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v);
  * @return The serialized 3D vector as `(X, Y, Z)`.
  */
 CBNDEF char *carbon_math_vec3_to_cstr(CBN_Vec3 v);
+
+/**
+ * @brief Performs a linear interpolation between two 3D vectors based on the given weighting.
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @param t A value [0..1] indicating the weight of `v`.
+ * @return The interpolated 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3_lerp(CBN_Vec3 u, CBN_Vec3 v, f32 t);
 
 /**
  * @brief Rotates the 3D vector around the X-axis by the specified angle (in degrees).

@@ -49,6 +49,12 @@ char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
   return carbon_string_fmt("(%.3f, %.3f, %.3f)", v.x, v.y, v.z);
 }
 
+CBN_Vec3 carbon_math_vec3_lerp(CBN_Vec3 u, CBN_Vec3 v, f32 t) {
+  return CARBON_VEC3(CARBON_LERP(u.x, v.x, t),
+                     CARBON_LERP(u.y, v.y, t),
+                     CARBON_LERP(u.z, v.z, t));
+}
+
 CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle) {
   CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC_yz(v), angle);
   return CARBON_VEC3(v.x, r.x, r.y);
