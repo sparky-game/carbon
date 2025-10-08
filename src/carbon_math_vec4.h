@@ -51,6 +51,10 @@ typedef union CBN_Vec4 {
   };
 #ifdef __cplusplus
   /**
+   * @see carbon_math_vec4_lerp
+   */
+  CBN_Vec4 Lerp(const CBN_Vec4 &v, f32 t) const;
+  /**
    * @see carbon_math_vec4_to_cstr
    */
   const char *ToString(void) const;
@@ -65,6 +69,15 @@ typedef union CBN_Vec4 {
 CBNDEF char *carbon_math_vec4_to_cstr(CBN_Vec4 v);
 
 /**
+ * @brief Performs a linear interpolation between two 4D vectors based on the given weighting.
+ * @param u The first 4D vector.
+ * @param v The second 4D vector.
+ * @param t A value [0..1] indicating the weight of `v`.
+ * @return The interpolated 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_lerp(CBN_Vec4 u, CBN_Vec4 v, f32 t);
+
+/**
  * @brief Projects a 4D point/vector into 3D Normalized Device Coordinates (NDC).
  *
  * It performs the perspective divide algorithm, mapping (x, y, z, w) in clip space
@@ -77,3 +90,7 @@ CBNDEF char *carbon_math_vec4_to_cstr(CBN_Vec4 v);
  * @return A boolean value indicating whether it projected the 4D vector successfully or not.
  */
 CBNDEF bool carbon_math_vec4_project_3d(CBN_Vec4 v, CBN_Vec3 *out_v);
+
+// Local Variables:
+// mode: c++
+// End:
