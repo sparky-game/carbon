@@ -36,7 +36,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
     line[strcspn(line, "\r")] = 0;
     line[strcspn(line, "\n")] = 0;
     CBN_SKAP_AssetGroup ag;
-    // carbon_println("%s", line);  // DEBUG
+    // CBN_DEBUG("%s", line);
     // Empty or commented line
     if (line[0] == 0 || (line[0] == '/' && line[1] == '/')) {
       ++line_n;
@@ -81,6 +81,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
           break;
         }
       }
+      // @type_dependant
       if (!type_is_valid) {
         if (!carbon_string_cmp(ag.type, "image") ||
             !carbon_string_cmp(ag.type, "img")   ||
@@ -103,7 +104,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       ag.assets = carbon_strlist_create(true);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = true;
-      // carbon_println("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);  // DEBUG
+      // CBN_DEBUG("  -> Path: `%s`, Type: `%s`", ag.path, ag.type);
     }
     // New asset in previous group
     else {
@@ -115,7 +116,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       carbon_strlist_push(&ag.assets, line);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = false;
-      // carbon_println("  -> Asset: `%s`", line);  // DEBUG
+      // CBN_DEBUG("  -> Asset: `%s`", line);
     }
     ++line_n;
   }
@@ -243,8 +244,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List
   }
 }
 
-// @type_dependant
-CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
+CARBON_INLINE void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     CBN_Image *asset = &carbon_list_at_raw(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
@@ -264,6 +264,9 @@ CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
     carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
     fwrite(asset->data, idx->blob_size, 1, fd);
   }
+}
+
+CARBON_INLINE void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
   carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
     CBN_Binary *asset = &carbon_list_at_raw(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
@@ -283,6 +286,12 @@ CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
     carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
     fwrite(asset->data, idx->blob_size, 1, fd);
   }
+}
+
+// @type_dependant
+CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
+  carbon_skap__append_blobs__images(skap, fd);
+  carbon_skap__append_blobs__binaries(skap, fd);
 }
 
 u8 carbon_skap_create(const char *decl, const char *skap) {
@@ -447,7 +456,7 @@ u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_typ
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
       CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
-      carbon_memory_free(asset.data);
+      carbon_fs_destroy_img(&asset);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));

@@ -1,7 +1,7 @@
 /*
-**  $$======================================$$
-**  ||       Sparky Asset Pack (SKAP)       ||
-**  $$======================================$$
+**  $$=====================================$$
+**  ||       Sparky AssetPack (SKAP)       ||
+**  $$=====================================$$
 */
 
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -97,15 +97,15 @@ typedef struct CBN_SKAP {
   template <typename T>
   usz CountOf(void) const;
   /**
-   * @brief carbon_sprite_manager_load_from_skap
+   * @see carbon_sprite_manager_load_from_skap
    */
   [[nodiscard]] cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const;
   /**
-   * @brief carbon_audio_load_from_skap
+   * @see carbon_audio_load_from_skap
    */
   [[nodiscard]] cbn::Opt<CBN_Audio_UID> LoadAudio(const char *name) const;
   /**
-   * @brief carbon_audio_load_stream_from_skap
+   * @see carbon_audio_load_stream_from_skap
    */
   [[nodiscard]] cbn::Opt<CBN_Audio_UID> LoadAudioStream(const char *name) const;
 private:
