@@ -36,6 +36,8 @@ typedef uintptr_t uptr;
 
 #ifdef __cplusplus
 namespace cbn {
+  template <typename T, typename U = T>
+  using Pair = std::pair<T, U>;
   template <typename... Ts>
   using Tuple = std::tuple<Ts...>;
   template <typename T>
