@@ -70,7 +70,7 @@ CBNDEF CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v);
 /**
  * @brief Creates a quaternion from the given 3D axis and angle.
  * @param axis The 3D axis.
- * @param angle The angle of rotation.
+ * @param angle The angle of rotation, in degrees.
  * @return The resultant quaternion.
  */
 CBNDEF CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
