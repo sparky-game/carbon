@@ -114,7 +114,7 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
     for (usz i = lx; i <= hx; ++i) {
       i32 u1, u2, det;
       if (!carbon_drawcanvas__triangle_barycentric(v1, v2, v3, i, j, &u1, &u2, &det)) continue;
-      carbon_drawcanvas_at(dc, i, j) = color;
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), color);
     }
   }
 }
