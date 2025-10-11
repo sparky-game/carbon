@@ -55,18 +55,6 @@ usz CBN_DrawCanvas::TextHeight(usz size) {
   return carbon_drawcanvas_get_text_height(size);
 }
 
-u32 CBN_DrawCanvas::HSVToRGB(f32 h, f32 s, f32 v) {
-  return carbon_drawcanvas_hsv_to_rgb(h, s, v);
-}
-
-u32 CBN_DrawCanvas::ColorScale(u32 color, f32 s) {
-  return carbon_drawcanvas_color_scale(color, s);
-}
-
-u32 CBN_DrawCanvas::ColorAdd(u32 c1, u32 c2) {
-  return carbon_drawcanvas_color_add(c1, c2);
-}
-
 u32 &CBN_DrawCanvas::operator()(usz i, usz j) const {
   return carbon_drawcanvas_at(*this, i, j);
 }

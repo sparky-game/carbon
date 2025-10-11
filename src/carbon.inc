@@ -38,6 +38,7 @@
 #include "carbon_strlist.h"
 #include "carbon_binary.h"
 #include "carbon_sprite.h"
+#include "carbon_color.h"
 #include "carbon_drawcanvas.h"
 #include "carbon_camera.h"
 #include "carbon_fs.h"
