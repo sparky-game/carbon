@@ -241,6 +241,17 @@ namespace cbn {
     }
     constexpr auto Lookup = carbon_sprite_manager_lookup;
   }
+  namespace mesh_mgr {
+    using UID = CBN_Mesh_UID;
+    constexpr auto Init     = carbon_mesh_manager_init;
+    constexpr auto Shutdown = carbon_mesh_manager_shutdown;
+    template <typename... Args>
+    [[nodiscard]] constexpr auto Load(Args &&... args) {
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_mesh_manager_load(std::forward<Args>(args))...);
+      else return carbon_mesh_manager_load(std::forward<Args>(args)...);
+    }
+    constexpr auto Lookup = carbon_mesh_manager_lookup;
+  }
   namespace win {
     using KeyCode     = CBN_KeyCode;
     using MouseButton = CBN_MouseButton;

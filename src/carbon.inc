@@ -46,6 +46,7 @@
 #include "carbon_net.h"
 #include "carbon_audio.h"
 #include "carbon_sprite_manager.h"
+#include "carbon_mesh_manager.h"
 #include "carbon_nn.h"
 #include "carbon_win.h"
 #include "carbon_test_manager.h"
