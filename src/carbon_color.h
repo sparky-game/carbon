@@ -19,6 +19,16 @@
 CBNDEF u32 carbon_color_from_hsv(f32 h, f32 s, f32 v);
 
 /**
+ * @brief Transforms 32-bit RGBA color into HSV.
+ * @param color The color.
+ * @return 3D vector holding the HSV data:
+ *   .x := Hue, in [0..360] range.
+ *   .y := Saturation, in [0..1] range.
+ *   .z := Value, in [0..1] range.
+ */
+CBNDEF CBN_Vec3 carbon_color_to_hsv(u32 color);
+
+/**
  * @brief Scales the 32-bit RGBA color by the specified scalar value (A is left untouched).
  * @param color The color.
  * @param s The scalar value.
@@ -33,3 +43,10 @@ CBNDEF u32 carbon_color_scale(u32 color, f32 s);
  * @return The resultant 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_add(u32 c1, u32 c2);
+
+/**
+ * @brief Computes the complementary color of the one provided (32-bit RGBA).
+ * @param color The color.
+ * @return The complementary 32-bit RGBA color.
+ */
+CBNDEF u32 carbon_color_complementary(u32 color);

@@ -16,6 +16,26 @@ u32 carbon_color_from_hsv(f32 h, f32 s, f32 v) {
   return ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | ((255 & 0xff) << 0);
 }
 
+CBN_Vec3 carbon_color_to_hsv(u32 color) {
+  CBN_Vec3 hsv = {0};
+  f32 r = ((color >> 24) & 0xff) / 255.f;
+  f32 g = ((color >> 16) & 0xff) / 255.f;
+  f32 b = ((color >> 8)  & 0xff) / 255.f;
+  f32 min = CARBON_MIN3(r, g, b), max = CARBON_MAX3(r, g, b), delta = max - min;
+  hsv.z = max;
+  if (delta < CARBON_EPS || max <= 0) {
+    hsv.x = hsv.y = 0;
+    return hsv;
+  }
+  hsv.y = delta/max;
+  if (r >= max) hsv.x = (g - b)/delta;
+  else if (g >= max) hsv.x = 2 + (b - r)/delta;
+  else hsv.x = 4 + (r - g)/delta;
+  hsv.x *= 60;
+  if (hsv.x < 0) hsv.x += 360;
+  return hsv;
+}
+
 u32 carbon_color_scale(u32 color, f32 s) {
   f32 r = CARBON_CLAMP(((color >> 24) & 0xff) * s, 0, 255);
   f32 g = CARBON_CLAMP(((color >> 16) & 0xff) * s, 0, 255);
@@ -30,4 +50,10 @@ u32 carbon_color_add(u32 c1, u32 c2) {
   u32 b = CARBON_CLAMP(((c1 >> 8)  & 0xff) + ((c2 >> 8)  & 0xff), 0, 255);
   u32 a = CARBON_CLAMP(((c1 >> 0)  & 0xff) + ((c2 >> 0)  & 0xff), 0, 255);
   return (r << 24) | (g << 16) | (b << 8) | a;
+}
+
+u32 carbon_color_complementary(u32 color) {
+  CBN_Vec3 hsv = carbon_color_to_hsv(color);
+  hsv.x = carbon_math_fmod(hsv.x + 180, 360);
+  return carbon_color_from_hsv(hsv.x, hsv.y, hsv.z);
 }

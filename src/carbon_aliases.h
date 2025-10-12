@@ -184,9 +184,11 @@ namespace cbn {
     const auto LevDist    = carbon_string_lev_dist;
   }
   namespace color {
-    const auto FromHSV = carbon_color_from_hsv;
-    const auto Scale   = carbon_color_scale;
-    const auto Add     = carbon_color_add;
+    const auto FromHSV       = carbon_color_from_hsv;
+    const auto ToHSV         = carbon_color_to_hsv;
+    const auto Scale         = carbon_color_scale;
+    const auto Add           = carbon_color_add;
+    const auto Complementary = carbon_color_complementary;
   }
   namespace fs {
     const auto Exists     = carbon_fs_exists;
