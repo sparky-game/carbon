@@ -51,6 +51,8 @@ CARBON_COMPILER_DIAG_END;
 #endif
 
 static RGFW_window *carbon_win__handle;
+static usz *carbon_win__xtable;
+static usz *carbon_win__ytable;
 static u32 carbon_win__max_fps;
 static u32 carbon_win__curr_fps;
 static u32 carbon_win__fps;
@@ -168,6 +170,22 @@ CARBON_INLINE RGFW_mouseButton carbon_win__map_mouse_buttons(const CBN_MouseButt
   }
 }
 
+CARBON_INLINE void carbon_win__rebuild_xtable(usz dst_w, usz src_w) {
+  carbon_win__xtable = (usz *) carbon_memory_realloc(carbon_win__xtable, dst_w * sizeof(usz));
+  const f32 sf = (f32) src_w / dst_w;
+  for (usz i = 0; i < dst_w; ++i) {
+    carbon_win__xtable[i] = CARBON_MIN(i * sf, src_w - 1);
+  }
+}
+
+CARBON_INLINE void carbon_win__rebuild_ytable(usz dst_h, usz src_h) {
+  carbon_win__ytable = (usz *) carbon_memory_realloc(carbon_win__ytable, dst_h * sizeof(usz));
+  const f32 sf = (f32) src_h / dst_h;
+  for (usz j = 0; j < dst_h; ++j) {
+    carbon_win__ytable[j] = CARBON_MIN(j * sf, src_h - 1);
+  }
+}
+
 CARBON_INLINE void carbon_win__resize_callback(RGFW_window *win, RGFW_rect r) {
   // TODO: investigate the height offset thing (-28) in other systems
   CBN_DEBUG("r = (%d, %d, %d, %d - 28)", r.x, r.y, r.w, r.h);
@@ -195,6 +213,8 @@ void carbon_win_open(const CBN_DrawCanvas dc, const char *title) {
   RGFW_window_setMinSize(carbon_win__handle, RGFW_AREA(w, h + 28));
   i32 gcd = carbon_math_egcd(w, h);
   RGFW_window_setAspectRatio(carbon_win__handle, RGFW_AREA(w/gcd, h/gcd));
+  carbon_win__rebuild_xtable(w, w);
+  carbon_win__rebuild_ytable(h, h);
   CBN_INFO("Opened a %$x%$ window", $(w), $(h));
   RGFW_setWindowResizeCallback(carbon_win__resize_callback);
   RGFW_setKeyCallback(carbon_win__key_callback);
@@ -202,6 +222,8 @@ void carbon_win_open(const CBN_DrawCanvas dc, const char *title) {
 }
 
 void carbon_win_close(void) {
+  carbon_memory_free(carbon_win__xtable);
+  carbon_memory_free(carbon_win__ytable);
   if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
   carbon_win__dl_close();
@@ -251,7 +273,7 @@ u32 carbon_win_get_fps(void) {
   return carbon_win__fps;
 }
 
-CARBON_INLINE void carbon_win__resize_buf(void) {
+CARBON_INLINE void carbon_win__resize_buf(const CBN_DrawCanvas dc) {
   RGFW_window *w = carbon_win__handle;
   if (w->bufferSize.w == (u32) w->r.w && w->bufferSize.h == (u32) w->r.h) return;
   w->bufferSize.w = w->r.w;
@@ -260,26 +282,27 @@ CARBON_INLINE void carbon_win__resize_buf(void) {
   const usz sz = w->bufferSize.w * w->bufferSize.h * 4;
   w->buffer = (u8 *) carbon_memory_realloc(w->buffer, sz);
   carbon_memory_set(w->buffer, 0, sz);
+  carbon_win__rebuild_xtable(w->bufferSize.w, dc.width);
+  carbon_win__rebuild_ytable(w->bufferSize.h, dc.height);
 }
 
 CARBON_INLINE void carbon_win__upscale_nearest_neighbor(const CBN_DrawCanvas dc) {
   const u32 * restrict src = dc.pixels;
-  const usz src_w = dc.width, src_h = dc.height;
+  const usz src_w = dc.width;
   u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
   const usz dst_w = carbon_win__handle->bufferSize.w, dst_h = carbon_win__handle->bufferSize.h;
-  const f32 sf = (f32) src_h / dst_h;
   for (usz j = 0; j < dst_h; ++j) {
-    const usz y = CARBON_MIN(j * sf, src_h - 1);
+    const usz y = carbon_win__ytable[j];
     const u32 *r = src + y * src_w;
     for (usz i = 0; i < dst_w; ++i) {
-      const usz x = CARBON_MIN(i * sf, src_w - 1);
+      const usz x = carbon_win__xtable[i];
       *dst++ = carbon_math_bswap32(r[x]);
     }
   }
 }
 
 void carbon_win_update(const CBN_DrawCanvas dc) {
-  carbon_win__resize_buf();
+  carbon_win__resize_buf(dc);
   carbon_win__upscale_nearest_neighbor(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
