@@ -65,6 +65,14 @@ struct CBN_Camera {
    */
   void MoveRight(f32 amount);
   /**
+   * @see carbon_camera_move_up
+   */
+  void MoveUp(f32 amount);
+  /**
+   * @see carbon_camera_move_down
+   */
+  void MoveDown(f32 amount);
+  /**
    * @see carbon_camera_yaw
    */
   void Yaw(f32 amount);
@@ -150,6 +158,20 @@ CBNDEF void carbon_camera_move_left(CBN_Camera *c, f32 amount);
  * @param amount The amount to move.
  */
 CBNDEF void carbon_camera_move_right(CBN_Camera *c, f32 amount);
+
+/**
+ * @brief Moves the Camera up (+Y) by the given amount.
+ * @param c The Camera object.
+ * @param amount The amount to move.
+ */
+CBNDEF void carbon_camera_move_up(CBN_Camera *c, f32 amount);
+
+/**
+ * @brief Moves the Camera down (-Y) by the given amount.
+ * @param c The Camera object.
+ * @param amount The amount to move.
+ */
+CBNDEF void carbon_camera_move_down(CBN_Camera *c, f32 amount);
 
 /**
  * @brief Adjusts the Camera's yaw (Y-axis) by the given amount.

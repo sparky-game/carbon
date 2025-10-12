@@ -101,6 +101,14 @@ void carbon_camera_move_right(CBN_Camera *c, f32 amount) {
   carbon_camera__translate_xz(c, CARBON_VEC3_RIGHT, amount);
 }
 
+void carbon_camera_move_up(CBN_Camera *c, f32 amount) {
+  carbon_camera__translate(c, CARBON_VEC3_UP, amount);
+}
+
+void carbon_camera_move_down(CBN_Camera *c, f32 amount) {
+  carbon_camera__translate(c, CARBON_VEC3_DOWN, amount);
+}
+
 CARBON_INLINE void carbon_camera__update_rotation(CBN_Camera *c) {
   const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(CARBON_VEC3_UP, c->yaw);
   const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(CARBON_VEC3_RIGHT, q_yaw);

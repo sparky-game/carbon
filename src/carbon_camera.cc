@@ -47,6 +47,14 @@ void CBN_Camera::MoveRight(f32 amount) {
   carbon_camera_move_right(this, amount);
 }
 
+void CBN_Camera::MoveUp(f32 amount) {
+  carbon_camera_move_up(this, amount);
+}
+
+void CBN_Camera::MoveDown(f32 amount) {
+  carbon_camera_move_down(this, amount);
+}
+
 void CBN_Camera::Yaw(f32 amount) {
   carbon_camera_yaw(this, amount);
 }
