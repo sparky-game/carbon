@@ -270,9 +270,9 @@ CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
  * @param x The first number.
  * @param y The second number.
  * @return An indicator of the comparison result:
- *           - If x < y, then -1.
- *           - If x > y, then +1.
- *           - If x ± ε ≈ y, then 0.
+ *   - If x < y, then -1.
+ *   - If x > y, then +1.
+ *   - If x ± ε ≈ y, then 0.
  */
 CBNDEF i8 carbon_math_cmp(f32 x, f32 y);
 
