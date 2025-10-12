@@ -13,9 +13,10 @@
 
 CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
   return (CBN_DrawCanvas) {
-    .pixels = (u32 *) carbon_memory_alloc(width * height * sizeof(u32)),
-    .width = width,
-    .height = height
+    .pixels  = (u32 *) carbon_memory_alloc(width * height * sizeof(u32)),
+    .zbuffer = (f32 *) carbon_memory_alloc(width * height * sizeof(f32)),
+    .width   = width,
+    .height  = height
   };
 }
 
@@ -25,12 +26,14 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
     return;
   }
   carbon_memory_free(dc->pixels);
+  carbon_memory_free(dc->zbuffer);
   carbon_memory_set(dc, 0, sizeof(*dc));
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
   for (usz i = 0; i < dc.width * dc.height; ++i) {
     dc.pixels[i] = color;
+    dc.zbuffer[i] = 1;
   }
 }
 
@@ -119,6 +122,24 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
   }
 }
 
+void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
+  usz lx, hx, ly, hy;
+  if (!carbon_drawcanvas__triangle_norm(dc, CARBON_VEC_xy(v1), CARBON_VEC_xy(v2), CARBON_VEC_xy(v3), &lx, &hx, &ly, &hy)) return;
+  for (usz j = ly; j <= hy; ++j) {
+    for (usz i = lx; i <= hx; ++i) {
+      i32 u1, u2, det;
+      if (!carbon_drawcanvas__triangle_barycentric(CARBON_VEC_xy(v1), CARBON_VEC_xy(v2), CARBON_VEC_xy(v3), i, j, &u1, &u2, &det)) continue;
+      f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
+      f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
+      usz idx = j * dc.width + i;
+      if (z < dc.zbuffer[idx]) {
+        dc.zbuffer[idx] = z;
+        carbon_drawcanvas__alpha_blending(&dc.pixels[idx], color);
+      }
+    }
+  }
+}
+
 CARBON_INLINE bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
@@ -186,6 +207,131 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 p
       ++p_dc, ++p_s;
     }
     p_dc += dc.width - sw;
+  }
+}
+
+typedef struct {
+  CBN_Vec3 world;
+  CBN_Vec4 clip;
+  CBN_Vec3 screen;
+} Vertex3D;  // TODO: find a better name for this struct
+
+CARBON_INLINE void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, Vertex3D *out_vs) {
+  const CBN_Mat4 M = carbon_math_mat4_model(t.position, carbon_math_quat_from_euler(t.rotation), carbon_math_vec3_scale(t.scale, 0.5));
+  const CBN_Mat4 V = carbon_camera_get_view(c);
+  const CBN_Mat4 P = carbon_camera_get_proj(c);
+  const CBN_Mat4 MVP = carbon_math_mat4_mult(P, carbon_math_mat4_mult(V, M));
+  for (usz i = 0; i < m->metadata.vertices_count; ++i) {
+    CBN_Vec4 v = CARBON_VEC4_3(m->vertices[i], 1);
+    out_vs[i].world = CARBON_VEC3_V(carbon_math_mat4_mult_vec4(M, v));
+    out_vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
+  }
+}
+
+CARBON_INLINE Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
+  // Intersects edge (a -> b) against plane (z + w = 0).
+  f32 n = -(a.clip.z + a.clip.w);
+  f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
+  f32 t = 0;
+  if (carbon_math_abs(d) > CARBON_EPS) t = n / d;
+  t = CARBON_CLAMP(t, 0, 1);
+  return (Vertex3D) {
+    .world = carbon_math_vec3_lerp(a.world, b.world, t),
+    .clip = carbon_math_vec4_lerp(a.clip, b.clip, t)
+  };
+}
+
+CARBON_INLINE usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vertex3D v3, Vertex3D *out_poly) {
+  // Sutherland-Hodgman polygon clipping algorithm
+  Vertex3D in[] = {v1, v2, v3};
+  Vertex3D out[4];
+  usz out_count = 0;
+  for (usz i = 0; i < 3; ++i) {
+    Vertex3D a = in[i];
+    Vertex3D b = in[(i + 1) % 3];
+    bool is_in_a = a.clip.z + a.clip.w >= 0;
+    bool is_in_b = b.clip.z + b.clip.w >= 0;
+    if (is_in_a && is_in_b)       out[out_count++] = b;
+    else if (is_in_a && !is_in_b) out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
+    else if (!is_in_a && is_in_b) {
+      out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
+      out[out_count++] = b;
+    }
+  }
+  for (usz i = 0; i < out_count; ++i) out_poly[i] = out[i];
+  return out_count;
+}
+
+CARBON_INLINE bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
+  if (v.w <= 0) return false;
+  CBN_Vec3 ndc;
+  if (!carbon_math_vec4_project_3d(v, &ndc)) return false;
+  ndc.x = (ndc.x + 1)/2 * dc.width;
+  ndc.y = (1 - (ndc.y + 1)/2) * dc.height;
+  *out_v = ndc;
+  return true;
+}
+
+CARBON_INLINE u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, CBN_Vec3 L) {
+  static const f32 n_a = 0.2;
+  const u32 k_a = carbon_color_scale(color, n_a);
+  const CBN_Vec3 N = carbon_math_vec3_norm(carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1)));
+  const f32 n_d = CARBON_MAX(0, carbon_math_vec3_dot(N, L));
+  const u32 k_d = carbon_color_scale(color, n_d);
+  return carbon_color_add(k_a, k_d);
+}
+
+CARBON_INLINE void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
+  if (vs_count < 3) return;
+  for (usz i = 1; i + 1 < vs_count; ++i) {
+    Vertex3D p1 = vs[0], p2 = vs[i], p3 = vs[i+1];
+    if (!carbon_drawcanvas__clip_to_screen_space(dc, p1.clip, &p1.screen)) continue;
+    if (!carbon_drawcanvas__clip_to_screen_space(dc, p2.clip, &p2.screen)) continue;
+    if (!carbon_drawcanvas__clip_to_screen_space(dc, p3.clip, &p3.screen)) continue;
+    u32 shade = carbon_drawcanvas__flat_shading(color, p1.world, p2.world, p3.world, light);
+    carbon_drawcanvas_triangle_3d(dc, p1.screen, p2.screen, p3.screen, shade);
+  }
+}
+
+void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
+  if (!c || !m || !m->vertices || !m->faces) return;
+  Vertex3D vs[m->metadata.vertices_count];
+  carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
+  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_ONE);
+  for (usz f = 0; f < m->metadata.faces_count; ++f) {
+    const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
+    const Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];
+    Vertex3D pvs[4];
+    usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
+  }
+}
+
+void carbon_drawcanvas_plane_xz(CBN_DrawCanvas dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
+  if (!c) return;
+  size = carbon_math_vec2_scale(size, 0.5);
+  Vertex3D vs[4];
+  vs[0].world = CARBON_VEC3(center.x - size.x, center.y, center.z - size.y);
+  vs[1].world = CARBON_VEC3(center.x + size.x, center.y, center.z - size.y);
+  vs[2].world = CARBON_VEC3(center.x + size.x, center.y, center.z + size.y);
+  vs[3].world = CARBON_VEC3(center.x - size.x, center.y, center.z + size.y);
+  const CBN_Mat4 V = carbon_camera_get_view(c);
+  const CBN_Mat4 P = carbon_camera_get_proj(c);
+  const CBN_Mat4 MVP = carbon_math_mat4_mult(P, V);
+  for (usz i = 0; i < CARBON_ARRAY_LEN(vs); ++i) {
+    CBN_Vec4 v = CARBON_VEC4_3(vs[i].world, 1);
+    vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
+  }
+  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_ONE);
+  {// First triangle
+    Vertex3D pvs[4];
+    usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[1], vs[2], pvs);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
+  }
+  {// Second triangle
+    Vertex3D pvs[4];
+    usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[2], vs[3], pvs);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
   }
 }
 

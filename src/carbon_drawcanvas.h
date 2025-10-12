@@ -9,11 +9,20 @@
 
 #pragma once
 
+typedef struct {
+  CBN_Vec3 position;
+  CBN_Vec3 rotation;
+  CBN_Vec3 scale;
+} CBN_Transform;
+
+typedef struct CBN_Camera CBN_Camera;  // Forward declaration
+
 /**
  * @brief Represents a 2D canvas to draw things to.
  */
 typedef struct CBN_DrawCanvas {
   u32 *pixels;
+  f32 *zbuffer;
   usz width;
   usz height;
 #ifdef __cplusplus
@@ -38,6 +47,10 @@ typedef struct CBN_DrawCanvas {
    */
   void DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
   /**
+   * @see carbon_drawcanvas_triangle_3d
+   */
+  void DrawTriangle3D(CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color);
+  /**
    * @see carbon_drawcanvas_rect
    */
   void DrawRect(CBN_Rect r, u32 color);
@@ -49,6 +62,14 @@ typedef struct CBN_DrawCanvas {
    * @see carbon_drawcanvas_sprite
    */
   void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position);
+  /**
+   * @see carbon_drawcanvas_mesh
+   */
+  void DrawMesh(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color);
+  /**
+   * @see carbon_drawcanvas_plane_xz
+   */
+  void DrawPlaneXZ(const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color);
   /**
    * @see carbon_drawcanvas_box
    */
@@ -120,6 +141,16 @@ CBNDEF void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, 
 CBNDEF void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
 
 /**
+ * @brief Draws a 3D triangle to the canvas with a specific color.
+ * @param dc The DrawCanvas object.
+ * @param v1 The first vertex of the triangle.
+ * @param v2 The second vertex of the triangle.
+ * @param v3 The third vertex of the triangle.
+ * @param color The color to draw the triangle with.
+ */
+CBNDEF void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color);
+
+/**
  * @brief Draws a rectangle to the canvas with a specific color.
  * @param dc The DrawCanvas object.
  * @param r The rectangle to draw.
@@ -143,6 +174,26 @@ CBNDEF void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz rad
  * @param position The position (top-left corner) to draw the sprite to.
  */
 CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position);
+
+/**
+ * @brief Draws a 3D mesh to the canvas.
+ * @param dc The DrawCanvas object.
+ * @param c The 3D camera used to look into the world.
+ * @param mesh The 3D mesh to draw.
+ * @param t The 3D transform to draw the mesh with.
+ * @param color The color to draw the mesh's faces with.
+ */
+CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color);
+
+/**
+ * @brief Draws a 3D XZ-axis-aligned plane to the canvas.
+ * @param dc The DrawCanvas object.
+ * @param c The 3D camera used to look into the world.
+ * @param center The position of the center of the plane.
+ * @param size The size of the plane (size.x -> X, size.y -> Z).
+ * @param color The color to draw the plane with.
+ */
+CBNDEF void carbon_drawcanvas_plane_xz(CBN_DrawCanvas dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color);
 
 /**
  * @brief Draws a box to the canvas.

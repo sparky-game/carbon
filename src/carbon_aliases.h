@@ -35,6 +35,8 @@ namespace cbn {
   using Binary     = CBN_Binary;
   using Image      = CBN_Image;
   using Sprite     = CBN_Sprite;
+  using Transform  = CBN_Transform;
+  using Mesh       = CBN_Mesh;
   using DrawCanvas = CBN_DrawCanvas;
   using Camera     = CBN_Camera;
   using SKAP       = CBN_SKAP;

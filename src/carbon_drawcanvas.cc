@@ -23,6 +23,10 @@ void CBN_DrawCanvas::DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 col
   carbon_drawcanvas_triangle(*this, v1, v2, v3, color);
 }
 
+void CBN_DrawCanvas::DrawTriangle3D(CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
+  carbon_drawcanvas_triangle_3d(*this, v1, v2, v3, color);
+}
+
 void CBN_DrawCanvas::DrawRect(CBN_Rect r, u32 color) {
   carbon_drawcanvas_rect(*this, r, color);
 }
@@ -33,6 +37,14 @@ void CBN_DrawCanvas::DrawCircle(CBN_Vec2 center, usz radius, u32 color) {
 
 void CBN_DrawCanvas::DrawSprite(const CBN_Sprite *s, CBN_Vec2 position) {
   carbon_drawcanvas_sprite(*this, s, position);
+}
+
+void CBN_DrawCanvas::DrawMesh(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
+  carbon_drawcanvas_mesh(*this, c, m, t, color);
+}
+
+void CBN_DrawCanvas::DrawPlaneXZ(const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
+  carbon_drawcanvas_plane_xz(*this, c, center, size, color);
 }
 
 void CBN_DrawCanvas::DrawBox(CBN_Rect r) {
