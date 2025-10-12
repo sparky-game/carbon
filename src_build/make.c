@@ -18,6 +18,7 @@
 #include "../src/carbon_skap.c"
 #include "../src/carbon_crypto.c"
 #include "../src/carbon_hashmap.c"
+#include "../src/carbon_mesh.c"
 
 #define HDR_FILE "carbon.h"
 #define HDR_FILE_TPL HDR_FILE ".in"
