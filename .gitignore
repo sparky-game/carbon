@@ -7,6 +7,8 @@ make
 make.exe
 carbon.h
 carbon-*/
+src_build/*.bin
+src_build/*.exe
 src_test/test
 src_test/test.exe
 examples/*
