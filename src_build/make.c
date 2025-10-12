@@ -25,6 +25,7 @@
 #define SRC_DIR "src"
 #define TEST_DIR "src_test"
 #define TEST_BIN "./" TEST_DIR "/test"
+#define SRC_BUILD_DIR "src_build"
 #define EXAMPLES_DIR "examples"
 #define BUILD_DIR "carbon-" CARBON_VERSION_RAW "-" CARBON_TARGET_OS "-" CARBON_CPU_ARCH
 
@@ -166,12 +167,13 @@ static void clean(void) {
   rm_dash_r(TEST_BIN);
   rm_dash_r(TEST_BIN ".exe");
   rm_dash_r(TEST_DIR "/*.o");
+  rm_dash_r(SRC_BUILD_DIR "/*.exe");
+  rm_dash_r(SRC_BUILD_DIR "/*.bin");
+  rm_dash_r(SRC_BUILD_DIR "/*.dSYM");
   rm_dash_r(EXAMPLES_DIR "/*.exe");
   rm_dash_r(EXAMPLES_DIR "/*.bin");
-  rm_dash_r(EXAMPLES_DIR "/*.bin.old");
   rm_dash_r(EXAMPLES_DIR "/*.png");
   rm_dash_r(EXAMPLES_DIR "/*.skap*");
-  rm_dash_r(EXAMPLES_DIR "/*.inl");
   rm_dash_r(EXAMPLES_DIR "/*.dSYM");
   rm_dash_r(BUILD_DIR);
   rm_dash_r(BUILD_DIR ".tgz");
