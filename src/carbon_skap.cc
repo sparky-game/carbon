@@ -31,6 +31,12 @@ cbn::Opt<CBN_Sprite_UID> CBN_SKAP::LoadSprite(const char *name) const {
   return uid;
 }
 
+cbn::Opt<CBN_Mesh_UID> CBN_SKAP::LoadMesh(const char *name) const {
+  CBN_Mesh_UID uid;
+  if (!carbon_mesh_manager_load_from_skap(name, this, &uid)) return {};
+  return uid;
+}
+
 cbn::Opt<CBN_Audio_UID> CBN_SKAP::LoadAudio(const char *name) const {
   CBN_Audio_UID uid;
   if (!carbon_audio_load_from_skap(name, this, &uid)) return {};

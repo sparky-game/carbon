@@ -16,12 +16,13 @@
 typedef enum {
   CARBON_SKAP_ASSET_TYPE_IMAGE,
   CARBON_SKAP_ASSET_TYPE_BINARY,
+  CARBON_SKAP_ASSET_TYPE_MESH,
   CARBON_SKAP_ASSET_TYPE_COUNT
 } CBN_SKAP_AssetType;
 
 #ifdef __cplusplus
 template <typename T>
-concept CBN_SKAP_AssetType_t = cbn::meta::Allowed<T, CBN_Image, CBN_Binary>;
+concept CBN_SKAP_AssetType_t = cbn::meta::Allowed<T, CBN_Image, CBN_Binary, CBN_Mesh>;
 #endif
 
 typedef struct {
@@ -29,6 +30,7 @@ typedef struct {
   union {
     CBN_Image_Metadata as_img;
     CBN_Binary_Metadata as_bin;
+    CBN_Mesh_Metadata as_mesh;
   };
 } CBN_SKAP_AssetMetadata;
 
@@ -100,6 +102,10 @@ typedef struct CBN_SKAP {
    * @see carbon_sprite_manager_load_from_skap
    */
   [[nodiscard]] cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const;
+  /**
+   * @see carbon_mesh_manager_load_from_skap
+   */
+  [[nodiscard]] cbn::Opt<CBN_Mesh_UID> LoadMesh(const char *name) const;
   /**
    * @see carbon_audio_load_from_skap
    */
