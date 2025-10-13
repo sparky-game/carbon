@@ -286,7 +286,8 @@ CARBON_INLINE void carbon_win__resize_buf(const CBN_DrawCanvas dc) {
   carbon_win__rebuild_ytable(w->bufferSize.h, dc.height);
 }
 
-CARBON_INLINE void carbon_win__upscale_nearest_neighbor(const CBN_DrawCanvas dc) {
+CARBON_INLINE void carbon_win__upscale_buf(const CBN_DrawCanvas dc) {
+  // Nearest-neighbor interpolation algorithm
   const u32 * restrict src = dc.pixels;
   const usz src_w = dc.width;
   u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
@@ -303,7 +304,7 @@ CARBON_INLINE void carbon_win__upscale_nearest_neighbor(const CBN_DrawCanvas dc)
 
 void carbon_win_update(const CBN_DrawCanvas dc) {
   carbon_win__resize_buf(dc);
-  carbon_win__upscale_nearest_neighbor(dc);
+  carbon_win__upscale_buf(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
