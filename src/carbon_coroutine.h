@@ -9,23 +9,16 @@
 
 #pragma once
 
-typedef struct {
-  void *rsp;   // Stack pointer
-  void *rsbp;  // Stack base pointer
-} CBN_Coroutine_CTX;
-
-typedef enum {
-  CBN_COROUTINE_SLEEP_MODE_NONE,
-  CBN_COROUTINE_SLEEP_MODE_READ,
-  CBN_COROUTINE_SLEEP_MODE_WRITE
-} CBN_Coroutine_SleepMode;
-
 /**
  * @brief Obtains the ID of the coroutine that governs the current scope.
  * @return The ID.
  */
 CBNDEF usz carbon_coroutine_id(void);
 
+/**
+ * @brief Gets the number of coroutines still alive (being asleep is a form of being alive).
+ * @return A counter of the currently alive coroutines.
+ */
 CBNDEF usz carbon_coroutine_alive(void);
 
 /**
@@ -39,7 +32,29 @@ CBNDEF usz carbon_coroutine_alive(void);
  */
 CBNDEF void carbon_coroutine_go(void (*f)(void *), void *arg);
 
+/**
+ * @brief Puts the current coroutine to sleep, and switches execution to the next one.
+ */
 CBNDEF void carbon_coroutine_yield(void);
+
+/**
+ * @brief Yields the current coroutine until a non-blocking socket has data to read.
+ * @param fd The file descriptor of a non-blocking socket.
+ */
 CBNDEF void carbon_coroutine_sleep_read(i32 fd);
+
+/**
+ * @brief Yields the current coroutine until a non-blocking socket is ready to accept data to write.
+ * @param fd The file descriptor of a non-blocking socket.
+ */
 CBNDEF void carbon_coroutine_sleep_write(i32 fd);
+
+/**
+ * @brief Wakes up a specific coroutine by ID.
+ *
+ * A coroutine may be sleeping due to `carbon_coroutine_sleep_read` or
+ * `carbon_coroutine_sleep_write` function calls;
+ *
+ * @param id The ID.
+ */
 CBNDEF void carbon_coroutine_wakeup(usz id);

@@ -152,6 +152,17 @@
 #define CARBON_COROUTINE__ALLOC_STACK_FAILED MAP_FAILED
 #endif
 
+typedef enum {
+  CBN_COROUTINE_SLEEP_MODE_NONE,
+  CBN_COROUTINE_SLEEP_MODE_READ,
+  CBN_COROUTINE_SLEEP_MODE_WRITE
+} CBN_Coroutine_SleepMode;
+
+typedef struct {
+  void *rsp;   // Stack pointer
+  void *rsbp;  // Stack base pointer
+} CBN_Coroutine_CTX;
+
 static usz carbon_coroutine__current;
 static CBN_List carbon_coroutine__active;  // CBN_List<usz>
 static CBN_List carbon_coroutine__dead;    // CBN_List<usz>

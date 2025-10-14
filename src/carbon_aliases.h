@@ -85,7 +85,7 @@ namespace cbn {
     constexpr auto Set     = carbon_memory_set;
     constexpr auto Free    = carbon_memory_free;
   }
-  namespace crt {
+  namespace co {
     constexpr auto ID    = carbon_coroutine_id;
     constexpr auto Alive = carbon_coroutine_alive;
     constexpr void Go(void (*f)(void *), void *arg = 0) { carbon_coroutine_go(f, arg); }
