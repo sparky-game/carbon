@@ -22,7 +22,6 @@ typedef struct {
   usz texcoords_count;
   usz normals_count;
   usz faces_count;
-  // usz edges_count;
 } CBN_Mesh_Metadata;
 
 typedef struct CBN_Mesh {
@@ -30,7 +29,6 @@ typedef struct CBN_Mesh {
   CBN_Vec2 *texcoords;
   CBN_Vec3 *normals;
   usz (*faces)[CARBON_MESH_FACE_COMPS][3];
-  // usz (*edges)[2];
   CBN_Mesh_Metadata metadata;
 #ifdef __cplusplus
   /**
