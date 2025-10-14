@@ -104,3 +104,15 @@ CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 far) {
   m.items[3][2] = -1;
   return m;
 }
+
+CBN_Mat4 carbon_math_mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
+  CBN_Mat4 m = carbon_math_mat4_zero();
+  m.items[0][0] =  2 / (right - left);
+  m.items[1][1] =  2 / (top - bottom);
+  m.items[2][2] = -2 / (far - near);
+  m.items[3][0] = - (right + left) / (right - left);
+  m.items[3][1] = - (top + bottom) / (top - bottom);
+  m.items[3][2] = - (far + near)   / (far - near);
+  m.items[3][3] = 1;
+  return m;
+}

@@ -99,3 +99,15 @@ CBNDEF CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation);
  * @return The 4x4 matrix.
  */
 CBNDEF CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 far);
+
+/**
+ * @brief Creates a 4x4 orthographic projection matrix.
+ * @param left The left coordinate of the orthographic frustum.
+ * @param right The right coordinate of the orthographic frustum.
+ * @param bottom The bottom coordinate of the orthographic frustum.
+ * @param top The top coordinate of the orthographic frustum.
+ * @param near The near clipping plane distance.
+ * @param far The far clipping plane distance.
+ * @return The 4x4 matrix.
+ */
+CBNDEF CBN_Mat4 carbon_math_mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
