@@ -228,8 +228,7 @@ void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd)
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
 #endif
-    break;
-  }
+  } break;
   case CBN_COROUTINE_SLEEP_MODE_WRITE: {
 #ifdef _WIN32
     CBN_WARN("Polling not implemented for Windows");
@@ -244,8 +243,7 @@ void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd)
     carbon_list_push(&carbon_coroutine__polls, &pfd);
     carbon_list_remove(&carbon_coroutine__active, carbon_coroutine__current);
 #endif
-    break;
-  }
+  } break;
   default: CARBON_UNREACHABLE;
   }
   if (carbon_coroutine__polls.size) {
