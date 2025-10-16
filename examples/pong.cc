@@ -130,9 +130,9 @@ namespace pong {
   };
 
   struct Entity : Drawable {
-    cbn::Vec2 position;
-    cbn::Vec2 velocity;
-    explicit Entity(const cbn::Vec2 &p, const cbn::Vec2 &v) : position{p}, velocity{v} {}
+    cbn::math::Vec2 position;
+    cbn::math::Vec2 velocity;
+    explicit Entity(const cbn::math::Vec2 &p, const cbn::math::Vec2 &v) : position{p}, velocity{v} {}
     virtual void Update([[maybe_unused]] const f64 dt) {}
   };
 
@@ -168,7 +168,7 @@ namespace pong {
   };
 
   struct Racket final : Entity {
-    explicit Racket(const cbn::Vec2 &p) : Entity{p, CARBON_VEC2(0, speed)} {}
+    explicit Racket(const cbn::math::Vec2 &p) : Entity{p, CARBON_VEC2(0, speed)} {}
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
       canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), color);
@@ -479,8 +479,8 @@ namespace pong {
       Ball m_Ball;
       Player<PlayerSide::Left> m_P1;
       Player<PlayerSide::Right> m_P2;
-      cbn::Chrono m_StallingTimer {};
-      cbn::Chrono m_VictoryTimer {};
+      cbn::time::Chrono m_StallingTimer {};
+      cbn::time::Chrono m_VictoryTimer {};
       bool m_Playing {false};
       bool m_AI {true};
 

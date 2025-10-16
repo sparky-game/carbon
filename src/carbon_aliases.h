@@ -11,12 +11,6 @@
 
 #ifdef __cplusplus
 namespace cbn {
-  using Vec2 = CBN_Vec2;
-  using Vec3 = CBN_Vec3;
-  using Vec4 = CBN_Vec4;
-  using Quat = CBN_Quat;
-  using Mat4 = CBN_Mat4;
-  using Rect = CBN_Rect;
   template <typename T>
   using List = CBN_List_t<T>;
   template <typename T>
@@ -29,9 +23,6 @@ namespace cbn {
   using RingBuffer = CircularQueue<T>;
   template <typename T>
   using SlotMap = CBN_SlotMap_t<T>;
-  using Chrono     = CBN_Chrono;
-  using StrBuilder = CBN_StrBuilder;
-  using StrView    = CBN_StrView;
   using Binary     = CBN_Binary;
   using Image      = CBN_Image;
   using Sprite     = CBN_Sprite;
@@ -95,6 +86,12 @@ namespace cbn {
     constexpr auto Wakeup     = carbon_coroutine_wakeup;
   }
   namespace math {
+    using Vec2 = CBN_Vec2;
+    using Vec3 = CBN_Vec3;
+    using Vec4 = CBN_Vec4;
+    using Quat = CBN_Quat;
+    using Mat4 = CBN_Mat4;
+    using Rect = CBN_Rect;
     constexpr auto Sin = carbon_math_sin;
     constexpr auto Cos = carbon_math_cos;
     constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
@@ -155,6 +152,7 @@ namespace cbn {
     }
   }
   namespace time {
+    using Chrono = CBN_Chrono;
     namespace literals {
       consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
       consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
@@ -170,9 +168,11 @@ namespace cbn {
     constexpr auto Get = carbon_time_get, now = Get;
   }
   namespace str {
+    using Builder = CBN_StrBuilder;
+    using View    = CBN_StrView;
     namespace literals {
-      inline CBN_StrView operator""_sv(const char *s, usz len) {
-        return cbn::StrView::make(s, len);
+      inline View operator""_sv(const char *s, usz len) {
+        return View::make(s, len);
       }
     }
     constexpr auto Length     = carbon_string_len,   len  = Length;
