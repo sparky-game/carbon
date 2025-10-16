@@ -17,12 +17,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../thirdparty/stb_image_write/stb_image_write.h"
 
-#ifdef _WIN32
-#define CARBON_FS_PATH_MAX_LEN 256
-#else
-#define CARBON_FS_PATH_MAX_LEN 4096
-#endif
-#define CARBON_FS_PATMAT_MAX_STRUCTS 4
+#define CARBON_FS__PATMAT_MAX_STRUCTS 4
 
 u8 carbon_fs_exists(const char *file) {
 #ifdef _WIN32
@@ -258,8 +253,8 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   CBN_PatternMatchedFiles out;
   carbon_memory_set(&out, 0, sizeof(out));
 #ifdef _WIN32
-  static usz counts[CARBON_FS_PATMAT_MAX_STRUCTS];
-  static char *results[CARBON_FS_PATMAT_MAX_STRUCTS][MAX_PATH];
+  static usz counts[CARBON_FS__PATMAT_MAX_STRUCTS];
+  static char *results[CARBON_FS__PATMAT_MAX_STRUCTS][MAX_PATH];
   HANDLE h_find;
   WIN32_FIND_DATA find_data;
   for (usz j = 0; j < counts[i]; ++j) free(results[i][j]);
@@ -283,10 +278,10 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
   out.count = counts[i];
   out.files = results[i];
   ++i;
-  if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
+  if (i >= CARBON_FS__PATMAT_MAX_STRUCTS) i = 0;
   return out;
 #else
-  static glob_t xs[CARBON_FS_PATMAT_MAX_STRUCTS];
+  static glob_t xs[CARBON_FS__PATMAT_MAX_STRUCTS];
   glob_t *x = &xs[i];
   carbon_memory_set(x, 0, sizeof(*x));
   switch (glob(pattern, GLOB_TILDE, 0, x)) {
@@ -301,7 +296,7 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
     return out;
   }
   ++i;
-  if (i >= CARBON_FS_PATMAT_MAX_STRUCTS) i = 0;
+  if (i >= CARBON_FS__PATMAT_MAX_STRUCTS) i = 0;
   out.count = x->gl_pathc;
   out.files = x->gl_pathv;
   return out;

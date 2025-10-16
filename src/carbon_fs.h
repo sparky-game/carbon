@@ -9,6 +9,12 @@
 
 #pragma once
 
+#ifdef _WIN32
+#define CARBON_FS_PATH_MAX_LEN 256
+#else
+#define CARBON_FS_PATH_MAX_LEN 4096
+#endif
+
 #define carbon_fs_pattern_match_foreach(pmf) for (struct { usz i; char *f; } it = {0, (pmf).files[0]}; it.i < (pmf).count; ++it.i, it.i < (pmf).count ? it.f = (pmf).files[it.i] : it.f)
 
 typedef enum {
