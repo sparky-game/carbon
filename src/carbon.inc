@@ -10,6 +10,7 @@
 #include "carbon_metaprogramming.h"
 #include "carbon_version.h"
 #include "carbon_test_entry.h"
+#include "carbon_defer.h"
 #include "carbon_assert.h"
 #include "carbon_memory.h"
 #include "carbon_coroutine.h"
