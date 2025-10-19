@@ -28,6 +28,8 @@ namespace cbn::meta {
    */
   template <typename... Ts>
   struct AlwaysFalse : False {};
+  template <typename... Ts>
+  constexpr auto AlwaysFalse_v = AlwaysFalse<Ts...>::value;
 
   /**
    */
