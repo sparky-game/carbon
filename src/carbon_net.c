@@ -4,7 +4,6 @@
 #include "carbon.inc"
 
 #define CARBON_NET__RESOLVE_DNS_MAX_BUFFERS 4
-#define CARBON_NET__IPV4_MAX_LEN 16
 
 #ifdef _WIN32
 CARBON_INLINE PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
@@ -17,8 +16,7 @@ CARBON_INLINE PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
 }
 #else
 CARBON_INLINE struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *domain) {
-  struct addrinfo *res = 0, hints;
-  carbon_memory_set(&hints, 0, sizeof(hints));
+  struct addrinfo *res = 0, hints = {0};
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   i32 status = getaddrinfo(domain, 0, &hints, &res);
@@ -30,11 +28,11 @@ CARBON_INLINE struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *doma
 }
 #endif
 
-char *carbon_net_resolve_dns_to_ip(const char *domain) {
+char *carbon_net_resolve_dns_to_ipv4(const char *domain) {
   static usz i = 0;
-  static char xs[CARBON_NET__RESOLVE_DNS_MAX_BUFFERS][CARBON_NET__IPV4_MAX_LEN];
+  static char xs[CARBON_NET__RESOLVE_DNS_MAX_BUFFERS][CARBON_NET_IPV4_MAX_LEN];
   char *x = xs[i];
-  carbon_memory_set(x, 0, CARBON_NET__IPV4_MAX_LEN);
+  carbon_memory_set(x, 0, CARBON_NET_IPV4_MAX_LEN);
 #ifdef _WIN32
   extern PSTR RtlIpv4AddressToStringA(const IP4_ADDRESS *, PSTR);
   PDNS_RECORD addrs = carbon_net__resolve_dns_to_addrs(domain);
@@ -64,7 +62,7 @@ char *carbon_net_resolve_dns_to_ip(const char *domain) {
     break;
   default: CARBON_UNREACHABLE;
   }
-  inet_ntop(addrs->ai_addr->sa_family, addr, x, CARBON_NET__IPV4_MAX_LEN);
+  inet_ntop(addrs->ai_addr->sa_family, addr, x, CARBON_NET_IPV4_MAX_LEN);
   freeaddrinfo(addrs);
 #endif
   ++i;

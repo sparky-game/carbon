@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   }
   const char *domain = CARBON_SHIFT_ARGS(argc, argv);
   carbon_println("Domain: %$", $(domain));
-  const char *ip = carbon_net_resolve_dns_to_ip(domain);
+  const char *ip = carbon_net_resolve_dns_to_ipv4(domain);
   carbon_println("IP: %$", $(ip));
   return 0;
 }
