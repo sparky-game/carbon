@@ -5,6 +5,15 @@
 
 #define CARBON_NET__RESOLVE_DNS_MAX_BUFFERS 4
 
+bool carbon_net_is_valid_ipv4(const char *ip) {
+  struct sockaddr_in addr = {0};
+  if (0 >= inet_pton(AF_INET, ip, &addr.sin_addr)) {
+    CBN_ERROR("unable to parse the specified IP (`%s`)", ip);
+    return false;
+  }
+  return true;
+}
+
 #ifdef _WIN32
 CARBON_INLINE PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
   PDNS_RECORD addrs = 0;
