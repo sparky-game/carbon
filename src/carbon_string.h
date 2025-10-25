@@ -18,6 +18,14 @@ CBNDEF void carbon_string_strip_substr(char *s, const char *sub);
 CBNDEF bool carbon_string_starts_with_substr(const char *s, const char *sub);
 CBNDEF bool carbon_string_ends_with_substr(const char *s, const char *sub);
 CBNDEF bool carbon_string_is_number(const char *s);
+
+/**
+ * @brief Converts the specified string to an equivalent 32-bit integer.
+ * @param s The string.
+ * @return The equivalent 32-bit integer (0 if unable to convert).
+ */
+CBNDEF i32 carbon_string_to_number(const char *s);
+
 CBNDEF bool carbon_string_has_char(const char *s, char c);
 
 /**

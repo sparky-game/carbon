@@ -72,6 +72,14 @@ bool carbon_string_is_number(const char *s) {
   return true;
 }
 
+i32 carbon_string_to_number(const char *s) {
+  char *end;
+  i32 ret = strtol(s, &end, 10);
+  if (end == s) CBN_ERROR("unable to convert string to number (no digits found)");
+  else if (*end != 0) CBN_ERROR("unable to convert string to number (invalid char `%c`)", *end);
+  return ret;
+}
+
 bool carbon_string_has_char(const char *s, char c) {
   const char *c_ptr = strchr(s, c);
   if (!c_ptr) return false;
