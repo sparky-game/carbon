@@ -67,9 +67,9 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       if (first) first = false;
       if (2 != sscanf(line,
                       "[\"%"
-                      CARBON_EXPAND_AND_QUOTE(CARBON_SKAP_DECL_FILE_MAX_PATH_LEN)
+                      CARBON_QUOTE(CARBON_SKAP_DECL_FILE_MAX_PATH_LEN)
                       "[^\"]\" as %"
-                      CARBON_EXPAND_AND_QUOTE(CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN)
+                      CARBON_QUOTE(CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN)
                       "[^]]",
                       ag.path, ag.type)) {
         CBN_ERROR("on line %zu, syntax error; expected expression `[\"<PATH>\" as <TYPE>]`", line_n);

@@ -10,11 +10,11 @@
 #pragma once
 
 #define CARBON_RUN_ALL carbon_test_manager_run
-#define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_EXPAND_AND_QUOTE(f), __FILE__)
+#define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_QUOTE(f), __FILE__)
 #define CARBON_TEST_FQN(ctx_name, unit_name) ctx_name ## _test_ ## unit_name
 #define CARBON_TEST_DECL(ctx_name, unit_name) static u8 CARBON_TEST_FQN(ctx_name, unit_name)(void)
 #define CARBON_TEST_REG_DECL(ctx_name, unit_name)                       \
-  __attribute__((constructor)) static void CARBON_EXPAND_AND_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
+  __attribute__((constructor)) static void CARBON_PASTE(register_, CARBON_TEST_FQN(ctx_name, unit_name))(void)
 
 #define CARBON_TEST(ctx_name, unit_name)                        \
   CARBON_TEST_DECL(ctx_name, unit_name);                        \

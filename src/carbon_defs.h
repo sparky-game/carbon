@@ -38,10 +38,10 @@
 #define CARBON_OK true
 #define CARBON_KO false
 
-#define CARBON_QUOTE(x) #x
-#define CARBON_PASTE(x, y) x ## y
-#define CARBON_EXPAND_AND_QUOTE(x) CARBON_QUOTE(x)
-#define CARBON_EXPAND_AND_PASTE(x, y) CARBON_PASTE(x, y)
+#define CARBON_QUOTE(x) CARBON_QUOTE__2_ELECTRIC_BOOGALOO(x)
+#define CARBON_QUOTE__2_ELECTRIC_BOOGALOO(x) #x
+#define CARBON_PASTE(x, y) CARBON_PASTE__2_ELECTRIC_BOOGALOO(x, y)
+#define CARBON_PASTE__2_ELECTRIC_BOOGALOO(x, y) x ## y
 #define CARBON_MACRO_IS_EMPTY(x) ((0 - x - 1) == 1 && (x - 0) != -2)
 #define CARBON_NOTUSED(x) (void)(x)
 #define CARBON_UNUSED(x) CARBON_NOTUSED(x)
@@ -93,14 +93,14 @@
 #if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)
 #error Version information not valid
 #elif CARBON_VERSION_PATCH != 0
-#define CARBON_VERSION_RAW                                              \
-  CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)                         \
-    "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR)                   \
-    "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_PATCH) CARBON_VERSION_EXTRA
+#define CARBON_VERSION_RAW                                      \
+  CARBON_QUOTE(CARBON_VERSION_MAJOR)                            \
+  "." CARBON_QUOTE(CARBON_VERSION_MINOR)                        \
+  "." CARBON_QUOTE(CARBON_VERSION_PATCH) CARBON_VERSION_EXTRA
 #elif CARBON_VERSION_PATCH == 0
-#define CARBON_VERSION_RAW                                              \
-  CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MAJOR)                         \
-    "." CARBON_EXPAND_AND_QUOTE(CARBON_VERSION_MINOR) CARBON_VERSION_EXTRA
+#define CARBON_VERSION_RAW                                      \
+  CARBON_QUOTE(CARBON_VERSION_MAJOR)                            \
+  "." CARBON_QUOTE(CARBON_VERSION_MINOR) CARBON_VERSION_EXTRA
 #endif
 
 #if defined(__amd64__) || defined(_M_AMD64)
