@@ -127,7 +127,7 @@ namespace cbn::meta {
   template <typename T>
   auto AddLVRef__try(...) -> TID<T>;
   template <typename T>
-  struct AddLVRef : decltype(AddLVRef__try<T>(0)) {};
+  struct AddLVRef : typeof(AddLVRef__try<T>(0)) {};
   template <typename T>
   using AddLVRef_t = AddLVRef<T>::type;
 
@@ -138,7 +138,7 @@ namespace cbn::meta {
   template <typename T>
   auto AddRVRef__try(...) -> TID<T>;
   template <typename T>
-  struct AddRVRef : decltype(AddRVRef__try<T>(0)) {};
+  struct AddRVRef : typeof(AddRVRef__try<T>(0)) {};
   template <typename T>
   using AddRVRef_t = AddRVRef<T>::type;
 

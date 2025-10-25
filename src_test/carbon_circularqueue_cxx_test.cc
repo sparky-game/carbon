@@ -8,7 +8,7 @@
 TEST(make_free) {
   auto cq = cbn::CircularQueue<i32>::make(5);
   carbon_should_be(5, cq.capacity);
-  carbon_should_be(sizeof(decltype(cq)::value_type), cq.stride);
+  carbon_should_be(sizeof(typeof(cq)::value_type), cq.stride);
   carbon_should_be(0, cq.size);
   carbon_should_not_be_p(0, cq.items);
   cq.Free();
@@ -21,7 +21,7 @@ TEST(make_free) {
 
 TEST(push_element) {
   auto cq = cbn::CircularQueue<i32>::make(5);
-  decltype(cq)::value_type i = 7;
+  typeof(cq)::value_type i = 7;
   cq.Push(i);
   carbon_should_be(1, cq.size);
   carbon_should_be(i, cq[0]);
@@ -31,7 +31,7 @@ TEST(push_element) {
 
 TEST(pop_element) {
   auto cq = cbn::CircularQueue<i32>::make(5);
-  decltype(cq)::value_type x = 1, i = 7;
+  typeof(cq)::value_type x = 1, i = 7;
   cq.Push(x);
   cq.Push(i);
   carbon_should_be(2, cq.size);

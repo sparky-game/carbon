@@ -8,7 +8,7 @@
 TEST(make_free) {
   auto l = cbn::List<i32>::make();
   carbon_should_be(0, l.capacity);
-  carbon_should_be(sizeof(decltype(l)::value_type), l.stride);
+  carbon_should_be(sizeof(typeof(l)::value_type), l.stride);
   carbon_should_be(0, l.size);
   carbon_should_be_p(0, l.items);
   l.Free();
@@ -21,7 +21,7 @@ TEST(make_free) {
 
 TEST(push_element) {
   auto l = cbn::List<i32>::make();
-  decltype(l)::value_type i = 7;
+  typeof(l)::value_type i = 7;
   l.Push(i);
   carbon_should_be(1, l.size);
   carbon_should_be(i, l[0]);
@@ -31,7 +31,7 @@ TEST(push_element) {
 
 TEST(pop_element) {
   auto l = cbn::List<i32>::make();
-  decltype(l)::value_type x = 1, i = 7;
+  typeof(l)::value_type x = 1, i = 7;
   l.Push(x);
   l.Push(i);
   carbon_should_be(2, l.size);
@@ -44,7 +44,7 @@ TEST(pop_element) {
 
 TEST(find_element) {
   auto l = cbn::List<i32>::make();
-  decltype(l)::value_type i = 1, j = 7, k = 3;
+  typeof(l)::value_type i = 1, j = 7, k = 3;
   l.Push(i);
   l.Push(j);
   carbon_should_be(2, l.size);
@@ -58,7 +58,7 @@ TEST(find_element) {
 
 TEST(remove_element) {
   auto l = cbn::List<i32>::make();
-  decltype(l)::value_type i = 1, j = 7, k = 3;
+  typeof(l)::value_type i = 1, j = 7, k = 3;
   l.Push(i);
   l.Push(j);
   l.Push(k);
