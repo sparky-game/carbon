@@ -183,6 +183,7 @@ namespace cbn {
     constexpr auto StartsWith = carbon_string_starts_with_substr;
     constexpr auto EndsWith   = carbon_string_ends_with_substr;
     constexpr auto IsNumber   = carbon_string_is_number;
+    constexpr auto ToNumber   = carbon_string_to_number;
     constexpr auto LevDist    = carbon_string_lev_dist;
   }
   namespace color {
