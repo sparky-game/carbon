@@ -93,6 +93,17 @@ namespace cbn::meta {
 
   /**
    */
+  template <typename T>
+  struct RemoveRef : TID<T> {};
+  template <typename T>
+  struct RemoveRef<T &> : TID<T> {};
+  template <typename T>
+  struct RemoveRef<T &&> : TID<T> {};
+  template <typename T>
+  using RemoveRef_t = RemoveRef<T>::type;
+
+  /**
+   */
   template <usz N, typename... Ts>
   requires (sizeof...(Ts) > 0)
   struct Pick;

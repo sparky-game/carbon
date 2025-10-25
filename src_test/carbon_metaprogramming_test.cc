@@ -29,9 +29,15 @@ namespace IsFloat {
   static_assert(cbn::meta::IsFloat_v<flong>);
 }
 
+namespace RemoveRef {
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32 &>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32 &&>, i32>);
+}
+
 namespace List {
   static_assert(Types::Count() == 6);
-  static_assert(Types::Contains<f64>() and not Types::Contains<void>());
+  static_assert(Types::Contains<f64>() and not Types::Contains<u0>());
   static_assert(Types::Find<f64>() == 2 and Types::Find<char>() == Types::Count() - 1);
 }
 
