@@ -29,6 +29,25 @@ namespace IsFloat {
   static_assert(cbn::meta::IsFloat_v<flong>);
 }
 
+namespace AddRef {
+  using T = i32;
+  static_assert(!cbn::meta::IsRef_v<T>   and
+                !cbn::meta::IsLVRef_v<T> and
+                !cbn::meta::IsRVRef_v<T>);
+  using LT = cbn::meta::AddLVRef_t<T>;
+  static_assert(cbn::meta::IsRef_v<LT>   and
+                cbn::meta::IsLVRef_v<LT> and
+                !cbn::meta::IsRVRef_v<LT>);
+  using RT = cbn::meta::AddRVRef_t<T>;
+  static_assert(cbn::meta::IsRef_v<RT>    and
+                !cbn::meta::IsLVRef_v<RT> and
+                cbn::meta::IsRVRef_v<RT>);
+  using VR = cbn::meta::AddLVRef_t<u0>;
+  static_assert(!cbn::meta::IsRef_v<VR>   and
+                !cbn::meta::IsLVRef_v<VR> and
+                !cbn::meta::IsRVRef_v<VR>);
+}
+
 namespace RemoveRef {
   static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32>, i32>);
   static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32 &>, i32>);

@@ -94,6 +94,57 @@ namespace cbn::meta {
   /**
    */
   template <typename T>
+  struct IsRef : False {};
+  template <typename T>
+  struct IsRef<T &> : True {};
+  template <typename T>
+  struct IsRef<T &&> : True {};
+  template <typename T>
+  constexpr auto IsRef_v = IsRef<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct IsLVRef : False {};
+  template <typename T>
+  struct IsLVRef<T &> : True {};
+  template <typename T>
+  constexpr auto IsLVRef_v = IsLVRef<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct IsRVRef : False {};
+  template <typename T>
+  struct IsRVRef<T &&> : True {};
+  template <typename T>
+  constexpr auto IsRVRef_v = IsRVRef<T>::value;
+
+  /**
+   */
+  template <typename T>
+  auto AddLVRef__try(char) -> TID<T &>;
+  template <typename T>
+  auto AddLVRef__try(...) -> TID<T>;
+  template <typename T>
+  struct AddLVRef : decltype(AddLVRef__try<T>(0)) {};
+  template <typename T>
+  using AddLVRef_t = AddLVRef<T>::type;
+
+  /**
+   */
+  template <typename T>
+  auto AddRVRef__try(char) -> TID<T &&>;
+  template <typename T>
+  auto AddRVRef__try(...) -> TID<T>;
+  template <typename T>
+  struct AddRVRef : decltype(AddRVRef__try<T>(0)) {};
+  template <typename T>
+  using AddRVRef_t = AddRVRef<T>::type;
+
+  /**
+   */
+  template <typename T>
   struct RemoveRef : TID<T> {};
   template <typename T>
   struct RemoveRef<T &> : TID<T> {};
