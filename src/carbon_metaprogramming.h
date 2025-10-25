@@ -97,7 +97,7 @@ namespace cbn::meta {
   requires (sizeof...(Ts) > 0)
   struct Pick;
   template <usz N, typename... Ts>
-  using Pick_t = typename Pick<N, Ts...>::type;
+  using Pick_t = Pick<N, Ts...>::type;
   template <usz N, typename T, typename... Ts>
   struct Pick<N, T, Ts...> : TID<Pick_t<N-1, Ts...>> {};
   template <typename T, typename... Ts>
@@ -168,7 +168,7 @@ namespace cbn::meta {
   template <typename T, typename F>
   struct If<true, T, F> : TID<T> {};
   template <bool C, typename T, typename F>
-  using If_t = typename If<C, T, F>::type;
+  using If_t = If<C, T, F>::type;
 
   /**
    */
@@ -177,7 +177,7 @@ namespace cbn::meta {
   template <template <typename...> typename T, typename... Ts>
   struct Replace<T, List<Ts...>> : TID<T<Ts...>> {};
   template <template <typename...> typename T, typename L>
-  using Replace_t = typename Replace<T, L>::type;
+  using Replace_t = Replace<T, L>::type;
 
   /**
    */
@@ -186,7 +186,7 @@ namespace cbn::meta {
   template <template <typename...> typename F, typename... Ts>
   struct Transform<F, List<Ts...>> : TID<List<F<Ts>...>> {};
   template <template <typename...> typename F, typename L>
-  using Transform_t = typename Transform<F, L>::type;
+  using Transform_t = Transform<F, L>::type;
 
   /**
    */
@@ -199,7 +199,7 @@ namespace cbn::meta {
   template <template <typename, typename> typename F, typename I>
   struct Fold<F, I> : TID<I> {};
   template <template <typename, typename> typename F, typename I, typename... Ts>
-  using Fold_t = typename Fold<F, I, Ts...>::type;
+  using Fold_t = Fold<F, I, Ts...>::type;
 }
 #endif  // __cplusplus
 
