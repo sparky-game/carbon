@@ -55,5 +55,4 @@
 #include <utility>
 #include <optional>
 #include <functional>
-#include <type_traits>
 #endif
