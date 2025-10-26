@@ -29,6 +29,17 @@ namespace IsFloat {
   static_assert(cbn::meta::IsFloat_v<flong>);
 }
 
+namespace RemoveCV {
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<i32>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<const i32>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<volatile i32>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<const volatile i32>, i32>);
+  static_assert(!cbn::meta::Same_v<cbn::meta::RemoveCV_t<const volatile i32 *>, i32 *>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<const volatile i32 *>, const volatile i32 *>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<const i32 * volatile>, const i32 *>);
+  static_assert(cbn::meta::Same_v<cbn::meta::RemoveCV_t<i32 * const volatile>, i32 *>);
+}
+
 namespace AddRef {
   using T = i32;
   static_assert(!cbn::meta::IsRef_v<T>   and
@@ -54,6 +65,18 @@ namespace RemoveRef {
   static_assert(cbn::meta::Same_v<cbn::meta::RemoveRef_t<i32 &&>, i32>);
 }
 
+namespace Decay {
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32>, i32>);
+  static_assert(!cbn::meta::Same_v<cbn::meta::Decay_t<i32>, f32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32 &>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32 &&>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<const i32 &>, i32>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32[2]>, i32 *>);
+  static_assert(!cbn::meta::Same_v<cbn::meta::Decay_t<i32[4][2]>, i32 *>);
+  static_assert(!cbn::meta::Same_v<cbn::meta::Decay_t<i32[4][2]>, i32 **>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32[4][2]>, i32(*)[2]>);
+  static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32(i32)>, i32(*)(i32)>);
+}
 namespace List {
   static_assert(Types::Count() == 6);
   static_assert(Types::Contains<f64>() and not Types::Contains<u0>());

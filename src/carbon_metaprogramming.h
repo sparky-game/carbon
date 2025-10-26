@@ -94,6 +94,49 @@ namespace cbn::meta {
   /**
    */
   template <typename T>
+  struct IsConst : False {};
+  template <typename T>
+  struct IsConst<const T> : True {};
+  template <typename T>
+  constexpr auto IsConst_v = IsConst<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct RemoveConst : TID<T> {};
+  template <typename T>
+  struct RemoveConst<const T> : TID<T> {};
+  template <typename T>
+  using RemoveConst_t = RemoveConst<T>::type;
+
+  /**
+   */
+  template <typename T>
+  struct IsVolatile : False {};
+  template <typename T>
+  struct IsVolatile<volatile T> : True {};
+  template <typename T>
+  constexpr auto IsVolatile_v = IsVolatile<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct RemoveVolatile : TID<T> {};
+  template <typename T>
+  struct RemoveVolatile<volatile T> : TID<T> {};
+  template <typename T>
+  using RemoveVolatile_t = RemoveVolatile<T>::type;
+
+  /**
+   */
+  template <typename T>
+  struct RemoveCV : RemoveConst<RemoveVolatile_t<T>> {};
+  template <typename T>
+  using RemoveCV_t = RemoveCV<T>::type;
+
+  /**
+   */
+  template <typename T>
   struct IsRef : False {};
   template <typename T>
   struct IsRef<T &> : True {};
@@ -152,6 +195,90 @@ namespace cbn::meta {
   struct RemoveRef<T &&> : TID<T> {};
   template <typename T>
   using RemoveRef_t = RemoveRef<T>::type;
+
+  /**
+   */
+  template <typename T>
+  struct RemoveCVRef : RemoveCV<RemoveRef_t<T>> {};
+  template <typename T>
+  using RemoveCVRef_t = RemoveCVRef<T>::type;
+
+  /**
+   */
+  template <typename T>
+  auto AddPtr__try(char) -> TID<RemoveRef_t<T> *>;
+  template <typename T>
+  auto AddPtr__try(...) -> TID<T>;
+  template <typename T>
+  struct AddPtr : typeof(AddPtr__try<T>(0)) {};
+  template <typename T>
+  using AddPtr_t = AddPtr<T>::type;
+
+  /**
+   */
+  template <typename T>
+  struct IsArray : False {};
+  template <typename T>
+  struct IsArray<T[]> : True {};
+  template <typename T, usz N>
+  struct IsArray<T[N]> : True {};
+  template <typename T>
+  constexpr auto IsArray_v = IsArray<T>::value;
+
+  // TODO: implement Rank (same as std::rank)
+  // TODO: implement Extent (same as std::extent)
+
+  /**
+   * @brief Removes the first dimension of an array type.
+   *
+   * If T is an array of type X, the resultant type would be X, otherwise T is returned.
+   * If T is a ɣ-dimensional array of type X (X[][N]..{ɣ-1}..[M]), the resultant type would
+   * be of an array of ɣ-1 dimensions (X[N]..{ɣ-1}..[M]), the first of which has been discarded.
+   *
+   * @param T The type.
+   * @return The resultant type.
+   */
+  template <typename T>
+  struct RemoveExtent : TID<T> {};
+  template <typename T>
+  struct RemoveExtent<T[]> : TID<T> {};
+  template <typename T, usz N>
+  struct RemoveExtent<T[N]> : TID<T> {};
+  template <typename T>
+  using RemoveExtent_t = RemoveExtent<T>::type;
+
+  /**
+   * @brief Removes all dimensions of an array type.
+   *
+   * If T is an array of type X, the resultant type would be X, otherwise T is returned.
+   * If T is a ɣ-dimensional array of type X (X[][N]..{ɣ-1}..[M]), the resultant type would
+   * be X, where all of the ɣ array dimensions have been discarded.
+   *
+   * @param T The type.
+   * @return The resultant type.
+   */
+  template <typename T>
+  struct RemoveAllExtents : TID<T> {};
+  template <typename T>
+  using RemoveAllExtents_t = RemoveAllExtents<T>::type;
+  template <typename T>
+  struct RemoveAllExtents<T[]> : TID<RemoveAllExtents_t<T>> {};
+  template <typename T, usz N>
+  struct RemoveAllExtents<T[N]> : TID<RemoveAllExtents_t<T>> {};
+
+  /**
+   */
+  template <typename T>
+  struct IsFunc : Constant<bool, !IsConst_v<const T> and !IsRef_v<T>> {};
+  template <typename T>
+  constexpr auto IsFunc_v = IsFunc<T>::value;
+
+  /**
+   */
+  template <typename T>
+  constexpr T &&Forward(RemoveRef_t<T> &t) noexcept { return static_cast<T &&>(t); }
+  template <typename T>
+  constexpr T &&Forward(RemoveRef_t<T> &&t) noexcept = delete;
 
   /**
    */
@@ -262,6 +389,17 @@ namespace cbn::meta {
   struct Fold<F, I> : TID<I> {};
   template <template <typename, typename> typename F, typename I, typename... Ts>
   using Fold_t = Fold<F, I, Ts...>::type;
+
+  /**
+   */
+  template <typename T>
+  struct Decay : If<IsArray_v<RemoveRef_t<T>>,
+                    AddPtr_t<RemoveExtent_t<RemoveRef_t<T>>>,
+                    If_t<IsFunc_v<RemoveRef_t<T>>,
+                         AddPtr_t<RemoveRef_t<T>>,
+                         RemoveCV_t<RemoveRef_t<T>>>> {};
+  template <typename T>
+  using Decay_t = Decay<T>::type;
 }
 #endif  // __cplusplus
 
