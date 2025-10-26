@@ -209,6 +209,10 @@ namespace cbn {
     constexpr auto GetBinDir  = carbon_fs_get_bin_directory;
     constexpr auto Size       = carbon_fs_get_file_size;
   }
+  namespace net {
+    constexpr auto IsValidIPv4 = carbon_net_is_valid_ipv4;
+    constexpr auto ResolveDNS  = carbon_net_resolve_dns_to_ipv4;
+  }
   namespace audio {
     using UID = CBN_Audio_UID;
     constexpr auto Init      = carbon_audio_init;
