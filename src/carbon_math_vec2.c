@@ -38,7 +38,7 @@ f32 carbon_math_vec2_len(CBN_Vec2 v) {
 CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v) {
   f32 sqlen = carbon_math_vec2_len_squared(v);
   if (sqlen <= CARBON_EPS_SQ) return v;
-  return carbon_math_vec2_scale(v, 1/carbon_math_sqrt(sqlen));
+  return carbon_math_vec2_scale(v, carbon_math_rsqrt(sqlen));
 }
 
 CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t) {

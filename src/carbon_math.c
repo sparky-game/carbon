@@ -178,6 +178,16 @@ f32 carbon_math_sqrt(f32 x) {
 #endif
 }
 
+f32 carbon_math_rsqrt(f32 x) {
+  // Fast Inverse Square Root algorithm
+  f32 x2 = x/2, y = x;
+  i32 i = *((i32 *) &y);      // evil floating point bit level hacking
+  i = 0x5f3759df - (i >> 1);  // what the fuck?
+  y = *((f32 *) &i);
+  y *= (1.5 - (x2 * y * y));
+  return y;
+}
+
 i32 carbon_math_imod(i32 x, i32 y) {
   CBN_ASSERT(y && "division by 0 is not defined");
   return (x%y + y) % y;

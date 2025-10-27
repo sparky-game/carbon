@@ -47,9 +47,9 @@ f32 carbon_math_quat_len(CBN_Quat q) {
 }
 
 CBN_Quat carbon_math_quat_norm(CBN_Quat q) {
-  f32 len = carbon_math_quat_len(q);
-  if (!len) return q;
-  return carbon_math_quat_scale(q, 1/len);
+  f32 sqlen = carbon_math_quat_len_squared(q);
+  if (sqlen <= CARBON_EPS_SQ) return q;
+  return carbon_math_quat_scale(q, carbon_math_rsqrt(sqlen));
 }
 
 CBN_Quat carbon_math_quat_inv(CBN_Quat q) {

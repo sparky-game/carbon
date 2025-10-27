@@ -152,6 +152,13 @@ CBNDEF f32 carbon_math_snap(f32 x, f32 dx);
 CBNDEF f32 carbon_math_sqrt(f32 x);
 
 /**
+ * @brief Returns the reciprocal (multiplicative inverse) of the square root of a specified number.
+ * @param x The number.
+ * @return An approximation of 1/√x, provided x ≥ 0.
+ */
+CBNDEF f32 carbon_math_rsqrt(f32 x);
+
+/**
  * @brief Performs a true modulo operation for integers.
  * @param x The dividend.
  * @param y The divisor.

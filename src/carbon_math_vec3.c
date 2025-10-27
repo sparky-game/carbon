@@ -42,7 +42,7 @@ f32 carbon_math_vec3_len(CBN_Vec3 v) {
 CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v) {
   f32 sqlen = carbon_math_vec3_len_squared(v);
   if (sqlen <= CARBON_EPS_SQ) return v;
-  return carbon_math_vec3_scale(v, 1/carbon_math_sqrt(sqlen));
+  return carbon_math_vec3_scale(v, carbon_math_rsqrt(sqlen));
 }
 
 char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
