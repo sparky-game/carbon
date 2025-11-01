@@ -77,6 +77,16 @@ namespace Decay {
   static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32[4][2]>, i32(*)[2]>);
   static_assert(cbn::meta::Same_v<cbn::meta::Decay_t<i32(i32)>, i32(*)(i32)>);
 }
+
+namespace Forward {
+  i32 x = 69;
+  constexpr i32 cx = 420;
+  static_assert(cbn::meta::Same_v<typeof(cbn::meta::Forward<i32 &>(x)), i32 &>);
+  static_assert(cbn::meta::Same_v<typeof(cbn::meta::Forward<i32>(x)), i32 &&>);
+  static_assert(cbn::meta::Same_v<typeof(cbn::meta::Forward<const i32 &>(cx)), const i32 &>);
+  static_assert(cbn::meta::Same_v<typeof(cbn::meta::Forward<const i32>(cx)), const i32 &&>);
+}
+
 namespace List {
   static_assert(Types::Count() == 6);
   static_assert(Types::Contains<f64>() and not Types::Contains<u0>());

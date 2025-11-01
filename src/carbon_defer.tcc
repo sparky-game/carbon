@@ -15,20 +15,20 @@ struct carbon_defer__raii {
   carbon_defer__raii &operator=(const carbon_defer__raii &) = delete;
   inline ~carbon_defer__raii(void) { func(); }
   template <typename U>
-  carbon_defer__raii(U &&f) noexcept : func{std::forward<U>(f)} {}
+  carbon_defer__raii(U &&f) noexcept : func{cbn::meta::Forward<U>(f)} {}
 private:
   T func;
 };
 
 template <typename T>
 carbon_defer__raii<T> carbon_defer__impl(T &&f) noexcept {
-  return {std::forward<T>(f)};
+  return {cbn::meta::Forward<T>(f)};
 }
 
 struct carbon_defer__adder_t {
   template <typename T>
   carbon_defer__raii<cbn::meta::Decay_t<T>> operator+(T &&f) const noexcept {
-    return carbon_defer__impl(std::forward<T>(f));
+    return carbon_defer__impl(cbn::meta::Forward<T>(f));
   }
 };
 
