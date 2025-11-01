@@ -31,7 +31,8 @@ static_assert(sizeof(flong) >= sizeof(f64), "Expected flong to be at least 8 byt
 
 typedef typeof(sizeof(0)) usz;
 static_assert(sizeof(usz) >= 2, "Expected usz to be at least 2 bytes");
-typedef ssize_t isz;
+typedef ptrdiff_t isz;
+typedef intptr_t iptr;
 typedef uintptr_t uptr;
 
 #ifdef __cplusplus
