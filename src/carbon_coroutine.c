@@ -203,7 +203,7 @@ __attribute__((destructor)) CARBON_INLINE void carbon_coroutine__shutdown(void) 
   carbon_list_destroy(&carbon_coroutine__polls);
 }
 
-__attribute__((naked)) CARBON_INLINE void carbon_coroutine__restore_ctx(__attribute__((unused)) void *rsp) {
+__attribute__((naked)) void carbon_coroutine__restore_ctx(__attribute__((unused)) void *rsp) {
   __asm__ volatile (CARBON_COROUTINE__RESTORE_REGISTERS);
 }
 

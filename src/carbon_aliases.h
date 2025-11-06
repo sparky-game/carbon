@@ -79,7 +79,7 @@ namespace cbn {
   namespace co {
     constexpr auto ID    = carbon_coroutine_id;
     constexpr auto Alive = carbon_coroutine_alive;
-    constexpr void Go(void (*f)(void *), void *arg = 0) { carbon_coroutine_go(f, arg); }
+    inline void Go(void (*f)(void *), void *arg = 0) { carbon_coroutine_go(f, arg); }
     constexpr auto Yield      = carbon_coroutine_yield;
     constexpr auto SleepRead  = carbon_coroutine_sleep_read;
     constexpr auto SleepWrite = carbon_coroutine_sleep_write;
