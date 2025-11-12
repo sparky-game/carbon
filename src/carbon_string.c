@@ -64,10 +64,14 @@ bool carbon_string_ends_with_substr(const char *s, const char *sub) {
   return (s_len >= sub_len) && (!carbon_string_cmp(s + (s_len - sub_len), sub));
 }
 
+bool carbon_string_is_digit(char c) {
+  return '0' <= c && c <= '9';
+}
+
 bool carbon_string_is_number(const char *s) {
   usz len = carbon_string_len(s);
   for (usz i = 0; i < len; ++i) {
-    if (!isdigit(s[i])) return false;
+    if (!carbon_string_is_digit(s[i])) return false;
   }
   return true;
 }
