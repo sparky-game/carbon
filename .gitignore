@@ -16,3 +16,4 @@ examples/*
 !examples/*.cc
 !examples/README.org
 !examples/pong.d/
+!examples/3d.d/

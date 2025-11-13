@@ -387,6 +387,12 @@ static void examples(void) {
   CBN_INFO("Building examples...");
   examples_c_files();
   examples_cxx_files();
+  {// 3D AssetPack
+    const char *skap = EXAMPLES_DIR "/3d.skap";
+    const char *decl = EXAMPLES_DIR "/3d.d/assets.txt";
+    CBN_INFO("Creating `%$`...", $(skap));
+    CBN_ASSERT(carbon_skap_create(decl, skap));
+  }
   {// Pong AssetPack
     const char *skap = EXAMPLES_DIR "/pong.skap";
     const char *decl = EXAMPLES_DIR "/pong.d/assets.txt";
