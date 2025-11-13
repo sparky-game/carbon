@@ -85,6 +85,14 @@ CBNDEF i32 carbon_string_to_number(const char *s);
 CBNDEF bool carbon_string_has_char(const char *s, char c);
 
 /**
+ * @brief Finds the first occurrence of a specific character in a C-style string.
+ * @param s The C-style string.
+ * @param c The character.
+ * @return The pointer to the found character in `s`.
+ */
+CBNDEF char *carbon_string_get_char(const char *s, char c);
+
+/**
  * @brief Gets the Levenshtein distance between two strings.
  * @param s1 The first string.
  * @param s2 The second string.

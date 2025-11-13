@@ -85,9 +85,15 @@ i32 carbon_string_to_number(const char *s) {
 }
 
 bool carbon_string_has_char(const char *s, char c) {
-  const char *c_ptr = strchr(s, c);
+  const char *c_ptr = carbon_string_get_char(s, c);
   if (!c_ptr) return false;
   return true;
+}
+
+char *carbon_string_get_char(const char *s, char c) {
+  while (*s && *s != c) ++s;
+  if (!c || *s == c) return (char *) s;
+  return 0;
 }
 
 usz carbon_string_lev_dist(const char *s1, const char *s2) {
