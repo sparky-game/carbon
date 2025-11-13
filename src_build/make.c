@@ -7,6 +7,7 @@
 #include "../src/carbon_assert.c"
 #include "../src/carbon_memory.c"
 #include "../src/carbon_math.c"
+#include "../src/carbon_math_mat.c"
 #include "../src/carbon_log.c"
 #include "../src/carbon_time.c"
 #include "../src/carbon_list.c"
