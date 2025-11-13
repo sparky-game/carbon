@@ -99,7 +99,7 @@ char *carbon_string_get_char(const char *s, char c) {
 usz carbon_string_lev_dist(const char *s1, const char *s2) {
   usz n = carbon_string_len(s1);
   usz m = carbon_string_len(s2);
-  CBN_Matrix dp = carbon_math_mat_create(n + 1, m + 1);
+  CBN_Mat dp = carbon_math_mat_create(n + 1, m + 1);
   for (usz i = 0; i <= n; ++i) CARBON_MAT_AT(dp, i, 0) = i;
   for (usz j = 0; j <= m; ++j) CARBON_MAT_AT(dp, 0, j) = j;
   for (usz i = 1; i <= n; ++i) {

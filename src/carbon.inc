@@ -22,6 +22,7 @@
 #include "carbon_math_rect.h"
 #include "carbon_math_quat.h"
 #include "carbon_math_mat4.h"
+#include "carbon_math_mat.h"
 #include "carbon_crypto.h"
 #include "carbon_log.h"
 #include "carbon_should.h"

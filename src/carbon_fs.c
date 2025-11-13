@@ -367,10 +367,10 @@ u8 *carbon_fs_read_img_from_file_linearly(const char *file, usz *out_width, usz 
 }
 
 CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs) {
-  CBN_List img = carbon_list_create(sizeof(CBN_Matrix));
+  CBN_List img = carbon_list_create(sizeof(CBN_Mat));
   for (usz c = 0; c < chs; ++c) {
     u8 *ptr = pixels + c;
-    CBN_Matrix ch = carbon_math_mat_create(height, width);
+    CBN_Mat ch = carbon_math_mat_create(height, width);
     for (usz i = 0; i < ch.rows; ++i) {
       for (usz j = 0; j < ch.cols; ++j) {
         CARBON_MAT_AT(ch, i, j) = *ptr;
@@ -383,12 +383,12 @@ CBN_List carbon_fs_img_tensorize(u8 *pixels, usz width, usz height, usz chs) {
 }
 
 u8 *carbon_fs_img_linearize(CBN_List *img) {
-  CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
+  CBN_Mat first_ch = carbon_list_at(CBN_Mat, *img, 0);
   usz n_pixels = first_ch.rows * first_ch.cols;
   u8 *pixels = (u8 *) carbon_memory_alloc(img->size * n_pixels * sizeof(u8));
   usz i = 0, j = 0;
   for (usz k = 0; k < n_pixels; ++k) {
-    carbon_list_foreach(CBN_Matrix, *img) {
+    carbon_list_foreach(CBN_Mat, *img) {
       pixels[(k * img->size) + it.i] = (u8) CARBON_MAT_AT(it.var, i, j);
     }
     ++j;
@@ -427,7 +427,7 @@ u8 carbon_fs_write_img_to_file(const CBN_Image *img, CBN_FileFormat fmt, const c
 }
 
 u8 carbon_fs_write_tensor_img_to_file(CBN_List *img, CBN_FileFormat fmt, const char *file) {
-  CBN_Matrix first_ch = carbon_list_at(CBN_Matrix, *img, 0);
+  CBN_Mat first_ch = carbon_list_at(CBN_Mat, *img, 0);
   u8 *pixels = carbon_fs_img_linearize(img);
   u8 result = carbon_fs_write_img_to_file_linearly(pixels, fmt, first_ch.cols, first_ch.rows, img->size, file);
   carbon_memory_free(pixels);
@@ -463,7 +463,7 @@ void carbon_fs_destroy_img(CBN_Image *img) {
 }
 
 void carbon_fs_destroy_tensor_img(CBN_List *img) {
-  carbon_list_foreach(CBN_Matrix, *img) {
+  carbon_list_foreach(CBN_Mat, *img) {
     carbon_math_mat_destroy(&it.var);
   }
   carbon_list_destroy(img);

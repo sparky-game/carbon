@@ -10,7 +10,7 @@ TEST(or_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;
@@ -37,7 +37,7 @@ TEST(nor_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;
@@ -64,7 +64,7 @@ TEST(and_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;
@@ -91,7 +91,7 @@ TEST(nand_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;
@@ -118,7 +118,7 @@ TEST(xor_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;
@@ -145,7 +145,7 @@ TEST(xnor_gate) {
   CBN_NeuralNet nn = carbon_nn_create(arch, CARBON_ARRAY_LEN(arch));
   carbon_math_srand(69);
   carbon_nn_rand(nn, -1, 1);
-  CBN_Matrix train = carbon_math_mat_create(4, 3);
+  CBN_Mat train = carbon_math_mat_create(4, 3);
   for (usz i = 0; i < 2; ++i) {
     for (usz j = 0; j < 2; ++j) {
       usz row = 2*i + j;

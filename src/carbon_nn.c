@@ -8,7 +8,7 @@ CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
   CBN_NeuralNet nn = {
     .arch = arch,
     .arch_count = arch_count,
-    .ws = (CBN_Matrix *) carbon_memory_alloc((arch_count - 1) * sizeof(CBN_Matrix)),
+    .ws = (CBN_Mat *) carbon_memory_alloc((arch_count - 1) * sizeof(CBN_Mat)),
     .bs = (CBN_Row *) carbon_memory_alloc((arch_count - 1) * sizeof(CBN_Row)),
     .as = (CBN_Row *) carbon_memory_alloc(arch_count * sizeof(CBN_Row))
   };
@@ -66,7 +66,7 @@ void carbon_nn_forward(CBN_NeuralNet nn) {
   }
 }
 
-f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m) {
+f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Mat m) {
   CBN_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
   f32 c = 0;
   for (usz i = 0; i < m.rows; ++i) {
@@ -83,7 +83,7 @@ f32 carbon_nn_cost(CBN_NeuralNet nn, CBN_Matrix m) {
   return c / m.rows;
 }
 
-CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Matrix m) {
+CBN_NeuralNet carbon_nn_backprop(CBN_NeuralNet nn, CBN_Mat m) {
   CBN_ASSERT(CARBON_NN_IN(nn).cols + CARBON_NN_OUT(nn).cols == m.cols);
   CBN_NeuralNet g = carbon_nn_create(nn.arch, nn.arch_count);
   carbon_nn_zero(g);
@@ -140,7 +140,7 @@ void carbon_nn_learn(CBN_NeuralNet nn, CBN_NeuralNet g, f32 lr) {
   }
 }
 
-void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Matrix train, f32 lr) {
+void carbon_nn_fit(CBN_NeuralNet nn, usz iters, CBN_Mat train, f32 lr) {
   for (usz i = 0; i < iters; ++i) {
     CBN_NeuralNet g = carbon_nn_backprop(nn, train);
     carbon_nn_learn(nn, g, lr);
