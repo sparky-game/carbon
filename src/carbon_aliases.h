@@ -32,9 +32,11 @@ namespace cbn {
   using Camera     = CBN_Camera;
   using SKAP       = CBN_SKAP;
   constexpr auto Version = carbon_version;
+
   namespace log {
     using Color = CBN_Log_Color;
   }
+
   template <typename... Args>
   constexpr void print(const char *msg, Args &&... args) {
     carbon_print(msg, std::forward<Args>(args)...);
@@ -67,6 +69,7 @@ namespace cbn {
   constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
     carbon_ceprintln(color, msg, std::forward<Args>(args)...);
   }
+
   namespace mem {
     constexpr auto Alloc   = carbon_memory_alloc;
     constexpr auto Realloc = carbon_memory_realloc;
@@ -76,6 +79,7 @@ namespace cbn {
     constexpr auto Set     = carbon_memory_set;
     constexpr auto Free    = carbon_memory_free;
   }
+
   namespace co {
     constexpr auto ID    = carbon_coroutine_id;
     constexpr auto Alive = carbon_coroutine_alive;
@@ -85,6 +89,7 @@ namespace cbn {
     constexpr auto SleepWrite = carbon_coroutine_sleep_write;
     constexpr auto Wakeup     = carbon_coroutine_wakeup;
   }
+
   namespace math {
     using Vec2 = CBN_Vec2;
     using Vec3 = CBN_Vec3;
@@ -125,6 +130,7 @@ namespace cbn {
     constexpr void Clamp(auto &x, const auto min, const auto max) { x = ToClamped(x, min, max); }
     constexpr void Lerp(auto &a, const auto b, const auto t) { a = CARBON_LERP(a, b, t); }
   }
+
   namespace crypto {
     namespace b64 {
       constexpr auto Encode = carbon_crypto_base64_encode;
@@ -151,6 +157,7 @@ namespace cbn {
       constexpr auto AsHexString = carbon_crypto_keccak256_as_hex_cstr;
     }
   }
+
   namespace time {
     using Chrono = CBN_Chrono;
     namespace literals {
@@ -167,6 +174,7 @@ namespace cbn {
     }
     constexpr auto Get = carbon_time_get, now = Get;
   }
+
   namespace str {
     using Builder = CBN_StrBuilder;
     using View    = CBN_StrView;
@@ -186,6 +194,7 @@ namespace cbn {
     constexpr auto ToNumber   = carbon_string_to_number;
     constexpr auto LevDist    = carbon_string_lev_dist;
   }
+
   namespace color {
     constexpr auto FromHSV       = carbon_color_from_hsv;
     constexpr auto ToHSV         = carbon_color_to_hsv;
@@ -193,6 +202,7 @@ namespace cbn {
     constexpr auto Add           = carbon_color_add;
     constexpr auto Complementary = carbon_color_complementary;
   }
+
   namespace fs {
     constexpr auto Exists     = carbon_fs_exists;
     constexpr auto IsFile     = carbon_fs_is_regular_file;
@@ -209,10 +219,12 @@ namespace cbn {
     constexpr auto GetBinDir  = carbon_fs_get_bin_directory;
     constexpr auto Size       = carbon_fs_get_file_size;
   }
+
   namespace net {
     constexpr auto IsValidIPv4 = carbon_net_is_valid_ipv4;
     constexpr auto ResolveDNS  = carbon_net_resolve_dns_to_ipv4;
   }
+
   namespace audio {
     using UID = CBN_Audio_UID;
     constexpr auto Init      = carbon_audio_init;
@@ -235,6 +247,7 @@ namespace cbn {
     constexpr auto SetPitch   = carbon_audio_set_pitch;
     constexpr auto ShiftPitch = carbon_audio_shift_pitch;
   }
+
   namespace sprite_mgr {
     using UID = CBN_Sprite_UID;
     constexpr auto Init     = carbon_sprite_manager_init;
@@ -246,6 +259,7 @@ namespace cbn {
     }
     constexpr auto Lookup = carbon_sprite_manager_lookup;
   }
+
   namespace mesh_mgr {
     using UID = CBN_Mesh_UID;
     constexpr auto Init     = carbon_mesh_manager_init;
@@ -257,6 +271,7 @@ namespace cbn {
     }
     constexpr auto Lookup = carbon_mesh_manager_lookup;
   }
+
   namespace win {
     using KeyCode     = CBN_KeyCode;
     using MouseButton = CBN_MouseButton;
