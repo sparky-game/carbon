@@ -50,3 +50,17 @@ CBNDEF u32 carbon_color_add(u32 c1, u32 c2);
  * @return The complementary 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_complementary(u32 color);
+
+/**
+ * @brief Transforms 32-bit RGBA color into normalized 4D vector.
+ * @param color The color.
+ * @return The resultant normalized RGBA color (as 4D vector).
+ */
+CBNDEF CBN_Vec4 carbon_color_to_normalized(u32 color);
+
+/**
+ * @brief Transforms normalized 4D vector into 32-bit RGBA color.
+ * @param v The normalized RGBA color (as 4D vector).
+ * @return The resultant 32-bit RGBA color.
+ */
+CBNDEF u32 carbon_color_from_normalized(CBN_Vec4 v);

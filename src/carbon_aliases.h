@@ -199,11 +199,13 @@ namespace cbn {
   }
 
   namespace color {
-    constexpr auto FromHSV       = carbon_color_from_hsv;
-    constexpr auto ToHSV         = carbon_color_to_hsv;
-    constexpr auto Scale         = carbon_color_scale;
-    constexpr auto Add           = carbon_color_add;
-    constexpr auto Complementary = carbon_color_complementary;
+    constexpr auto FromHSV        = carbon_color_from_hsv;
+    constexpr auto ToHSV          = carbon_color_to_hsv;
+    constexpr auto Scale          = carbon_color_scale;
+    constexpr auto Add            = carbon_color_add;
+    constexpr auto Complementary  = carbon_color_complementary;
+    constexpr auto ToNormalized   = carbon_color_to_normalized;
+    constexpr auto FromNormalized = carbon_color_from_normalized;
   }
 
   namespace fs {
