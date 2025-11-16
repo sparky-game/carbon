@@ -97,8 +97,6 @@ namespace cbn {
     using Quat = CBN_Quat;
     using Mat4 = CBN_Mat4;
     using Rect = CBN_Rect;
-    constexpr auto Sin = carbon_math_sin;
-    constexpr auto Cos = carbon_math_cos;
     constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
     namespace literals {
       consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
@@ -107,7 +105,6 @@ namespace cbn {
       consteval f64 operator""_pi(const u64 n)   { return n * pi; }
       consteval f64 operator""_pi(const flong n) { return n * pi; }
     }
-    constexpr auto Abs = carbon_math_abs;
     template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
       if constexpr (std::floating_point<T> or std::floating_point<U>) {
@@ -123,6 +120,12 @@ namespace cbn {
       }
       else return static_cast<i32>(carbon_math_rand_between(min, max));
     }
+    constexpr auto Abs     = carbon_math_abs;
+    constexpr auto Exp     = carbon_math_exp;
+    constexpr auto Sin     = carbon_math_sin;
+    constexpr auto Cos     = carbon_math_cos;
+    constexpr auto Tan     = carbon_math_tan;
+    constexpr auto Tanh    = carbon_math_tanh;
     constexpr auto MT19937 = carbon_math_mt19937_64_rand;
     [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
       return CARBON_CLAMP(x, min, max);
