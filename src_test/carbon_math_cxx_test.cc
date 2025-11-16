@@ -46,7 +46,7 @@ TEST(vec3_sub) {
 TEST(vec2_dot) {
   CBN_Vec2 u = {{1, 2}};
   CBN_Vec2 v = {{3, 4}};
-  carbon_should_be_f(11, u * v);
+  carbon_should_be_f(11, u.Dot(v));
   return CARBON_OK;
 }
 

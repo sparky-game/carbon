@@ -19,6 +19,10 @@ f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v) {
   return u.x * v.x + u.y * v.y;
 }
 
+CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
+  return CARBON_VEC2(v.x * s, v.y * s);
+}
+
 CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max) {
   return CARBON_VEC2(CARBON_CLAMP(v.x, min.x, max.x), CARBON_CLAMP(v.y, min.y, max.y));
 }
@@ -41,12 +45,32 @@ CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v) {
   return carbon_math_vec2_scale(v, carbon_math_rsqrt(sqlen));
 }
 
-CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t) {
-  return CARBON_VEC2(CARBON_LERP(u.x, v.x, t), CARBON_LERP(u.y, v.y, t));
+CBN_Vec2 carbon_math_vec2_abs(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_abs(v.x), carbon_math_abs(v.y));
 }
 
-CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
-  return CARBON_VEC2(v.x * s, v.y * s);
+CBN_Vec2 carbon_math_vec2_exp(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_exp(v.x), carbon_math_exp(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_sin(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_sin(v.x), carbon_math_sin(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_cos(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_cos(v.x), carbon_math_cos(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_tan(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_tan(v.x), carbon_math_tan(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_tanh(CBN_Vec2 v) {
+  return CARBON_VEC2(carbon_math_tanh(v.x), carbon_math_tanh(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t) {
+  return CARBON_VEC2(CARBON_LERP(u.x, v.x, t), CARBON_LERP(u.y, v.y, t));
 }
 
 CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {

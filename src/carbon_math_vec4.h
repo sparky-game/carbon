@@ -39,6 +39,16 @@
 #define CARBON_VEC4_3(v, w) CARBON_VEC4((v).x, (v).y, (v).z, (w))
 
 /**
+ * @brief Defines an inline 4D vector whose 4 elements are equal to zero.
+ */
+#define CARBON_VEC4_ZERO CARBON_VEC4_1(0)
+
+/**
+ * @brief Defines an inline 4D vector whose 4 elements are equal to one.
+ */
+#define CARBON_VEC4_ONE CARBON_VEC4_1(1)
+
+/**
  * @brief Represents a 4D vector with four 32-bit floating-point (f32) values.
  */
 typedef union CBN_Vec4 {
@@ -51,6 +61,59 @@ typedef union CBN_Vec4 {
   };
 #ifdef __cplusplus
   /**
+   * @see carbon_math_vec4_add
+   */
+  CBN_Vec4 operator+(const CBN_Vec4 &v) const;
+  CBN_Vec4 operator+(f32 s) const;
+  friend CBN_Vec4 operator+(f32 s, const CBN_Vec4 &v);
+  CBN_Vec4 &operator+=(const CBN_Vec4 &v);
+  CBN_Vec4 &operator+=(f32 s);
+  /**
+   * @see carbon_math_vec4_sub
+   */
+  CBN_Vec4 operator-(f32 s) const;
+  friend CBN_Vec4 operator-(f32 s, const CBN_Vec4 &v);
+  /**
+   * @see carbon_math_vec4_mult
+   */
+  CBN_Vec4 operator*(const CBN_Vec4 &v) const;
+  CBN_Vec4 operator/(const CBN_Vec4 &v) const;
+  /**
+   * @see carbon_math_vec4_scale
+   */
+  CBN_Vec4 operator-(void) const;
+  CBN_Vec4 operator*(f32 s) const;
+  friend CBN_Vec4 operator*(f32 s, const CBN_Vec4 &v);
+  friend CBN_Vec4 operator/(f32 s, const CBN_Vec4 &v);
+  /**
+   * @see carbon_math_vec4_clamp
+   */
+  void Clamp(const CBN_Vec4 &min, const CBN_Vec4 &max);
+  /**
+   * @see carbon_math_vec4_abs
+   */
+  CBN_Vec4 Abs(void) const;
+  /**
+   * @see carbon_math_vec4_exp
+   */
+  CBN_Vec4 Exp(void) const;
+  /**
+   * @see carbon_math_vec4_sin
+   */
+  CBN_Vec4 Sin(void) const;
+  /**
+   * @see carbon_math_vec4_cos
+   */
+  CBN_Vec4 Cos(void) const;
+  /**
+   * @see carbon_math_vec4_tan
+   */
+  CBN_Vec4 Tan(void) const;
+  /**
+   * @see carbon_math_vec4_tanh
+   */
+  CBN_Vec4 Tanh(void) const;
+  /**
    * @see carbon_math_vec4_lerp
    */
   CBN_Vec4 Lerp(const CBN_Vec4 &v, f32 t) const;
@@ -60,6 +123,97 @@ typedef union CBN_Vec4 {
   const char *ToString(void) const;
 #endif
 } CBN_Vec4;
+
+/**
+ * @brief Adds two 4D vectors together (element-wise).
+ * @param u The first 4D vector.
+ * @param v The second 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_add(CBN_Vec4 u, CBN_Vec4 v);
+
+/**
+ * @brief Subtracts one 4D vector from another one (element-wise).
+ * @param u The first 4D vector.
+ * @param v The second 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_sub(CBN_Vec4 u, CBN_Vec4 v);
+
+/**
+ * @brief Computes the Hadamard product (element-wise multiplication) between two 4D vectors.
+ * @param u The first 4D vector.
+ * @param v The second 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_mult(CBN_Vec4 u, CBN_Vec4 v);
+
+/**
+ * @brief Computes the dot product between two 4D vectors.
+ * @param u The first 4D vector.
+ * @param v The second 4D vector.
+ * @return The resultant scalar value.
+ */
+CBNDEF f32 carbon_math_vec4_dot(CBN_Vec4 u, CBN_Vec4 v);
+
+/**
+ * @brief Scales the 4D vector by the specified scalar value.
+ * @param v The 4D vector.
+ * @param s The scalar value.
+ * @return The scaled 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_scale(CBN_Vec4 v, f32 s);
+
+/**
+ * @brief Restricts a 4D vector between a minimum and a maximum value.
+ * @param v The 4D vector.
+ * @param min The minimum value (as 4D vector).
+ * @param max The maximum value (as 4D vector).
+ * @return The restricted 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_clamp(CBN_Vec4 v, CBN_Vec4 min, CBN_Vec4 max);
+
+/**
+ * @brief Applies abs(x) function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_abs(CBN_Vec4 v);
+
+/**
+ * @brief Applies e^x function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_exp(CBN_Vec4 v);
+
+/**
+ * @brief Applies sin(x) function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_sin(CBN_Vec4 v);
+
+/**
+ * @brief Applies cos(x) function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_cos(CBN_Vec4 v);
+
+/**
+ * @brief Applies tan(x) function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_tan(CBN_Vec4 v);
+
+/**
+ * @brief Applies tanh(x) function to the 4D vector (element-wise).
+ * @param v The 4D vector.
+ * @return The resultant 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_tanh(CBN_Vec4 v);
 
 /**
  * @brief Returns the string representation of the 4D vector using default formatting.

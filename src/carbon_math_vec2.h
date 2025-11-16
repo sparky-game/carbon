@@ -29,10 +29,25 @@
  */
 #define CARBON_VEC2_P(r, phi) CARBON_VEC2(r * carbon_math_cos(phi), r * carbon_math_sin(phi))
 
+// Swizzling Operations
+#define CARBON_VEC_xx(v)   CARBON_VEC2((v).x, (v).x)
+#define CARBON_VEC_xy(v)   CARBON_VEC2((v).x, (v).y)
+#define CARBON_VEC_yx(v)   CARBON_VEC2((v).y, (v).x)
+#define CARBON_VEC_yy(v)   CARBON_VEC2((v).y, (v).y)
+#define CARBON_VEC_xxx(v)  CARBON_VEC3((v).x, (v).x, (v).x)
+#define CARBON_VEC_xxy(v)  CARBON_VEC3((v).x, (v).x, (v).y)
+#define CARBON_VEC_xyx(v)  CARBON_VEC3((v).x, (v).y, (v).x)
+#define CARBON_VEC_xyy(v)  CARBON_VEC3((v).x, (v).y, (v).y)
+#define CARBON_VEC_yxx(v)  CARBON_VEC3((v).y, (v).x, (v).x)
+#define CARBON_VEC_yxy(v)  CARBON_VEC3((v).y, (v).x, (v).y)
+#define CARBON_VEC_yyx(v)  CARBON_VEC3((v).y, (v).y, (v).x)
+#define CARBON_VEC_yyy(v)  CARBON_VEC3((v).y, (v).y, (v).y)
+#define CARBON_VEC_xyyx(v) CARBON_VEC4((v).x, (v).y, (v).y, (v).x)
+
 /**
  * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
  */
-#define CARBON_VEC2_ZERO CARBON_VEC2(0, 0)
+#define CARBON_VEC2_ZERO CARBON_VEC2_1(0)
 
 /**
  * @brief Defines an inline 2D vector which represents -X direction.
@@ -57,7 +72,10 @@
 /**
  * @brief Defines an inline 2D vector whose 2 elements are equal to one.
  */
-#define CARBON_VEC2_ONE CARBON_VEC2(1, 1)
+#define CARBON_VEC2_ONE CARBON_VEC2_1(1)
+
+typedef union CBN_Vec3 CBN_Vec3;  // Forward declaration
+typedef union CBN_Vec4 CBN_Vec4;  // Forward declaration
 
 /**
  * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
@@ -73,20 +91,36 @@ typedef union CBN_Vec2 {
    * @see carbon_math_vec2_add
    */
   CBN_Vec2 operator+(const CBN_Vec2 &v) const;
-  CBN_Vec2 operator+(const f32 s) const;
-  friend CBN_Vec2 operator+(const f32 s, const CBN_Vec2 &v);
-  void operator+=(const CBN_Vec2 &v);
+  CBN_Vec2 operator+(f32 s) const;
+  friend CBN_Vec2 operator+(f32 s, const CBN_Vec2 &v);
+  CBN_Vec2 &operator+=(const CBN_Vec2 &v);
+  CBN_Vec2 &operator+=(f32 s);
   /**
    * @see carbon_math_vec2_sub
    */
   CBN_Vec2 operator-(const CBN_Vec2 &v) const;
-  CBN_Vec2 operator-(const f32 s) const;
-  friend CBN_Vec2 operator-(const f32 s, const CBN_Vec2 &v);
+  CBN_Vec2 operator-(f32 s) const;
+  friend CBN_Vec2 operator-(f32 s, const CBN_Vec2 &v);
   void operator-=(const CBN_Vec2 &v);
+  /**
+   * @see carbon_math_vec2_mult
+   */
+  CBN_Vec2 operator*(const CBN_Vec2 &v) const;
+  CBN_Vec2 operator/(const CBN_Vec2 &v) const;
   /**
    * @see carbon_math_vec2_dot
    */
-  f32 operator*(const CBN_Vec2 &v) const;
+  f32 Dot(const CBN_Vec2 &v) const;
+  static f32 Dot(const CBN_Vec2 &u, const CBN_Vec2 &v);
+  /**
+   * @see carbon_math_vec2_scale
+   */
+  CBN_Vec2 operator-(void) const;
+  CBN_Vec2 operator*(f32 s) const;
+  friend CBN_Vec2 operator*(f32 s, const CBN_Vec2 &v);
+  void operator*=(f32 s);
+  CBN_Vec2 operator/(f32 s) const;
+  void operator/=(f32 s);
   /**
    * @see carbon_math_vec2_clamp
    */
@@ -108,18 +142,33 @@ typedef union CBN_Vec2 {
    */
   CBN_Vec2 Normalize(void) const;
   /**
+   * @see carbon_math_vec2_abs
+   */
+  CBN_Vec2 Abs(void) const;
+  /**
+   * @see carbon_math_vec2_exp
+   */
+  CBN_Vec2 Exp(void) const;
+  /**
+   * @see carbon_math_vec2_sin
+   */
+  CBN_Vec2 Sin(void) const;
+  /**
+   * @see carbon_math_vec2_cos
+   */
+  CBN_Vec2 Cos(void) const;
+  /**
+   * @see carbon_math_vec2_tan
+   */
+  CBN_Vec2 Tan(void) const;
+  /**
+   * @see carbon_math_vec2_tanh
+   */
+  CBN_Vec2 Tanh(void) const;
+  /**
    * @see carbon_math_vec2_lerp
    */
   CBN_Vec2 Lerp(const CBN_Vec2 &v, f32 t) const;
-  /**
-   * @see carbon_math_vec2_scale
-   */
-  CBN_Vec2 operator-(void) const;
-  CBN_Vec2 operator*(const f32 s) const;
-  friend CBN_Vec2 operator*(const f32 s, const CBN_Vec2 &v);
-  void operator*=(const f32 s);
-  CBN_Vec2 operator/(const f32 s) const;
-  void operator/=(const f32 s);
   /**
    * @see carbon_math_vec2_rotate
    */
@@ -133,34 +182,21 @@ typedef union CBN_Vec2 {
    */
   const char *ToString(void) const;
   // Swizzling Operations
-  constexpr auto xx(void)  const;
-  constexpr auto xy(void)  const;
-  constexpr auto yx(void)  const;
-  constexpr auto yy(void)  const;
-  constexpr auto xxx(void) const;
-  constexpr auto xxy(void) const;
-  constexpr auto xyx(void) const;
-  constexpr auto xyy(void) const;
-  constexpr auto yxx(void) const;
-  constexpr auto yxy(void) const;
-  constexpr auto yyx(void) const;
-  constexpr auto yyy(void) const;
+  CBN_Vec2 xx(void)   const;
+  CBN_Vec2 xy(void)   const;
+  CBN_Vec2 yx(void)   const;
+  CBN_Vec2 yy(void)   const;
+  CBN_Vec3 xxx(void)  const;
+  CBN_Vec3 xxy(void)  const;
+  CBN_Vec3 xyx(void)  const;
+  CBN_Vec3 xyy(void)  const;
+  CBN_Vec3 yxx(void)  const;
+  CBN_Vec3 yxy(void)  const;
+  CBN_Vec3 yyx(void)  const;
+  CBN_Vec3 yyy(void)  const;
+  CBN_Vec4 xyyx(void) const;
 #endif
 } CBN_Vec2;
-
-// Swizzling Operations
-#define CARBON_VEC_xx(v)  CARBON_VEC2((v).x, (v).x)
-#define CARBON_VEC_xy(v)  CARBON_VEC2((v).x, (v).y)
-#define CARBON_VEC_yx(v)  CARBON_VEC2((v).y, (v).x)
-#define CARBON_VEC_yy(v)  CARBON_VEC2((v).y, (v).y)
-#define CARBON_VEC_xxx(v) CARBON_VEC3((v).x, (v).x, (v).x)
-#define CARBON_VEC_xxy(v) CARBON_VEC3((v).x, (v).x, (v).y)
-#define CARBON_VEC_xyx(v) CARBON_VEC3((v).x, (v).y, (v).x)
-#define CARBON_VEC_xyy(v) CARBON_VEC3((v).x, (v).y, (v).y)
-#define CARBON_VEC_yxx(v) CARBON_VEC3((v).y, (v).x, (v).x)
-#define CARBON_VEC_yxy(v) CARBON_VEC3((v).y, (v).x, (v).y)
-#define CARBON_VEC_yyx(v) CARBON_VEC3((v).y, (v).y, (v).x)
-#define CARBON_VEC_yyy(v) CARBON_VEC3((v).y, (v).y, (v).y)
 
 /**
  * @brief Adds two 2D vectors together (element-wise).
@@ -193,6 +229,14 @@ CBNDEF CBN_Vec2 carbon_math_vec2_mult(CBN_Vec2 u, CBN_Vec2 v);
  * @return The resultant scalar value.
  */
 CBNDEF f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
+
+/**
+ * @brief Scales the 2D vector by the specified scalar value.
+ * @param v The 2D vector.
+ * @param s The scalar value.
+ * @return The scaled 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
 
 /**
  * @brief Restricts a 2D vector between a minimum and a maximum value.
@@ -232,6 +276,48 @@ CBNDEF f32 carbon_math_vec2_len(CBN_Vec2 v);
 CBNDEF CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
 
 /**
+ * @brief Applies abs(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_abs(CBN_Vec2 v);
+
+/**
+ * @brief Applies e^x function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_exp(CBN_Vec2 v);
+
+/**
+ * @brief Applies sin(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_sin(CBN_Vec2 v);
+
+/**
+ * @brief Applies cos(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_cos(CBN_Vec2 v);
+
+/**
+ * @brief Applies tan(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_tan(CBN_Vec2 v);
+
+/**
+ * @brief Applies tanh(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_tanh(CBN_Vec2 v);
+
+/**
  * @brief Performs a linear interpolation between two 2D vectors based on the given weighting.
  * @param u The first 2D vector.
  * @param v The second 2D vector.
@@ -239,14 +325,6 @@ CBNDEF CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
  * @return The interpolated 2D vector.
  */
 CBNDEF CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t);
-
-/**
- * @brief Scales the 2D vector by the specified scalar value.
- * @param v The 2D vector.
- * @param s The scalar value.
- * @return The scaled 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
 
 /**
  * @brief Rotates the 2D vector by the specified rotation value (in degrees).

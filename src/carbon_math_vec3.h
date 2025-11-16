@@ -42,6 +42,32 @@
  */
 #define CARBON_VEC3_N(v) CARBON_VEC3(-(v).x, -(v).y, -(v).z)
 
+// Swizzling Operations
+#define CARBON_VEC_xz(v)  CARBON_VEC2((v).x, (v).z)
+#define CARBON_VEC_zx(v)  CARBON_VEC2((v).z, (v).x)
+#define CARBON_VEC_yz(v)  CARBON_VEC2((v).y, (v).z)
+#define CARBON_VEC_zy(v)  CARBON_VEC2((v).z, (v).y)
+#define CARBON_VEC_zz(v)  CARBON_VEC2((v).z, (v).z)
+#define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
+#define CARBON_VEC_xyz(v) CARBON_VEC3((v).x, (v).y, (v).z)
+#define CARBON_VEC_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)
+#define CARBON_VEC_xzy(v) CARBON_VEC3((v).x, (v).z, (v).y)
+#define CARBON_VEC_xzz(v) CARBON_VEC3((v).x, (v).z, (v).z)
+#define CARBON_VEC_yxz(v) CARBON_VEC3((v).y, (v).x, (v).z)
+#define CARBON_VEC_yyz(v) CARBON_VEC3((v).y, (v).y, (v).z)
+#define CARBON_VEC_yzx(v) CARBON_VEC3((v).y, (v).z, (v).x)
+#define CARBON_VEC_yzy(v) CARBON_VEC3((v).y, (v).z, (v).y)
+#define CARBON_VEC_yzz(v) CARBON_VEC3((v).y, (v).z, (v).z)
+#define CARBON_VEC_zxx(v) CARBON_VEC3((v).z, (v).x, (v).x)
+#define CARBON_VEC_zxy(v) CARBON_VEC3((v).z, (v).x, (v).y)
+#define CARBON_VEC_zxz(v) CARBON_VEC3((v).z, (v).x, (v).z)
+#define CARBON_VEC_zyx(v) CARBON_VEC3((v).z, (v).y, (v).x)
+#define CARBON_VEC_zyy(v) CARBON_VEC3((v).z, (v).y, (v).y)
+#define CARBON_VEC_zyz(v) CARBON_VEC3((v).z, (v).y, (v).z)
+#define CARBON_VEC_zzx(v) CARBON_VEC3((v).z, (v).z, (v).x)
+#define CARBON_VEC_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
+#define CARBON_VEC_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
+
 /**
  * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
  */
@@ -140,70 +166,44 @@ typedef union CBN_Vec3 {
    */
   cbn::Opt<CBN_Vec2> Project2D(f32 near_z) const;
   // Swizzling Operations
-  constexpr auto xx(void)  const;
-  constexpr auto xy(void)  const;
-  constexpr auto xz(void)  const;
-  constexpr auto yx(void)  const;
-  constexpr auto yy(void)  const;
-  constexpr auto yz(void)  const;
-  constexpr auto zx(void)  const;
-  constexpr auto zy(void)  const;
-  constexpr auto zz(void)  const;
-  constexpr auto xxx(void) const;
-  constexpr auto xxy(void) const;
-  constexpr auto xxz(void) const;
-  constexpr auto xyx(void) const;
-  constexpr auto xyy(void) const;
-  constexpr auto xyz(void) const;
-  constexpr auto xzx(void) const;
-  constexpr auto xzy(void) const;
-  constexpr auto xzz(void) const;
-  constexpr auto yxx(void) const;
-  constexpr auto yxy(void) const;
-  constexpr auto yxz(void) const;
-  constexpr auto yyx(void) const;
-  constexpr auto yyy(void) const;
-  constexpr auto yyz(void) const;
-  constexpr auto yzx(void) const;
-  constexpr auto yzy(void) const;
-  constexpr auto yzz(void) const;
-  constexpr auto zxx(void) const;
-  constexpr auto zxy(void) const;
-  constexpr auto zxz(void) const;
-  constexpr auto zyx(void) const;
-  constexpr auto zyy(void) const;
-  constexpr auto zyz(void) const;
-  constexpr auto zzx(void) const;
-  constexpr auto zzy(void) const;
-  constexpr auto zzz(void) const;
+  CBN_Vec2 xx(void)  const;
+  CBN_Vec2 xy(void)  const;
+  CBN_Vec2 xz(void)  const;
+  CBN_Vec2 yx(void)  const;
+  CBN_Vec2 yy(void)  const;
+  CBN_Vec2 yz(void)  const;
+  CBN_Vec2 zx(void)  const;
+  CBN_Vec2 zy(void)  const;
+  CBN_Vec2 zz(void)  const;
+  CBN_Vec3 xxx(void) const;
+  CBN_Vec3 xxy(void) const;
+  CBN_Vec3 xxz(void) const;
+  CBN_Vec3 xyx(void) const;
+  CBN_Vec3 xyy(void) const;
+  CBN_Vec3 xyz(void) const;
+  CBN_Vec3 xzx(void) const;
+  CBN_Vec3 xzy(void) const;
+  CBN_Vec3 xzz(void) const;
+  CBN_Vec3 yxx(void) const;
+  CBN_Vec3 yxy(void) const;
+  CBN_Vec3 yxz(void) const;
+  CBN_Vec3 yyx(void) const;
+  CBN_Vec3 yyy(void) const;
+  CBN_Vec3 yyz(void) const;
+  CBN_Vec3 yzx(void) const;
+  CBN_Vec3 yzy(void) const;
+  CBN_Vec3 yzz(void) const;
+  CBN_Vec3 zxx(void) const;
+  CBN_Vec3 zxy(void) const;
+  CBN_Vec3 zxz(void) const;
+  CBN_Vec3 zyx(void) const;
+  CBN_Vec3 zyy(void) const;
+  CBN_Vec3 zyz(void) const;
+  CBN_Vec3 zzx(void) const;
+  CBN_Vec3 zzy(void) const;
+  CBN_Vec3 zzz(void) const;
 #endif
 } CBN_Vec3;
-
-// Swizzling Operations
-#define CARBON_VEC_xz(v)  CARBON_VEC2((v).x, (v).z)
-#define CARBON_VEC_yz(v)  CARBON_VEC2((v).y, (v).z)
-#define CARBON_VEC_zx(v)  CARBON_VEC2((v).z, (v).x)
-#define CARBON_VEC_zy(v)  CARBON_VEC2((v).z, (v).y)
-#define CARBON_VEC_zz(v)  CARBON_VEC2((v).z, (v).z)
-#define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
-#define CARBON_VEC_xyz(v) CARBON_VEC3((v).x, (v).y, (v).z)
-#define CARBON_VEC_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)
-#define CARBON_VEC_xzy(v) CARBON_VEC3((v).x, (v).z, (v).y)
-#define CARBON_VEC_xzz(v) CARBON_VEC3((v).x, (v).z, (v).z)
-#define CARBON_VEC_yxz(v) CARBON_VEC3((v).y, (v).x, (v).z)
-#define CARBON_VEC_yyz(v) CARBON_VEC3((v).y, (v).y, (v).z)
-#define CARBON_VEC_yzx(v) CARBON_VEC3((v).y, (v).z, (v).x)
-#define CARBON_VEC_yzy(v) CARBON_VEC3((v).y, (v).z, (v).y)
-#define CARBON_VEC_yzz(v) CARBON_VEC3((v).y, (v).z, (v).z)
-#define CARBON_VEC_zxx(v) CARBON_VEC3((v).z, (v).x, (v).x)
-#define CARBON_VEC_zxy(v) CARBON_VEC3((v).z, (v).x, (v).y)
-#define CARBON_VEC_zxz(v) CARBON_VEC3((v).z, (v).x, (v).z)
-#define CARBON_VEC_zyx(v) CARBON_VEC3((v).z, (v).y, (v).x)
-#define CARBON_VEC_zyy(v) CARBON_VEC3((v).z, (v).y, (v).y)
-#define CARBON_VEC_zyz(v) CARBON_VEC3((v).z, (v).y, (v).z)
-#define CARBON_VEC_zzx(v) CARBON_VEC3((v).z, (v).z, (v).x)
-#define CARBON_VEC_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
-#define CARBON_VEC_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
 
 /**
  * @brief Adds two 3D vectors together (element-wise).

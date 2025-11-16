@@ -13,7 +13,7 @@ CBN_Quat carbon_math_quat_mult(CBN_Quat p, CBN_Quat q) {
 }
 
 f32 carbon_math_quat_dot(CBN_Quat p, CBN_Quat q) {
-  return p.x * q.x + p.y * q.y + p.z * q.z + p.w * q.w;
+  return carbon_math_vec4_dot(p, q);
 }
 
 CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v) {
