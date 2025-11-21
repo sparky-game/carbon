@@ -126,6 +126,7 @@ namespace cbn {
     constexpr auto Cos     = carbon_math_cos;
     constexpr auto Tan     = carbon_math_tan;
     constexpr auto Tanh    = carbon_math_tanh;
+    constexpr auto Atan2   = carbon_math_atan2;
     constexpr auto MT19937 = carbon_math_mt19937_64_rand;
     [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
       return CARBON_CLAMP(x, min, max);
