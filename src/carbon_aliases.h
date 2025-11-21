@@ -39,35 +39,35 @@ namespace cbn {
 
   template <typename... Args>
   constexpr void print(const char *msg, Args &&... args) {
-    carbon_print(msg, std::forward<Args>(args)...);
+    carbon_print(msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void eprint(const char *msg, Args &&... args) {
-    carbon_eprint(msg, std::forward<Args>(args)...);
+    carbon_eprint(msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void println(const char *msg = "", Args &&... args) {
-    carbon_println(msg, std::forward<Args>(args)...);
+    carbon_println(msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void eprintln(const char *msg = "", Args &&... args) {
-    carbon_eprintln(msg, std::forward<Args>(args)...);
+    carbon_eprintln(msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprint(color, msg, std::forward<Args>(args)...);
+    carbon_cprint(color, msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void ceprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprint(color, msg, std::forward<Args>(args)...);
+    carbon_ceprint(color, msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void cprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprintln(color, msg, std::forward<Args>(args)...);
+    carbon_cprintln(color, msg, cbn::meta::Forward<Args>(args)...);
   }
   template <typename... Args>
   constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprintln(color, msg, std::forward<Args>(args)...);
+    carbon_ceprintln(color, msg, cbn::meta::Forward<Args>(args)...);
   }
 
   namespace mem {
@@ -238,13 +238,13 @@ namespace cbn {
     constexpr auto SetVolume = carbon_audio_set_volume;
     template <typename... Args>
     [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load(std::forward<Args>(args))...);
-      else return carbon_audio_load(std::forward<Args>(args)...);
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load(cbn::meta::Forward<Args>(args))...);
+      else return carbon_audio_load(cbn::meta::Forward<Args>(args)...);
     }
     template <typename... Args>
     [[nodiscard]] constexpr auto LoadStream(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load_stream(std::forward<Args>(args))...);
-      else return carbon_audio_load_stream(std::forward<Args>(args)...);
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load_stream(cbn::meta::Forward<Args>(args))...);
+      else return carbon_audio_load_stream(cbn::meta::Forward<Args>(args)...);
     }
     constexpr auto Play       = carbon_audio_play;
     constexpr auto Stop       = carbon_audio_stop;
@@ -259,8 +259,8 @@ namespace cbn {
     constexpr auto Shutdown = carbon_sprite_manager_shutdown;
     template <typename... Args>
     [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_sprite_manager_load(std::forward<Args>(args))...);
-      else return carbon_sprite_manager_load(std::forward<Args>(args)...);
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_sprite_manager_load(cbn::meta::Forward<Args>(args))...);
+      else return carbon_sprite_manager_load(cbn::meta::Forward<Args>(args)...);
     }
     constexpr auto Lookup = carbon_sprite_manager_lookup;
   }
@@ -271,8 +271,8 @@ namespace cbn {
     constexpr auto Shutdown = carbon_mesh_manager_shutdown;
     template <typename... Args>
     [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_mesh_manager_load(std::forward<Args>(args))...);
-      else return carbon_mesh_manager_load(std::forward<Args>(args)...);
+      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_mesh_manager_load(cbn::meta::Forward<Args>(args))...);
+      else return carbon_mesh_manager_load(cbn::meta::Forward<Args>(args)...);
     }
     constexpr auto Lookup = carbon_mesh_manager_lookup;
   }
