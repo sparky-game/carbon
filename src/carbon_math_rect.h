@@ -24,7 +24,7 @@
  * @param w The value to assign to the width of the size.
  * @param h The value to assign to the height of the size.
  */
-#define CARBON_RECT_V(v, w, h) CARBON_RECT(v.x, v.y, w, h)
+#define CARBON_RECT_V(v, w, h) CARBON_RECT((v).x, (v).y, w, h)
 
 /**
  * @brief Defines an inline rectangle whose width and height are equal (square).
@@ -39,7 +39,7 @@
  * @param v The 2D vector to assign to the position.
  * @param sz The value to assign to both the width and the height of the size.
  */
-#define CARBON_RECT_SQUARE_V(v, sz) CARBON_RECT_SQUARE(v.x, v.y, sz)
+#define CARBON_RECT_SQUARE_V(v, sz) CARBON_RECT_SQUARE((v).x, (v).y, sz)
 
 /**
  * @brief Defines an inline rectangle whose 4 elements are equal to zero.
