@@ -58,10 +58,10 @@ static u32 carbon_win__curr_fps;
 static u32 carbon_win__fps;
 static CBN_Chrono carbon_win__fps_timer;
 static CBN_Image carbon_win__icon;
-static u8 carbon_win__keys[RGFW_keyLast];
-static u8 carbon_win__prev_keys[RGFW_keyLast];
-static u8 carbon_win__mouse_buttons[RGFW_mouseFinal];
-static u8 carbon_win__prev_mouse_buttons[RGFW_mouseFinal];
+static bool carbon_win__keys[RGFW_keyLast];
+static bool carbon_win__prev_keys[RGFW_keyLast];
+static bool carbon_win__mouse_buttons[RGFW_mouseFinal];
+static bool carbon_win__prev_mouse_buttons[RGFW_mouseFinal];
 
 CARBON_INLINE void carbon_win__dl_open(void) {
 #if defined(__APPLE__)
@@ -309,7 +309,7 @@ void carbon_win_update(const CBN_DrawCanvas dc) {
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
 
-u8 carbon_win_shouldclose(void) {
+bool carbon_win_shouldclose(void) {
   for (u8 i = 0; i < RGFW_keyLast; ++i)    carbon_win__prev_keys[i]          = carbon_win__keys[i];
   for (u8 i = 0; i < RGFW_mouseFinal; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
   RGFW_window_checkEvent(carbon_win__handle);
@@ -320,27 +320,27 @@ void carbon_win_exit(void) {
   carbon_win__handle->event.type = RGFW_quit;
 }
 
-u8 carbon_win_get_key_down(const CBN_KeyCode key) {
+bool carbon_win_get_key_down(const CBN_KeyCode key) {
   return carbon_win__keys[carbon_win__map_keycodes(key)] && !carbon_win__prev_keys[carbon_win__map_keycodes(key)];
 }
 
-u8 carbon_win_get_key(const CBN_KeyCode key) {
+bool carbon_win_get_key(const CBN_KeyCode key) {
   return carbon_win__keys[carbon_win__map_keycodes(key)];
 }
 
-u8 carbon_win_get_key_up(const CBN_KeyCode key) {
+bool carbon_win_get_key_up(const CBN_KeyCode key) {
   return !carbon_win__keys[carbon_win__map_keycodes(key)] && carbon_win__prev_keys[carbon_win__map_keycodes(key)];
 }
 
-u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn) {
+bool carbon_win_get_mouse_button_down(const CBN_MouseButton btn) {
   return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && !carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
 }
 
-u8 carbon_win_get_mouse_button(const CBN_MouseButton btn) {
+bool carbon_win_get_mouse_button(const CBN_MouseButton btn) {
   return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)];
 }
 
-u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn) {
+bool carbon_win_get_mouse_button_up(const CBN_MouseButton btn) {
   return !carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
 }
 

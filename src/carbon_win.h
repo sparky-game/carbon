@@ -83,7 +83,7 @@ CBNDEF void carbon_win_update(const CBN_DrawCanvas dc);
  * @brief Checks if the window should close or not.
  * @return A boolean value representing whether the window should close or not.
  */
-CBNDEF u8 carbon_win_shouldclose(void);
+CBNDEF bool carbon_win_shouldclose(void);
 
 #ifdef __cplusplus
 /**
@@ -108,42 +108,42 @@ CBNDEF void carbon_win_exit(void);
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was pressed or not.
  */
-CBNDEF u8 carbon_win_get_key_down(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key_down(const CBN_KeyCode key);
 
 /**
  * @brief Returns true while the user holds down the specified key.
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key is being pressed or not.
  */
-CBNDEF u8 carbon_win_get_key(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key(const CBN_KeyCode key);
 
 /**
  * @brief Returns true during the frame the user releases the specified key.
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was released or not.
  */
-CBNDEF u8 carbon_win_get_key_up(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key_up(const CBN_KeyCode key);
 
 /**
  * @brief Returns true during the frame the user starts pressing down the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was pressed or not.
  */
-CBNDEF u8 carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
 
 /**
  * @brief Returns true while the user holds down the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button is being pressed or not.
  */
-CBNDEF u8 carbon_win_get_mouse_button(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button(const CBN_MouseButton btn);
 
 /**
  * @brief Returns true during the frame the user releases the specified mouse button.
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was released or not.
  */
-CBNDEF u8 carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
 
 /**
  * @brief Returns the actual mouse position within the window.
