@@ -348,3 +348,7 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
   RGFW_point p = RGFW_window_getMousePoint(carbon_win__handle);
   return CARBON_VEC2(p.x, p.y);
 }
+
+void carbon_win_set_mouse_visibility(bool visible) {
+  RGFW_window_showMouse(carbon_win__handle, visible);
+}

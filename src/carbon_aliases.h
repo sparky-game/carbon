@@ -301,6 +301,7 @@ namespace cbn {
     constexpr auto GetMouseButton     = carbon_win_get_mouse_button;
     constexpr auto GetMouseButtonUp   = carbon_win_get_mouse_button_up;
     constexpr auto GetMousePosition   = carbon_win_get_mouse_position;
+    constexpr auto SetMouseVisibility = carbon_win_set_mouse_visibility;
   }
 }
 #endif  // __cplusplus

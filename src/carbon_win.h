@@ -151,6 +151,12 @@ CBNDEF bool carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
  */
 CBNDEF CBN_Vec2 carbon_win_get_mouse_position(void);
 
+/**
+ * @brief Sets the visibility state of the mouse cursor, between shown or hidden.
+ * @param visible A boolean value representing whether the mouse cursor must be visible or not.
+ */
+CBNDEF void carbon_win_set_mouse_visibility(bool visible);
+
 // Local Variables:
 // mode: c++
 // End:
