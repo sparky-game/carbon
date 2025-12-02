@@ -29,9 +29,9 @@ CARBON_INLINE CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
   };
 }
 
-CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) {
-  u8 first = true;
-  u8 prev_line_was_new_group = false;
+CARBON_INLINE bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) {
+  bool first = true;
+  bool prev_line_was_new_group = false;
   usz line_n = 1;
   char line[CARBON_SKAP_DECL_FILE_MAX_LINE_LEN];
   while (fgets(line, CARBON_SKAP_DECL_FILE_MAX_LINE_LEN, decl_fd)) {
@@ -45,7 +45,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
       continue;
     }
     // Whitespace-only line
-    u8 all_is_whitespaced = true;
+    bool all_is_whitespaced = true;
     char *line_ptr = line;
     while (*line_ptr) {
       if (!isspace(*line_ptr)) {
@@ -76,7 +76,7 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
         return false;
       }
       // Check whether type is valid
-      u8 type_is_valid = false;
+      bool type_is_valid = false;
       for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
         if (!carbon_string_cmp(ag.type, carbon_skap__allowed_types[i])) {
           type_is_valid = true;
@@ -128,10 +128,10 @@ CARBON_INLINE u8 carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_gro
   return true;
 }
 
-CARBON_INLINE u8 carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_groups) {
+CARBON_INLINE bool carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_groups) {
   const char *cwd = carbon_fs_get_curr_directory();
   CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
-  u8 status = true;
+  bool status = true;
   carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
     if (!ag_it.var.assets.size) continue;
     carbon_strlist_foreach(ag_it.var.assets) {
@@ -340,7 +340,7 @@ CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
   carbon_skap__append_blobs__meshes(skap, fd);
 }
 
-u8 carbon_skap_create(const char *decl, const char *skap) {
+bool carbon_skap_create(const char *decl, const char *skap) {
   // Input: DECL text file
   if (!carbon_fs_exists(decl) || !carbon_fs_is_regular_file(decl)) {
     CBN_ERROR("there is no SKAP declarations file named `%s`", decl);
@@ -374,7 +374,7 @@ u8 carbon_skap_create(const char *decl, const char *skap) {
   return true;
 }
 
-u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
+bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   if (!out_handle) {
     CBN_ERROR("`out_handle` must be a valid pointer");
     return false;
@@ -465,7 +465,7 @@ void carbon_skap_print(const CBN_SKAP *handle) {
 }
 
 // @type_dependant
-u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
+bool carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob) {
   if (!handle || !asset_name || !out_blob) {
     CBN_ERROR("`handle`, `asset_name` and `out_blob` must be valid pointers");
     return false;

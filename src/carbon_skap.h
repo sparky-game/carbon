@@ -67,7 +67,7 @@ typedef struct CBN_SKAP {
    * @param skap The filename that the resulting SKAP file should have in disk.
    * @return A boolean value indicating whether it created the SKAP successfully or not.
    */
-  static u8 Create(const char *decl, const char *skap);
+  static bool Create(const char *decl, const char *skap);
   /**
    * @brief carbon_skap_open
    * @param skap The filename of the SKAP in disk.
@@ -131,7 +131,7 @@ private:
  * @param skap The filename that the resulting SKAP file should have in disk.
  * @return A boolean value indicating whether it created the SKAP successfully or not.
  */
-CBNDEF u8 carbon_skap_create(const char *decl, const char *skap);
+CBNDEF bool carbon_skap_create(const char *decl, const char *skap);
 
 /**
  * @brief Opens a SKAP from disk.
@@ -144,7 +144,7 @@ CBNDEF u8 carbon_skap_create(const char *decl, const char *skap);
  * @param out_handle The handle info object of the opened SKAP (output argument pointer).
  * @return A boolean value indicating whether it opened the SKAP successfully or not.
  */
-CBNDEF u8 carbon_skap_open(const char *skap, CBN_SKAP *out_handle);
+CBNDEF bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle);
 
 /**
  * @brief Closes a previously opened SKAP.
@@ -166,7 +166,7 @@ CBNDEF void carbon_skap_print(const CBN_SKAP *handle);
  * @param out_blob The retrieved asset from the SKAP (output argument pointer).
  * @return A boolean value indicating whether it retrieved the requested asset from the SKAP successfully or not.
  */
-CBNDEF u8 carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
+CBNDEF bool carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_type, const char *asset_name, void *out_blob);
 
 /**
  * @brief Counts how many assets are stored in a SKAP.

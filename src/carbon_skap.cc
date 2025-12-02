@@ -3,7 +3,7 @@
 
 #include "carbon.inc"
 
-u8 CBN_SKAP::Create(const char *decl, const char *skap) {
+bool CBN_SKAP::Create(const char *decl, const char *skap) {
   return carbon_skap_create(decl, skap);
 }
 
