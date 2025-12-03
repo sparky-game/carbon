@@ -395,8 +395,8 @@ namespace pong {
         static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, YPos);
         m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
                                       text_pos.y - text_padding.y - 2*text_size,
-                                      text_pos.x + text_width + text_padding.x,
-                                      text_pos.y + text_height + text_padding.y));
+                                      text_width + 2*text_padding.x,
+                                      text_height + 2*text_padding.y + 2*text_size));
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -656,8 +656,8 @@ namespace pong {
         static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, m_Window->height/2);
         m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
                                       text_pos.y - text_padding.y - 2*text_size,
-                                      text_pos.x + text_width + text_padding.x,
-                                      text_pos.y + text_height + text_padding.y));
+                                      text_width + 2*text_padding.x,
+                                      text_height + 2*text_padding.y + 2*text_size));
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
     };

@@ -342,101 +342,102 @@ void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r) {
 #define TOPLEFT(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR)
 #define BOTTOMRIGHT(i, j) PX(i, j, CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR)
 #define INSIDE(i, j)      PX(i, j, CARBON_DRAWCANVAS__BOX_INSIDE_COLOR)
+  const usz x1 = r.x, y1 = r.y, x2 = x1 + r.w - 1, y2 = y1 + r.h - 1;
   // Header
-  for (usz j = r.y; j <= r.y + 1; ++j) {
-    for (usz i = r.x + 4; i <= r.w - 6; ++i) {
+  for (usz j = y1; j <= y1 + 1; ++j) {
+    for (usz i = x1 + 4; i <= x2 - 6; ++i) {
       OUTLINE(i, j);
     }
   }
-  for (usz j = r.y + 2; j <= r.y + 3; ++j) {
-    OUTLINE(r.x + 2, j);
-    OUTLINE(r.x + 3, j);
-    for (usz i = r.x + 4; i <= r.w - 6; ++i) {
+  for (usz j = y1 + 2; j <= y1 + 3; ++j) {
+    OUTLINE(x1 + 2, j);
+    OUTLINE(x1 + 3, j);
+    for (usz i = x1 + 4; i <= x2 - 6; ++i) {
       TOPLEFT(i, j);
     }
-    OUTLINE(r.w - 5, j);
-    OUTLINE(r.w - 4, j);
+    OUTLINE(x2 - 5, j);
+    OUTLINE(x2 - 4, j);
   }
-  for (usz j = r.y + 4; j <= r.y + 5; ++j) {
-    OUTLINE(r.x + 0, j);
-    OUTLINE(r.x + 1, j);
-    for (usz i = r.x + 2; i <= r.w - 6; ++i) {
+  for (usz j = y1 + 4; j <= y1 + 5; ++j) {
+    OUTLINE(x1 + 0, j);
+    OUTLINE(x1 + 1, j);
+    for (usz i = x1 + 2; i <= x2 - 6; ++i) {
       TOPLEFT(i, j);
     }
-    INSIDE(r.w - 5, j);
-    INSIDE(r.w - 4, j);
-    OUTLINE(r.w - 3, j);
-    OUTLINE(r.w - 2, j);
+    INSIDE(x2 - 5, j);
+    INSIDE(x2 - 4, j);
+    OUTLINE(x2 - 3, j);
+    OUTLINE(x2 - 2, j);
   }
-  for (usz j = r.y + 6; j <= r.y + 7; ++j) {
-    OUTLINE(r.x + 0, j);
-    OUTLINE(r.x + 1, j);
-    for (usz i = r.x + 2; i <= r.x + 7; ++i) {
+  for (usz j = y1 + 6; j <= y1 + 7; ++j) {
+    OUTLINE(x1 + 0, j);
+    OUTLINE(x1 + 1, j);
+    for (usz i = x1 + 2; i <= x1 + 7; ++i) {
       TOPLEFT(i, j);
     }
-    for (usz i = r.x + 8; i <= r.w - 6; ++i) {
+    for (usz i = x1 + 8; i <= x2 - 6; ++i) {
       INSIDE(i, j);
     }
-    for (usz i = r.w - 5; i <= r.w - 2; ++i) {
+    for (usz i = x2 - 5; i <= x2 - 2; ++i) {
       BOTTOMRIGHT(i, j);
     }
-    OUTLINE(r.w - 1, j);
-    OUTLINE(r.w - 0, j);
+    OUTLINE(x2 - 1, j);
+    OUTLINE(x2 - 0, j);
   }
   // Content
-  for (usz j = r.y + 8; j <= r.h - 8; ++j) {
-    OUTLINE(r.x + 0, j);
-    OUTLINE(r.x + 1, j);
-    for (usz i = r.x + 2; i <= r.x + 5; ++i) {
+  for (usz j = y1 + 8; j <= y2 - 8; ++j) {
+    OUTLINE(x1 + 0, j);
+    OUTLINE(x1 + 1, j);
+    for (usz i = x1 + 2; i <= x1 + 5; ++i) {
       TOPLEFT(i, j);
     }
-    for (usz i = r.x + 6; i <= r.w - 6; ++i) {
+    for (usz i = x1 + 6; i <= x2 - 6; ++i) {
       INSIDE(i, j);
     }
-    for (usz i = r.w - 5; i <= r.w - 2; ++i) {
+    for (usz i = x2 - 5; i <= x2 - 2; ++i) {
       BOTTOMRIGHT(i, j);
     }
-    OUTLINE(r.w - 1, j);
-    OUTLINE(r.w - 0, j);
+    OUTLINE(x2 - 1, j);
+    OUTLINE(x2 - 0, j);
   }
   // Footer
-  for (usz j = r.h - 7; j <= r.h - 6; ++j) {
-    OUTLINE(r.x + 0, j);
-    OUTLINE(r.x + 1, j);
-    for (usz i = r.x + 2; i <= r.x + 5; ++i) {
+  for (usz j = y2 - 7; j <= y2 - 6; ++j) {
+    OUTLINE(x1 + 0, j);
+    OUTLINE(x1 + 1, j);
+    for (usz i = x1 + 2; i <= x1 + 5; ++i) {
       TOPLEFT(i, j);
     }
-    for (usz i = r.x + 6; i <= r.w - 8; ++i) {
+    for (usz i = x1 + 6; i <= x2 - 8; ++i) {
       INSIDE(i, j);
     }
-    for (usz i = r.w - 7; i <= r.w - 2; ++i) {
+    for (usz i = x2 - 7; i <= x2 - 2; ++i) {
       BOTTOMRIGHT(i, j);
     }
-    OUTLINE(r.w - 1, j);
-    OUTLINE(r.w - 0, j);
+    OUTLINE(x2 - 1, j);
+    OUTLINE(x2 - 0, j);
   }
-  for (usz j = r.h - 5; j <= r.h - 4; ++j) {
-    OUTLINE(r.x + 2, j);
-    OUTLINE(r.x + 3, j);
-    INSIDE(r.x + 4, j);
-    INSIDE(r.x + 5, j);
-    for (usz i = r.x + 6; i <= r.w - 2; ++i) {
+  for (usz j = y2 - 5; j <= y2 - 4; ++j) {
+    OUTLINE(x1 + 2, j);
+    OUTLINE(x1 + 3, j);
+    INSIDE(x1 + 4, j);
+    INSIDE(x1 + 5, j);
+    for (usz i = x1 + 6; i <= x2 - 2; ++i) {
       BOTTOMRIGHT(i, j);
     }
-    OUTLINE(r.w - 1, j);
-    OUTLINE(r.w - 0, j);
+    OUTLINE(x2 - 1, j);
+    OUTLINE(x2 - 0, j);
   }
-  for (usz j = r.h - 3; j <= r.h - 2; ++j) {
-    OUTLINE(r.x + 4, j);
-    OUTLINE(r.x + 5, j);
-    for (usz i = r.x + 6; i <= r.w - 4; ++i) {
+  for (usz j = y2 - 3; j <= y2 - 2; ++j) {
+    OUTLINE(x1 + 4, j);
+    OUTLINE(x1 + 5, j);
+    for (usz i = x1 + 6; i <= x2 - 4; ++i) {
       BOTTOMRIGHT(i, j);
     }
-    OUTLINE(r.w - 3, j);
-    OUTLINE(r.w - 2, j);
+    OUTLINE(x2 - 3, j);
+    OUTLINE(x2 - 2, j);
   }
-  for (usz j = r.h - 1; j <= r.h; ++j) {
-    for (usz i = r.x + 6; i <= r.w - 4; ++i) {
+  for (usz j = y2 - 1; j <= y2; ++j) {
+    for (usz i = x1 + 6; i <= x2 - 4; ++i) {
       OUTLINE(i, j);
     }
   }
