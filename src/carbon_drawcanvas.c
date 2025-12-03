@@ -196,17 +196,18 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
 }
 
 void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position) {
-  if (!carbon_math_rect_contains_point(CARBON_RECT(0, 0, dc.width, dc.height), position)) return;
-  usz sw = CARBON_MIN(s->width, dc.width - position.x);
-  usz sh = CARBON_MIN(s->height, dc.height - position.y);
-  u32 *p_dc = dc.pixels + (usz)(position.y * dc.width + position.x);
-  const u32 *p_s = s->pixels;
-  for (usz j = 0; j < sh; ++j) {
-    for (usz i = 0; i < sw; ++i) {
-      carbon_drawcanvas__alpha_blending(p_dc, *p_s);
-      ++p_dc, ++p_s;
+  const CBN_Rect r_dc = CARBON_RECT(0, 0, dc.width, dc.height);
+  const CBN_Rect r_sp = CARBON_RECT(position.x, position.y, s->width, s->height);
+  CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
+  u32 *p_dc = dc.pixels + (usz)(xywh.y * r_dc.w + xywh.x);
+  const u32 *p_sp = s->pixels + (usz)((xywh.y - r_sp.y) * r_sp.w + (xywh.x - r_sp.x));
+  for (usz j = 0; j < xywh.h; ++j) {
+    for (usz i = 0; i < xywh.w; ++i) {
+      carbon_drawcanvas__alpha_blending(p_dc, *p_sp);
+      ++p_dc, ++p_sp;
     }
-    p_dc += dc.width - sw;
+    p_dc += (usz)(r_dc.w - xywh.w);
+    p_sp += (usz)(r_sp.w - xywh.w);
   }
 }
 
