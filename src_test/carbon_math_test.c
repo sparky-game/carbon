@@ -280,25 +280,25 @@ TEST(vec3_cross) {
   return CARBON_OK;
 }
 
-TEST(rect_contains_point) {
+TEST(rect_contains) {
   CBN_Rect r = {0, 0, 10, 5};
   CBN_Vec2 p1 = {{8, 3}};
   CBN_Vec2 p2 = {{3, 8}};
-  carbon_should_be_true(carbon_math_rect_contains_point(r, p1));
-  carbon_should_be_false(carbon_math_rect_contains_point(r, p2));
+  carbon_should_be_true(carbon_math_rect_contains(r, p1));
+  carbon_should_be_false(carbon_math_rect_contains(r, p2));
   return CARBON_OK;
 }
 
-TEST(rect_detect_collision) {
+TEST(rect_overlaps) {
   CBN_Rect r1 = {0, 5, 5, 5}, r2 = {4, 11, 5, 5};
-  carbon_should_be_false(carbon_math_rect_detect_collision(r1, r2));
-  carbon_should_be_false(carbon_math_rect_detect_collision(r2, r1));
+  carbon_should_be_false(carbon_math_rect_overlaps(r1, r2));
+  carbon_should_be_false(carbon_math_rect_overlaps(r2, r1));
   CBN_Rect r3 = {0, 5, 5, 5}, r4 = {4, 10, 5, 5};
-  carbon_should_be_true(carbon_math_rect_detect_collision(r3, r4));
-  carbon_should_be_true(carbon_math_rect_detect_collision(r4, r3));
+  carbon_should_be_true(carbon_math_rect_overlaps(r3, r4));
+  carbon_should_be_true(carbon_math_rect_overlaps(r4, r3));
   CBN_Rect r5 = {0, 5, 5, 5}, r6 = {4, 9, 5, 5};
-  carbon_should_be_true(carbon_math_rect_detect_collision(r5, r6));
-  carbon_should_be_true(carbon_math_rect_detect_collision(r6, r5));
+  carbon_should_be_true(carbon_math_rect_overlaps(r5, r6));
+  carbon_should_be_true(carbon_math_rect_overlaps(r6, r5));
   return CARBON_OK;
 }
 

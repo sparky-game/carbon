@@ -3,12 +3,12 @@
 
 #include "carbon.inc"
 
-u8 CBN_Rect::Contains(const CBN_Vec2 &p) const {
-  return carbon_math_rect_contains_point(*this, p);
+bool CBN_Rect::Contains(const CBN_Vec2 &p) const {
+  return carbon_math_rect_contains(*this, p);
 }
 
-u8 CBN_Rect::Overlaps(const CBN_Rect &r) const {
-  return carbon_math_rect_detect_collision(*this, r);
+bool CBN_Rect::Overlaps(const CBN_Rect &r) const {
+  return carbon_math_rect_overlaps(*this, r);
 }
 
 void CBN_Rect::Scale(const f32 s) {

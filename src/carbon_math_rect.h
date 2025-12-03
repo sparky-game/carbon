@@ -54,20 +54,15 @@ typedef struct CBN_Rect {
   f32 w, h;
 #ifdef __cplusplus
   /**
-   * @brief carbon_math_rect_contains_point
-   * @param p The point to check.
-   * @return A boolean value representing whether the point is contained within this rectangle or not.
+   * @see carbon_math_rect_contains
    */
-  u8 Contains(const CBN_Vec2 &p) const;
+  bool Contains(const CBN_Vec2 &p) const;
   /**
-   * @brief carbon_math_rect_detect_collision
-   * @param r The other rectangle to check with.
-   * @return A boolean value representing whether they overlap (also touching).
+   * @see carbon_math_rect_overlaps
    */
-  u8 Overlaps(const CBN_Rect &r) const;
+  bool Overlaps(const CBN_Rect &r) const;
   /**
-   * @brief carbon_math_rect_scale
-   * @param s The scale factor value.
+   * @see carbon_math_rect_scale
    */
   void Scale(const f32 s);
   // Overloaded Operators
@@ -81,15 +76,15 @@ typedef struct CBN_Rect {
  * @param p The point to check.
  * @return A boolean value representing whether the point is contained within this rectangle or not.
  */
-CBNDEF u8 carbon_math_rect_contains_point(CBN_Rect r, CBN_Vec2 p);
+CBNDEF bool carbon_math_rect_contains(CBN_Rect r, CBN_Vec2 p);
 
 /**
- * @brief Determines whether the rectangles collide/overlap/intersect with each other.
+ * @brief Determines whether the rectangles overlap/intersect/collide with each other.
  * @param r1 The first rectangle.
  * @param r2 The second rectangle.
  * @return A boolean value representing whether they overlap (also touching).
  */
-CBNDEF u8 carbon_math_rect_detect_collision(CBN_Rect r1, CBN_Rect r2);
+CBNDEF bool carbon_math_rect_overlaps(CBN_Rect r1, CBN_Rect r2);
 
 /**
  * @brief Scales the rectangle by the specified value.
