@@ -62,6 +62,10 @@ typedef struct CBN_Rect {
    */
   bool Overlaps(const CBN_Rect &r) const;
   /**
+   * @see carbon_math_rect_intersection
+   */
+  CBN_Rect Intersection(const CBN_Rect &r) const;
+  /**
    * @see carbon_math_rect_scale
    */
   void Scale(const f32 s);
@@ -85,6 +89,14 @@ CBNDEF bool carbon_math_rect_contains(CBN_Rect r, CBN_Vec2 p);
  * @return A boolean value representing whether they overlap (also touching).
  */
 CBNDEF bool carbon_math_rect_overlaps(CBN_Rect r1, CBN_Rect r2);
+
+/**
+ * @brief Computes the intersection rectangle between the rectangles.
+ * @param r1 The first rectangle.
+ * @param r2 The second rectangle.
+ * @return The rectangle holding the area of the intersection between them.
+ */
+CBNDEF CBN_Rect carbon_math_rect_intersection(CBN_Rect r1, CBN_Rect r2);
 
 /**
  * @brief Scales the rectangle by the specified value.

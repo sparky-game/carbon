@@ -11,6 +11,10 @@ bool CBN_Rect::Overlaps(const CBN_Rect &r) const {
   return carbon_math_rect_overlaps(*this, r);
 }
 
+CBN_Rect CBN_Rect::Intersection(const CBN_Rect &r) const {
+  return carbon_math_rect_intersection(*this, r);
+}
+
 void CBN_Rect::Scale(const f32 s) {
   carbon_math_rect_scale(this, s);
 }
