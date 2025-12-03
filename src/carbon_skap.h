@@ -62,39 +62,32 @@ typedef struct CBN_SKAP {
   CBN_HashMap idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 #ifdef __cplusplus
   /**
-   * @brief carbon_skap_create
-   * @param decl The filename of the DECL file in disk.
-   * @param skap The filename that the resulting SKAP file should have in disk.
-   * @return A boolean value indicating whether it created the SKAP successfully or not.
+   * @see carbon_skap_create
    */
   static bool Create(const char *decl, const char *skap);
   /**
-   * @brief carbon_skap_open
-   * @param skap The filename of the SKAP in disk.
-   * @return The handle info object of the opened SKAP.
+   * @see carbon_skap_open
    */
   static cbn::Opt<CBN_SKAP> make(const char *skap);
   /**
-   * @brief carbon_skap_close
+   * @see carbon_skap_close
    */
   void Free(void);
   /**
-   * @brief carbon_skap_print
+   * @see carbon_skap_print
    */
   void Print(void) const;
   /**
-   * @brief carbon_skap_lookup
+   * @see carbon_skap_lookup
    */
   template <typename T>
   cbn::Opt<T> Lookup(const char *asset_name) const;
   /**
-   * @brief carbon_skap_count
-   * @return The number of assets stored in the opened SKAP.
+   * @see carbon_skap_count
    */
   usz Count(void) const;
   /**
-   * @brief carbon_skap_count_of
-   * @return The number of assets of the specified type stored in the opened SKAP.
+   * @see carbon_skap_count_of
    */
   template <typename T>
   usz CountOf(void) const;
