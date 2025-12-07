@@ -56,7 +56,7 @@
  * @param x The first variable.
  * @param y The second variable.
  */
-#define CARBON_SWAP(x, y) do { typeof(x) z = x; x = y; y = z; } while (0)
+#define CARBON_SWAP(x, y) { x ^= y; y ^= x; x ^= y; }
 
 #if defined(__has_builtin) && !defined(CARBON_NO_BUILTIN)
 #define CARBON_HAS_BUILTIN __has_builtin
