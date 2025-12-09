@@ -41,7 +41,7 @@ void carbon_math_mt19937_64_srand(u64 seed) {
   u64 *si = &carbon_math__mt19937_64_rand_state_idx;
   sv[0] = seed;
   for (*si = 1; *si < CARBON_MATH__MT19937_64_RAND_NN; ++(*si)) {
-    sv[*si] = (6364136223846793005ULL * (sv[*si - 1] ^ (sv[*si - 1] >> 62)) + *si);
+    sv[*si] = (CARBON_MATH__RAND_PCG_MAGIC * (sv[*si - 1] ^ (sv[*si - 1] >> 62)) + *si);
   }
 }
 
