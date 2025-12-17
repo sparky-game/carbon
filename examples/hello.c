@@ -4,6 +4,7 @@
 #include <carbon.h>
 
 int main(void) {
-  carbon_println("Hello, World!");
+  const char *ver = carbon_version(0, 0, 0);
+  carbon_println("Hello, World! This is Carbon %s", ver);
   return 0;
 }
