@@ -3,7 +3,7 @@
 
 #include "carbon.inc"
 
-typedef struct CBN_Camera {
+struct CBN_Camera {
   CBN_Vec3 position;
   f32 yaw;
   f32 pitch;
@@ -14,7 +14,7 @@ typedef struct CBN_Camera {
   f32 near;
   f32 far;
   CBN_Mat4 proj;
-} CBN_Camera;
+};
 
 CBN_Camera *carbon_camera_create(const CBN_DrawCanvas dc) {
   CBN_Camera *c = (CBN_Camera *) carbon_memory_alloc(sizeof(CBN_Camera));
