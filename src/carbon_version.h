@@ -17,3 +17,4 @@
  * @return The full version string formatted as `vX.Y.Z[-EXTRA]`.
  */
 CBNDEF char *carbon_version(usz *major, usz *minor, usz *patch);
+CBNDEF_FN(cbn, Version, carbon_version);

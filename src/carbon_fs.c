@@ -19,7 +19,7 @@
 
 #define CARBON_FS__PATMAT_MAX_STRUCTS 4
 
-u8 carbon_fs_exists(const char *file) {
+bool carbon_fs_exists(const char *file) {
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
   return attrs != INVALID_FILE_ATTRIBUTES;
@@ -29,7 +29,7 @@ u8 carbon_fs_exists(const char *file) {
 #endif
 }
 
-u8 carbon_fs_is_regular_file(const char *file) {
+bool carbon_fs_is_regular_file(const char *file) {
   if (!carbon_fs_exists(file)) return false;
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
@@ -42,7 +42,7 @@ u8 carbon_fs_is_regular_file(const char *file) {
 #endif
 }
 
-u8 carbon_fs_is_directory(const char *file) {
+bool carbon_fs_is_directory(const char *file) {
   if (!carbon_fs_exists(file)) return false;
 #ifdef _WIN32
   DWORD attrs = GetFileAttributes(file);
@@ -55,7 +55,7 @@ u8 carbon_fs_is_directory(const char *file) {
 #endif
 }
 
-u8 carbon_fs_rename(const char *oldie, const char *newie) {
+bool carbon_fs_rename(const char *oldie, const char *newie) {
   if (-1 == rename(oldie, newie)) {
     CBN_ERROR("unable to rename %s -> %s", oldie, newie);
     return false;
@@ -72,15 +72,11 @@ i32 carbon_fs_mtime(const char *file) {
   return sb.st_mtime;
 }
 
-void carbon_fs_copy(const char *from, const char *to, u8 recursive) {
-  // TODO: not yet implemented
-  CARBON_NOTUSED(from);
-  CARBON_NOTUSED(to);
-  CARBON_NOTUSED(recursive);
-  CARBON_NOTIMPLEMENTED;
-}
+/* void carbon_fs_copy(const char *from, const char *to, bool recursive) { */
+/*   // ... */
+/* } */
 
-u8 carbon_fs_remove(const char *file) {
+bool carbon_fs_remove(const char *file) {
   if (-1 == remove(file)) {
     CBN_ERROR("unable to remove file `%s`", file);
     return false;
@@ -88,14 +84,11 @@ u8 carbon_fs_remove(const char *file) {
   return true;
 }
 
-u8 carbon_fs_remove_all(const char *file) {
-  // TODO: not yet implemented
-  CARBON_NOTUSED(file);
-  CARBON_NOTIMPLEMENTED;
-  return false;
-}
+/* bool carbon_fs_remove_all(const char *file) { */
+/*   // ... */
+/* } */
 
-u8 carbon_fs_change_directory(const char *path) {
+bool carbon_fs_change_directory(const char *path) {
 #ifdef _WIN32
   i8 result = _chdir(path);
 #else
@@ -108,7 +101,7 @@ u8 carbon_fs_change_directory(const char *path) {
   return true;
 }
 
-u8 carbon_fs_create_directory(const char *path) {
+bool carbon_fs_create_directory(const char *path) {
   if (!path || !path[0]) {
     CBN_ERROR("path is invalid");
     return false;
@@ -126,7 +119,7 @@ u8 carbon_fs_create_directory(const char *path) {
   return true;
 }
 
-u8 carbon_fs_create_directories(const char *path) {
+bool carbon_fs_create_directories(const char *path) {
   if (!path || !path[0]) {
     CBN_ERROR("path is invalid");
     return false;
@@ -322,7 +315,7 @@ u32 carbon_fs_get_file_size(const char *file) {
   return size;
 }
 
-u8 carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
+bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   FILE *fd = fopen(file, "rb");
   if (!fd) {
     CBN_ERROR("unable to open file (`%s`)", file);

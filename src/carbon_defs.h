@@ -75,10 +75,19 @@
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
+/**
+ * @brief ...
+ */
 #ifdef __cplusplus
 #define CBNDEF extern "C"
 #else
 #define CBNDEF extern
+#endif
+
+#ifdef __cplusplus
+#define CBNDEF_FN(ns, alias, fn) namespace ns {constexpr auto alias = fn;}
+#else
+#define CBNDEF_FN(...)
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
