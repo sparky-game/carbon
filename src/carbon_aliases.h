@@ -77,20 +77,14 @@ namespace cbn {
       }
       else return static_cast<i32>(carbon_math_imod(x, y));
     }
-    inline auto Rand(void) { return carbon_math_randf(); }
-    template <meta::Numeric T, meta::Numeric U>
-    auto Rand(const T min, const U max) {
-      if constexpr (std::floating_point<T> or std::floating_point<U>) {
-        return static_cast<f32>(carbon_math_randf_between(min, max));
-      }
-      else return static_cast<i32>(carbon_math_rand_between(min, max));
-    }
-    constexpr auto MT19937 = carbon_math_mt19937_64_rand;
     [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
       return CARBON_CLAMP(x, min, max);
     }
     constexpr void Clamp(auto &x, const auto min, const auto max) { x = ToClamped(x, min, max); }
-    constexpr void Lerp(auto &a, const auto b, const auto t) { a = CARBON_LERP(a, b, t); }
+    [[nodiscard]] constexpr auto ToLerped(const auto a, const auto b, const auto t) {
+      return CARBON_LERP(a, b, t);
+    }
+    constexpr void Lerp(auto &a, const auto b, const auto t) { a = ToLerped(a, b, t); }
   }
 
   namespace time {
