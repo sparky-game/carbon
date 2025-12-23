@@ -84,3 +84,66 @@ u64 carbon_rng_mt19937_64_rand(void) {
   x ^= (x >> 43);
   return x;
 }
+
+CARBON_INLINE i32 carbon_rng__ascending_order(const void *a, const void *b) {
+  const i32 x = *(const i32 *) a;
+  const i32 y = *(const i32 *) b;
+  return (x > y) - (x < y);
+}
+
+CARBON_INLINE i32 carbon_rng__descending_order(const void *a, const void *b) {
+  const i32 x = *(const i32 *) a;
+  const i32 y = *(const i32 *) b;
+  return (y > x) - (y < x);
+}
+
+// {N}d{S}kl{X}
+// N := number of dice to be rolled
+// S := number of faces of each die
+// kl{X} := keep lowest X rolls
+// kh{X} := keep highest X rolls
+// e.g. `4d6kh3` := Roll 4 d6 dice, keep the highest 3 values, and sum them up.
+u32 carbon_rng_roll_dice(const char *expr) {
+  const char *p = expr;
+  u32 n, s, x;
+  i32 cs;
+  if (2 > sscanf(p, "%ud%u%n", &n, &s, &cs)) {
+    CBN_ERROR("expr (%s) is not valid, must be in {N}d{S} format", p);
+    return 0;
+  }
+  p += cs;
+  CBN_Sort_CmpFunc f_cmp;
+  if (!*p) x = n;
+  else if (!carbon_string_cmp_n(p, "kl", 2)) {
+    if (1 != sscanf(p + 2, "%u", &x)) {
+      CBN_ERROR("missing keep number in suffix");
+      return 0;
+    }
+    f_cmp = carbon_rng__ascending_order;
+  }
+  else if (!carbon_string_cmp_n(p, "kh", 2)) {
+    if (1 != sscanf(p + 2, "%u", &x)) {
+      CBN_ERROR("missing keep number in suffix");
+      return 0;
+    }
+    f_cmp = carbon_rng__descending_order;
+  }
+  else {
+    CBN_ERROR("unrecognized suffix");
+    return 0;
+  }
+  if (x > n) {
+    CBN_ERROR("can't keep %u dice when only %u were rolled", x, n);
+    return 0;
+  }
+  if (s != 4 && s != 6 && s != 8 && s != 10 && s != 12 && s != 20 && s != 100) {
+    CBN_ERROR("invalid die size d%u", s);
+    return 0;
+  }
+  u32 rolls[256] = {0};
+  for (usz i = 0; i < n; ++i) rolls[i] = carbon_rng_lcg_range(1, s);
+  carbon_sort_insertion(rolls, n, sizeof(u32), f_cmp);
+  u32 sum = 0;
+  for (usz i = 0; i < x; ++i) sum += rolls[i];
+  return sum;
+}

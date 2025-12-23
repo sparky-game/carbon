@@ -54,6 +54,9 @@ CBNDEF u64 carbon_rng_mt19937_64_rand(void);
 CBNDEF_FN(cbn::rng, MT19937, carbon_rng_mt19937_64_rand);
 
 /**
+ * @brief ...
+ * @param expr ...
+ * @return ...
  */
 CBNDEF u32 carbon_rng_roll_dice(const char *expr);
 CBNDEF_FN(cbn::rng, RollDice, carbon_rng_roll_dice);
