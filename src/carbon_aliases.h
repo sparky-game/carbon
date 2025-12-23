@@ -113,9 +113,6 @@ namespace cbn {
     }
   }
 
-  namespace net {
-  }
-
   namespace audio {
     using UID = CBN_Audio_UID;
     template <typename... Args>
