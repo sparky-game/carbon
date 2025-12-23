@@ -14,6 +14,7 @@ typedef struct {
   CBN_Vec3 rotation;
   CBN_Vec3 scale;
 } CBN_Transform;
+CBNDEF_T(cbn, Transform, CBN_Transform);
 
 typedef struct CBN_Camera CBN_Camera;  // Forward declaration
 
@@ -97,6 +98,7 @@ typedef struct CBN_DrawCanvas {
   explicit operator bool(void) const;
 #endif
 } CBN_DrawCanvas;
+CBNDEF_T(cbn, DrawCanvas, CBN_DrawCanvas);
 
 #define carbon_drawcanvas_at(dc, i, j) (dc).pixels[(j) * (dc).width + (i)]
 

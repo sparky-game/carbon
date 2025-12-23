@@ -17,3 +17,4 @@ typedef struct {
   u8 *data;
   CBN_Binary_Metadata metadata;
 } CBN_Binary;
+CBNDEF_T(cbn, Binary, CBN_Binary);

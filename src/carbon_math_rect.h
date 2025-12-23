@@ -73,6 +73,7 @@ typedef struct CBN_Rect {
   bool operator==(const CBN_Rect &r) const;
 #endif
 } CBN_Rect;
+CBNDEF_T(cbn::math, Rect, CBN_Rect);
 
 /**
  * @brief Determines whether the specified point is contained within a rectangle.

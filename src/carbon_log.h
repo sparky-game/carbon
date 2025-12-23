@@ -25,6 +25,7 @@ struct CBN_Log_Color {
   static constexpr const char *Cyan    = CARBON_COLOR_CYAN;
 };
 #endif
+CBNDEF_T(cbn::log, Color, CBN_Log_Color);
 
 #define CBN_DEBUG(msg, ...) carbon_cprintln(CARBON_COLOR_CYAN, carbon_string_fmt("[^] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)
 #define CBN_INFO(msg, ...)  carbon_cprintln(CARBON_COLOR_YELLOW, carbon_string_fmt("[*] %s:%u :: %s", __FILE__, __LINE__, msg), ##__VA_ARGS__)

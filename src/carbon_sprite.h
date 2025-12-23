@@ -29,6 +29,7 @@ typedef struct CBN_Sprite {
   void Free(void);
 #endif
 } CBN_Sprite;
+CBNDEF_T(cbn, Sprite, CBN_Sprite);
 
 /**
  * @brief Creates a Sprite from an Image object.

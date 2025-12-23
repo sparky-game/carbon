@@ -43,6 +43,7 @@
  * by the angle θ, where `w = cos(θ/2)`.
  */
 typedef CBN_Vec4 CBN_Quat;
+CBNDEF_T(cbn::math, Quat, CBN_Quat);
 
 /**
  * @brief Computes the Hamilton product between two quaternions.

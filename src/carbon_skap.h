@@ -112,6 +112,7 @@ private:
   static consteval CBN_SKAP_AssetType GetAssetType(void);
 #endif
 } CBN_SKAP;
+CBNDEF_T(cbn, SKAP, CBN_SKAP);
 
 /**
  * @brief Creates a SKAP from a declarations (DECL) file.

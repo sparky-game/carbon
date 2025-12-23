@@ -15,6 +15,7 @@
 typedef struct CBN_Mat4 {
   f32 items[4][4];
 } CBN_Mat4;
+CBNDEF_T(cbn::math, Mat4, CBN_Mat4);
 
 /**
  * @brief Creates a zeroed-out 4x4 matrix.

@@ -123,6 +123,7 @@ typedef union CBN_Vec4 {
   const char *ToString(void) const;
 #endif
 } CBN_Vec4;
+CBNDEF_T(cbn::math, Vec4, CBN_Vec4);
 
 /**
  * @brief Adds two 4D vectors together (element-wise).

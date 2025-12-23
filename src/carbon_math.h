@@ -114,6 +114,7 @@ CBNDEF u32 carbon_math_bswap32(u32 x);
  * @return The non-negative value of x without regard to its sign.
  */
 CBNDEF f32 carbon_math_abs(f32 x);
+CBNDEF_FN(cbn::math, Abs, carbon_math_abs);
 
 /**
  * @brief Rounds a number to the nearest integral value.
@@ -217,6 +218,7 @@ CBNDEF f32 carbon_math_log(f32 x);
  * @return The result of e^x.
  */
 CBNDEF f32 carbon_math_exp(f32 x);
+CBNDEF_FN(cbn::math, Exp, carbon_math_exp);
 
 /**
  * @brief Multiplies a number by an integer power of e.
@@ -305,6 +307,7 @@ CBNDEF i32 carbon_math_egcd(i32 x, i32 y);
  * @return The sine of x.
  */
 CBNDEF f32 carbon_math_sin(f32 x);
+CBNDEF_FN(cbn::math, Sin, carbon_math_sin);
 
 /**
  * @brief Returns the cosine of the specified angle.
@@ -312,6 +315,7 @@ CBNDEF f32 carbon_math_sin(f32 x);
  * @return The cosine of x.
  */
 CBNDEF f32 carbon_math_cos(f32 x);
+CBNDEF_FN(cbn::math, Cos, carbon_math_cos);
 
 /**
  * @brief Returns the tangent of the specified angle.
@@ -319,6 +323,7 @@ CBNDEF f32 carbon_math_cos(f32 x);
  * @return The tangent of x.
  */
 CBNDEF f32 carbon_math_tan(f32 x);
+CBNDEF_FN(cbn::math, Tan, carbon_math_tan);
 
 /**
  * @brief Returns the hyperbolic tangent of the specified angle.
@@ -326,6 +331,7 @@ CBNDEF f32 carbon_math_tan(f32 x);
  * @return The hyperbolic tangent of x.
  */
 CBNDEF f32 carbon_math_tanh(f32 x);
+CBNDEF_FN(cbn::math, Tanh, carbon_math_tanh);
 
 /**
  * @brief Returns the angle whose sine is the specified number.
@@ -348,3 +354,4 @@ CBNDEF f32 carbon_math_atan(f32 x);
  * @return An angle θ, in radians, such that tan(θ) = y/x, where (x, y) is a point in the Cartesian plane.
  */
 CBNDEF f32 carbon_math_atan2(f32 y, f32 x);
+CBNDEF_FN(cbn::math, Atan2, carbon_math_atan2);

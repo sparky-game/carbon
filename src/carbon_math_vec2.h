@@ -197,6 +197,7 @@ typedef union CBN_Vec2 {
   CBN_Vec4 xyyx(void) const;
 #endif
 } CBN_Vec2;
+CBNDEF_T(cbn::math, Vec2, CBN_Vec2);
 
 /**
  * @brief Adds two 2D vectors together (element-wise).

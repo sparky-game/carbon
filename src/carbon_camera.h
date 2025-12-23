@@ -82,6 +82,7 @@ struct CBN_Camera {
   void Pitch(f32 amount);
 };
 #endif
+CBNDEF_T(cbn, Camera, CBN_Camera);
 
 /**
  * @brief Creates a new Camera object.

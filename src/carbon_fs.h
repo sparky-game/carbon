@@ -82,6 +82,7 @@ typedef struct CBN_Image {
   u8 Save(CBN_FileFormat fmt, const char *file) const;
 #endif
 } CBN_Image;
+CBNDEF_T(cbn, Image, CBN_Image);
 
 /**
  * @brief ...

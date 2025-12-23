@@ -45,6 +45,7 @@ typedef struct CBN_Mesh {
   u32 CRC32(void) const;
 #endif
 } CBN_Mesh;
+CBNDEF_T(cbn, Mesh, CBN_Mesh);
 
 CBNDEF bool carbon_mesh_create_from_file(CBN_Mesh *m, const char *file);
 

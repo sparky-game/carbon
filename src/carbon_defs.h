@@ -85,8 +85,10 @@
 #endif
 
 #ifdef __cplusplus
+#define CBNDEF_T(ns, alias, type) namespace ns {using alias = type;}
 #define CBNDEF_FN(ns, alias, fn) namespace ns {constexpr auto alias = fn;}
 #else
+#define CBNDEF_T(...)
 #define CBNDEF_FN(...)
 #endif
 

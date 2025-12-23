@@ -6,19 +6,19 @@
 #ifdef __cplusplus
 
 template <typename T>
-cbn::Opt<T> CBN_SKAP::Lookup(const char *asset_name) const {
+cbn::Opt<T> cbn::SKAP::Lookup(const char *asset_name) const {
   T asset;
   if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
   return asset;
 }
 
 template <typename T>
-usz CBN_SKAP::CountOf(void) const {
+usz cbn::SKAP::CountOf(void) const {
   return carbon_skap_count_of(this, GetAssetType<T>());
 }
 
 template <CBN_SKAP_AssetType_t T>
-consteval CBN_SKAP_AssetType CBN_SKAP::GetAssetType(void) {
+consteval CBN_SKAP_AssetType cbn::SKAP::GetAssetType(void) {
   if constexpr      (cbn::meta::Same_v<T, CBN_Image>)  return CARBON_SKAP_ASSET_TYPE_IMAGE;
   else if constexpr (cbn::meta::Same_v<T, CBN_Binary>) return CARBON_SKAP_ASSET_TYPE_BINARY;
   else if constexpr (cbn::meta::Same_v<T, CBN_Mesh>)   return CARBON_SKAP_ASSET_TYPE_MESH;
