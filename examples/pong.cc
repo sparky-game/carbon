@@ -140,8 +140,8 @@ namespace pong {
     explicit Ball(void) : Entity{CARBON_VEC2(c_ScreenWidth/2 - size/2, c_ScreenHeight/2 - size/2), CARBON_VEC2_ZERO}
     {
       using namespace cbn::math::literals;
-      auto angle = cbn::math::Mod((cbn::math::Rand(0, 120_deg) + 300_deg), 2_pi);
-      if (cbn::math::Rand() < 0.5) angle += pi;
+      auto angle = cbn::math::Mod((cbn::rng::LCGfr(0, 120_deg) + 300_deg), 2_pi);
+      if (cbn::rng::LCGf() < 0.5) angle += pi;
       velocity = CARBON_VEC2(speed_initial * cbn::math::Cos(angle), speed_initial * cbn::math::Sin(angle));
     }
 
@@ -518,7 +518,7 @@ namespace pong {
 
       void Update_ServeBall(void) {
         m_Playing = true;
-        const auto &sound = cbn::math::Rand() < 0.15 ? res::s_Sound_Serve_2 : res::s_Sound_Serve_1;
+        const auto &sound = cbn::rng::LCGf() < 0.15 ? res::s_Sound_Serve_2 : res::s_Sound_Serve_1;
         cbn::audio::ShiftPitch(sound);
         cbn::audio::Play(sound);
       }
@@ -578,7 +578,7 @@ namespace pong {
         const auto ball_center_y = m_Ball.position.y + m_Ball.size/2;
         const auto racket_center_y = p.racket.position.y + p.racket.size/2;
         const auto relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (p.racket.size/2), -1, 1);
-        const auto angle = (relative_y * 45_deg) + cbn::math::Rand(-10_deg, 10_deg);
+        const auto angle = (relative_y * 45_deg) + cbn::rng::LCGfr(-10_deg, 10_deg);
         const auto d_speed = m_Ball.speed_delta * (1 - 2 * cbn::math::Abs(relative_y));
         const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
         m_Ball.velocity = CARBON_VEC2(dir * cbn::math::Abs(speed * cbn::math::Cos(angle)), speed * cbn::math::Sin(angle));
@@ -606,7 +606,7 @@ namespace pong {
         static constexpr auto deadzone = 30;
         static auto target = m_Window->height/2 - r.size/2;
         const auto t = m_Ball.position.y + m_Ball.size/2 - r.size/2;
-        const auto difficulty = cbn::math::Rand() < 0.5 ? 30 : 80;
+        const auto difficulty = cbn::rng::LCGf() < 0.5 ? 30 : 80;
         cbn::math::Lerp(target, t, difficulty * dt);
         if (r.position.y + deadzone < target)      r.position += r.velocity * dt;
         else if (r.position.y - deadzone > target) r.position -= r.velocity * dt;

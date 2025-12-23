@@ -26,7 +26,7 @@ static const u8 oca_mappings[] = {
 };
 
 static u8 roll_die(void) {
-  return carbon_math_rand_between(1, 6);
+  return carbon_rng_lcg_range(1, 6);
 }
 
 static void print_board(void) {
@@ -64,7 +64,6 @@ static void print_board(void) {
 }
 
 int main(void) {
-  carbon_math_srand(carbon_time_get());
   print_board();
   usz t = 1;
   u8 pos = 1;

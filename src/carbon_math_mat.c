@@ -31,7 +31,7 @@ void carbon_math_mat_fill(CBN_Mat m, f32 x) {
 void carbon_math_mat_rand(CBN_Mat m, f32 min, f32 max) {
   for (usz i = 0; i < m.rows; ++i) {
     for (usz j = 0; j < m.cols; ++j) {
-      CARBON_MAT_AT(m, i, j) = carbon_math_randf() * (max - min) + min;
+      CARBON_MAT_AT(m, i, j) = carbon_rng_lcgf_range(min, max);
     }
   }
 }

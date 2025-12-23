@@ -93,14 +93,6 @@
  */
 #define CARBON_TO_RADIANS(angle) ((angle) * CARBON_PI / 180)
 
-CBNDEF void carbon_math_srand(u64 seed);
-CBNDEF i32 carbon_math_rand(void);
-CBNDEF i32 carbon_math_rand_between(i32 min, i32 max);
-CBNDEF f32 carbon_math_randf(void);
-CBNDEF f32 carbon_math_randf_between(f32 min, f32 max);
-CBNDEF void carbon_math_mt19937_64_srand(u64 seed);
-CBNDEF u64 carbon_math_mt19937_64_rand(void);
-
 /**
  * @brief Reverses the order of the bytes in the provided 32-bit unsigned integer (e.g. 0xAABBCCDD -> 0xDDCCBBAA).
  * @param x The 32-bit unsigned integer.

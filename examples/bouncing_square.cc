@@ -14,8 +14,8 @@ int main(void) {
   };
   constexpr auto n_colors = CARBON_ARRAY_LEN(colors);
   constexpr auto size = 100;
-  auto position = CARBON_VEC2(carbon_math_rand_between(0, canvas.width - size),
-                              carbon_math_rand_between(0, canvas.height - size));
+  auto position = CARBON_VEC2(cbn::rng::LCGr(0, canvas.width - size),
+                              cbn::rng::LCGr(0, canvas.height - size));
   auto velocity = CARBON_VEC2_1(200);
   auto c = 0;
   cbn::win::ForFrame([&](const auto dt){

@@ -79,8 +79,8 @@ void carbon_time_sleep(u64 ms) {
 
 u64 carbon_time_snowflake_get(void) {
   u64 timestamp = (u64) carbon_time_get() & ((1ULL << 42) - 1);
-  carbon_math_mt19937_64_srand(timestamp);
-  u64 random = carbon_math_mt19937_64_rand() % (1ULL << 22);
+  carbon_rng_mt19937_64_srand(timestamp);
+  u64 random = carbon_rng_mt19937_64_rand() % (1ULL << 22);
   /*
   ** [1][TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT][RRRRRRRRRRRRRRRRRRRRRR]
   **  ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~
