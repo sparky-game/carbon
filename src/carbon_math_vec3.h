@@ -125,6 +125,10 @@ typedef union CBN_Vec3 {
    * @see carbon_math_vec3_add
    */
   CBN_Vec3 operator+(const CBN_Vec3 &v) const;
+  CBN_Vec3 operator+(f32 s) const;
+  friend CBN_Vec3 operator+(f32 s, const CBN_Vec3 &v);
+  CBN_Vec3 &operator+=(const CBN_Vec3 &v);
+  CBN_Vec3 &operator+=(f32 s);
   /**
    * @see carbon_math_vec3_sub
    */
@@ -141,6 +145,10 @@ typedef union CBN_Vec3 {
    * @see carbon_math_vec3_lerp
    */
   CBN_Vec3 Lerp(const CBN_Vec3 &v, f32 t) const;
+  /**
+   * @see carbon_math_quat_from_euler
+   */
+  CBN_Quat ToQuat(void) const;
   /**
    * @see carbon_math_vec3_to_cstr
    */
