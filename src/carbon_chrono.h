@@ -40,6 +40,7 @@ typedef struct CBN_Chrono {
   bool IsRunning(void) const;
 #endif
 } CBN_Chrono;
+CBNDEF_T(cbn::time, Chrono, CBN_Chrono);
 
 /**
  * @brief Creates and starts the chrono.

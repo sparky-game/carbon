@@ -114,6 +114,7 @@ CBNDEF_FN(cbn::math, Abs, carbon_math_abs);
  * @return The rounded integral value of x.
  */
 CBNDEF f32 carbon_math_round(f32 x);
+CBNDEF_FN(cbn::math, Round, carbon_math_round);
 
 /**
  * @brief Returns the largest integral value less than or equal to the specified number.
@@ -338,6 +339,7 @@ CBNDEF f32 carbon_math_asin(f32 x);
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
 CBNDEF f32 carbon_math_atan(f32 x);
+CBNDEF_FN(cbn::math, Atan, carbon_math_atan);
 
 /**
  * @brief Returns the angle whose tangent is the quotient of the two specified numbers.

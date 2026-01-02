@@ -88,7 +88,6 @@ namespace cbn {
   }
 
   namespace time {
-    using Chrono = CBN_Chrono;
     namespace literals {
       consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
       consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
@@ -143,11 +142,6 @@ namespace cbn {
       if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_mesh_manager_load(cbn::meta::Forward<Args>(args))...);
       else return carbon_mesh_manager_load(cbn::meta::Forward<Args>(args)...);
     }
-  }
-
-  namespace win {
-    using KeyCode     = CBN_KeyCode;
-    using MouseButton = CBN_MouseButton;
   }
 }
 #endif  // __cplusplus
