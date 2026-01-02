@@ -62,6 +62,21 @@ namespace cbn {
   }
 
   namespace math {
+    [[nodiscard]] constexpr auto Max(auto x, auto y) {
+      return CARBON_MAX(x, y);
+    }
+    [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
+      return CARBON_CLAMP(x, min, max);
+    }
+    constexpr void Clamp(auto &x, const auto min, const auto max) {
+      x = ToClamped(x, min, max);
+    }
+    [[nodiscard]] constexpr auto ToLerped(const auto a, const auto b, const auto t) {
+      return CARBON_LERP(a, b, t);
+    }
+    constexpr void Lerp(auto &a, const auto b, const auto t) {
+      a = ToLerped(a, b, t);
+    }
     constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
     namespace literals {
       consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
@@ -72,19 +87,11 @@ namespace cbn {
     }
     template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
-      if constexpr (std::floating_point<T> or std::floating_point<U>) {
+      if constexpr (meta::Float<T> or meta::Float<U>) {
         return static_cast<f32>(carbon_math_fmod(x, y));
       }
       else return static_cast<i32>(carbon_math_imod(x, y));
     }
-    [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
-      return CARBON_CLAMP(x, min, max);
-    }
-    constexpr void Clamp(auto &x, const auto min, const auto max) { x = ToClamped(x, min, max); }
-    [[nodiscard]] constexpr auto ToLerped(const auto a, const auto b, const auto t) {
-      return CARBON_LERP(a, b, t);
-    }
-    constexpr void Lerp(auto &a, const auto b, const auto t) { a = ToLerped(a, b, t); }
   }
 
   namespace time {
