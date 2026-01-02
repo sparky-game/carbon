@@ -20,14 +20,14 @@
  * @brief Defines an inline 2D vector.
  * @param x The value to assign to both the X and Y fields.
  */
-#define CARBON_VEC2_1(x) CARBON_VEC2(x, x)
+#define CARBON_VEC2_1(x) CARBON_VEC2((x), (x))
 
 /**
  * @brief Defines an inline 2D vector (from polar coordinate system).
  * @param r The radial coordinate.
  * @param phi The angular coordinate.
  */
-#define CARBON_VEC2_P(r, phi) CARBON_VEC2(r * carbon_math_cos(phi), r * carbon_math_sin(phi))
+#define CARBON_VEC2_P(r, phi) CARBON_VEC2((r) * carbon_math_cos((phi)), (r) * carbon_math_sin((phi)))
 
 // Swizzling Operations
 #define CARBON_VEC_xx(v)   CARBON_VEC2((v).x, (v).x)
