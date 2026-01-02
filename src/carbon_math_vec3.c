@@ -56,7 +56,7 @@ CBN_Vec3 carbon_math_vec3_lerp(CBN_Vec3 u, CBN_Vec3 v, f32 t) {
 }
 
 CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle) {
-  CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC_yz(v), angle);
+  CBN_Vec2 r = carbon_math_vec2_rotate(v.yz, angle);
   return CARBON_VEC3(v.x, r.x, r.y);
 }
 
@@ -66,7 +66,7 @@ CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle) {
 }
 
 CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle) {
-  CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC_xy(v), angle);
+  CBN_Vec2 r = carbon_math_vec2_rotate(v.xy, angle);
   return CARBON_VEC3(r.x, r.y, v.z);
 }
 

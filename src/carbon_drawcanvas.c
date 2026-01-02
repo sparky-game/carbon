@@ -124,11 +124,11 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
 
 void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
   usz lx, hx, ly, hy;
-  if (!carbon_drawcanvas__triangle_norm(dc, CARBON_VEC_xy(v1), CARBON_VEC_xy(v2), CARBON_VEC_xy(v3), &lx, &hx, &ly, &hy)) return;
+  if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
   for (usz j = ly; j <= hy; ++j) {
     for (usz i = lx; i <= hx; ++i) {
       i32 u1, u2, det;
-      if (!carbon_drawcanvas__triangle_barycentric(CARBON_VEC_xy(v1), CARBON_VEC_xy(v2), CARBON_VEC_xy(v3), i, j, &u1, &u2, &det)) continue;
+      if (!carbon_drawcanvas__triangle_barycentric(v1.xy, v2.xy, v3.xy, i, j, &u1, &u2, &det)) continue;
       f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
       f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
       usz idx = j * dc.width + i;
@@ -298,7 +298,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Me
   if (!c || !m || !m->vertices || !m->faces) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
-  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_ONE);
+  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_BACK);
   for (usz f = 0; f < m->metadata.faces_count; ++f) {
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
     const Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];

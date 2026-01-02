@@ -15,7 +15,7 @@
  * @param y The value to assign to the Y field.
  * @param z The value to assign to the Z field.
  */
-#define CARBON_VEC3(x, y, z) (CBN_Vec3){{(f32)(x), (f32)(y), (f32)(z)}}
+#define CARBON_VEC3(x, y, z) (CBN_Vec3){{.c = {(f32)(x), (f32)(y), (f32)(z)}}}
 
 /**
  * @brief Defines an inline 3D vector.
@@ -45,7 +45,6 @@
 // Swizzling Operations
 #define CARBON_VEC_xz(v)  CARBON_VEC2((v).x, (v).z)
 #define CARBON_VEC_zx(v)  CARBON_VEC2((v).z, (v).x)
-#define CARBON_VEC_yz(v)  CARBON_VEC2((v).y, (v).z)
 #define CARBON_VEC_zy(v)  CARBON_VEC2((v).z, (v).y)
 #define CARBON_VEC_zz(v)  CARBON_VEC2((v).z, (v).z)
 #define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
@@ -108,19 +107,28 @@
  */
 #define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
 
-typedef union CBN_Vec4 CBN_Quat;  // Forward declaration
-
 /**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
  */
-typedef union CBN_Vec3 {
-  f32 items[3];
-  struct {
-    union { f32 x, r; };
-    union { f32 y, g; };
-    union { f32 z, b; };
+struct CBN_Vec3_t {
+  union {
+    struct { f32 x, y, z; };
+    struct { CBN_Vec2 xy; f32 __pad1; };
+    struct { f32 __pad2; CBN_Vec2 yz; };
+    f32 c[3];
   };
+};
+
+// Forward declarations
 #ifdef __cplusplus
+typedef struct CBN_Vec4 CBN_Quat;
+#else
+typedef struct CBN_Vec4_t CBN_Quat;
+#endif
+
+
+#ifdef __cplusplus
+struct CBN_Vec3 : CBN_Vec3_t {
   /**
    * @see carbon_math_vec3_add
    */
@@ -175,11 +183,9 @@ typedef union CBN_Vec3 {
   cbn::Opt<CBN_Vec2> Project2D(f32 near_z) const;
   // Swizzling Operations
   CBN_Vec2 xx(void)  const;
-  CBN_Vec2 xy(void)  const;
   CBN_Vec2 xz(void)  const;
   CBN_Vec2 yx(void)  const;
   CBN_Vec2 yy(void)  const;
-  CBN_Vec2 yz(void)  const;
   CBN_Vec2 zx(void)  const;
   CBN_Vec2 zy(void)  const;
   CBN_Vec2 zz(void)  const;
@@ -210,8 +216,10 @@ typedef union CBN_Vec3 {
   CBN_Vec3 zzx(void) const;
   CBN_Vec3 zzy(void) const;
   CBN_Vec3 zzz(void) const;
+};
+#else
+typedef struct CBN_Vec3_t CBN_Vec3;
 #endif
-} CBN_Vec3;
 CBNDEF_T(cbn::math, Vec3, CBN_Vec3);
 
 /**

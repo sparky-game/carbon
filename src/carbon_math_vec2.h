@@ -14,7 +14,7 @@
  * @param x The value to assign to the X field.
  * @param y The value to assign to the Y field.
  */
-#define CARBON_VEC2(x, y) (CBN_Vec2){{(f32)(x), (f32)(y)}}
+#define CARBON_VEC2(x, y) (CBN_Vec2){{.c = {(f32)(x), (f32)(y)}}}
 
 /**
  * @brief Defines an inline 2D vector.
@@ -74,19 +74,27 @@
  */
 #define CARBON_VEC2_ONE CARBON_VEC2_1(1)
 
-typedef union CBN_Vec3 CBN_Vec3;  // Forward declaration
-typedef union CBN_Vec4 CBN_Vec4;  // Forward declaration
-
 /**
  * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
  */
-typedef union CBN_Vec2 {
-  f32 items[2];
-  struct {
-    union { f32 x, r; };
-    union { f32 y, g; };
+struct CBN_Vec2_t {
+  union {
+    struct { f32 x, y; };
+    f32 c[2];
   };
+};
+
+// Forward declarations
 #ifdef __cplusplus
+typedef struct CBN_Vec3 CBN_Vec3;
+typedef struct CBN_Vec4 CBN_Vec4;
+#else
+typedef struct CBN_Vec3_t CBN_Vec3;
+typedef struct CBN_Vec4_t CBN_Vec4;
+#endif
+
+#ifdef __cplusplus
+struct CBN_Vec2 : CBN_Vec2_t {
   /**
    * @see carbon_math_vec2_add
    */
@@ -195,8 +203,10 @@ typedef union CBN_Vec2 {
   CBN_Vec3 yyx(void)  const;
   CBN_Vec3 yyy(void)  const;
   CBN_Vec4 xyyx(void) const;
+};
+#else
+typedef struct CBN_Vec2_t CBN_Vec2;
 #endif
-} CBN_Vec2;
 CBNDEF_T(cbn::math, Vec2, CBN_Vec2);
 
 /**

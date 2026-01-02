@@ -11,19 +11,9 @@
 
 /**
  * @brief Defines an inline quaternion.
- * @param x The value to assign to the X field.
- * @param y The value to assign to the Y field.
- * @param z The value to assign to the Z field.
- * @param w The value to assign to the W field.
  */
-#define CARBON_QUAT(x, y, z, w) (CBN_Quat){{(f32)(x), (f32)(y), (f32)(z), (f32)(w)}}
-
-/**
- * @brief Defines an inline quaternion.
- * @param v The 3D vector to assign to the X, Y and Z fields.
- * @param w The value to assign to the W field.
- */
-#define CARBON_QUAT_3(v, w) CARBON_VEC4_3(v, w)
+#define CARBON_QUAT CARBON_VEC4
+#define CARBON_QUAT_3 CARBON_VEC4_3
 
 /**
  * @brief Defines an inline quaternion being the conjugate of the provided one.

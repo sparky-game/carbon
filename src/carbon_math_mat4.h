@@ -12,9 +12,21 @@
 /**
  * @brief Represents a 4x4 matrix that is used to encode 3D physical transformations.
  */
-typedef struct CBN_Mat4 {
-  f32 items[4][4];
-} CBN_Mat4;
+struct CBN_Mat4_t {
+  union {
+    CBN_Vec4 v[4];
+    f32 m[4][4];
+    f32 c[4*4];
+  };
+};
+
+#ifdef __cplusplus
+struct CBN_Mat4 : CBN_Mat4_t {
+  // ...
+};
+#else
+typedef struct CBN_Mat4_t CBN_Mat4;
+#endif
 CBNDEF_T(cbn::math, Mat4, CBN_Mat4);
 
 /**
@@ -112,3 +124,7 @@ CBNDEF CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 
  * @return The 4x4 matrix.
  */
 CBNDEF CBN_Mat4 carbon_math_mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
+
+// Local Variables:
+// mode: c++
+// End:

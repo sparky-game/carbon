@@ -4,7 +4,7 @@
 #include <carbon.h>
 
 int main(void) {
-  CBN_Vec2 flag_size = {{900, 600}};
+  CBN_Vec2 flag_size = CARBON_VEC2(900, 600);
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(flag_size.x * 1.0555, flag_size.y * 1.08);
   carbon_drawcanvas_fill(canvas, 0x181818ff);
   carbon_drawcanvas_rect(canvas, CARBON_RECT(canvas.width/2  - flag_size.x/2,

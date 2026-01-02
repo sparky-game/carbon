@@ -16,7 +16,7 @@
  * @param z The value to assign to the Z field.
  * @param w The value to assign to the W field.
  */
-#define CARBON_VEC4(x, y, z, w) (CBN_Vec4){{(f32)(x), (f32)(y), (f32)(z), (f32)(w)}}
+#define CARBON_VEC4(x, y, z, w) (CBN_Vec4){{.c = {(f32)(x), (f32)(y), (f32)(z), (f32)(w)}}}
 
 /**
  * @brief Defines an inline 4D vector.
@@ -51,15 +51,19 @@
 /**
  * @brief Represents a 4D vector with four 32-bit floating-point (f32) values.
  */
-typedef union CBN_Vec4 {
-  f32 items[4];
-  struct {
-    union { f32 x, r; };
-    union { f32 y, g; };
-    union { f32 z, b; };
-    union { f32 w, a; };
+struct CBN_Vec4_t {
+  union {
+    struct { f32 x, y, z, w; };
+    struct { CBN_Vec2 xy; CBN_Vec2 zw; };
+    struct { f32 __pad1; CBN_Vec2 yz; f32 __pad2; };
+    struct { CBN_Vec3 xyz; f32 __pad3; };
+    struct { f32 __pad4; CBN_Vec3 yzw; };
+    f32 c[4];
   };
+};
+
 #ifdef __cplusplus
+struct CBN_Vec4 : CBN_Vec4_t {
   /**
    * @see carbon_math_vec4_add
    */
@@ -121,8 +125,10 @@ typedef union CBN_Vec4 {
    * @see carbon_math_vec4_to_cstr
    */
   const char *ToString(void) const;
+};
+#else
+typedef struct CBN_Vec4_t CBN_Vec4;
 #endif
-} CBN_Vec4;
 CBNDEF_T(cbn::math, Vec4, CBN_Vec4);
 
 /**

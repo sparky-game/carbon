@@ -6,18 +6,18 @@
 #define TEST(name) CARBON_TEST(carbon_math_cxx, name)
 
 TEST(vec2_add) {
-  CBN_Vec2 u = {{1, 2}};
-  CBN_Vec2 v = {{3, 4}};
-  CBN_Vec2 r = u + v;
+  auto u = CARBON_VEC2(1, 2);
+  auto v = CARBON_VEC2(3, 4);
+  auto r = u + v;
   carbon_should_be_f(4, r.x);
   carbon_should_be_f(6, r.y);
   return CARBON_OK;
 }
 
 TEST(vec3_add) {
-  CBN_Vec3 u = {{1, 2, 3}};
-  CBN_Vec3 v = {{4, 5, 6}};
-  CBN_Vec3 r = u + v;
+  auto u = CARBON_VEC3(1, 2, 3);
+  auto v = CARBON_VEC3(4, 5, 6);
+  auto r = u + v;
   carbon_should_be_f(5, r.x);
   carbon_should_be_f(7, r.y);
   carbon_should_be_f(9, r.z);
@@ -25,18 +25,18 @@ TEST(vec3_add) {
 }
 
 TEST(vec2_sub) {
-  CBN_Vec2 u = {{1, 2}};
-  CBN_Vec2 v = {{3, 4}};
-  CBN_Vec2 r = u - v;
+  auto u = CARBON_VEC2(1, 2);
+  auto v = CARBON_VEC2(3, 4);
+  auto r = u - v;
   carbon_should_be_f(-2, r.x);
   carbon_should_be_f(-2, r.y);
   return CARBON_OK;
 }
 
 TEST(vec3_sub) {
-  CBN_Vec3 u = {{1, 2, 3}};
-  CBN_Vec3 v = {{4, 5, 6}};
-  CBN_Vec3 r = u - v;
+  auto u = CARBON_VEC3(1, 2, 3);
+  auto v = CARBON_VEC3(4, 5, 6);
+  auto r = u - v;
   carbon_should_be_f(-3, r.x);
   carbon_should_be_f(-3, r.y);
   carbon_should_be_f(-3, r.z);
@@ -44,15 +44,15 @@ TEST(vec3_sub) {
 }
 
 TEST(vec2_dot) {
-  CBN_Vec2 u = {{1, 2}};
-  CBN_Vec2 v = {{3, 4}};
+  auto u = CARBON_VEC2(1, 2);
+  auto v = CARBON_VEC2(3, 4);
   carbon_should_be_f(11, u.Dot(v));
   return CARBON_OK;
 }
 
 TEST(vec3_dot) {
-  CBN_Vec3 u = {{1, 2, 3}};
-  CBN_Vec3 v = {{4, 5, 6}};
+  auto u = CARBON_VEC3(1, 2, 3);
+  auto v = CARBON_VEC3(4, 5, 6);
   carbon_should_be_f(32, u * v);
   return CARBON_OK;
 }
