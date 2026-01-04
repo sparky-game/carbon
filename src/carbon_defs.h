@@ -75,32 +75,24 @@
 #define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
-/**
- * @brief ...
- */
 #ifdef __cplusplus
 #define CBNDEF extern "C"
-#else
-#define CBNDEF extern
-#endif
-
-#ifdef __cplusplus
 #define CBNDEF_T(ns, alias, type) namespace ns {using alias = type;}
 #define CBNDEF_FN(ns, alias, fn) namespace ns {constexpr auto alias = fn;}
+#define CBNDEF_PDS(name) struct name ## _t
 #else
+#define CBNDEF extern
 #define CBNDEF_T(...)
 #define CBNDEF_FN(...)
+#define CBNDEF_PDS(name) typedef struct name ## _t name; struct name ## _t
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
 #define CBNINL __attribute__((always_inline)) static inline
-#define CARBON_NOINLINE __attribute__((noinline))
 #elif defined(_WIN32) && defined(_MSC_VER)
 #define CBNINL __forceinline
-#define CARBON_NOINLINE __declspec(noinline)
 #else
 #define CBNINL static inline
-#define CARBON_NOINLINE
 #endif
 
 #if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)

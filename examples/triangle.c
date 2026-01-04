@@ -8,10 +8,10 @@ int main(void) {
   carbon_win_open(canvas, "Triangle");
   carbon_win_set_max_fps(60);
   const usz size = 250;
-  const CBN_Vec2 center = CARBON_VEC2(canvas.width/2, canvas.height/2);
-  const CBN_Vec2 v1 = CARBON_VEC2(center.x, center.y - (size / CARBON_SQRT3));
-  const CBN_Vec2 v2 = CARBON_VEC2(center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3)));
-  const CBN_Vec2 v3 = CARBON_VEC2(center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3)));
+  const CBN_Vec2 center = carbon_math_vec2(canvas.width/2, canvas.height/2);
+  const CBN_Vec2 v1 = carbon_math_vec2(center.x, center.y - (size / CARBON_SQRT3));
+  const CBN_Vec2 v2 = carbon_math_vec2(center.x - (size/2), center.y + (size / (2 * CARBON_SQRT3)));
+  const CBN_Vec2 v3 = carbon_math_vec2(center.x + (size/2), center.y + (size / (2 * CARBON_SQRT3)));
   f32 angle = 0;
   while (!carbon_win_shouldclose()) {
     const f64 dt = carbon_win_get_deltatime();

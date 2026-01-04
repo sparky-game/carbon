@@ -137,12 +137,21 @@ namespace pong {
   };
 
   struct Ball final : Entity {
-    explicit Ball(void) : Entity{CARBON_VEC2(c_ScreenWidth/2 - size/2, c_ScreenHeight/2 - size/2), CARBON_VEC2_ZERO}
+    explicit Ball(void) : Entity{
+        cbn::math::Vec2{
+          c_ScreenWidth/2 - size/2,
+          c_ScreenHeight/2 - size/2
+        },
+        cbn::math::Vec2()
+      }
     {
       using namespace cbn::math::literals;
       auto angle = cbn::math::Mod((cbn::rng::LCGfr(0, 120_deg) + 300_deg), 2_pi);
       if (cbn::rng::LCGf() < 0.5) angle += pi;
-      velocity = CARBON_VEC2(speed_initial * cbn::math::Cos(angle), speed_initial * cbn::math::Sin(angle));
+      velocity = cbn::math::Vec2{
+        speed_initial * cbn::math::Cos(angle),
+        speed_initial * cbn::math::Sin(angle)
+      };
     }
 
     virtual void Update(const f64 dt) final override {
@@ -168,7 +177,7 @@ namespace pong {
   };
 
   struct Racket final : Entity {
-    explicit Racket(const cbn::math::Vec2 &p) : Entity{p, CARBON_VEC2(0, speed)} {}
+    explicit Racket(const cbn::math::Vec2 &p) : Entity{p, cbn::math::Vec2(0, speed)} {}
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
       canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), color);
@@ -190,7 +199,7 @@ namespace pong {
     u32 score {0};
     u8 yellow_cards {0};
 
-    explicit Player(void) : racket{CARBON_VEC2(0, c_ScreenHeight/2 - racket.size/2)}
+    explicit Player(void) : racket{cbn::math::Vec2(0, c_ScreenHeight/2 - racket.size/2)}
     {
       static constexpr auto padding = 100;
       if constexpr (S == PlayerSide::Left) racket.position.x = padding;
@@ -213,10 +222,10 @@ namespace pong {
     void Render_Points(cbn::DrawCanvas &canvas) const {
       const auto text = points.GetStr();
       static constexpr auto text_size = 8;
-      static constexpr auto text_padding = CARBON_VEC2(100, 50);
+      static constexpr auto text_padding = cbn::math::Vec2(100, 50);
       static constexpr auto text_color = static_cast<u32>(Color::White);
       const auto text_width = canvas.TextWidth(text, text_size);
-      auto text_pos = CARBON_VEC2(canvas.width/2, text_padding.y);
+      auto text_pos = cbn::math::Vec2(canvas.width/2, text_padding.y);
       if constexpr (S == PlayerSide::Left) text_pos.x -= text_padding.x + text_width;
       else text_pos.x += text_padding.x;
       canvas.DrawText(text, text_pos, text_size, text_color);
@@ -226,7 +235,7 @@ namespace pong {
       static constexpr auto padding = 10;
       static const auto * const sp = cbn::sprite_mgr::Lookup(res::s_Sprite_YellowCard);
       {// Sprite
-        static const auto sp_pos = CARBON_VEC2(padding, canvas.height - padding - sp->height);
+        static const auto sp_pos = cbn::math::Vec2(padding, canvas.height - padding - sp->height);
         canvas.DrawSprite(sp, sp_pos);
       }
       {// Text
@@ -234,7 +243,7 @@ namespace pong {
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::White);
         static const auto text_height = canvas.TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(2*padding + sp->width, canvas.height - padding - text_height);
+        static const auto text_pos = cbn::math::Vec2(2*padding + sp->width, canvas.height - padding - text_height);
         canvas.DrawText(text, text_pos, text_size, text_color);
       }
     }
@@ -380,7 +389,7 @@ namespace pong {
         static constexpr auto text_size = 14;
         static constexpr auto text_color = static_cast<u32>(Color::White);
         static const auto text_width = m_Window->TextWidth(text, text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 50);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, 50);
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -389,10 +398,10 @@ namespace pong {
         static constexpr auto text = Text.value;
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
-        static constexpr auto text_padding = CARBON_VEC2(20, 15);
+        static constexpr auto text_padding = cbn::math::Vec2(20, 15);
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, YPos);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, YPos);
         m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
                                       text_pos.y - text_padding.y - 2*text_size,
                                       text_width + 2*text_padding.x,
@@ -405,7 +414,7 @@ namespace pong {
         static constexpr auto text_size = 8;
         static constexpr auto text_color = static_cast<u32>(Color::White);
         static const auto text_width = m_Window->TextWidth(text, text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, 50);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, 50);
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -413,7 +422,7 @@ namespace pong {
         static constexpr auto text = "<ESC> Go Back";
         static constexpr auto text_size = 2;
         static constexpr auto text_color = static_cast<u32>(Color::White);
-        static constexpr auto text_pos = CARBON_VEC2(25, 50);
+        static constexpr auto text_pos = cbn::math::Vec2(25, 50);
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -423,7 +432,7 @@ namespace pong {
         static constexpr auto text_color = static_cast<u32>(Color::White);
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, m_Window->height/2 - text_height/2);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, m_Window->height/2 - text_height/2);
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -434,7 +443,7 @@ namespace pong {
         static constexpr auto text_padding = 10;
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width - text_padding - text_width, m_Window->height - text_padding - text_height);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width - text_padding - text_width, m_Window->height - text_padding - text_height);
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
     };
@@ -581,7 +590,10 @@ namespace pong {
         const auto angle = (relative_y * 45_deg) + cbn::rng::LCGfr(-10_deg, 10_deg);
         const auto d_speed = m_Ball.speed_delta * (1 - 2 * cbn::math::Abs(relative_y));
         const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
-        m_Ball.velocity = CARBON_VEC2(dir * cbn::math::Abs(speed * cbn::math::Cos(angle)), speed * cbn::math::Sin(angle));
+        m_Ball.velocity = cbn::math::Vec2{
+          dir * cbn::math::Abs(speed * cbn::math::Cos(angle)),
+          speed * cbn::math::Sin(angle)
+        };
         m_Ball.wall_hits = 0;
         p.score += 10;
         cbn::audio::ShiftPitch(res::s_Sound_Racket);
@@ -641,7 +653,7 @@ namespace pong {
           cbn::str::fmt("Score: %06u", m_P1.score)
         };
         for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
-          m_Window->DrawText(text[i], CARBON_VEC2(text_padding, text_padding + i*text_height), text_size, text_color);
+          m_Window->DrawText(text[i], cbn::math::Vec2(text_padding, text_padding + i*text_height), text_size, text_color);
         }
       }
 
@@ -650,10 +662,10 @@ namespace pong {
         static const auto text = m_P1.points > m_P2.points ? "PL1 WINS" : m_AI ? "CPU WINS" : "PL2 WINS";
         static constexpr auto text_size = 4;
         static constexpr auto text_color = static_cast<u32>(Color::Black);
-        static constexpr auto text_padding = CARBON_VEC2(20, 15);
+        static constexpr auto text_padding = cbn::math::Vec2(20, 15);
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
-        static const auto text_pos = CARBON_VEC2(m_Window->width/2 - text_width/2, m_Window->height/2);
+        static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, m_Window->height/2);
         m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
                                       text_pos.y - text_padding.y - 2*text_size,
                                       text_width + 2*text_padding.x,

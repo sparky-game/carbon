@@ -14,9 +14,11 @@ int main(void) {
   };
   constexpr auto n_colors = CARBON_ARRAY_LEN(colors);
   constexpr auto size = 100;
-  auto position = CARBON_VEC2(cbn::rng::LCGr(0, canvas.width - size),
-                              cbn::rng::LCGr(0, canvas.height - size));
-  auto velocity = CARBON_VEC2_1(200);
+  auto position = cbn::math::Vec2{
+    (f32)cbn::rng::LCGr(0, canvas.width - size),
+    (f32)cbn::rng::LCGr(0, canvas.height - size)
+  };
+  auto velocity = cbn::math::Vec2(200);
   auto c = 0;
   cbn::win::ForFrame([&](const auto dt){
     canvas.Fill(0x181818ff);
@@ -29,7 +31,7 @@ int main(void) {
       velocity.y *= -1;
       c = (c + 1) % n_colors;
     }
-    position.Clamp(CARBON_VEC2_ZERO, CARBON_VEC2(canvas.width, canvas.height) - size);
+    position.Clamp(cbn::math::Vec2(), cbn::math::Vec2(canvas.width, canvas.height) - size);
     canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), colors[c]);
     cbn::win::Update(canvas);
   });

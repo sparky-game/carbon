@@ -6,8 +6,8 @@
 #define TEST(name) CARBON_TEST(carbon_math_cxx, name)
 
 TEST(vec2_add) {
-  auto u = CARBON_VEC2(1, 2);
-  auto v = CARBON_VEC2(3, 4);
+  auto u = cbn::math::Vec2(1, 2);
+  auto v = cbn::math::Vec2(3, 4);
   auto r = u + v;
   carbon_should_be_f(4, r.x);
   carbon_should_be_f(6, r.y);
@@ -25,8 +25,8 @@ TEST(vec3_add) {
 }
 
 TEST(vec2_sub) {
-  auto u = CARBON_VEC2(1, 2);
-  auto v = CARBON_VEC2(3, 4);
+  auto u = cbn::math::Vec2(1, 2);
+  auto v = cbn::math::Vec2(3, 4);
   auto r = u - v;
   carbon_should_be_f(-2, r.x);
   carbon_should_be_f(-2, r.y);
@@ -44,8 +44,8 @@ TEST(vec3_sub) {
 }
 
 TEST(vec2_dot) {
-  auto u = CARBON_VEC2(1, 2);
-  auto v = CARBON_VEC2(3, 4);
+  auto u = cbn::math::Vec2(1, 2);
+  auto v = cbn::math::Vec2(3, 4);
   carbon_should_be_f(11, u.Dot(v));
   return CARBON_OK;
 }

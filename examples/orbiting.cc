@@ -9,11 +9,11 @@ int main(void) {
   cbn::win::SetMaxFPS(60);
   constexpr auto radius = 50;
   auto rotation = 0.0f;
-  auto position = CARBON_VEC2(canvas.width - radius - 20, canvas.height/2);
+  auto position = cbn::math::Vec2(canvas.width - radius - 20, canvas.height/2);
   cbn::win::ForFrame([&](const auto dt){
     canvas.Fill(0x181818ff);
     rotation += 45 * dt;
-    position += CARBON_VEC2_UP.Rotate(rotation) * 180 * dt;
+    position += cbn::math::Vec2(0, 1).Rotate(rotation) * 180 * dt;
     canvas.DrawCircle(position, radius, 0xffdd33ff);
     cbn::win::Update(canvas);
   });

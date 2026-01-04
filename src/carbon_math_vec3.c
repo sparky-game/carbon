@@ -78,7 +78,7 @@ CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q) {
 
 bool carbon_math_vec3_project_2d(CBN_Vec3 v, f32 near_z, CBN_Vec2 *out_v) {
   if (!out_v || v.z <= near_z) return false;
-  *out_v = CARBON_VEC2(v.x/v.z, v.y/v.z);
+  *out_v = carbon_math_vec2(v.x/v.z, v.y/v.z);
   return true;
 }
 

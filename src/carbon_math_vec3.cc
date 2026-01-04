@@ -73,13 +73,13 @@ f32 Vec3::operator*(const Vec3 &v) const {
   return carbon_math_vec3_dot(*this, v);
 }
 
-Vec2 Vec3::xx(void)  const { return CARBON_VEC_xx(*this);  }
-Vec2 Vec3::xz(void)  const { return CARBON_VEC_xz(*this);  }
-Vec2 Vec3::yx(void)  const { return CARBON_VEC_yx(*this);  }
-Vec2 Vec3::yy(void)  const { return CARBON_VEC_yy(*this);  }
-Vec2 Vec3::zx(void)  const { return CARBON_VEC_zx(*this);  }
-Vec2 Vec3::zy(void)  const { return CARBON_VEC_zy(*this);  }
-Vec2 Vec3::zz(void)  const { return CARBON_VEC_zz(*this);  }
+Vec2 Vec3::xx(void)  const { return Vec2(x);    }
+Vec2 Vec3::xz(void)  const { return Vec2(x, z); }
+Vec2 Vec3::yx(void)  const { return Vec2(y, x); }
+Vec2 Vec3::yy(void)  const { return Vec2(y);    }
+Vec2 Vec3::zx(void)  const { return Vec2(z, x); }
+Vec2 Vec3::zy(void)  const { return Vec2(z, y); }
+Vec2 Vec3::zz(void)  const { return Vec2(z);    }
 Vec3 Vec3::xxx(void) const { return CARBON_VEC_xxx(*this); }
 Vec3 Vec3::xxy(void) const { return CARBON_VEC_xxy(*this); }
 Vec3 Vec3::xxz(void) const { return CARBON_VEC_xxz(*this); }

@@ -87,20 +87,27 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera *c) {
       cbn::str::fmt("Back-face culling [b]: %s", dc.flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING ? "ON" : "OFF")
     };
     for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
-      dc.DrawText(text[i], CARBON_VEC2(text_padding, text_padding + i*text_height), text_size, color);
+      dc.DrawText(text[i], cbn::math::Vec2(text_padding, text_padding + i*text_height), text_size, color);
     }
   }
   {// Bottom-left info
     const char *text = cbn::str::fmt("Camera: [Pos = %s, Rot = %s]", c->GetPosition().ToString(), c->GetRotation().ToString());
-    static const auto text_pos = CARBON_VEC2(text_padding, dc.height - text_padding - text_height);
+    static const auto text_pos = cbn::math::Vec2(text_padding, dc.height - text_padding - text_height);
     dc.DrawText(text, text_pos, text_size, color);
   }
   {// Crosshair
     static constexpr auto size = 11;
     const auto hw = dc.width/2, hh = dc.height/2;
-    dc.DrawLine(CARBON_VEC2(hw, hh - size), CARBON_VEC2(hw, hh + size), color);
-    dc.DrawLine(CARBON_VEC2(hw - size, hh), CARBON_VEC2(hw + size, hh), color);
+    dc.DrawLine(cbn::math::Vec2(hw, hh - size), cbn::math::Vec2(hw, hh + size), color);
+    dc.DrawLine(cbn::math::Vec2(hw - size, hh), cbn::math::Vec2(hw + size, hh), color);
   }
+}
+
+void render(cbn::DrawCanvas &dc, const cbn::Camera *c, const f64 dt) {
+  dc.Fill(Color_BG);
+  dc.DrawPlaneXZ(c, CARBON_VEC3(0, -2, 0), cbn::math::Vec2(25), Color_2);
+  mesh_render(dc, c, dt);
+  hud_render(dc, c);
 }
 
 int main(void) {
@@ -111,11 +118,8 @@ int main(void) {
   cbn::win::Open(canvas, "3D");
   cbn::win::SetMaxFPS(0);  // Set to unlimited for debug purposes
   cbn::win::ForFrame([&](const auto dt){
-    canvas.Fill(Color_BG);
-    canvas.DrawPlaneXZ(cam, CARBON_VEC3(0, -2, 0), CARBON_VEC2_1(25), Color_2);
-    mesh_render(canvas, cam, dt);
-    hud_render(canvas, cam);
     update(canvas, cam, dt);
+    render(canvas, cam, dt);
     cbn::win::Update(canvas);
   });
   cbn::win::Close();

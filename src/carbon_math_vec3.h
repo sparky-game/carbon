@@ -43,10 +43,10 @@
 #define CARBON_VEC3_N(v) CARBON_VEC3(-(v).x, -(v).y, -(v).z)
 
 // Swizzling Operations
-#define CARBON_VEC_xz(v)  CARBON_VEC2((v).x, (v).z)
-#define CARBON_VEC_zx(v)  CARBON_VEC2((v).z, (v).x)
-#define CARBON_VEC_zy(v)  CARBON_VEC2((v).z, (v).y)
-#define CARBON_VEC_zz(v)  CARBON_VEC2((v).z, (v).z)
+#define CARBON_VEC_xz(v)  carbon_math_vec2((v).x, (v).z)
+#define CARBON_VEC_zx(v)  carbon_math_vec2((v).z, (v).x)
+#define CARBON_VEC_zy(v)  carbon_math_vec2((v).z, (v).y)
+#define CARBON_VEC_zz(v)  carbon_math_vec2((v).z, (v).z)
 #define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
 #define CARBON_VEC_xyz(v) CARBON_VEC3((v).x, (v).y, (v).z)
 #define CARBON_VEC_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)

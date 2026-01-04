@@ -32,7 +32,7 @@ void Render(cbn::DrawCanvas &dc, const f64 dt) {
   const auto &w = dc.width, &h = dc.height;
   for (usz y = 0; y < h; ++y) {
     for (usz x = 0; x < w; ++x) {
-      const auto o = shader::Run(CARBON_VEC2(x, y), CARBON_VEC2(w, h), t);
+      const auto o = shader::Run(cbn::math::Vec2(x, y), cbn::math::Vec2(w, h), t);
       dc(x, y) = cbn::color::FromNormalized(o);
     }
   }

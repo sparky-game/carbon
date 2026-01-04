@@ -10,30 +10,19 @@
 #pragma once
 
 /**
- * @brief Defines an inline 2D vector.
- * @param x The value to assign to the X field.
- * @param y The value to assign to the Y field.
+ * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
  */
-#define CARBON_VEC2(x, y) (CBN_Vec2){{.c = {(f32)(x), (f32)(y)}}}
-
-/**
- * @brief Defines an inline 2D vector.
- * @param x The value to assign to both the X and Y fields.
- */
-#define CARBON_VEC2_1(x) CARBON_VEC2((x), (x))
-
-/**
- * @brief Defines an inline 2D vector (from polar coordinate system).
- * @param r The radial coordinate.
- * @param phi The angular coordinate.
- */
-#define CARBON_VEC2_P(r, phi) CARBON_VEC2((r) * carbon_math_cos((phi)), (r) * carbon_math_sin((phi)))
+CBNDEF_PDS(CBN_Vec2) {
+  union {
+    struct { f32 x, y; };
+    f32 c[2];
+  };
+};
 
 // Swizzling Operations
-#define CARBON_VEC_xx(v)   CARBON_VEC2((v).x, (v).x)
-#define CARBON_VEC_xy(v)   CARBON_VEC2((v).x, (v).y)
-#define CARBON_VEC_yx(v)   CARBON_VEC2((v).y, (v).x)
-#define CARBON_VEC_yy(v)   CARBON_VEC2((v).y, (v).y)
+#define CARBON_VEC_xx(v)   carbon_math_vec2((v).x, (v).x)
+#define CARBON_VEC_yx(v)   carbon_math_vec2((v).y, (v).x)
+#define CARBON_VEC_yy(v)   carbon_math_vec2((v).y, (v).y)
 #define CARBON_VEC_xxx(v)  CARBON_VEC3((v).x, (v).x, (v).x)
 #define CARBON_VEC_xxy(v)  CARBON_VEC3((v).x, (v).x, (v).y)
 #define CARBON_VEC_xyx(v)  CARBON_VEC3((v).x, (v).y, (v).x)
@@ -44,46 +33,6 @@
 #define CARBON_VEC_yyy(v)  CARBON_VEC3((v).y, (v).y, (v).y)
 #define CARBON_VEC_xyyx(v) CARBON_VEC4((v).x, (v).y, (v).y, (v).x)
 
-/**
- * @brief Defines an inline 2D vector whose 2 elements are equal to zero.
- */
-#define CARBON_VEC2_ZERO CARBON_VEC2_1(0)
-
-/**
- * @brief Defines an inline 2D vector which represents -X direction.
- */
-#define CARBON_VEC2_LEFT CARBON_VEC2(-1, 0)
-
-/**
- * @brief Defines an inline 2D vector which represents +X direction.
- */
-#define CARBON_VEC2_RIGHT CARBON_VEC2(1, 0)
-
-/**
- * @brief Defines an inline 2D vector which represents -Y direction.
- */
-#define CARBON_VEC2_DOWN CARBON_VEC2(0, -1)
-
-/**
- * @brief Defines an inline 2D vector which represents +Y direction.
- */
-#define CARBON_VEC2_UP CARBON_VEC2(0, 1)
-
-/**
- * @brief Defines an inline 2D vector whose 2 elements are equal to one.
- */
-#define CARBON_VEC2_ONE CARBON_VEC2_1(1)
-
-/**
- * @brief Represents a 2D vector with two 32-bit floating-point (f32) values.
- */
-struct CBN_Vec2_t {
-  union {
-    struct { f32 x, y; };
-    f32 c[2];
-  };
-};
-
 // Forward declarations
 #ifdef __cplusplus
 typedef struct CBN_Vec3 CBN_Vec3;
@@ -93,8 +42,17 @@ typedef struct CBN_Vec3_t CBN_Vec3;
 typedef struct CBN_Vec4_t CBN_Vec4;
 #endif
 
+// Method declarations
 #ifdef __cplusplus
 struct CBN_Vec2 : CBN_Vec2_t {
+  /**
+   * @see carbon_math_vec2
+   */
+  constexpr CBN_Vec2(f32 x, f32 y) : CBN_Vec2_t{{{x, y}}} {}
+  /**
+   * @see carbon_math_vec2_1
+   */
+  constexpr CBN_Vec2(f32 x = 0) : CBN_Vec2(x, x) {}
   /**
    * @see carbon_math_vec2_add
    */
@@ -204,10 +162,31 @@ struct CBN_Vec2 : CBN_Vec2_t {
   CBN_Vec3 yyy(void)  const;
   CBN_Vec4 xyyx(void) const;
 };
-#else
-typedef struct CBN_Vec2_t CBN_Vec2;
 #endif
 CBNDEF_T(cbn::math, Vec2, CBN_Vec2);
+
+/**
+ * @brief Creates a 2D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ * @return The newly created 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2(f32 x, f32 y);
+
+/**
+ * @brief Creates a 2D vector.
+ * @param x The value to assign to both the X and Y fields.
+ * @return The newly created 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_1(f32 x);
+
+/**
+ * @brief Creates a 2D vector (from polar coordinate system).
+ * @param r The radial coordinate.
+ * @param phi The angular coordinate in radians.
+ * @return The newly created 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_p(f32 r, f32 phi);
 
 /**
  * @brief Adds two 2D vectors together (element-wise).

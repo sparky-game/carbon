@@ -70,7 +70,7 @@ Vec2 Vec2::operator+(const Vec2 &v) const {
 }
 
 Vec2 Vec2::operator+(f32 s) const {
-  return CARBON_VEC2(x + s, y + s);
+  return Vec2(x + s, y + s);
 }
 
 Vec2 operator+(f32 s, const Vec2 &v) {
@@ -96,7 +96,7 @@ Vec2 Vec2::operator-(const Vec2 &v) const {
 }
 
 Vec2 Vec2::operator-(f32 s) const {
-  return CARBON_VEC2(x - s, y - s);
+  return Vec2(x - s, y - s);
 }
 
 Vec2 operator-(f32 s, const Vec2 &v) {
@@ -139,10 +139,10 @@ void Vec2::operator/=(f32 s) {
   *this = *this / s;
 }
 
-Vec2 Vec2::xx(void)   const { return CARBON_VEC_xx(*this);   }
-Vec2 Vec2::xy(void)   const { return CARBON_VEC_xy(*this);   }
-Vec2 Vec2::yx(void)   const { return CARBON_VEC_yx(*this);   }
-Vec2 Vec2::yy(void)   const { return CARBON_VEC_yy(*this);   }
+Vec2 Vec2::xx(void)   const { return Vec2(x);    }
+Vec2 Vec2::xy(void)   const { return Vec2(x, y); }
+Vec2 Vec2::yx(void)   const { return Vec2(y, x); }
+Vec2 Vec2::yy(void)   const { return Vec2(y);    }
 Vec3 Vec2::xxx(void)  const { return CARBON_VEC_xxx(*this);  }
 Vec3 Vec2::xxy(void)  const { return CARBON_VEC_xxy(*this);  }
 Vec3 Vec2::xyx(void)  const { return CARBON_VEC_xyx(*this);  }

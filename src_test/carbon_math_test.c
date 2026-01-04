@@ -219,8 +219,8 @@ TEST(asin) {
 }
 
 TEST(vec2_add) {
-  CBN_Vec2 u = CARBON_VEC2(1, 2);
-  CBN_Vec2 v = CARBON_VEC2(3, 4);
+  CBN_Vec2 u = carbon_math_vec2(1, 2);
+  CBN_Vec2 v = carbon_math_vec2(3, 4);
   CBN_Vec2 r = carbon_math_vec2_add(u, v);
   carbon_should_be_f(4, r.x);
   carbon_should_be_f(6, r.y);
@@ -238,8 +238,8 @@ TEST(vec3_add) {
 }
 
 TEST(vec2_sub) {
-  CBN_Vec2 u = CARBON_VEC2(1, 2);
-  CBN_Vec2 v = CARBON_VEC2(3, 4);
+  CBN_Vec2 u = carbon_math_vec2(1, 2);
+  CBN_Vec2 v = carbon_math_vec2(3, 4);
   CBN_Vec2 r = carbon_math_vec2_sub(u, v);
   carbon_should_be_f(-2, r.x);
   carbon_should_be_f(-2, r.y);
@@ -257,8 +257,8 @@ TEST(vec3_sub) {
 }
 
 TEST(vec2_dot) {
-  CBN_Vec2 u = CARBON_VEC2(1, 2);
-  CBN_Vec2 v = CARBON_VEC2(3, 4);
+  CBN_Vec2 u = carbon_math_vec2(1, 2);
+  CBN_Vec2 v = carbon_math_vec2(3, 4);
   carbon_should_be_f(11, carbon_math_vec2_dot(u, v));
   return CARBON_OK;
 }
@@ -282,8 +282,8 @@ TEST(vec3_cross) {
 
 TEST(rect_contains) {
   CBN_Rect r = {0, 0, 10, 5};
-  CBN_Vec2 p1 = CARBON_VEC2(8, 3);
-  CBN_Vec2 p2 = CARBON_VEC2(3, 8);
+  CBN_Vec2 p1 = carbon_math_vec2(8, 3);
+  CBN_Vec2 p2 = carbon_math_vec2(3, 8);
   carbon_should_be_true(carbon_math_rect_contains(r, p1));
   carbon_should_be_false(carbon_math_rect_contains(r, p2));
   return CARBON_OK;
