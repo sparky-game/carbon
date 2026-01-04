@@ -110,11 +110,12 @@ u32 carbon_mesh_compute_crc32(CBN_Mesh *m) {
     CBN_WARN("`m` is not a valid pointer, skipping computation");
     return 0;
   }
+  u32 c;
   u32 c_v  = carbon_crypto_crc32((u8 *) m->vertices, CARBON_MESH__SZ_V);
   u32 c_vt = carbon_crypto_crc32((u8 *) m->texcoords, CARBON_MESH__SZ_VT);
   u32 c_vn = carbon_crypto_crc32((u8 *) m->normals, CARBON_MESH__SZ_VN);
   u32 c_f  = carbon_crypto_crc32((u8 *) m->faces, CARBON_MESH__SZ_F);
-  u32 c = carbon_crypto_crc32_combine(c_v, c_vt, CARBON_MESH__SZ_VT);
+  c = carbon_crypto_crc32_combine(c_v, c_vt, CARBON_MESH__SZ_VT);
   c = carbon_crypto_crc32_combine(c, c_vn, CARBON_MESH__SZ_VN);
   c = carbon_crypto_crc32_combine(c, c_f, CARBON_MESH__SZ_F);
   return c;
