@@ -11,6 +11,18 @@ void CBN_DrawCanvas::Free(void) {
   carbon_drawcanvas_destroy(this);
 }
 
+void CBN_DrawCanvas::FlagsEnable(u32 fs) {
+  carbon_drawcanvas_flags_enable(this, fs);
+}
+
+void CBN_DrawCanvas::FlagsDisable(u32 fs) {
+  carbon_drawcanvas_flags_disable(this, fs);
+}
+
+void CBN_DrawCanvas::FlagsToggle(u32 fs) {
+  carbon_drawcanvas_flags_toggle(this, fs);
+}
+
 void CBN_DrawCanvas::Fill(u32 color) {
   carbon_drawcanvas_fill(*this, color);
 }

@@ -56,6 +56,11 @@ void camera_update(cbn::Camera *c, const f64 dt) {
   }
 }
 
+void update(cbn::DrawCanvas &dc, cbn::Camera *c, const f64 dt) {
+  camera_update(c, dt);
+  if (cbn::win::GetKeyDown(cbn::win::KeyCode::B)) dc.FlagsToggle(CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING);
+}
+
 void mesh_render(cbn::DrawCanvas &dc, const cbn::Camera *c, const f64 dt) {
   static constexpr auto color = Color_1;
   static const auto * const mp = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
@@ -78,7 +83,8 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera *c) {
     const char *text[] = {
       cbn::str::fmt(CARBON_NAME " %s", cbn::Version(0, 0, 0)),
       cbn::str::fmt("%u fps", cbn::win::GetFPS()),
-      render_res.c_str()
+      render_res.c_str(),
+      cbn::str::fmt("Back-face culling [b]: %s", dc.flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING ? "ON" : "OFF")
     };
     for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
       dc.DrawText(text[i], CARBON_VEC2(text_padding, text_padding + i*text_height), text_size, color);
@@ -105,11 +111,11 @@ int main(void) {
   cbn::win::Open(canvas, "3D");
   cbn::win::SetMaxFPS(0);  // Set to unlimited for debug purposes
   cbn::win::ForFrame([&](const auto dt){
-    camera_update(cam, dt);
     canvas.Fill(Color_BG);
     canvas.DrawPlaneXZ(cam, CARBON_VEC3(0, -2, 0), CARBON_VEC2_1(25), Color_2);
     mesh_render(canvas, cam, dt);
     hud_render(canvas, cam);
+    update(canvas, cam, dt);
     cbn::win::Update(canvas);
   });
   cbn::win::Close();

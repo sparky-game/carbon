@@ -16,6 +16,10 @@ typedef struct {
 } CBN_Transform;
 CBNDEF_T(cbn, Transform, CBN_Transform);
 
+enum {
+  CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING = 1 << 0
+};
+
 typedef struct CBN_Camera CBN_Camera;  // Forward declaration
 
 /**
@@ -26,6 +30,7 @@ typedef struct CBN_DrawCanvas {
   f32 *zbuffer;
   usz width;
   usz height;
+  u32 flags;
 #ifdef __cplusplus
   /**
    * @see carbon_drawcanvas_create
@@ -35,6 +40,18 @@ typedef struct CBN_DrawCanvas {
    * @see carbon_drawcanvas_destroy
    */
   void Free(void);
+  /**
+   * @see carbon_drawcanvas_flags_enable
+   */
+  void FlagsEnable(u32 fs);
+  /**
+   * @see carbon_drawcanvas_flags_disable
+   */
+  void FlagsDisable(u32 fs);
+  /**
+   * @see carbon_drawcanvas_flags_toggle
+   */
+  void FlagsToggle(u32 fs);
   /**
    * @see carbon_drawcanvas_fill
    */
@@ -115,6 +132,27 @@ CBNDEF CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height);
  * @param dc The DrawCanvas to destroy.
  */
 CBNDEF void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
+
+/**
+ * @brief Enables a particular set of flags for the DrawCanvas.
+ * @param dc The DrawCanvas object.
+ * @param flags The flag(s) to enable.
+ */
+CBNDEF void carbon_drawcanvas_flags_enable(CBN_DrawCanvas *dc, u32 flags);
+
+/**
+ * @brief Disables a particular set of flags for the DrawCanvas.
+ * @param dc The DrawCanvas object.
+ * @param flags The flag(s) to disable.
+ */
+CBNDEF void carbon_drawcanvas_flags_disable(CBN_DrawCanvas *dc, u32 flags);
+
+/**
+ * @brief Toggles (ON/OFF) a particular set of flags for the DrawCanvas.
+ * @param dc The DrawCanvas object.
+ * @param flags The flag(s) to toggle.
+ */
+CBNDEF void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags);
 
 /**
  * @brief Fills the DrawCanvas with the specified color.

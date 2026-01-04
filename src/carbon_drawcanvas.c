@@ -16,7 +16,8 @@ CBN_DrawCanvas carbon_drawcanvas_create(usz width, usz height) {
     .pixels  = (u32 *) carbon_memory_alloc(width * height * sizeof(u32)),
     .zbuffer = (f32 *) carbon_memory_alloc(width * height * sizeof(f32)),
     .width   = width,
-    .height  = height
+    .height  = height,
+    .flags   = 0
   };
 }
 
@@ -28,6 +29,21 @@ void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
   carbon_memory_free(dc->pixels);
   carbon_memory_free(dc->zbuffer);
   carbon_memory_set(dc, 0, sizeof(*dc));
+}
+
+void carbon_drawcanvas_flags_enable(CBN_DrawCanvas *dc, u32 flags) {
+  if (!dc) return;
+  dc->flags |= flags;
+}
+
+void carbon_drawcanvas_flags_disable(CBN_DrawCanvas *dc, u32 flags) {
+  if (!dc) return;
+  dc->flags &= ~flags;
+}
+
+void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags) {
+  if (!dc) return;
+  dc->flags ^= flags;
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
@@ -229,8 +245,15 @@ CBNINL void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CB
   }
 }
 
+CBNINL bool carbon_drawcanvas__is_back_face(CBN_Vec3 cam_pos, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3) {
+  // Back-face check with counter-clockwise (CCW) winding order
+  CBN_Vec3 N = carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1));
+  CBN_Vec3 V = carbon_math_vec3_sub(cam_pos, v1);
+  return carbon_math_vec3_dot(N, V) <= 0;
+}
+
 CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
-  // Intersects edge (a -> b) against plane (z + w = 0).
+  // Intersects edge (a -> b) against plane (z + w = 0)
   f32 n = -(a.clip.z + a.clip.w);
   f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
   f32 t = 0;
@@ -299,9 +322,13 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Me
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
   const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_BACK);
+  const CBN_Vec3 cam_pos = carbon_camera_get_position(c);
   for (usz f = 0; f < m->metadata.faces_count; ++f) {
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
     const Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];
+    if (dc.flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING) {
+      if (carbon_drawcanvas__is_back_face(cam_pos, v1.world, v2.world, v3.world)) continue;
+    }
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
     carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
