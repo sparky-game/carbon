@@ -6,7 +6,7 @@
 static CBN_Suite carbon_test_manager__test_suite;
 static CBN_CmdArgs carbon_test_manager__cmd_args;
 
-CARBON_INLINE void carbon_test_manager__cleanup_and_exit(void) {
+CBNINL void carbon_test_manager__cleanup_and_exit(void) {
   carbon_test_manager_cleanup(&carbon_test_manager__test_suite);
   exit(1);
 }

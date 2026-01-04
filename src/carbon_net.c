@@ -15,7 +15,7 @@ bool carbon_net_is_valid_ipv4(const char *ip) {
 }
 
 #ifdef _WIN32
-CARBON_INLINE PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
+CBNINL PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
   PDNS_RECORD addrs = 0;
   if (ERROR_SUCCESS != DnsQuery_A(domain, DNS_TYPE_A, DNS_QUERY_STANDARD, 0, &addrs, 0)) {
     CBN_ERROR("unable to DnsQuery_A");
@@ -24,7 +24,7 @@ CARBON_INLINE PDNS_RECORD carbon_net__resolve_dns_to_addrs(const char *domain) {
   return addrs;
 }
 #else
-CARBON_INLINE struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *domain) {
+CBNINL struct addrinfo *carbon_net__resolve_dns_to_addrs(const char *domain) {
   struct addrinfo *res = 0, hints = {0};
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;

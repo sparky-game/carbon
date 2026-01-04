@@ -164,7 +164,7 @@ u32 carbon_crypto_crc32(const u8 *in, const usz in_size) {
   return ~out;
 }
 
-CARBON_INLINE u32 carbon_crypto_crc32__gf2_mult(const u32 *m, u32 v) {
+CBNINL u32 carbon_crypto_crc32__gf2_mult(const u32 *m, u32 v) {
   u32 s = 0;
   for (u32 i = 0; v; ++i, v >>= 1) {
     if (v & 1) s ^= m[i];
@@ -172,7 +172,7 @@ CARBON_INLINE u32 carbon_crypto_crc32__gf2_mult(const u32 *m, u32 v) {
   return s;
 }
 
-CARBON_INLINE void carbon_crypto_crc32__gf2_square(u32 *dest, const u32 *src) {
+CBNINL void carbon_crypto_crc32__gf2_square(u32 *dest, const u32 *src) {
   for (u32 i = 0; i < 32; ++i) dest[i] = carbon_crypto_crc32__gf2_mult(src, src[i]);
 }
 
@@ -284,7 +284,7 @@ char *carbon_crypto_sha1_as_hex_cstr(const u8 *in, const usz in_size) {
   return x;
 }
 
-CARBON_INLINE void carbon_crypto_sha256__transform(CBN_SHA256_CTX *ctx, const u8 *data) {
+CBNINL void carbon_crypto_sha256__transform(CBN_SHA256_CTX *ctx, const u8 *data) {
   u32 a, b, c, d, e, f, g, h, i, j, t1, t2, m[64];
   for (i = 0, j = 0; i < 16; ++i, j += 4) {
     m[i] = ((u32) data[j + 0] << 24) | ((u32) data[j + 1] << 16) | ((u32) data[j + 2] << 8) | ((u32) data[j + 3] << 0);
@@ -322,7 +322,7 @@ CARBON_INLINE void carbon_crypto_sha256__transform(CBN_SHA256_CTX *ctx, const u8
   ctx->state[7] += h;
 }
 
-CARBON_INLINE void carbon_crypto_sha256__update(CBN_SHA256_CTX *ctx, const u8 *data, const usz len) {
+CBNINL void carbon_crypto_sha256__update(CBN_SHA256_CTX *ctx, const u8 *data, const usz len) {
   for (u32 i = 0; i < len; ++i) {
     ctx->data[ctx->datalen] = data[i];
     ++ctx->datalen;
@@ -334,7 +334,7 @@ CARBON_INLINE void carbon_crypto_sha256__update(CBN_SHA256_CTX *ctx, const u8 *d
   }
 }
 
-CARBON_INLINE void carbon_crypto_sha256__assemble(CBN_SHA256_CTX *ctx, u8 *hash) {
+CBNINL void carbon_crypto_sha256__assemble(CBN_SHA256_CTX *ctx, u8 *hash) {
   u32 i = ctx->datalen;
   if (ctx->datalen < 56) {
     ctx->data[i++] = 0x80;
@@ -405,7 +405,7 @@ char *carbon_crypto_sha256_as_hex_cstr(const u8 *in, const usz in_size) {
   return x;
 }
 
-CARBON_INLINE u64 carbon_crypto_keccak256__get_round_const(u8 round) {
+CBNINL u64 carbon_crypto_keccak256__get_round_const(u8 round) {
   u64 result = 0;
   u8 k_round = carbon_crypto_keccak256__k[round];
   if (k_round & (1 << 6)) { result |= ((u64) 1 << 63); }
@@ -418,7 +418,7 @@ CARBON_INLINE u64 carbon_crypto_keccak256__get_round_const(u8 round) {
   return result;
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__phase_theta(u64 *A) {
+CBNINL void carbon_crypto_keccak256__phase_theta(u64 *A) {
   u64 C[5], D[5];
   for (u8 i = 0; i < 5; ++i) {
     C[i] = A[i];
@@ -434,7 +434,7 @@ CARBON_INLINE void carbon_crypto_keccak256__phase_theta(u64 *A) {
   }
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__phase_pi(u64 *A) {
+CBNINL void carbon_crypto_keccak256__phase_pi(u64 *A) {
   u64 A1 = A[1];
   for (u8 i = 1; i < 24; ++i) {
     A[carbon_crypto_keccak256__k[24 + i - 1]] = A[carbon_crypto_keccak256__k[24 + i]];
@@ -442,7 +442,7 @@ CARBON_INLINE void carbon_crypto_keccak256__phase_pi(u64 *A) {
   A[10] = A1;
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__phase_chi(u64 *A) {
+CBNINL void carbon_crypto_keccak256__phase_chi(u64 *A) {
   for (u8 i = 0; i < 25; i += 5) {
     u64 A0 = A[i + 0], A1 = A[i + 1];
     A[i + 0] ^= ~A1 & A[i + 2];
@@ -453,7 +453,7 @@ CARBON_INLINE void carbon_crypto_keccak256__phase_chi(u64 *A) {
   }
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__permutation(u64 *hash) {
+CBNINL void carbon_crypto_keccak256__permutation(u64 *hash) {
   for (u8 r = 0; r < 24; ++r) {
     carbon_crypto_keccak256__phase_theta(hash);
     for (u8 i = 1; i < 25; ++i) {
@@ -465,12 +465,12 @@ CARBON_INLINE void carbon_crypto_keccak256__permutation(u64 *hash) {
   }
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__process_blk(u64 *hash, const u64 *blk) {
+CBNINL void carbon_crypto_keccak256__process_blk(u64 *hash, const u64 *blk) {
   for (u8 i = 0; i < 17; ++i) hash[i] ^= blk[i];
   carbon_crypto_keccak256__permutation(hash);
 }
 
-CARBON_INLINE void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const u8 *msg, u16 msg_size) {
+CBNINL void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const u8 *msg, u16 msg_size) {
   u16 idx = ctx->rest;
   ctx->rest = (ctx->rest + msg_size) % 136;
   if (idx) {

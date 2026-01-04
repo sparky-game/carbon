@@ -178,7 +178,7 @@ int getpagesize(void) {
 }
 #endif
 
-__attribute__((constructor)) CARBON_INLINE void carbon_coroutine__init(void) {
+__attribute__((constructor)) CBNINL void carbon_coroutine__init(void) {
   carbon_coroutine__active = carbon_list_create(sizeof(usz));
   carbon_coroutine__dead   = carbon_list_create(sizeof(usz));
   carbon_coroutine__ctxs   = carbon_list_create(sizeof(CBN_Coroutine_CTX));
@@ -195,7 +195,7 @@ __attribute__((constructor)) CARBON_INLINE void carbon_coroutine__init(void) {
   carbon_list_push(&carbon_coroutine__active, &i);
 }
 
-__attribute__((destructor)) CARBON_INLINE void carbon_coroutine__shutdown(void) {
+__attribute__((destructor)) CBNINL void carbon_coroutine__shutdown(void) {
   carbon_list_destroy(&carbon_coroutine__active);
   carbon_list_destroy(&carbon_coroutine__dead);
   carbon_list_destroy(&carbon_coroutine__ctxs);
@@ -272,7 +272,7 @@ void carbon_coroutine__switch_ctx(void *rsp, CBN_Coroutine_SleepMode sm, i32 fd)
   carbon_coroutine__restore_ctx(current_ctx_item.rsp);
 }
 
-CARBON_INLINE void carbon_coroutine__finish_current(void) {
+CBNINL void carbon_coroutine__finish_current(void) {
   usz current_active_item = carbon_list_at(usz, carbon_coroutine__active, carbon_coroutine__current);
   if (!current_active_item) CARBON_UNREACHABLE;
   carbon_list_push(&carbon_coroutine__dead, &current_active_item);

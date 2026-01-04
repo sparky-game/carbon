@@ -67,18 +67,18 @@ CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c) {
   return c->proj;
 }
 
-CARBON_INLINE void carbon_camera__update_view(CBN_Camera *c) {
+CBNINL void carbon_camera__update_view(CBN_Camera *c) {
   c->view = carbon_math_mat4_view(c->position, c->rotation);
 }
 
-CARBON_INLINE void carbon_camera__translate(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
+CBNINL void carbon_camera__translate(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
   if (!c || !amount) return;
   v = carbon_math_vec3_scale(carbon_math_vec3_norm(v), amount);
   c->position = carbon_math_vec3_add(c->position, v);
   carbon_camera__update_view(c);
 }
 
-CARBON_INLINE void carbon_camera__translate_xz(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
+CBNINL void carbon_camera__translate_xz(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
   if (!c || !amount) return;
   v = carbon_math_vec3_rotate(v, c->rotation);
   v.y = 0;
@@ -109,7 +109,7 @@ void carbon_camera_move_down(CBN_Camera *c, f32 amount) {
   carbon_camera__translate(c, CARBON_VEC3_DOWN, amount);
 }
 
-CARBON_INLINE void carbon_camera__update_rotation(CBN_Camera *c) {
+CBNINL void carbon_camera__update_rotation(CBN_Camera *c) {
   const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(CARBON_VEC3_UP, c->yaw);
   const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(CARBON_VEC3_RIGHT, q_yaw);
   const CBN_Quat q_pitch = carbon_math_quat_from_axis_angle(v_pitch, c->pitch);

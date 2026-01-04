@@ -93,13 +93,13 @@
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
-#define CARBON_INLINE __attribute__((always_inline)) static inline
+#define CBNINL __attribute__((always_inline)) static inline
 #define CARBON_NOINLINE __attribute__((noinline))
 #elif defined(_WIN32) && defined(_MSC_VER)
-#define CARBON_INLINE __forceinline
+#define CBNINL __forceinline
 #define CARBON_NOINLINE __declspec(noinline)
 #else
-#define CARBON_INLINE static inline
+#define CBNINL static inline
 #define CARBON_NOINLINE
 #endif
 

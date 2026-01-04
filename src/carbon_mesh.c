@@ -8,7 +8,7 @@
 #define CARBON_MESH__SZ_VN (m->metadata.normals_count * sizeof(CBN_Vec3))
 #define CARBON_MESH__SZ_F  (m->metadata.faces_count * CARBON_MESH_FACE_COMPS * 3 * sizeof(usz))
 
-CARBON_INLINE bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
+CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
     CBN_ERROR("OBJ file (`%$`) could not be read", $(file));
@@ -26,7 +26,7 @@ CARBON_INLINE bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *f
   return true;
 }
 
-CARBON_INLINE bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
+CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
     CBN_ERROR("OBJ file (`%$`) could not be read", $(file));

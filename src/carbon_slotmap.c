@@ -3,12 +3,12 @@
 
 #include "carbon.inc"
 
-CARBON_INLINE u8 carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+CBNINL u8 carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
   if (carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).gen != key.gen) return false;
   return true;
 }
 
-CARBON_INLINE u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
+CBNINL u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
   u64 slot_id = sm->freelist;
   carbon_list_push(&sm->indices, &(CBN_SlotMap_Key){.id = slot_id + 1, .gen = 0});
   sm->freelist = carbon_list_at(CBN_SlotMap_Key, sm->indices, slot_id).id;
@@ -20,7 +20,7 @@ CARBON_INLINE u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
   return slot_id;
 }
 
-CARBON_INLINE void carbon_slotmap__free(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+CBNINL void carbon_slotmap__free(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
   CBN_ASSERT(carbon_slotmap__is_valid_key(sm, key) && "Key is not valid");
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, key.id);
   u64 data_id = slot->id;

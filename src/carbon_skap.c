@@ -19,7 +19,7 @@ static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_COUNT];
 
 // @type_dependant
-CARBON_INLINE CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
+CBNINL CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
   if (!carbon_string_cmp(s, "images")) return CARBON_SKAP_ASSET_TYPE_IMAGE;
   else if (!carbon_string_cmp(s, "binaries")) return CARBON_SKAP_ASSET_TYPE_BINARY;
   else if (!carbon_string_cmp(s, "meshes")) return CARBON_SKAP_ASSET_TYPE_MESH;
@@ -29,7 +29,7 @@ CARBON_INLINE CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
   };
 }
 
-CARBON_INLINE bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) {
+CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) {
   bool first = true;
   bool prev_line_was_new_group = false;
   usz line_n = 1;
@@ -128,7 +128,7 @@ CARBON_INLINE bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_g
   return true;
 }
 
-CARBON_INLINE bool carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_groups) {
+CBNINL bool carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_groups) {
   const char *cwd = carbon_fs_get_curr_directory();
   CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
   bool status = true;
@@ -146,7 +146,7 @@ CARBON_INLINE bool carbon_skap__check_decl_assets(const char *decl, CBN_List *as
   return status;
 }
 
-CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
+CBNINL void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
   // CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
   if (asset_groups->size) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
@@ -158,7 +158,7 @@ CARBON_INLINE void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__create_global_lists(void) {
+CBNINL void carbon_skap__create_global_lists(void) {
   carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE] = carbon_list_create(sizeof(CBN_Image));
   carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY] = carbon_list_create(sizeof(CBN_Binary));
   carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH] = carbon_list_create(sizeof(CBN_Mesh));
@@ -169,7 +169,7 @@ CARBON_INLINE void carbon_skap__create_global_lists(void) {
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__destroy_global_lists(void) {
+CBNINL void carbon_skap__destroy_global_lists(void) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     carbon_fs_destroy_img(&it.var);
@@ -189,7 +189,7 @@ CARBON_INLINE void carbon_skap__destroy_global_lists(void) {
   }
 }
 
-CARBON_INLINE void carbon_skap__append_header(FILE *fd) {
+CBNINL void carbon_skap__append_header(FILE *fd) {
   CBN_SKAP_Header header = {
     .signature = {'S', 'K', 'A', 'P'},
     .fmt_ver = 1,
@@ -198,7 +198,7 @@ CARBON_INLINE void carbon_skap__append_header(FILE *fd) {
   fwrite(&header, sizeof(header), 1, fd);
 }
 
-CARBON_INLINE void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_groups) {
+CBNINL void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     usz asset_count = 0;
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
@@ -211,7 +211,7 @@ CARBON_INLINE void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_g
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
+CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
       if (!ag_it.var.assets.size || carbon_string_cmp(ag_it.var.type, carbon_skap__allowed_types[i])) continue;
@@ -260,7 +260,7 @@ CARBON_INLINE void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List
   }
 }
 
-CARBON_INLINE void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
+CBNINL void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     CBN_Image *asset = &carbon_list_at_raw(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
@@ -282,7 +282,7 @@ CARBON_INLINE void carbon_skap__append_blobs__images(const char *skap, FILE *fd)
   }
 }
 
-CARBON_INLINE void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
+CBNINL void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
   carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
     CBN_Binary *asset = &carbon_list_at_raw(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
@@ -304,7 +304,7 @@ CARBON_INLINE void carbon_skap__append_blobs__binaries(const char *skap, FILE *f
   }
 }
 
-CARBON_INLINE void carbon_skap__append_blobs__meshes(const char *skap, FILE *fd) {
+CBNINL void carbon_skap__append_blobs__meshes(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH].size) return;
   carbon_list_foreach(CBN_Mesh, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH]) {
     CBN_Mesh *asset = &carbon_list_at_raw(CBN_Mesh, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH], it.i);
@@ -334,7 +334,7 @@ CARBON_INLINE void carbon_skap__append_blobs__meshes(const char *skap, FILE *fd)
 }
 
 // @type_dependant
-CARBON_INLINE void carbon_skap__append_blobs(const char *skap, FILE *fd) {
+CBNINL void carbon_skap__append_blobs(const char *skap, FILE *fd) {
   carbon_skap__append_blobs__images(skap, fd);
   carbon_skap__append_blobs__binaries(skap, fd);
   carbon_skap__append_blobs__meshes(skap, fd);

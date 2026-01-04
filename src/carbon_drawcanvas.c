@@ -37,7 +37,7 @@ void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
   }
 }
 
-CARBON_INLINE void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
+CBNINL void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
   u32 a2 = c2 & 0xff;
   if (a2 == 0) return;
   if (a2 == 255) {
@@ -82,7 +82,7 @@ void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 col
   }
 }
 
-CARBON_INLINE bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
+CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
   *lx = *hx = v1.x;
   *ly = *hy = v1.y;
   if (*lx > v2.x) *lx = v2.x;
@@ -101,7 +101,7 @@ CARBON_INLINE bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN
   return true;
 }
 
-CARBON_INLINE bool carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
+CBNINL bool carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
   *det = (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
   *u1  = (v2.y - v3.y) * (x - v3.x) + (v3.x - v2.x) * (y - v3.y);
   *u2  = (v3.y - v1.y) * (x - v3.x) + (v1.x - v3.x) * (y - v3.y);
@@ -140,7 +140,7 @@ void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, 
   }
 }
 
-CARBON_INLINE bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
+CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
   i32 oy1 = r.y;
@@ -217,7 +217,7 @@ typedef struct {
   CBN_Vec3 screen;
 } Vertex3D;  // TODO: find a better name for this struct
 
-CARBON_INLINE void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, Vertex3D *out_vs) {
+CBNINL void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, Vertex3D *out_vs) {
   const CBN_Mat4 M = carbon_math_mat4_model(t.position, carbon_math_quat_from_euler(t.rotation), carbon_math_vec3_scale(t.scale, 0.5));
   const CBN_Mat4 V = carbon_camera_get_view(c);
   const CBN_Mat4 P = carbon_camera_get_proj(c);
@@ -229,7 +229,7 @@ CARBON_INLINE void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, c
   }
 }
 
-CARBON_INLINE Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
+CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
   // Intersects edge (a -> b) against plane (z + w = 0).
   f32 n = -(a.clip.z + a.clip.w);
   f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
@@ -242,7 +242,7 @@ CARBON_INLINE Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b)
   };
 }
 
-CARBON_INLINE usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vertex3D v3, Vertex3D *out_poly) {
+CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vertex3D v3, Vertex3D *out_poly) {
   // Sutherland-Hodgman polygon clipping algorithm
   Vertex3D in[] = {v1, v2, v3};
   Vertex3D out[4];
@@ -263,7 +263,7 @@ CARBON_INLINE usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v
   return out_count;
 }
 
-CARBON_INLINE bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
+CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
   if (v.w <= 0) return false;
   CBN_Vec3 ndc;
   if (!carbon_math_vec4_project_3d(v, &ndc)) return false;
@@ -273,7 +273,7 @@ CARBON_INLINE bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas 
   return true;
 }
 
-CARBON_INLINE u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, CBN_Vec3 L) {
+CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, CBN_Vec3 L) {
   static const f32 n_a = 0.2;
   const u32 k_a = carbon_color_scale(color, n_a);
   const CBN_Vec3 N = carbon_math_vec3_norm(carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1)));
@@ -282,7 +282,7 @@ CARBON_INLINE u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Ve
   return carbon_color_add(k_a, k_d);
 }
 
-CARBON_INLINE void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
+CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
   if (vs_count < 3) return;
   for (usz i = 1; i + 1 < vs_count; ++i) {
     Vertex3D p1 = vs[0], p2 = vs[i], p3 = vs[i+1];

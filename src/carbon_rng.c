@@ -3,7 +3,7 @@
 
 #include "carbon.inc"
 
-CARBON_INLINE u32 carbon_rng__seed(void) {
+CBNINL u32 carbon_rng__seed(void) {
   f64 t = carbon_time_get();
   union { f64 f; u64 i; } u = {t};
   return (u32)(u.i ^ (u.i >> 32));
@@ -85,19 +85,19 @@ u64 carbon_rng_mt19937_64_rand(void) {
   return x;
 }
 
-CARBON_INLINE i32 carbon_rng__ascending_order(const void *a, const void *b) {
+CBNINL i32 carbon_rng__ascending_order(const void *a, const void *b) {
   const i32 x = *(const i32 *) a;
   const i32 y = *(const i32 *) b;
   return (x > y) - (x < y);
 }
 
-CARBON_INLINE i32 carbon_rng__descending_order(const void *a, const void *b) {
+CBNINL i32 carbon_rng__descending_order(const void *a, const void *b) {
   const i32 x = *(const i32 *) a;
   const i32 y = *(const i32 *) b;
   return (y > x) - (y < x);
 }
 
-// {N}d{S}kl{X}
+// {N}d{S}k[l|h]{X}
 // N := number of dice to be rolled
 // S := number of faces of each die
 // kl{X} := keep lowest X rolls

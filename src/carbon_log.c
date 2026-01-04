@@ -5,7 +5,7 @@
 
 #define carbon_log__printv(stream, x) fprintf(stream, carbon_log__var_to_spec(x), (x))
 
-CARBON_INLINE void carbon_log__print_boxed_var(FILE *stream, CBN_Log_BoxedVar x) {
+CBNINL void carbon_log__print_boxed_var(FILE *stream, CBN_Log_BoxedVar x) {
   if      (!carbon_string_cmp(x.spec, "%zu"))  carbon_log__printv(stream, *((usz *) x.var));
   else if (!carbon_string_cmp(x.spec, "%zd"))  carbon_log__printv(stream, *((isz *) x.var));
   else if (!carbon_string_cmp(x.spec, "%hhu")) carbon_log__printv(stream, *((u8 *) x.var));
