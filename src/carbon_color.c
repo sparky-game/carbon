@@ -63,11 +63,11 @@ CBN_Vec4 carbon_color_to_normalized(u32 color) {
   f32 g = (color >> 16) & 0xff;
   f32 b = (color >> 8)  & 0xff;
   f32 a = (color >> 0)  & 0xff;
-  return CARBON_VEC4(r/255, g/255, b/255, a/255);
+  return carbon_math_vec4(r/255, g/255, b/255, a/255);
 }
 
 u32 carbon_color_from_normalized(CBN_Vec4 v) {
-  v = carbon_math_vec4_clamp(v, CARBON_VEC4_ZERO, CARBON_VEC4_ONE);
+  v = carbon_math_vec4_clamp(v, carbon_math_vec4_1(0), carbon_math_vec4_1(1));
   u32 r = CARBON_CLAMP(v.x * 255, 0, 255);
   u32 g = CARBON_CLAMP(v.y * 255, 0, 255);
   u32 b = CARBON_CLAMP(v.z * 255, 0, 255);

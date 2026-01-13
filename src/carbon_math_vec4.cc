@@ -10,7 +10,7 @@ Vec4 Vec4::operator+(const Vec4 &v) const {
 }
 
 Vec4 Vec4::operator+(f32 s) const {
-  return CARBON_VEC4(x + s, y + s, z + s, w + s);
+  return carbon_math_vec4(x + s, y + s, z + s, w + s);
 }
 
 Vec4 operator+(f32 s, const Vec4 &v) {
@@ -28,7 +28,7 @@ Vec4 &Vec4::operator+=(f32 s) {
 }
 
 Vec4 Vec4::operator-(f32 s) const {
-  return CARBON_VEC4(x - s, y - s, z - s, w - s);
+  return carbon_math_vec4(x - s, y - s, z - s, w - s);
 }
 
 Vec4 operator-(f32 s, const Vec4 &v) {
@@ -52,7 +52,7 @@ Vec4 operator*(f32 s, const Vec4 &v) {
 }
 
 Vec4 operator/(f32 s, const Vec4 &v) {
-  return CARBON_VEC4(s/v.x, s/v.y, s/v.z, s/v.w);
+  return carbon_math_vec4(s/v.x, s/v.y, s/v.z, s/v.w);
 }
 
 void Vec4::Clamp(const Vec4 &min, const Vec4 &max) {

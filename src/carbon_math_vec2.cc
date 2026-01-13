@@ -139,16 +139,16 @@ void Vec2::operator/=(f32 s) {
   *this = *this / s;
 }
 
-Vec2 Vec2::xx(void)   const { return Vec2(x);    }
-Vec2 Vec2::xy(void)   const { return Vec2(x, y); }
-Vec2 Vec2::yx(void)   const { return Vec2(y, x); }
-Vec2 Vec2::yy(void)   const { return Vec2(y);    }
-Vec3 Vec2::xxx(void)  const { return CARBON_VEC_xxx(*this);  }
-Vec3 Vec2::xxy(void)  const { return CARBON_VEC_xxy(*this);  }
-Vec3 Vec2::xyx(void)  const { return CARBON_VEC_xyx(*this);  }
-Vec3 Vec2::xyy(void)  const { return CARBON_VEC_xyy(*this);  }
-Vec3 Vec2::yxx(void)  const { return CARBON_VEC_yxx(*this);  }
-Vec3 Vec2::yxy(void)  const { return CARBON_VEC_yxy(*this);  }
-Vec3 Vec2::yyx(void)  const { return CARBON_VEC_yyx(*this);  }
-Vec3 Vec2::yyy(void)  const { return CARBON_VEC_yyy(*this);  }
-Vec4 Vec2::xyyx(void) const { return CARBON_VEC_xyyx(*this); }
+Vec2 Vec2::xx(void)   const { return Vec2(x);          }
+Vec2 Vec2::xy(void)   const { return Vec2(x, y);       }
+Vec2 Vec2::yx(void)   const { return Vec2(y, x);       }
+Vec2 Vec2::yy(void)   const { return Vec2(y);          }
+Vec3 Vec2::xxx(void)  const { return Vec3(x);          }
+Vec3 Vec2::xxy(void)  const { return Vec3(x, x, y);    }
+Vec3 Vec2::xyx(void)  const { return Vec3(x, y, x);    }
+Vec3 Vec2::xyy(void)  const { return Vec3(x, y, y);    }
+Vec3 Vec2::yxx(void)  const { return Vec3(y, x, x);    }
+Vec3 Vec2::yxy(void)  const { return Vec3(y, x, y);    }
+Vec3 Vec2::yyx(void)  const { return Vec3(y, y, x);    }
+Vec3 Vec2::yyy(void)  const { return Vec3(y);          }
+Vec4 Vec2::xyyx(void) const { return Vec4(x, y, y, x); }

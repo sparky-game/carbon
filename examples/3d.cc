@@ -65,9 +65,9 @@ void mesh_render(cbn::DrawCanvas &dc, const cbn::Camera *c, const f64 dt) {
   static constexpr auto color = Color_1;
   static const auto * const mp = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
   static cbn::Transform transform = {
-    .position = CARBON_VEC3(0, -1, -3),
-    .rotation = CARBON_VEC3_ZERO,
-    .scale = CARBON_VEC3_ONE
+    .position = cbn::math::Vec3(0, -1, -3),
+    .rotation = cbn::math::Vec3(),
+    .scale    = cbn::math::Vec3(1)
   };
   dc.DrawMesh(c, mp, transform, color);
   transform.rotation.y += 50 * dt;
@@ -105,7 +105,7 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera *c) {
 
 void render(cbn::DrawCanvas &dc, const cbn::Camera *c, const f64 dt) {
   dc.Fill(Color_BG);
-  dc.DrawPlaneXZ(c, CARBON_VEC3(0, -2, 0), cbn::math::Vec2(25), Color_2);
+  dc.DrawPlaneXZ(c, cbn::math::Vec3(0, -2, 0), cbn::math::Vec2(25), Color_2);
   mesh_render(dc, c, dt);
   hud_render(dc, c);
 }

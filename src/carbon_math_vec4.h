@@ -10,48 +10,9 @@
 #pragma once
 
 /**
- * @brief Defines an inline 4D vector.
- * @param x The value to assign to the X field.
- * @param y The value to assign to the Y field.
- * @param z The value to assign to the Z field.
- * @param w The value to assign to the W field.
- */
-#define CARBON_VEC4(x, y, z, w) (CBN_Vec4){{.c = {(f32)(x), (f32)(y), (f32)(z), (f32)(w)}}}
-
-/**
- * @brief Defines an inline 4D vector.
- * @param x The value to assign to the X, Y, Z and W fields.
- */
-#define CARBON_VEC4_1(x) CARBON_VEC4((x), (x), (x), (x))
-
-/**
- * @brief Defines an inline 4D vector.
- * @param v The ≥2D vector to assign to the X, Y and Z fields.
- * @param w The value to assign to the W field.
- */
-#define CARBON_VEC4_2(v, z, w) CARBON_VEC4((v).x, (v).y, (z), (w))
-
-/**
- * @brief Defines an inline 4D vector.
- * @param v The ≥3D vector to assign to the X, Y and Z fields.
- * @param w The value to assign to the W field.
- */
-#define CARBON_VEC4_3(v, w) CARBON_VEC4((v).x, (v).y, (v).z, (w))
-
-/**
- * @brief Defines an inline 4D vector whose 4 elements are equal to zero.
- */
-#define CARBON_VEC4_ZERO CARBON_VEC4_1(0)
-
-/**
- * @brief Defines an inline 4D vector whose 4 elements are equal to one.
- */
-#define CARBON_VEC4_ONE CARBON_VEC4_1(1)
-
-/**
  * @brief Represents a 4D vector with four 32-bit floating-point (f32) values.
  */
-struct CBN_Vec4_t {
+CBNDEF_PDS(CBN_Vec4) {
   union {
     struct { f32 x, y, z, w; };
     struct { CBN_Vec2 xy; CBN_Vec2 zw; };
@@ -64,6 +25,14 @@ struct CBN_Vec4_t {
 
 #ifdef __cplusplus
 struct CBN_Vec4 : CBN_Vec4_t {
+  /**
+   * @see carbon_math_vec4
+   */
+  constexpr CBN_Vec4(f32 x, f32 y, f32 z, f32 w) : CBN_Vec4_t{.c = {x, y, z, w}} {}
+  /**
+   * @see carbon_math_vec4_1
+   */
+  constexpr CBN_Vec4(f32 x = 0) : CBN_Vec4(x, x, x, x) {}
   /**
    * @see carbon_math_vec4_add
    */
@@ -126,10 +95,42 @@ struct CBN_Vec4 : CBN_Vec4_t {
    */
   const char *ToString(void) const;
 };
-#else
-typedef struct CBN_Vec4_t CBN_Vec4;
 #endif
 CBNDEF_T(cbn::math, Vec4, CBN_Vec4);
+
+/**
+ * @brief Creates a 4D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ * @param z The value to assign to the Z field.
+ * @param w The value to assign to the W field.
+ * @return The newly created 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4(f32 x, f32 y, f32 z, f32 w);
+
+/**
+ * @brief Creates a 4D vector.
+ * @param x The value to assign to the X, Y, Z and W fields.
+ * @return The newly created 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_1(f32 x);
+
+/**
+ * @brief Creates a 4D vector.
+ * @param v The 2D vector to assign to the X and Y fields.
+ * @param z The value to assign to the Z field.
+ * @param w The value to assign to the W field.
+ * @return The newly created 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_2(CBN_Vec2 v, f32 z, f32 w);
+
+/**
+ * @brief Creates a 4D vector.
+ * @param v The 3D vector to assign to the X, Y and Z fields.
+ * @param w The value to assign to the W field.
+ * @return The newly created 4D vector.
+ */
+CBNDEF CBN_Vec4 carbon_math_vec4_3(CBN_Vec3 v, f32 w);
 
 /**
  * @brief Adds two 4D vectors together (element-wise).

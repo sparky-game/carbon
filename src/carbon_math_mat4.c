@@ -38,7 +38,7 @@ CBN_Mat4 carbon_math_mat4_mult(CBN_Mat4 a, CBN_Mat4 b) {
 }
 
 CBN_Vec3 carbon_math_mat4_mult_vec3(CBN_Mat4 m, CBN_Vec3 v) {
-  return CARBON_VEC3_V(carbon_math_mat4_mult_vec4(m, CARBON_VEC4_3(v, 1)));
+  return carbon_math_mat4_mult_vec4(m, carbon_math_vec4_3(v, 1)).xyz;
 }
 
 CBN_Vec4 carbon_math_mat4_mult_vec4(CBN_Mat4 m, CBN_Vec4 v) {
@@ -90,7 +90,7 @@ CBN_Mat4 carbon_math_mat4_model(CBN_Vec3 t, CBN_Quat r, CBN_Vec3 s) {
 
 CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation) {
   CBN_Mat4 r = carbon_math_mat4_from_quat(carbon_math_quat_inv(rotation));
-  CBN_Mat4 t = carbon_math_mat4_translation(CARBON_VEC3_N(position));
+  CBN_Mat4 t = carbon_math_mat4_translation(carbon_math_vec3_neg(position));
   return carbon_math_mat4_mult(r, t);
 }
 

@@ -3,16 +3,28 @@
 
 #include "carbon.inc"
 
+CBN_Vec3 carbon_math_vec3(f32 x, f32 y, f32 z) {
+  return (CBN_Vec3){.c = {x, y, z}};
+}
+
+CBN_Vec3 carbon_math_vec3_1(f32 x) {
+  return carbon_math_vec3(x, x, x);
+}
+
+CBN_Vec3 carbon_math_vec3_2(CBN_Vec2 v, f32 z) {
+  return carbon_math_vec3(v.x, v.y, z);
+}
+
 CBN_Vec3 carbon_math_vec3_add(CBN_Vec3 u, CBN_Vec3 v) {
-  return CARBON_VEC3(u.x + v.x, u.y + v.y, u.z + v.z);
+  return carbon_math_vec3(u.x + v.x, u.y + v.y, u.z + v.z);
 }
 
 CBN_Vec3 carbon_math_vec3_sub(CBN_Vec3 u, CBN_Vec3 v) {
-  return CARBON_VEC3(u.x - v.x, u.y - v.y, u.z - v.z);
+  return carbon_math_vec3(u.x - v.x, u.y - v.y, u.z - v.z);
 }
 
 CBN_Vec3 carbon_math_vec3_mult(CBN_Vec3 u, CBN_Vec3 v) {
-  return CARBON_VEC3(u.x * v.x, u.y * v.y, u.z * v.z);
+  return carbon_math_vec3(u.x * v.x, u.y * v.y, u.z * v.z);
 }
 
 f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
@@ -20,15 +32,17 @@ f32 carbon_math_vec3_dot(CBN_Vec3 u, CBN_Vec3 v) {
 }
 
 CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v) {
-  return (CBN_Vec3) {
-    .x = u.y * v.z - u.z * v.y,
-    .y = u.z * v.x - u.x * v.z,
-    .z = u.x * v.y - u.y * v.x
-  };
+  return carbon_math_vec3(u.y * v.z - u.z * v.y,
+                          u.z * v.x - u.x * v.z,
+                          u.x * v.y - u.y * v.x);
 }
 
 CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s) {
-  return CARBON_VEC3(v.x * s, v.y * s, v.z * s);
+  return carbon_math_vec3(v.x * s, v.y * s, v.z * s);
+}
+
+CBN_Vec3 carbon_math_vec3_neg(CBN_Vec3 v) {
+  return carbon_math_vec3_scale(v, -1);
 }
 
 f32 carbon_math_vec3_len_squared(CBN_Vec3 v) {
@@ -50,28 +64,28 @@ char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
 }
 
 CBN_Vec3 carbon_math_vec3_lerp(CBN_Vec3 u, CBN_Vec3 v, f32 t) {
-  return CARBON_VEC3(CARBON_LERP(u.x, v.x, t),
-                     CARBON_LERP(u.y, v.y, t),
-                     CARBON_LERP(u.z, v.z, t));
+  return carbon_math_vec3(CARBON_LERP(u.x, v.x, t),
+                          CARBON_LERP(u.y, v.y, t),
+                          CARBON_LERP(u.z, v.z, t));
 }
 
 CBN_Vec3 carbon_math_vec3_rotate_x(CBN_Vec3 v, f32 angle) {
   CBN_Vec2 r = carbon_math_vec2_rotate(v.yz, angle);
-  return CARBON_VEC3(v.x, r.x, r.y);
+  return carbon_math_vec3(v.x, r.x, r.y);
 }
 
 CBN_Vec3 carbon_math_vec3_rotate_y(CBN_Vec3 v, f32 angle) {
   CBN_Vec2 r = carbon_math_vec2_rotate(CARBON_VEC_xz(v), angle);
-  return CARBON_VEC3(r.x, v.y, r.y);
+  return carbon_math_vec3(r.x, v.y, r.y);
 }
 
 CBN_Vec3 carbon_math_vec3_rotate_z(CBN_Vec3 v, f32 angle) {
   CBN_Vec2 r = carbon_math_vec2_rotate(v.xy, angle);
-  return CARBON_VEC3(r.x, r.y, v.z);
+  return carbon_math_vec3(r.x, r.y, v.z);
 }
 
 CBN_Vec3 carbon_math_vec3_rotate(CBN_Vec3 v, CBN_Quat q) {
-  CBN_Vec3 u = CARBON_VEC3_V(q);
+  CBN_Vec3 u = q.xyz;
   CBN_Vec3 t = carbon_math_vec3_scale(carbon_math_vec3_cross(u, v), 2);
   return carbon_math_vec3_add(v, carbon_math_vec3_add(carbon_math_vec3_scale(t, q.w), carbon_math_vec3_cross(u, t)));
 }
@@ -90,6 +104,6 @@ CBN_Vec3 carbon_math_vec3_reflect(CBN_Vec3 i, CBN_Vec3 n) {
 CBN_Vec3 carbon_math_vec3_refract(CBN_Vec3 i, CBN_Vec3 n, f32 idx) {
   f32 d = carbon_math_vec3_dot(n, i);
   f32 k = 1 - idx*idx * (1 - d*d);
-  if (k < 0) return CARBON_VEC3_ZERO;
+  if (k < 0) return carbon_math_vec3_1(0);
   return carbon_math_vec3_sub(carbon_math_vec3_scale(i, idx), carbon_math_vec3_scale(n, idx * d + carbon_math_sqrt(k)));
 }

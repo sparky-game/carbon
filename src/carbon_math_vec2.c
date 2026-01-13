@@ -4,7 +4,7 @@
 #include "carbon.inc"
 
 CBN_Vec2 carbon_math_vec2(f32 x, f32 y) {
-  return (CBN_Vec2){{{x, y}}};
+  return (CBN_Vec2){.c = {x, y}};
 }
 
 CBN_Vec2 carbon_math_vec2_1(f32 x) {

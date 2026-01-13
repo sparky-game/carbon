@@ -228,8 +228,8 @@ TEST(vec2_add) {
 }
 
 TEST(vec3_add) {
-  CBN_Vec3 u = CARBON_VEC3(1, 2, 3);
-  CBN_Vec3 v = CARBON_VEC3(4, 5, 6);
+  CBN_Vec3 u = carbon_math_vec3(1, 2, 3);
+  CBN_Vec3 v = carbon_math_vec3(4, 5, 6);
   CBN_Vec3 r = carbon_math_vec3_add(u, v);
   carbon_should_be_f(5, r.x);
   carbon_should_be_f(7, r.y);
@@ -247,8 +247,8 @@ TEST(vec2_sub) {
 }
 
 TEST(vec3_sub) {
-  CBN_Vec3 u = CARBON_VEC3(1, 2, 3);
-  CBN_Vec3 v = CARBON_VEC3(4, 5, 6);
+  CBN_Vec3 u = carbon_math_vec3(1, 2, 3);
+  CBN_Vec3 v = carbon_math_vec3(4, 5, 6);
   CBN_Vec3 r = carbon_math_vec3_sub(u, v);
   carbon_should_be_f(-3, r.x);
   carbon_should_be_f(-3, r.y);
@@ -264,15 +264,15 @@ TEST(vec2_dot) {
 }
 
 TEST(vec3_dot) {
-  CBN_Vec3 u = CARBON_VEC3(1, 2, 3);
-  CBN_Vec3 v = CARBON_VEC3(4, 5, 6);
+  CBN_Vec3 u = carbon_math_vec3(1, 2, 3);
+  CBN_Vec3 v = carbon_math_vec3(4, 5, 6);
   carbon_should_be_f(32, carbon_math_vec3_dot(u, v));
   return CARBON_OK;
 }
 
 TEST(vec3_cross) {
-  CBN_Vec3 u = CARBON_VEC3(3, -3, 1);
-  CBN_Vec3 v = CARBON_VEC3(4, 9, 2);
+  CBN_Vec3 u = carbon_math_vec3(3, -3, 1);
+  CBN_Vec3 v = carbon_math_vec3(4, 9, 2);
   CBN_Vec3 r = carbon_math_vec3_cross(u, v);
   carbon_should_be_f(-15, r.x);
   carbon_should_be_f(-2, r.y);

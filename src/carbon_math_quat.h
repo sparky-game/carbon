@@ -10,23 +10,6 @@
 #pragma once
 
 /**
- * @brief Defines an inline quaternion.
- */
-#define CARBON_QUAT CARBON_VEC4
-#define CARBON_QUAT_3 CARBON_VEC4_3
-
-/**
- * @brief Defines an inline quaternion being the conjugate of the provided one.
- * @param q The quaternion.
- */
-#define CARBON_QUAT_C(q) CARBON_QUAT(-(q).x, -(q).y, -(q).z, (q).w)
-
-/**
- * @brief Defines an inline quaternion which represents identity.
- */
-#define CARBON_QUAT_ID CARBON_QUAT(0, 0, 0, 1)
-
-/**
  * @brief Represents a 4D vector that is used to encode 3D physical rotations.
  *
  * Is used to efficiently rotate an object about the (x, y, z) 3D vector
@@ -34,6 +17,24 @@
  */
 typedef CBN_Vec4 CBN_Quat;
 CBNDEF_T(cbn::math, Quat, CBN_Quat);
+
+/**
+ * @brief Creates a quaternion.
+ */
+#define carbon_math_quat carbon_math_vec4
+
+/**
+ * @brief Creates a quaternion which represents identity.
+ * @return The newly created quaternion.
+ */
+CBNDEF CBN_Quat carbon_math_quat_id(void);
+
+/**
+ * @brief Returns a quaternion being the conjugate of the provided one.
+ * @param q The quaternion.
+ * @return The newly created quaternion.
+ */
+CBNDEF CBN_Quat carbon_math_quat_conj(CBN_Quat q);
 
 /**
  * @brief Computes the Hamilton product between two quaternions.
@@ -45,11 +46,8 @@ CBNDEF CBN_Quat carbon_math_quat_mult(CBN_Quat p, CBN_Quat q);
 
 /**
  * @brief Computes the dot product between two quaternions.
- * @param p The first quaternion.
- * @param q The second quaternion.
- * @return The resultant scalar value.
  */
-CBNDEF f32 carbon_math_quat_dot(CBN_Quat p, CBN_Quat q);
+#define carbon_math_quat_dot carbon_math_vec4_dot
 
 /**
  * @brief Converts an Euler angle rotation specified as a 3D vector to a quaternion.
@@ -68,18 +66,14 @@ CBNDEF CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
 
 /**
  * @brief Returns the string representation of the quaternion using default formatting.
- * @param q The quaternion.
- * @return The serialized quaternion as `(X, Y, Z, W)`.
  */
-CBNDEF char *carbon_math_quat_to_cstr(CBN_Quat q);
+#define carbon_math_quat_to_cstr carbon_math_vec4_to_cstr
 
 /**
  * @brief Scales the quaternion by the specified scalar value.
- * @param q The quaternion.
- * @param s The scalar value.
- * @return The scaled quaternion.
  */
-CBNDEF CBN_Quat carbon_math_quat_scale(CBN_Quat q, f32 s);
+//CBNDEF CBN_Quat carbon_math_quat_scale(CBN_Quat q, f32 s);
+#define carbon_math_quat_scale carbon_math_vec4_scale
 
 /**
  * @brief Returns the length of the quaternion squared.

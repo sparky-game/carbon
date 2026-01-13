@@ -19,19 +19,8 @@ CBNDEF_PDS(CBN_Vec2) {
   };
 };
 
-// Swizzling Operations
-#define CARBON_VEC_xx(v)   carbon_math_vec2((v).x, (v).x)
-#define CARBON_VEC_yx(v)   carbon_math_vec2((v).y, (v).x)
-#define CARBON_VEC_yy(v)   carbon_math_vec2((v).y, (v).y)
-#define CARBON_VEC_xxx(v)  CARBON_VEC3((v).x, (v).x, (v).x)
-#define CARBON_VEC_xxy(v)  CARBON_VEC3((v).x, (v).x, (v).y)
-#define CARBON_VEC_xyx(v)  CARBON_VEC3((v).x, (v).y, (v).x)
-#define CARBON_VEC_xyy(v)  CARBON_VEC3((v).x, (v).y, (v).y)
-#define CARBON_VEC_yxx(v)  CARBON_VEC3((v).y, (v).x, (v).x)
-#define CARBON_VEC_yxy(v)  CARBON_VEC3((v).y, (v).x, (v).y)
-#define CARBON_VEC_yyx(v)  CARBON_VEC3((v).y, (v).y, (v).x)
-#define CARBON_VEC_yyy(v)  CARBON_VEC3((v).y, (v).y, (v).y)
-#define CARBON_VEC_xyyx(v) CARBON_VEC4((v).x, (v).y, (v).y, (v).x)
+// Swizzling
+#define CARBON_VEC_xyyx(v) carbon_math_vec4((v).x, (v).y, (v).y, (v).x)
 
 // Forward declarations
 #ifdef __cplusplus
@@ -48,7 +37,7 @@ struct CBN_Vec2 : CBN_Vec2_t {
   /**
    * @see carbon_math_vec2
    */
-  constexpr CBN_Vec2(f32 x, f32 y) : CBN_Vec2_t{{{x, y}}} {}
+  constexpr CBN_Vec2(f32 x, f32 y) : CBN_Vec2_t{.c = {x, y}} {}
   /**
    * @see carbon_math_vec2_1
    */
@@ -182,8 +171,8 @@ CBNDEF CBN_Vec2 carbon_math_vec2_1(f32 x);
 
 /**
  * @brief Creates a 2D vector (from polar coordinate system).
- * @param r The radial coordinate.
- * @param phi The angular coordinate in radians.
+ * @param r The radial distance.
+ * @param phi The polar angle in radians.
  * @return The newly created 2D vector.
  */
 CBNDEF CBN_Vec2 carbon_math_vec2_p(f32 r, f32 phi);

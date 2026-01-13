@@ -12,7 +12,7 @@
 /**
  * @brief Represents a 4x4 matrix that is used to encode 3D physical transformations.
  */
-struct CBN_Mat4_t {
+CBNDEF_PDS(CBN_Mat4) {
   union {
     CBN_Vec4 v[4];
     f32 m[4][4];
@@ -24,8 +24,6 @@ struct CBN_Mat4_t {
 struct CBN_Mat4 : CBN_Mat4_t {
   // ...
 };
-#else
-typedef struct CBN_Mat4_t CBN_Mat4;
 #endif
 CBNDEF_T(cbn::math, Mat4, CBN_Mat4);
 

@@ -10,107 +10,9 @@
 #pragma once
 
 /**
- * @brief Defines an inline 3D vector.
- * @param x The value to assign to the X field.
- * @param y The value to assign to the Y field.
- * @param z The value to assign to the Z field.
- */
-#define CARBON_VEC3(x, y, z) (CBN_Vec3){{.c = {(f32)(x), (f32)(y), (f32)(z)}}}
-
-/**
- * @brief Defines an inline 3D vector.
- * @param x The value to assign to the X, Y and Z fields.
- */
-#define CARBON_VEC3_1(x) CARBON_VEC3((x), (x), (x))
-
-/**
- * @brief Defines an inline 3D vector.
- * @param v The ≥2D vector to assign to the X and Y fields.
- * @param z The value to assign to the Z field.
- */
-#define CARBON_VEC3_2(v, z) CARBON_VEC3((v).x, (v).y, z)
-
-/**
- * @brief Defines an inline 3D vector.
- * @param v The ≥3D vector to assign to the X, Y and Z fields.
- */
-#define CARBON_VEC3_V(v) CARBON_VEC3((v).x, (v).y, (v).z)
-
-/**
- * @brief Defines an inline 3D vector being the negated of the provided one.
- * @param v The ≥3D vector.
- */
-#define CARBON_VEC3_N(v) CARBON_VEC3(-(v).x, -(v).y, -(v).z)
-
-// Swizzling Operations
-#define CARBON_VEC_xz(v)  carbon_math_vec2((v).x, (v).z)
-#define CARBON_VEC_zx(v)  carbon_math_vec2((v).z, (v).x)
-#define CARBON_VEC_zy(v)  carbon_math_vec2((v).z, (v).y)
-#define CARBON_VEC_zz(v)  carbon_math_vec2((v).z, (v).z)
-#define CARBON_VEC_xxz(v) CARBON_VEC3((v).x, (v).x, (v).z)
-#define CARBON_VEC_xyz(v) CARBON_VEC3((v).x, (v).y, (v).z)
-#define CARBON_VEC_xzx(v) CARBON_VEC3((v).x, (v).z, (v).x)
-#define CARBON_VEC_xzy(v) CARBON_VEC3((v).x, (v).z, (v).y)
-#define CARBON_VEC_xzz(v) CARBON_VEC3((v).x, (v).z, (v).z)
-#define CARBON_VEC_yxz(v) CARBON_VEC3((v).y, (v).x, (v).z)
-#define CARBON_VEC_yyz(v) CARBON_VEC3((v).y, (v).y, (v).z)
-#define CARBON_VEC_yzx(v) CARBON_VEC3((v).y, (v).z, (v).x)
-#define CARBON_VEC_yzy(v) CARBON_VEC3((v).y, (v).z, (v).y)
-#define CARBON_VEC_yzz(v) CARBON_VEC3((v).y, (v).z, (v).z)
-#define CARBON_VEC_zxx(v) CARBON_VEC3((v).z, (v).x, (v).x)
-#define CARBON_VEC_zxy(v) CARBON_VEC3((v).z, (v).x, (v).y)
-#define CARBON_VEC_zxz(v) CARBON_VEC3((v).z, (v).x, (v).z)
-#define CARBON_VEC_zyx(v) CARBON_VEC3((v).z, (v).y, (v).x)
-#define CARBON_VEC_zyy(v) CARBON_VEC3((v).z, (v).y, (v).y)
-#define CARBON_VEC_zyz(v) CARBON_VEC3((v).z, (v).y, (v).z)
-#define CARBON_VEC_zzx(v) CARBON_VEC3((v).z, (v).z, (v).x)
-#define CARBON_VEC_zzy(v) CARBON_VEC3((v).z, (v).z, (v).y)
-#define CARBON_VEC_zzz(v) CARBON_VEC3((v).z, (v).z, (v).z)
-
-/**
- * @brief Defines an inline 3D vector whose 3 elements are equal to zero.
- */
-#define CARBON_VEC3_ZERO CARBON_VEC3(0, 0, 0)
-
-/**
- * @brief Defines an inline 3D vector which represents -X direction.
- */
-#define CARBON_VEC3_LEFT CARBON_VEC3(-1, 0, 0)
-
-/**
- * @brief Defines an inline 3D vector which represents +X direction.
- */
-#define CARBON_VEC3_RIGHT CARBON_VEC3(1, 0, 0)
-
-/**
- * @brief Defines an inline 3D vector which represents -Y direction.
- */
-#define CARBON_VEC3_DOWN CARBON_VEC3(0, -1, 0)
-
-/**
- * @brief Defines an inline 3D vector which represents +Y direction.
- */
-#define CARBON_VEC3_UP CARBON_VEC3(0, 1, 0)
-
-/**
- * @brief Defines an inline 3D vector which represents -Z direction.
- */
-#define CARBON_VEC3_FORWARD CARBON_VEC3(0, 0, -1)
-
-/**
- * @brief Defines an inline 3D vector which represents +Z direction.
- */
-#define CARBON_VEC3_BACK CARBON_VEC3(0, 0, 1)
-
-/**
- * @brief Defines an inline 3D vector whose 3 elements are equal to one.
- */
-#define CARBON_VEC3_ONE CARBON_VEC3(1, 1, 1)
-
-/**
  * @brief Represents a 3D vector with three 32-bit floating-point (f32) values.
  */
-struct CBN_Vec3_t {
+CBNDEF_PDS(CBN_Vec3) {
   union {
     struct { f32 x, y, z; };
     struct { CBN_Vec2 xy; f32 __pad1; };
@@ -119,6 +21,9 @@ struct CBN_Vec3_t {
   };
 };
 
+// Swizzling
+#define CARBON_VEC_xz(v) carbon_math_vec2((v).x, (v).z)
+
 // Forward declarations
 #ifdef __cplusplus
 typedef struct CBN_Vec4 CBN_Quat;
@@ -126,9 +31,17 @@ typedef struct CBN_Vec4 CBN_Quat;
 typedef struct CBN_Vec4_t CBN_Quat;
 #endif
 
-
+// Method declarations
 #ifdef __cplusplus
 struct CBN_Vec3 : CBN_Vec3_t {
+  /**
+   * @see carbon_math_vec3
+   */
+  constexpr CBN_Vec3(f32 x, f32 y, f32 z) : CBN_Vec3_t{.c = {x, y, z}} {}
+  /**
+   * @see carbon_math_vec3_1
+   */
+  constexpr CBN_Vec3(f32 x = 0) : CBN_Vec3(x, x, x) {}
   /**
    * @see carbon_math_vec3_add
    */
@@ -217,10 +130,32 @@ struct CBN_Vec3 : CBN_Vec3_t {
   CBN_Vec3 zzy(void) const;
   CBN_Vec3 zzz(void) const;
 };
-#else
-typedef struct CBN_Vec3_t CBN_Vec3;
 #endif
 CBNDEF_T(cbn::math, Vec3, CBN_Vec3);
+
+/**
+ * @brief Creates a 3D vector.
+ * @param x The value to assign to the X field.
+ * @param y The value to assign to the Y field.
+ * @param z The value to assign to the Z field.
+ * @return The newly created 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3(f32 x, f32 y, f32 z);
+
+/**
+ * @brief Creates a 3D vector.
+ * @param x The value to assign to the X, Y and Z fields.
+ * @return The newly created 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3_1(f32 x);
+
+/**
+ * @brief Creates a 3D vector.
+ * @param v The 2D vector to assign to the X and Y fields.
+ * @param z The value to assign to the Z field.
+ * @return The newly created 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3_2(CBN_Vec2 v, f32 z);
 
 /**
  * @brief Adds two 3D vectors together (element-wise).
@@ -269,6 +204,13 @@ CBNDEF CBN_Vec3 carbon_math_vec3_cross(CBN_Vec3 u, CBN_Vec3 v);
  * @return The scaled 3D vector.
  */
 CBNDEF CBN_Vec3 carbon_math_vec3_scale(CBN_Vec3 v, f32 s);
+
+/**
+ * @brief Returns a 3D vector being the negated of the provided one.
+ * @param v The 3D vector.
+ * @return The negated 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3_neg(CBN_Vec3 v);
 
 /**
  * @brief Returns the length of the 3D vector squared.

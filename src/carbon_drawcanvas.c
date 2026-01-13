@@ -239,8 +239,8 @@ CBNINL void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CB
   const CBN_Mat4 P = carbon_camera_get_proj(c);
   const CBN_Mat4 MVP = carbon_math_mat4_mult(P, carbon_math_mat4_mult(V, M));
   for (usz i = 0; i < m->metadata.vertices_count; ++i) {
-    CBN_Vec4 v = CARBON_VEC4_3(m->vertices[i], 1);
-    out_vs[i].world = CARBON_VEC3_V(carbon_math_mat4_mult_vec4(M, v));
+    CBN_Vec4 v = carbon_math_vec4_3(m->vertices[i], 1);
+    out_vs[i].world = carbon_math_mat4_mult_vec4(M, v).xyz;
     out_vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
   }
 }
@@ -321,7 +321,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Me
   if (!c || !m || !m->vertices || !m->faces) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
-  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_BACK);
+  const CBN_Vec3 light = carbon_math_vec3_norm(carbon_math_vec3(0, 0, 1));
   const CBN_Vec3 cam_pos = carbon_camera_get_position(c);
   for (usz f = 0; f < m->metadata.faces_count; ++f) {
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
@@ -339,18 +339,18 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas dc, const CBN_Camera *c, CBN_Vec3
   if (!c) return;
   size = carbon_math_vec2_scale(size, 0.5);
   Vertex3D vs[4];
-  vs[0].world = CARBON_VEC3(center.x - size.x, center.y, center.z - size.y);
-  vs[1].world = CARBON_VEC3(center.x + size.x, center.y, center.z - size.y);
-  vs[2].world = CARBON_VEC3(center.x + size.x, center.y, center.z + size.y);
-  vs[3].world = CARBON_VEC3(center.x - size.x, center.y, center.z + size.y);
+  vs[0].world = carbon_math_vec3(center.x - size.x, center.y, center.z - size.y);
+  vs[1].world = carbon_math_vec3(center.x + size.x, center.y, center.z - size.y);
+  vs[2].world = carbon_math_vec3(center.x + size.x, center.y, center.z + size.y);
+  vs[3].world = carbon_math_vec3(center.x - size.x, center.y, center.z + size.y);
   const CBN_Mat4 V = carbon_camera_get_view(c);
   const CBN_Mat4 P = carbon_camera_get_proj(c);
   const CBN_Mat4 MVP = carbon_math_mat4_mult(P, V);
   for (usz i = 0; i < CARBON_ARRAY_LEN(vs); ++i) {
-    CBN_Vec4 v = CARBON_VEC4_3(vs[i].world, 1);
+    CBN_Vec4 v = carbon_math_vec4_3(vs[i].world, 1);
     vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
   }
-  const CBN_Vec3 light = carbon_math_vec3_norm(CARBON_VEC3_ONE);
+  const CBN_Vec3 light = carbon_math_vec3_norm(carbon_math_vec3_1(1));
   {// First triangle
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[1], vs[2], pvs);

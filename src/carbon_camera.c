@@ -35,10 +35,10 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc) {
     CBN_WARN("`c` is not a valid pointer, skipping reset");
     return;
   }
-  c->position = CARBON_VEC3_ZERO;
+  c->position = carbon_math_vec3_1(0);
   c->yaw = 0;
   c->pitch = 0;
-  c->rotation = CARBON_QUAT_ID;
+  c->rotation = carbon_math_quat_id();
   c->view = carbon_math_mat4_view(c->position, c->rotation);
   c->fov = 60;
   c->aspect = (f32) dc.width / dc.height;
@@ -48,12 +48,12 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc) {
 }
 
 CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c) {
-  if (!c) return CARBON_VEC3_ZERO;
+  if (!c) return carbon_math_vec3_1(0);
   return c->position;
 }
 
 CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c) {
-  if (!c) return CARBON_QUAT_ID;
+  if (!c) return carbon_math_quat_id();
   return c->rotation;
 }
 
@@ -86,32 +86,32 @@ CBNINL void carbon_camera__translate_xz(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
 }
 
 void carbon_camera_move_forward(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate_xz(c, CARBON_VEC3_FORWARD, amount);
+  carbon_camera__translate_xz(c, carbon_math_vec3(0, 0, -1), amount);
 }
 
 void carbon_camera_move_backward(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate_xz(c, CARBON_VEC3_BACK, amount);
+  carbon_camera__translate_xz(c, carbon_math_vec3(0, 0, 1), amount);
 }
 
 void carbon_camera_move_left(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate_xz(c, CARBON_VEC3_LEFT, amount);
+  carbon_camera__translate_xz(c, carbon_math_vec3(-1, 0, 0), amount);
 }
 
 void carbon_camera_move_right(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate_xz(c, CARBON_VEC3_RIGHT, amount);
+  carbon_camera__translate_xz(c, carbon_math_vec3(1, 0, 0), amount);
 }
 
 void carbon_camera_move_up(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate(c, CARBON_VEC3_UP, amount);
+  carbon_camera__translate(c, carbon_math_vec3(0, 1, 0), amount);
 }
 
 void carbon_camera_move_down(CBN_Camera *c, f32 amount) {
-  carbon_camera__translate(c, CARBON_VEC3_DOWN, amount);
+  carbon_camera__translate(c, carbon_math_vec3(0, -1, 0), amount);
 }
 
 CBNINL void carbon_camera__update_rotation(CBN_Camera *c) {
-  const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(CARBON_VEC3_UP, c->yaw);
-  const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(CARBON_VEC3_RIGHT, q_yaw);
+  const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(carbon_math_vec3(0, 1, 0), c->yaw);
+  const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(carbon_math_vec3(1, 0, 0), q_yaw);
   const CBN_Quat q_pitch = carbon_math_quat_from_axis_angle(v_pitch, c->pitch);
   c->rotation = carbon_math_quat_mult(q_pitch, q_yaw);
   carbon_camera__update_view(c);
