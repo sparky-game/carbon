@@ -19,9 +19,6 @@ CBNDEF_PDS(CBN_Vec2) {
   };
 };
 
-// Swizzling
-#define CARBON_VEC_xyyx(v) carbon_math_vec4((v).x, (v).y, (v).y, (v).x)
-
 // Forward declarations
 #ifdef __cplusplus
 typedef struct CBN_Vec3 CBN_Vec3;
