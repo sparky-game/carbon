@@ -47,7 +47,7 @@ enum CBN_MouseButton_t {
 
 #ifdef __cplusplus
 enum struct CBN_MouseButton {
-#define x(name) CARBON_MOUSE_BUTTON_ ## name,
+#define x(name) name = CARBON_MOUSE_BUTTON_ ## name,
   CARBON_WIN_MOUSEBUTTONS
 #undef x
 };
