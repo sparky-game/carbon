@@ -19,40 +19,36 @@
   x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)      \
   x(UpArrow) x(DownArrow) x(LeftArrow) x(RightArrow)
 
-enum CBN_KeyCode_t {
-#define x(name) CARBON_KEY_CODE_ ## name,
-  CARBON_WIN_KEYCODES
-#undef x
-};
-
 #ifdef __cplusplus
 enum struct CBN_KeyCode {
-#define x(name) name = CARBON_KEY_CODE_ ## name,
+#define x(name) name,
   CARBON_WIN_KEYCODES
 #undef x
 };
 #else
-typedef enum CBN_KeyCode_t CBN_KeyCode;
+typedef enum {
+#define x(name) CARBON_KEY_CODE_ ## name,
+  CARBON_WIN_KEYCODES
+#undef x
+} CBN_KeyCode;
 #endif
 CBNDEF_T(cbn::win, KeyCode, CBN_KeyCode);
 
 #define CARBON_WIN_MOUSEBUTTONS                         \
   x(Left) x(Right) x(Middle) x(ScrollUp) x(ScrollDown)
 
-enum CBN_MouseButton_t {
-#define x(name) CARBON_MOUSE_BUTTON_ ## name,
-  CARBON_WIN_MOUSEBUTTONS
-#undef x
-};
-
 #ifdef __cplusplus
 enum struct CBN_MouseButton {
-#define x(name) name = CARBON_MOUSE_BUTTON_ ## name,
+#define x(name) name,
   CARBON_WIN_MOUSEBUTTONS
 #undef x
 };
 #else
-typedef enum CBN_MouseButton_t CBN_MouseButton;
+typedef enum {
+#define x(name) CARBON_MOUSE_BUTTON_ ## name,
+  CARBON_WIN_MOUSEBUTTONS
+#undef x
+} CBN_MouseButton;
 #endif
 CBNDEF_T(cbn::win, MouseButton, CBN_MouseButton);
 
