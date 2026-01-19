@@ -28,11 +28,11 @@ struct CBN_Vec4 : CBN_Vec4_t {
   /**
    * @see carbon_math_vec4
    */
-  constexpr CBN_Vec4(f32 x, f32 y, f32 z, f32 w) : CBN_Vec4_t{.c = {x, y, z, w}} {}
+  constexpr CBN_Vec4(f32 _x, f32 _y, f32 _z, f32 _w) : CBN_Vec4_t{.c = {_x, _y, _z, _w}} {}
   /**
    * @see carbon_math_vec4_1
    */
-  constexpr CBN_Vec4(f32 x = 0) : CBN_Vec4(x, x, x, x) {}
+  constexpr CBN_Vec4(f32 _x = 0) : CBN_Vec4(_x, _x, _x, _x) {}
   /**
    * @see carbon_math_vec4_add
    */

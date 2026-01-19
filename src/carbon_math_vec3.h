@@ -37,11 +37,11 @@ struct CBN_Vec3 : CBN_Vec3_t {
   /**
    * @see carbon_math_vec3
    */
-  constexpr CBN_Vec3(f32 x, f32 y, f32 z) : CBN_Vec3_t{.c = {x, y, z}} {}
+  constexpr CBN_Vec3(f32 _x, f32 _y, f32 _z) : CBN_Vec3_t{.c = {_x, _y, _z}} {}
   /**
    * @see carbon_math_vec3_1
    */
-  constexpr CBN_Vec3(f32 x = 0) : CBN_Vec3(x, x, x) {}
+  constexpr CBN_Vec3(f32 _x = 0) : CBN_Vec3(_x, _x, _x) {}
   /**
    * @see carbon_math_vec3_add
    */

@@ -34,11 +34,11 @@ struct CBN_Vec2 : CBN_Vec2_t {
   /**
    * @see carbon_math_vec2
    */
-  constexpr CBN_Vec2(f32 x, f32 y) : CBN_Vec2_t{.c = {x, y}} {}
+  constexpr CBN_Vec2(f32 _x, f32 _y) : CBN_Vec2_t{.c = {_x, _y}} {}
   /**
    * @see carbon_math_vec2_1
    */
-  constexpr CBN_Vec2(f32 x = 0) : CBN_Vec2(x, x) {}
+  constexpr CBN_Vec2(f32 _x = 0) : CBN_Vec2(_x, _x) {}
   /**
    * @see carbon_math_vec2_add
    */
