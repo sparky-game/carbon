@@ -32,7 +32,7 @@ int main(void) {
       c = (c + 1) % n_colors;
     }
     position.Clamp(cbn::math::Vec2(), cbn::math::Vec2(canvas.width, canvas.height) - size);
-    canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), colors[c]);
+    canvas.DrawRect(cbn::math::Rect(position, size), colors[c]);
     cbn::win::Update(canvas);
   });
   cbn::win::Close();

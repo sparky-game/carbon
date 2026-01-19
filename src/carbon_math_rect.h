@@ -10,49 +10,33 @@
 #pragma once
 
 /**
- * @brief Defines an inline rectangle.
- * @param x The value to assign to the X coordinate of the position.
- * @param y The value to assign to the Y coordinate of the position.
- * @param w The value to assign to the width of the size.
- * @param h The value to assign to the height of the size.
- */
-#define CARBON_RECT(x, y, w, h) (CBN_Rect){(f32)(x), (f32)(y), (f32)(w), (f32)(h)}
-
-/**
- * @brief Defines an inline rectangle.
- * @param v The 2D vector to assign to the position.
- * @param w The value to assign to the width of the size.
- * @param h The value to assign to the height of the size.
- */
-#define CARBON_RECT_V(v, w, h) CARBON_RECT((v).x, (v).y, w, h)
-
-/**
- * @brief Defines an inline rectangle whose width and height are equal (square).
- * @param x The value to assign to the X coordinate of the position.
- * @param y The value to assign to the Y coordinate of the position.
- * @param sz The value to assign to both the width and the height of the size.
- */
-#define CARBON_RECT_SQUARE(x, y, sz) CARBON_RECT(x, y, sz, sz)
-
-/**
- * @brief Defines an inline rectangle whose width and height are equal (square).
- * @param v The 2D vector to assign to the position.
- * @param sz The value to assign to both the width and the height of the size.
- */
-#define CARBON_RECT_SQUARE_V(v, sz) CARBON_RECT_SQUARE((v).x, (v).y, sz)
-
-/**
- * @brief Defines an inline rectangle whose 4 elements are equal to zero.
- */
-#define CARBON_RECT_ZERO CARBON_RECT(0, 0, 0, 0)
-
-/**
  * @brief Represents the position and size of a rectangle with four 32-bit floating-point (f32) values.
  */
-typedef struct CBN_Rect {
+CBNDEF_PDS(CBN_Rect) {
   f32 x, y;
   f32 w, h;
+};
+
+// Method declarations
 #ifdef __cplusplus
+struct CBN_Rect : CBN_Rect_t {
+  /**
+   * @see carbon_math_rect
+   */
+  constexpr CBN_Rect(f32 x, f32 y, f32 w, f32 h) : CBN_Rect_t{x, y, w, h} {}
+  constexpr CBN_Rect(void) : CBN_Rect(0, 0, 0, 0) {}
+  /**
+   * @see carbon_math_rect_v
+   */
+  constexpr CBN_Rect(CBN_Vec2 v, f32 w, f32 h) : CBN_Rect(v.x, v.y, w, h) {}
+  /**
+   * @see carbon_math_rect_sq
+   */
+  constexpr CBN_Rect(f32 x, f32 y, f32 sz) : CBN_Rect(x, y, sz, sz) {}
+  /**
+   * @see carbon_math_rect_sq_v(CBN_Vec2 v, f32 sz)
+   */
+  constexpr CBN_Rect(CBN_Vec2 v, f32 sz) : CBN_Rect(v.x, v.y, sz) {}
   /**
    * @see carbon_math_rect_contains
    */
@@ -71,9 +55,45 @@ typedef struct CBN_Rect {
   void Scale(const f32 s);
   // Overloaded Operators
   bool operator==(const CBN_Rect &r) const;
+};
 #endif
-} CBN_Rect;
 CBNDEF_T(cbn::math, Rect, CBN_Rect);
+
+/**
+ * @brief Creates a rectangle.
+ * @param x The value to assign to the X coordinate of the position.
+ * @param y The value to assign to the Y coordinate of the position.
+ * @param w The value to assign to the width of the size.
+ * @param h The value to assign to the height of the size.
+ * @return The newly created rectangle.
+ */
+CBNDEF CBN_Rect carbon_math_rect(f32 x, f32 y, f32 w, f32 h);
+
+/**
+ * @brief Creates a rectangle.
+ * @param v The 2D vector to assign to the position.
+ * @param w The value to assign to the width of the size.
+ * @param h The value to assign to the height of the size.
+ * @return The newly created rectangle.
+ */
+CBNDEF CBN_Rect carbon_math_rect_v(CBN_Vec2 v, f32 w, f32 h);
+
+/**
+ * @brief Creates a rectangle whose width and height are equal (square).
+ * @param x The value to assign to the X coordinate of the position.
+ * @param y The value to assign to the Y coordinate of the position.
+ * @param sz The value to assign to both the width and the height of the size.
+ * @return The newly created rectangle.
+ */
+CBNDEF CBN_Rect carbon_math_rect_sq(f32 x, f32 y, f32 sz);
+
+/**
+ * @brief Creates a rectangle whose width and height are equal (square).
+ * @param v The 2D vector to assign to the position.
+ * @param sz The value to assign to both the width and the height of the size.
+ * @return The newly created rectangle.
+ */
+CBNDEF CBN_Rect carbon_math_rect_sq_v(CBN_Vec2 v, f32 sz);
 
 /**
  * @brief Determines whether the specified point is contained within a rectangle.

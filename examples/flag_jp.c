@@ -7,9 +7,9 @@ int main(void) {
   CBN_Vec2 flag_size = carbon_math_vec2(900, 600);
   CBN_DrawCanvas canvas = carbon_drawcanvas_create(flag_size.x * 1.0555, flag_size.y * 1.08);
   carbon_drawcanvas_fill(canvas, 0x181818ff);
-  carbon_drawcanvas_rect(canvas, CARBON_RECT(canvas.width/2  - flag_size.x/2,
-                                             canvas.height/2 - flag_size.y/2,
-                                             flag_size.x, flag_size.y), 0xffffffff);
+  carbon_drawcanvas_rect(canvas, carbon_math_rect(canvas.width/2  - flag_size.x/2,
+                                                  canvas.height/2 - flag_size.y/2,
+                                                  flag_size.x, flag_size.y), 0xffffffff);
   carbon_drawcanvas_circle(canvas, carbon_math_vec2(canvas.width/2, canvas.height/2), 180, 0xbc002dff);
   carbon_win_open(canvas, "Flag of Japan");
   carbon_win_set_max_fps(60);

@@ -192,7 +192,8 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
 
 void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color) {
   i32 x1, x2, y1, y2;
-  if (!carbon_drawcanvas__rect_normalize(dc, CARBON_RECT(center.x - radius, center.y - radius, 2*radius, 2*radius), &x1, &x2, &y1, &y2)) return;
+  CBN_Rect xywh = carbon_math_rect_sq(center.x - radius, center.y - radius, 2*radius);
+  if (!carbon_drawcanvas__rect_normalize(dc, xywh, &x1, &x2, &y1, &y2)) return;
   for (i32 j = y1; j <= y2; ++j) {
     for (i32 i = x1; i <= x2; ++i) {
       i64 n = 0;
@@ -212,8 +213,8 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
 }
 
 void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position) {
-  const CBN_Rect r_dc = CARBON_RECT(0, 0, dc.width, dc.height);
-  const CBN_Rect r_sp = CARBON_RECT(position.x, position.y, s->width, s->height);
+  const CBN_Rect r_dc = carbon_math_rect(0, 0, dc.width, dc.height);
+  const CBN_Rect r_sp = carbon_math_rect(position.x, position.y, s->width, s->height);
   CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
   u32 *p_dc = dc.pixels + (usz)(xywh.y * r_dc.w + xywh.x);
   const u32 *p_sp = s->pixels + (usz)((xywh.y - r_sp.y) * r_sp.w + (xywh.x - r_sp.x));
@@ -486,7 +487,7 @@ void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 positio
         i32 px = gx + dx*size;
         i32 py = gy + dy*size;
         if (0 <= px && px < (i32) dc.width && 0 <= py && py < (i32) dc.height && glyph[dy*CARBON_DRAWCANVAS__FONT_WIDTH + dx]) {
-          carbon_drawcanvas_rect(dc, CARBON_RECT_SQUARE(px, py, size), color);
+          carbon_drawcanvas_rect(dc, carbon_math_rect_sq(px, py, size), color);
         }
       }
     }

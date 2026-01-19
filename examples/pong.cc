@@ -124,8 +124,8 @@ namespace pong {
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
       static constexpr auto color = static_cast<u32>(Color::Blue);
       static constexpr auto thickness = 4;
-      static const auto rect = CARBON_RECT(canvas.width/2 - thickness + 1, 0, thickness, canvas.height);
-      canvas.DrawRect(rect, color);
+      static const auto xywh = cbn::math::Rect(canvas.width/2 - thickness + 1, 0, thickness, canvas.height);
+      canvas.DrawRect(xywh, color);
     }
   };
 
@@ -161,8 +161,7 @@ namespace pong {
     }
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
-      const auto rect = CARBON_RECT_SQUARE_V(position, size);
-      canvas.DrawRect(rect, color);
+      canvas.DrawRect(cbn::math::Rect(position, size), color);
     }
 
     u8 wall_hits {0};
@@ -180,7 +179,7 @@ namespace pong {
     explicit Racket(const cbn::math::Vec2 &p) : Entity{p, cbn::math::Vec2(0, speed)} {}
 
     virtual void Render(cbn::DrawCanvas &canvas) const final override {
-      canvas.DrawRect(CARBON_RECT_SQUARE_V(position, size), color);
+      canvas.DrawRect(cbn::math::Rect(position, size), color);
     }
 
     static constexpr auto size {Ball::size * 2};
@@ -402,10 +401,12 @@ namespace pong {
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
         static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, YPos);
-        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                      text_pos.y - text_padding.y - 2*text_size,
-                                      text_width + 2*text_padding.x,
-                                      text_height + 2*text_padding.y + 2*text_size));
+        m_Window->DrawBox(cbn::math::Rect{
+            text_pos.x - text_padding.x,
+            text_pos.y - text_padding.y - 2*text_size,
+            text_width + 2*text_padding.x,
+            text_height + 2*text_padding.y + 2*text_size
+          });
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
 
@@ -581,8 +582,8 @@ namespace pong {
       bool Update_BallCollideRacket(Player<S> &p) {
         using namespace cbn::math::literals;
         static constexpr auto dir = S == PlayerSide::Left ? 1 : -1;
-        const auto racket = CARBON_RECT_SQUARE_V(p.racket.position, p.racket.size);
-        const auto ball = CARBON_RECT_SQUARE_V(m_Ball.position, m_Ball.size);
+        const auto racket = cbn::math::Rect(p.racket.position, p.racket.size);
+        const auto ball = cbn::math::Rect(m_Ball.position, m_Ball.size);
         if (!racket.Overlaps(ball)) return false;
         const auto ball_center_y = m_Ball.position.y + m_Ball.size/2;
         const auto racket_center_y = p.racket.position.y + p.racket.size/2;
@@ -629,12 +630,12 @@ namespace pong {
         static constexpr auto color = static_cast<u32>(Color::Blue);
         static constexpr auto thickness = 8;
         {
-          static const auto rect = CARBON_RECT(0, m_Window->height/3, thickness, m_Window->height/3);
-          m_Window->DrawRect(rect, color);
+          static const auto xywh = cbn::math::Rect(0, m_Window->height/3, thickness, m_Window->height/3);
+          m_Window->DrawRect(xywh, color);
         }
         {
-          static const auto rect = CARBON_RECT(m_Window->width - thickness, m_Window->height/3, thickness, m_Window->height/3);
-          m_Window->DrawRect(rect, color);
+          static const auto xywh = cbn::math::Rect(m_Window->width - thickness, m_Window->height/3, thickness, m_Window->height/3);
+          m_Window->DrawRect(xywh, color);
         }
       }
 
@@ -666,10 +667,12 @@ namespace pong {
         static const auto text_width = m_Window->TextWidth(text, text_size);
         static const auto text_height = m_Window->TextHeight(text_size);
         static const auto text_pos = cbn::math::Vec2(m_Window->width/2 - text_width/2, m_Window->height/2);
-        m_Window->DrawBox(CARBON_RECT(text_pos.x - text_padding.x,
-                                      text_pos.y - text_padding.y - 2*text_size,
-                                      text_width + 2*text_padding.x,
-                                      text_height + 2*text_padding.y + 2*text_size));
+        m_Window->DrawBox(cbn::math::Rect{
+            text_pos.x - text_padding.x,
+            text_pos.y - text_padding.y - 2*text_size,
+            text_width + 2*text_padding.x,
+            text_height + 2*text_padding.y + 2*text_size
+          });
         m_Window->DrawText(text, text_pos, text_size, text_color);
       }
     };
