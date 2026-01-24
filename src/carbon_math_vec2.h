@@ -74,14 +74,6 @@ struct CBN_Vec2 : CBN_Vec2_t {
   CBN_Vec2 operator/(f32 s) const;
   void operator/=(f32 s);
   /**
-   * @see carbon_math_vec2_clamp
-   */
-  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max);
-  /**
-   * @see carbon_math_vec2_floor
-   */
-  CBN_Vec2 Floor(void) const;
-  /**
    * @see carbon_math_vec2_len
    */
   f32 Length(void) const;
@@ -93,6 +85,14 @@ struct CBN_Vec2 : CBN_Vec2_t {
    * @see carbon_math_vec2_norm
    */
   CBN_Vec2 Normalize(void) const;
+  /**
+   * @see carbon_math_vec2_clamp
+   */
+  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max);
+  /**
+   * @see carbon_math_vec2_floor
+   */
+  CBN_Vec2 Floor(void) const;
   /**
    * @see carbon_math_vec2_abs
    */
@@ -215,22 +215,6 @@ CBNDEF f32 carbon_math_vec2_dot(CBN_Vec2 u, CBN_Vec2 v);
 CBNDEF CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s);
 
 /**
- * @brief Restricts a 2D vector between a minimum and a maximum value.
- * @param v The 2D vector.
- * @param min The minimum value (as 2D vector).
- * @param max The maximum value (as 2D vector).
- * @return The restricted 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
-
-/**
- * @brief Rounds down the components of the 2D vector.
- * @param v The 2D vector.
- * @return The rounded down 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
-
-/**
  * @brief Returns the length of the 2D vector squared.
  * @param v The 2D vector.
  * @return The 2D vector's length squared.
@@ -250,6 +234,22 @@ CBNDEF f32 carbon_math_vec2_len(CBN_Vec2 v);
  * @return The normalized 2D vector.
  */
 CBNDEF CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
+
+/**
+ * @brief Restricts a 2D vector between a minimum and a maximum value.
+ * @param v The 2D vector.
+ * @param min The minimum value (as 2D vector).
+ * @param max The maximum value (as 2D vector).
+ * @return The restricted 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
+
+/**
+ * @brief Applies floor(x) function to the 2D vector (element-wise).
+ * @param v The 2D vector.
+ * @return The resultant 2D vector.
+ */
+CBNDEF CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
 
 /**
  * @brief Applies abs(x) function to the 2D vector (element-wise).

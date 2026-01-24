@@ -109,10 +109,10 @@ CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v
   if (*hx < v3.x) *hx = v3.x;
   if (*ly > v3.y) *ly = v3.y;
   if (*hy < v3.y) *hy = v3.y;
-  *lx = CARBON_CLAMP(*lx, 0, dc.width - 1);
-  *hx = CARBON_CLAMP(*hx, 0, dc.width - 1);
-  *ly = CARBON_CLAMP(*ly, 0, dc.height - 1);
-  *hy = CARBON_CLAMP(*hy, 0, dc.height - 1);
+  *lx = carbon_math_clamp(*lx, 0, dc.width - 1);
+  *hx = carbon_math_clamp(*hx, 0, dc.width - 1);
+  *ly = carbon_math_clamp(*ly, 0, dc.height - 1);
+  *hy = carbon_math_clamp(*hy, 0, dc.height - 1);
   if (*lx > *hx || *ly > *hy) return false;
   return true;
 }
@@ -259,7 +259,7 @@ CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
   f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
   f32 t = 0;
   if (carbon_math_abs(d) > CARBON_EPS) t = n / d;
-  t = CARBON_CLAMP(t, 0, 1);
+  t = carbon_math_clamp(t, 0, 1);
   return (Vertex3D) {
     .world = carbon_math_vec3_lerp(a.world, b.world, t),
     .clip = carbon_math_vec4_lerp(a.clip, b.clip, t)

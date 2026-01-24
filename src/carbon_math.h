@@ -66,26 +66,10 @@
 #define CARBON_MAX3(x, y, z) CARBON_MAX(x, CARBON_MAX(y, z))
 
 /**
- * @brief Restricts a number between a minimum and a maximum value.
- * @param x The number.
- * @param min The minimum value.
- * @param max The maximum value.
- */
-#define CARBON_CLAMP(x, min, max) ((x <= min) ? min : (x >= max) ? max : x)
-
-/**
  * @brief Returns an integer {-1, 0, 1} that indicates the sign of a number.
  * @param x The number.
  */
 #define CARBON_SIGN(x) (!x ? 0 : x < 0 ? -1 : 1)
-
-/**
- * @brief Performs linear interpolation from a to b by factor t.
- * @param a The start value.
- * @param b The end value.
- * @param t The interpolation factor (0 ≤ t ≤ 1).
- */
-#define CARBON_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 
 /**
  * @brief Converts degrees to radians.
@@ -129,6 +113,15 @@ CBNDEF f32 carbon_math_floor(f32 x);
  * @return The smallest integral value ≥ x.
  */
 CBNDEF f32 carbon_math_ceil(f32 x);
+
+/**
+ * @brief Restricts a number between a minimum and a maximum value.
+ * @param x The number.
+ * @param min The minimum value.
+ * @param max The maximum value.
+ */
+CBNDEF f32 carbon_math_clamp(f32 x, f32 min, f32 max);
+CBNDEF_FN(cbn::math, Clamp, carbon_math_clamp);
 
 /**
  * @brief Snaps a number to the next integer up or down, depending on whether Δx is positive or negative.
@@ -259,13 +252,23 @@ CBNDEF f32 carbon_math_frexp(f32 x, i32 *n);
 CBNDEF f32 carbon_math_sigmoid(f32 x);
 
 /**
- * @brief Generates a smooth interpolation between two values, using the cubic Hermite polynomial.
- * @param a The start of the range.
- * @param b The end of the range.
- * @param t The value to be interpolated.
+ * @brief Performs linear interpolation from a to b by factor t.
+ * @param a The start value.
+ * @param b The end value.
+ * @param t The interpolation factor (0 ≤ t ≤ 1).
  * @return The interpolated value between a and b.
  */
-CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 t);
+CBNDEF f32 carbon_math_lerp(f32 a, f32 b, f32 t);
+CBNDEF_FN(cbn::math, Lerp, carbon_math_lerp);
+
+/**
+ * @brief Performs cubic Hermite interpolation between two values.
+ * @param a The start of the range.
+ * @param b The end of the range.
+ * @param t The source value for interpolation.
+ * @return The interpolated value in [0..1].
+ */
+CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 x);
 
 /**
  * @brief Compares two numbers with a floating-point tolerance (ε).

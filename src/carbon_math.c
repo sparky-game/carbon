@@ -81,6 +81,10 @@ f32 carbon_math_ceil(f32 x) {
 #endif
 }
 
+f32 carbon_math_clamp(f32 x, f32 min, f32 max) {
+  return x <= min ? min : x >= max ? max : x;
+}
+
 f32 carbon_math_snap(f32 x, f32 dx) {
   f32 res = x + CARBON_SIGN(dx) * CARBON_EPS;
   if (dx > 0) return carbon_math_ceil(res);
@@ -316,10 +320,14 @@ f32 carbon_math_sigmoid(f32 x) {
   return 1 / (1 + carbon_math_exp(-x));
 }
 
-f32 carbon_math_smoothstep(f32 a, f32 b, f32 t) {
+f32 carbon_math_lerp(f32 a, f32 b, f32 t) {
+  return a + (b - a) * t;
+}
+
+f32 carbon_math_smoothstep(f32 a, f32 b, f32 x) {
   CBN_ASSERT(a < b);
-  f32 x = CARBON_CLAMP((t - a) / (b - a), 0, 1);
-  return x * x * (3 - 2 * x);
+  f32 t = carbon_math_clamp((x - a)/(b - a), 0, 1);
+  return 3*t*t - 2*t*t*t;
 }
 
 i8 carbon_math_cmp(f32 x, f32 y) {

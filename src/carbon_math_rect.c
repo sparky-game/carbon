@@ -41,8 +41,8 @@ CBN_Rect carbon_math_rect_intersection(CBN_Rect r1, CBN_Rect r2) {
 }
 
 void carbon_math_rect_scale(CBN_Rect *r, const f32 s) {
-  r->x = CARBON_LERP(r->x, r->x + r->w/2, 1 - s);
-  r->y = CARBON_LERP(r->y, r->y + r->h/2, 1 - s);
-  r->w = CARBON_LERP(0, r->w, s);
-  r->h = CARBON_LERP(0, r->h, s);
+  r->x = carbon_math_lerp(r->x, r->x + r->w/2, 1 - s);
+  r->y = carbon_math_lerp(r->y, r->y + r->h/2, 1 - s);
+  r->w = carbon_math_lerp(0, r->w, s);
+  r->h = carbon_math_lerp(0, r->h, s);
 }

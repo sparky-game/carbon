@@ -126,6 +126,6 @@ void carbon_camera_yaw(CBN_Camera *c, f32 amount) {
 void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
   static const f32 max_pitch = 89;
   if (!c || !amount) return;
-  c->pitch = CARBON_CLAMP(c->pitch + amount, -max_pitch, max_pitch);
+  c->pitch = carbon_math_clamp(c->pitch + amount, -max_pitch, max_pitch);
   carbon_camera__update_rotation(c);
 }

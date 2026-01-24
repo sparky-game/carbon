@@ -353,12 +353,12 @@ namespace pong {
         if (cbn::win::GetKey(cbn::win::KeyCode::LeftArrow) ||
             cbn::win::GetKey(cbn::win::KeyCode::DownArrow)) {
           volume -= 0.25 * dt;
-          cbn::audio::SetVolume(cbn::math::ToClamped(volume, 0, 1));
+          cbn::audio::SetVolume(cbn::math::Clamp(volume, 0, 1));
         }
         else if (cbn::win::GetKey(cbn::win::KeyCode::RightArrow) ||
                  cbn::win::GetKey(cbn::win::KeyCode::UpArrow)) {
           volume += 0.25 * dt;
-          cbn::audio::SetVolume(cbn::math::ToClamped(volume, 0, 1));
+          cbn::audio::SetVolume(cbn::math::Clamp(volume, 0, 1));
         }
       }
 
@@ -560,14 +560,14 @@ namespace pong {
         if (m_Ball.position.y < 0 || m_Ball.position.y + m_Ball.size >= m_Window->height) {
           m_Ball.velocity.y *= -1;
           ++m_Ball.wall_hits;
-          cbn::math::Clamp(m_Ball.position.y, 0, m_Window->height - m_Ball.size);
+          cbn::math::ClampAt(m_Ball.position.y, 0, m_Window->height - m_Ball.size);
           cbn::audio::ShiftPitch(res::s_Sound_Wall);
           cbn::audio::Play(res::s_Sound_Wall);
         }
         if ((m_Ball.position.x < 0 && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom)) ||
             (m_Ball.position.x + m_Ball.size >= m_Window->width && (m_Ball.position.y < slot_top || m_Ball.position.y >= slot_bottom))) {
           m_Ball.velocity.x *= -1;
-          cbn::math::Clamp(m_Ball.position.x, 0, m_Window->width - m_Ball.size);
+          cbn::math::ClampAt(m_Ball.position.x, 0, m_Window->width - m_Ball.size);
           cbn::audio::ShiftPitch(res::s_Sound_Wall);
           cbn::audio::Play(res::s_Sound_Wall);
         }
@@ -587,10 +587,10 @@ namespace pong {
         if (!racket.Overlaps(ball)) return false;
         const auto ball_center_y = m_Ball.position.y + m_Ball.size/2;
         const auto racket_center_y = p.racket.position.y + p.racket.size/2;
-        const auto relative_y = cbn::math::ToClamped((ball_center_y - racket_center_y) / (p.racket.size/2), -1, 1);
+        const auto relative_y = cbn::math::Clamp((ball_center_y - racket_center_y) / (p.racket.size/2), -1, 1);
         const auto angle = (relative_y * 45_deg) + cbn::rng::LCGfr(-10_deg, 10_deg);
         const auto d_speed = m_Ball.speed_delta * (1 - 2 * cbn::math::Abs(relative_y));
-        const auto speed = cbn::math::ToClamped(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
+        const auto speed = cbn::math::Clamp(m_Ball.velocity.Length() + d_speed, m_Ball.speed_min, m_Ball.speed_max);
         m_Ball.velocity = cbn::math::Vec2{
           dir * cbn::math::Abs(speed * cbn::math::Cos(angle)),
           speed * cbn::math::Sin(angle)
@@ -612,7 +612,7 @@ namespace pong {
       void Update_MoveRacket(Racket &r, const cbn::win::KeyCode up, const cbn::win::KeyCode down, const f64 dt) {
         if (cbn::win::GetKey(up))   r.position.y -= r.velocity.y * dt;
         if (cbn::win::GetKey(down)) r.position.y += r.velocity.y * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Window->height - r.size);
+        cbn::math::ClampAt(r.position.y, 0, m_Window->height - r.size);
       }
 
       void Update_MoveRacketWithAI(Racket &r, const f64 dt) {
@@ -620,10 +620,10 @@ namespace pong {
         static auto target = m_Window->height/2 - r.size/2;
         const auto t = m_Ball.position.y + m_Ball.size/2 - r.size/2;
         const auto difficulty = cbn::rng::LCGf() < 0.5 ? 30 : 80;
-        cbn::math::Lerp(target, t, difficulty * dt);
+        cbn::math::LerpAt(target, t, difficulty * dt);
         if (r.position.y + deadzone < target)      r.position += r.velocity * dt;
         else if (r.position.y - deadzone > target) r.position -= r.velocity * dt;
-        cbn::math::Clamp(r.position.y, 0, m_Window->height - r.size);
+        cbn::math::ClampAt(r.position.y, 0, m_Window->height - r.size);
       }
 
       void Render_GoalSlots(void) const {

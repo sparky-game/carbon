@@ -65,17 +65,11 @@ namespace cbn {
     [[nodiscard]] constexpr auto Max(auto x, auto y) {
       return CARBON_MAX(x, y);
     }
-    [[nodiscard]] constexpr auto ToClamped(const auto x, const auto min, const auto max) {
-      return CARBON_CLAMP(x, min, max);
+    void ClampAt(auto &x, auto min, auto max) {
+      x = Clamp(x, min, max);
     }
-    constexpr void Clamp(auto &x, const auto min, const auto max) {
-      x = ToClamped(x, min, max);
-    }
-    [[nodiscard]] constexpr auto ToLerped(const auto a, const auto b, const auto t) {
-      return CARBON_LERP(a, b, t);
-    }
-    constexpr void Lerp(auto &a, const auto b, const auto t) {
-      a = ToLerped(a, b, t);
+    void LerpAt(auto &a, auto b, auto t) {
+      a = Lerp(a, b, t);
     }
     constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
     namespace literals {

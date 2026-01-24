@@ -35,14 +35,6 @@ CBN_Vec2 carbon_math_vec2_scale(CBN_Vec2 v, f32 s) {
   return carbon_math_vec2(v.x * s, v.y * s);
 }
 
-CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max) {
-  return carbon_math_vec2(CARBON_CLAMP(v.x, min.x, max.x), CARBON_CLAMP(v.y, min.y, max.y));
-}
-
-CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_floor(v.x), carbon_math_floor(v.y));
-}
-
 f32 carbon_math_vec2_len_squared(CBN_Vec2 v) {
   return carbon_math_vec2_dot(v, v);
 }
@@ -57,32 +49,44 @@ CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v) {
   return carbon_math_vec2_scale(v, carbon_math_rsqrt(sqlen));
 }
 
+CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max) {
+  return carbon_math_vec2(carbon_math_clamp(v.x, min.x, max.x), carbon_math_clamp(v.y, min.y, max.y));
+}
+
+CBNINL CBN_Vec2 carbon_math_vec2__apply_func(CBN_Vec2 v, f32 (*f)(f32)) {
+  return carbon_math_vec2(f(v.x), f(v.y));
+}
+
+CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v) {
+  return carbon_math_vec2__apply_func(v, carbon_math_floor);
+}
+
 CBN_Vec2 carbon_math_vec2_abs(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_abs(v.x), carbon_math_abs(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_abs);
 }
 
 CBN_Vec2 carbon_math_vec2_exp(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_exp(v.x), carbon_math_exp(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_exp);
 }
 
 CBN_Vec2 carbon_math_vec2_sin(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_sin(v.x), carbon_math_sin(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_sin);
 }
 
 CBN_Vec2 carbon_math_vec2_cos(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_cos(v.x), carbon_math_cos(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_cos);
 }
 
 CBN_Vec2 carbon_math_vec2_tan(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_tan(v.x), carbon_math_tan(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_tan);
 }
 
 CBN_Vec2 carbon_math_vec2_tanh(CBN_Vec2 v) {
-  return carbon_math_vec2(carbon_math_tanh(v.x), carbon_math_tanh(v.y));
+  return carbon_math_vec2__apply_func(v, carbon_math_tanh);
 }
 
 CBN_Vec2 carbon_math_vec2_lerp(CBN_Vec2 u, CBN_Vec2 v, f32 t) {
-  return carbon_math_vec2(CARBON_LERP(u.x, v.x, t), CARBON_LERP(u.y, v.y, t));
+  return carbon_math_vec2(carbon_math_lerp(u.x, v.x, t), carbon_math_lerp(u.y, v.y, t));
 }
 
 CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle) {
