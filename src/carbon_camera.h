@@ -18,6 +18,8 @@
  * up until they need to be changed, thus avoiding unnecessary computations.
  */
 typedef struct CBN_Camera CBN_Camera;
+
+// Method declarations
 #ifdef __cplusplus
 struct CBN_Camera {
   /**
