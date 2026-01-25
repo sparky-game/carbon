@@ -24,15 +24,6 @@ If you'd like to make a contribution, you can check the project's [[CONTRIBUTING
 
 -----
 
-We use *CI/CD* to ensure the final product has the expected level of quality, if not more 🚀. This is the summary of the pipelines being run:
-
-| *Kind*                        | *Target*          | *Status*                                                                                                                                                                |
-| CI (/Continuous Integration/) | /master/          | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml/badge.svg" href="https://github.com/sparky-game/carbon/actions/workflows/ci.yaml">@@   |
-| CD (/Continuous Delivery/)    | /master/          | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/cd.yaml/badge.svg" href="https://github.com/sparky-game/carbon/actions/workflows/cd.yaml">@@   |
-| CD (/Continuous Deployment/)  | /master/docs/www/ | @@html:<img src="https://github.com/sparky-game/carbon/actions/workflows/www.yaml/badge.svg" href="https://github.com/sparky-game/carbon/actions/workflows/www.yaml">@@ |
-
------
-
 Do you want to *keep up with changes* or do you have a *question* that doesn't require you to open an issue? @@html:<br>@@
 Join the [[https://github.com/sparky-game/carbon/discussions][GitHub Discussions]] forum, meet other users like you. The more we are, the better for everyone. @@html:<br>@@
 There you can ask questions, exchange ideas, share some of your work, make polls, stay up to date with new updates and announcements of the library, and much more.
