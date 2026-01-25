@@ -53,25 +53,25 @@ void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
   }
 }
 
-CBNINL void carbon_drawcanvas__alpha_blending(u32 *c1, u32 c2) {
-  u32 a2 = c2 & 0xff;
-  if (a2 == 0) return;
-  if (a2 == 255) {
-    *c1 = c2;
+CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
+  const u32 a = src & 0xff;
+  if (a == 0) return;
+  if (a == 0xff) {
+    *dst = src;
     return;
   }
-  u32 r1 = (*c1 >> 24) & 0xff;
-  u32 g1 = (*c1 >> 16) & 0xff;
-  u32 b1 = (*c1 >> 8)  & 0xff;
-  u32 a1 = (*c1 >> 0)  & 0xff;
-  u32 r2 = (c2  >> 24) & 0xff;
-  u32 g2 = (c2  >> 16) & 0xff;
-  u32 b2 = (c2  >> 8)  & 0xff;
-  u32 r = (r1 * (255 - a2) + r2 * a2) / 255;
-  u32 g = (g1 * (255 - a2) + g2 * a2) / 255;
-  u32 b = (b1 * (255 - a2) + b2 * a2) / 255;
-  u32 a = a2 + (a1 * (255 - a2)) / 255;
-  *c1 = (r << 24) | (g << 16) | (b << 8) | a;
+  const u32 d = *dst;
+  const u32 ia = 0xff - a;
+  u32 dst_r = (d   >> 24) & 0xff;
+  u32 src_r = (src >> 24) & 0xff;
+  u32 r = ((dst_r*ia + src_r*a) * 0x101) >> 16;
+  u32 dst_g = (d   >> 16) & 0xff;
+  u32 src_g = (src >> 16) & 0xff;
+  u32 g = ((dst_g*ia + src_g*a) * 0x101) >> 16;
+  u32 dst_b = (d   >> 8) & 0xff;
+  u32 src_b = (src >> 8) & 0xff;
+  u32 b = ((dst_b*ia + src_b*a) * 0x101) >> 16;
+  *dst = (r << 24) | (g << 16) | (b << 8) | 0xff;
 }
 
 void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
