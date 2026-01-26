@@ -79,7 +79,7 @@ typedef struct CBN_DrawCanvas {
   /**
    * @see carbon_drawcanvas_sprite
    */
-  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale);
+  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = cbn::math::Vec2(1));
   /**
    * @see carbon_drawcanvas_mesh
    */
