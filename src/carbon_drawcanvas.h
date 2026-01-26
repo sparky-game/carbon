@@ -79,7 +79,7 @@ typedef struct CBN_DrawCanvas {
   /**
    * @see carbon_drawcanvas_sprite
    */
-  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position);
+  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale);
   /**
    * @see carbon_drawcanvas_mesh
    */
@@ -213,7 +213,7 @@ CBNDEF void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz rad
  * @param sprite The sprite to draw.
  * @param position The position (top-left corner) to draw the sprite to.
  */
-CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position);
+CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale);
 
 /**
  * @brief Draws a 3D mesh to the canvas.
