@@ -20,7 +20,7 @@
 
 ~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑːbᵊn\slash{}]]/) is the ultimate *tiny* and *easy to use* C/C++ standard library to enjoy programming. @@html:<br>@@
 It serves a wide variety of use cases, from CLI programs, graphics-intensive real-time applications, to complex full-fledged testing suites. @@html:<br>@@
-If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[SECURITY.md][instructions]] and our [[CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/! *¯\_(ツ)_/¯*
+If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[SECURITY.md][instructions]] and our [[CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/!
 
 -----
 
@@ -70,7 +70,7 @@ git submodule update --init --recursive
 *CMake FetchContent:*
 
 #+begin_html
-<p><img src="https://cdn.frankerfacez.com/emote/381875/1">&nbsp;&nbsp;<i>&mdash;&nbsp;&nbsp;Мои соболезнования.</i></p>
+<p><img src="https://cdn.frankerfacez.com/emote/381875/1">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;<i>Мои соболезнования.</i>&nbsp;¯\_(ツ)_/¯</p>
 #+end_html
 
 #+begin_src cmake
@@ -135,7 +135,7 @@ If you prefer to release your application under a different, more commercially f
 - *Version compatibility:* Each CRLE applies to a specific branch or minor version of /Carbon/ (e.g. ~v1.0.y/lts~), enabling you to update the library to a more up-to-date version with the same CRLE.
 - *Professional support:* You also gain access to more advanced support regarding the library, as well as a private channel to make high-priority requests such as bug fixes or security vulnerabilities.
 
-For more details and to acquire a copy of the *CRLE*, please visit <https://sparky-game.org/software/carbon>.
+For more details and to acquire a copy of the *CRLE*, please visit [[https://sparky-game.org/software/carbon][its official website]].
 
 * References
 
