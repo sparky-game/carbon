@@ -255,20 +255,21 @@ CBNDEF f32 carbon_math_sigmoid(f32 x);
  * @brief Performs linear interpolation from a to b by factor t.
  * @param a The start value.
  * @param b The end value.
- * @param t The interpolation factor (0 ≤ t ≤ 1).
+ * @param t The interpolation factor in [0..1].
  * @return The interpolated value between a and b.
  */
 CBNDEF f32 carbon_math_lerp(f32 a, f32 b, f32 t);
 CBNDEF_FN(cbn::math, Lerp, carbon_math_lerp);
 
 /**
- * @brief Performs cubic Hermite interpolation between two values.
+ * @brief Computes the interpolation factor of x between two values following 3t²-2t³.
  * @param a The start of the range.
  * @param b The end of the range.
- * @param t The source value for interpolation.
- * @return The interpolated value in [0..1].
+ * @param x The source value for interpolation.
+ * @return The interpolation factor in [0..1].
  */
 CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 x);
+CBNDEF_FN(cbn::math, SmoothStep, carbon_math_smoothstep);
 
 /**
  * @brief Compares two numbers with a floating-point tolerance (ε).
