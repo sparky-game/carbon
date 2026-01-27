@@ -3,62 +3,71 @@
 
 #include "carbon.inc"
 
-CBN_Camera *CBN_Camera::make(const CBN_DrawCanvas &dc) {
+using namespace cbn::math;
+
+cbn::Camera *cbn::Camera::make(const cbn::DrawCanvas *dc) {
   return carbon_camera_create(dc);
 }
 
-void CBN_Camera::Free(void) {
+cbn::Scope<cbn::Camera> cbn::Camera::make_unique(const cbn::DrawCanvas *dc) {
+  return {
+    make(dc),
+    [](cbn::Camera *c){ if (c) c->Free(); }
+  };
+}
+
+void cbn::Camera::Free(void) {
   carbon_camera_destroy(this);
 }
 
-void CBN_Camera::Reset(const CBN_DrawCanvas &dc) {
-  carbon_camera_reset(this, dc);
+void cbn::Camera::Reset(const cbn::DrawCanvas &dc) {
+  carbon_camera_reset(this, &dc);
 }
 
-CBN_Vec3 CBN_Camera::GetPosition(void) const {
+Vec3 cbn::Camera::GetPosition(void) const {
   return carbon_camera_get_position(this);
 }
 
-CBN_Quat CBN_Camera::GetRotation(void) const {
+Quat cbn::Camera::GetRotation(void) const {
   return carbon_camera_get_rotation(this);
 }
 
-CBN_Mat4 CBN_Camera::GetView(void) const {
+Mat4 cbn::Camera::GetView(void) const {
   return carbon_camera_get_view(this);
 }
 
-CBN_Mat4 CBN_Camera::GetProj(void) const {
+Mat4 cbn::Camera::GetProj(void) const {
   return carbon_camera_get_proj(this);
 }
 
-void CBN_Camera::MoveForward(f32 amount) {
+void cbn::Camera::MoveForward(f32 amount) {
   carbon_camera_move_forward(this, amount);
 }
 
-void CBN_Camera::MoveBackward(f32 amount) {
+void cbn::Camera::MoveBackward(f32 amount) {
   carbon_camera_move_backward(this, amount);
 }
 
-void CBN_Camera::MoveLeft(f32 amount) {
+void cbn::Camera::MoveLeft(f32 amount) {
   carbon_camera_move_left(this, amount);
 }
 
-void CBN_Camera::MoveRight(f32 amount) {
+void cbn::Camera::MoveRight(f32 amount) {
   carbon_camera_move_right(this, amount);
 }
 
-void CBN_Camera::MoveUp(f32 amount) {
+void cbn::Camera::MoveUp(f32 amount) {
   carbon_camera_move_up(this, amount);
 }
 
-void CBN_Camera::MoveDown(f32 amount) {
+void cbn::Camera::MoveDown(f32 amount) {
   carbon_camera_move_down(this, amount);
 }
 
-void CBN_Camera::Yaw(f32 amount) {
+void cbn::Camera::Yaw(f32 amount) {
   carbon_camera_yaw(this, amount);
 }
 
-void CBN_Camera::Pitch(f32 amount) {
+void cbn::Camera::Pitch(f32 amount) {
   carbon_camera_pitch(this, amount);
 }

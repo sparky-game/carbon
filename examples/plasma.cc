@@ -62,11 +62,11 @@ void render(cbn::DrawCanvas &dc, const f64 dt) {
 
 int main(void) {
   auto canvas = cbn::DrawCanvas::make(640, 360);
-  cbn::win::Open(canvas, "Plasma Animation");
+  canvas.OpenWindow("Plasma Animation");
   cbn::win::SetMaxFPS(60);
   cbn::win::ForFrame([&](const auto dt){
     render(canvas, dt);
-    cbn::win::Update(canvas);
+    canvas.UpdateWindow();
   });
   cbn::win::Close();
   canvas.Free();

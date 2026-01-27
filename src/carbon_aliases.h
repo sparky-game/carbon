@@ -62,15 +62,10 @@ namespace cbn {
   }
 
   namespace math {
-    [[nodiscard]] constexpr auto Max(auto x, auto y) {
-      return CARBON_MAX(x, y);
-    }
-    void ClampAt(auto &x, auto min, auto max) {
-      x = Clamp(x, min, max);
-    }
-    void LerpAt(auto &a, auto b, auto t) {
-      a = Lerp(a, b, t);
-    }
+    constexpr auto Min(auto x, auto y)         { return CARBON_MIN(x, y); }
+    constexpr auto Max(auto x, auto y)         { return CARBON_MAX(x, y); }
+    void ClampAt(auto &x, auto min, auto max)  { x = Clamp(x, min, max); }
+    void LerpAt(auto &a, auto b, auto t)       { a = Lerp(a, b, t); }
     constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
     namespace literals {
       consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }

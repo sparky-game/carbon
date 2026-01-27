@@ -259,7 +259,7 @@ namespace pong {
                               m_Canvas{cbn::DrawCanvas::make(spec.width, spec.height)}
     {
       res::Init();
-      cbn::win::Open(m_Canvas, spec.name.c_str());
+      m_Canvas.OpenWindow(spec.name.c_str());
       cbn::win::SetMaxFPS(spec.max_fps);
       if (auto i = res::s_AssetPack.Lookup<cbn::Image>("./icon.png")) cbn::win::SetIcon(*i);
       else CARBON_UNREACHABLE;
@@ -283,7 +283,7 @@ namespace pong {
     void Loop(T &&callback) {
       cbn::win::ForFrame([&](const auto dt){
         callback(dt);
-        cbn::win::Update(m_Canvas);
+        m_Canvas.UpdateWindow();
       });
     }
 

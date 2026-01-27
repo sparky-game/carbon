@@ -5,7 +5,7 @@
 
 int main(void) {
   auto canvas = cbn::DrawCanvas::make(800, 600);
-  cbn::win::Open(canvas, "Bouncing Square");
+  canvas.OpenWindow("Bouncing Square");
   cbn::win::SetMaxFPS(60);
   constexpr u32 colors[] = {
     0xff1818ff, 0x18ff18ff,
@@ -33,7 +33,7 @@ int main(void) {
     }
     position.Clamp(cbn::math::Vec2(), cbn::math::Vec2(canvas.width, canvas.height) - size);
     canvas.DrawRect(cbn::math::Rect(position, size), colors[c]);
-    cbn::win::Update(canvas);
+    canvas.UpdateWindow();
   });
   cbn::win::Close();
   canvas.Free();

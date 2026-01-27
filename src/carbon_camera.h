@@ -11,11 +11,6 @@
 
 /**
  * @brief Represents a 3D camera for rendering.
- *
- * It's defined as an opaque type, because the member data is ought to be
- * retrieved through the provided getter functions.
- * Thanks to this mechanism, it's possible to cache important information
- * up until they need to be changed, thus avoiding unnecessary computations.
  */
 typedef struct CBN_Camera CBN_Camera;
 
@@ -25,7 +20,8 @@ struct CBN_Camera {
   /**
    * @see carbon_camera_create
    */
-  static CBN_Camera *make(const CBN_DrawCanvas &dc);
+  static CBN_Camera *make(const CBN_DrawCanvas *dc);
+  static cbn::Scope<CBN_Camera> make_unique(const CBN_DrawCanvas *dc);
   /**
    * @see carbon_camera_destroy
    */
@@ -91,7 +87,7 @@ CBNDEF_T(cbn, Camera, CBN_Camera);
  * @param dc The DrawCanvas to get the needed info from.
  * @return The newly created Camera object.
  */
-CBNDEF CBN_Camera *carbon_camera_create(const CBN_DrawCanvas dc);
+CBNDEF CBN_Camera *carbon_camera_create(const CBN_DrawCanvas *dc);
 
 /**
  * @brief Destroys a Camera object.
@@ -104,7 +100,7 @@ CBNDEF void carbon_camera_destroy(CBN_Camera *c);
  * @param c The Camera object.
  * @param dc The DrawCanvas to get the needed info from.
  */
-CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas dc);
+CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc);
 
 /**
  * @brief Obtains the current position of the Camera as 3D vector.

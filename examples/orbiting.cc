@@ -5,7 +5,7 @@
 
 int main(void) {
   auto canvas = cbn::DrawCanvas::make(600, 600);
-  cbn::win::Open(canvas, "Orbiting");
+  canvas.OpenWindow("Orbiting");
   cbn::win::SetMaxFPS(60);
   constexpr auto radius = 50;
   auto rotation = 0.0f;
@@ -15,7 +15,7 @@ int main(void) {
     rotation += 45 * dt;
     position += cbn::math::Vec2(0, 1).Rotate(rotation) * 180 * dt;
     canvas.DrawCircle(position, radius, 0xffdd33ff);
-    cbn::win::Update(canvas);
+    canvas.UpdateWindow();
   });
   cbn::win::Close();
   canvas.Free();

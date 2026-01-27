@@ -46,7 +46,7 @@ namespace cbn {
   template <typename T>
   using Func = std::function<T>;
   template <typename T>
-  using Scope = std::unique_ptr<T>;
+  using Scope = std::unique_ptr<T, void (*)(T *)>;
   template <typename T>
   using Ref = std::shared_ptr<T>;
 }

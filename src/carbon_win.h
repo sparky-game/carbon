@@ -54,7 +54,7 @@ CBNDEF_T(cbn::win, MouseButton, CBN_MouseButton);
 
 /**
  */
-CBNDEF void carbon_win_open(const CBN_DrawCanvas dc, const char *title);
+CBNDEF void carbon_win_open(const CBN_DrawCanvas *dc, const char *title);
 CBNDEF_FN(cbn::win, Open, carbon_win_open);
 
 /**
@@ -85,7 +85,7 @@ CBNDEF_FN(cbn::win, GetDeltaTime, carbon_win_get_deltatime);
 CBNDEF u32 carbon_win_get_fps(void);
 CBNDEF_FN(cbn::win, GetFPS, carbon_win_get_fps);
 
-CBNDEF void carbon_win_update(const CBN_DrawCanvas dc);
+CBNDEF void carbon_win_update(const CBN_DrawCanvas *dc);
 CBNDEF_FN(cbn::win, Update, carbon_win_update);
 
 /**

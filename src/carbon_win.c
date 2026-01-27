@@ -204,9 +204,9 @@ CBNINL void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton
   carbon_win__mouse_buttons[button] = pressed ? true : false;
 }
 
-void carbon_win_open(const CBN_DrawCanvas dc, const char *title) {
+void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   carbon_win__dl_open();
-  const usz w = dc.width, h = dc.height;
+  const usz w = dc->width, h = dc->height;
   carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter);
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(w, h));
   // TODO: investigate the height offset thing (+28) in other systems
@@ -273,7 +273,7 @@ u32 carbon_win_get_fps(void) {
   return carbon_win__fps;
 }
 
-CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas dc) {
+CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas *dc) {
   RGFW_window *w = carbon_win__handle;
   if (w->bufferSize.w == (u32) w->r.w && w->bufferSize.h == (u32) w->r.h) return;
   w->bufferSize.w = w->r.w;
@@ -282,14 +282,14 @@ CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas dc) {
   const usz sz = w->bufferSize.w * w->bufferSize.h * 4;
   w->buffer = (u8 *) carbon_memory_realloc(w->buffer, sz);
   carbon_memory_set(w->buffer, 0, sz);
-  carbon_win__rebuild_xtable(w->bufferSize.w, dc.width);
-  carbon_win__rebuild_ytable(w->bufferSize.h, dc.height);
+  carbon_win__rebuild_xtable(w->bufferSize.w, dc->width);
+  carbon_win__rebuild_ytable(w->bufferSize.h, dc->height);
 }
 
-CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas dc) {
+CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas *dc) {
   // Nearest-neighbor interpolation algorithm
-  const u32 * restrict src = dc.pixels;
-  const usz src_w = dc.width;
+  const u32 * restrict src = dc->pixels;
+  const usz src_w = dc->width;
   u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
   const usz dst_w = carbon_win__handle->bufferSize.w, dst_h = carbon_win__handle->bufferSize.h;
   for (usz j = 0; j < dst_h; ++j) {
@@ -302,7 +302,7 @@ CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas dc) {
   }
 }
 
-void carbon_win_update(const CBN_DrawCanvas dc) {
+void carbon_win_update(const CBN_DrawCanvas *dc) {
   carbon_win__resize_buf(dc);
   carbon_win__upscale_buf(dc);
   RGFW_window_swapBuffers(carbon_win__handle);

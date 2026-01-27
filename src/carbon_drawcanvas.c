@@ -46,10 +46,10 @@ void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags) {
   dc->flags ^= flags;
 }
 
-void carbon_drawcanvas_fill(CBN_DrawCanvas dc, u32 color) {
-  for (usz i = 0; i < dc.width * dc.height; ++i) {
-    dc.pixels[i] = color;
-    dc.zbuffer[i] = 1;
+void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
+  for (usz i = 0; i < dc->width * dc->height; ++i) {
+    dc->pixels[i] = color;
+    dc->zbuffer[i] = 1;
   }
 }
 
@@ -74,13 +74,13 @@ CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
   *dst = (r << 24) | (g << 16) | (b << 8) | 0xff;
 }
 
-void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
+void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
   i32 x1 = v1.x, y1 = v1.y, x2 = v2.x, y2 = v2.y;
   i32 dx =  carbon_math_abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
   i32 dy = -carbon_math_abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
   i32 err = dx + dy;
   for (;;) {
-    if (0 <= x1 && x1 < (i32) dc.width && 0 <= y1 && y1 < (i32) dc.height) {
+    if (0 <= x1 && x1 < (i32) dc->width && 0 <= y1 && y1 < (i32) dc->height) {
       carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz) x1, (usz) y1), color);
     }
     if (x1 == x2 && y1 == y2) break;
@@ -98,7 +98,7 @@ void carbon_drawcanvas_line(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 col
   }
 }
 
-CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
+CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
   *lx = *hx = v1.x;
   *ly = *hy = v1.y;
   if (*lx > v2.x) *lx = v2.x;
@@ -109,10 +109,10 @@ CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas dc, CBN_Vec2 v
   if (*hx < v3.x) *hx = v3.x;
   if (*ly > v3.y) *ly = v3.y;
   if (*hy < v3.y) *hy = v3.y;
-  *lx = carbon_math_clamp(*lx, 0, dc.width - 1);
-  *hx = carbon_math_clamp(*hx, 0, dc.width - 1);
-  *ly = carbon_math_clamp(*ly, 0, dc.height - 1);
-  *hy = carbon_math_clamp(*hy, 0, dc.height - 1);
+  *lx = carbon_math_clamp(*lx, 0, dc->width - 1);
+  *hx = carbon_math_clamp(*hx, 0, dc->width - 1);
+  *ly = carbon_math_clamp(*ly, 0, dc->height - 1);
+  *hy = carbon_math_clamp(*hy, 0, dc->height - 1);
   if (*lx > *hx || *ly > *hy) return false;
   return true;
 }
@@ -126,7 +126,7 @@ CBNINL bool carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CB
   return (CARBON_SIGN(*u1) == det_sign || !*u1) && (CARBON_SIGN(*u2) == det_sign || !*u2) && (CARBON_SIGN(u3) == det_sign || !u3);
 }
 
-void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
+void carbon_drawcanvas_triangle(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
   usz lx, hx, ly, hy;
   if (!carbon_drawcanvas__triangle_norm(dc, v1, v2, v3, &lx, &hx, &ly, &hy)) return;
   for (usz j = ly; j <= hy; ++j) {
@@ -138,7 +138,7 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN
   }
 }
 
-void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
+void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
   usz lx, hx, ly, hy;
   if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
   for (usz j = ly; j <= hy; ++j) {
@@ -147,16 +147,16 @@ void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas dc, CBN_Vec3 v1, CBN_Vec3 v2, 
       if (!carbon_drawcanvas__triangle_barycentric(v1.xy, v2.xy, v3.xy, i, j, &u1, &u2, &det)) continue;
       f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
       f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
-      usz idx = j * dc.width + i;
-      if (z < dc.zbuffer[idx]) {
-        dc.zbuffer[idx] = z;
-        carbon_drawcanvas__alpha_blending(&dc.pixels[idx], color);
+      usz idx = j * dc->width + i;
+      if (z < dc->zbuffer[idx]) {
+        dc->zbuffer[idx] = z;
+        carbon_drawcanvas__alpha_blending(&dc->pixels[idx], color);
       }
     }
   }
 }
 
-CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
+CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas *dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
   i32 oy1 = r.y;
@@ -164,33 +164,33 @@ CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas dc, const CBN
   if (ox1 > ox2) CARBON_SWAP(ox1, ox2);
   i32 oy2 = oy1 + CARBON_SIGN(r.h) * (carbon_math_abs(r.h) - 1);
   if (oy1 > oy2) CARBON_SWAP(oy1, oy2);
-  if (ox1 >= (i32) dc.width || ox2 < 0 || oy1 >= (i32) dc.height || oy2 < 0) return false;
+  if (ox1 >= (i32) dc->width || ox2 < 0 || oy1 >= (i32) dc->height || oy2 < 0) return false;
   *x1 = ox1;
   if (*x1 < 0) *x1 = 0;
   *x2 = ox2;
-  if (*x2 >= (i32) dc.width) *x2 = dc.width - 1;
+  if (*x2 >= (i32) dc->width) *x2 = dc->width - 1;
   *y1 = oy1;
   if (*y1 < 0) *y1 = 0;
   *y2 = oy2;
-  if (*y2 >= (i32) dc.height) *y2 = dc.height - 1;
+  if (*y2 >= (i32) dc->height) *y2 = dc->height - 1;
   return true;
 }
 
-void carbon_drawcanvas_rect(CBN_DrawCanvas dc, CBN_Rect r, u32 color) {
+void carbon_drawcanvas_rect(CBN_DrawCanvas *dc, CBN_Rect r, u32 color) {
   i32 x1, x2, y1, y2;
   if (!carbon_drawcanvas__rect_normalize(dc, r, &x1, &x2, &y1, &y2)) return;
-  u32 *p_dc = dc.pixels + (y1 * dc.width + x1);
+  u32 *p_dc = dc->pixels + (y1 * dc->width + x1);
   usz row_offset = x2 - x1 + 1;
   for (i32 j = y1; j <= y2; ++j) {
     for (i32 i = x1; i <= x2; ++i) {
       carbon_drawcanvas__alpha_blending(p_dc, color);
       ++p_dc;
     }
-    p_dc += dc.width - row_offset;
+    p_dc += dc->width - row_offset;
   }
 }
 
-void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u32 color) {
+void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u32 color) {
   i32 x1, x2, y1, y2;
   CBN_Rect xywh = carbon_math_rect_sq(center.x - radius, center.y - radius, 2*radius);
   if (!carbon_drawcanvas__rect_normalize(dc, xywh, &x1, &x2, &y1, &y2)) return;
@@ -212,13 +212,13 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas dc, CBN_Vec2 center, usz radius, u3
   }
 }
 
-void carbon_drawcanvas_sprite(CBN_DrawCanvas dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale) {
+void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale) {
   const f32 sw = s->width * scale.x, sh = s->height * scale.y;
-  const CBN_Rect r_dc = carbon_math_rect(0, 0, dc.width, dc.height);
+  const CBN_Rect r_dc = carbon_math_rect(0, 0, dc->width, dc->height);
   const CBN_Rect r_sp = carbon_math_rect(position.x, position.y, sw, sh);
   CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
   if (xywh.w <= 0 || xywh.h <= 0) return;
-  u32 *p_dc = dc.pixels + (usz)(xywh.y * r_dc.w + xywh.x);
+  u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
   const f32 inv_sx = 1/scale.x, inv_sy = 1/scale.y;
   const f32 start_x = (xywh.x - r_sp.x) * inv_sx;
   f32 src_y = (xywh.y - r_sp.y) * inv_sy;
@@ -296,12 +296,12 @@ CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vert
   return out_count;
 }
 
-CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
+CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas *dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
   if (v.w <= 0) return false;
   CBN_Vec3 ndc;
   if (!carbon_math_vec4_project_3d(v, &ndc)) return false;
-  ndc.x = (ndc.x + 1)/2 * dc.width;
-  ndc.y = (1 - (ndc.y + 1)/2) * dc.height;
+  ndc.x = (ndc.x + 1)/2 * dc->width;
+  ndc.y = (1 - (ndc.y + 1)/2) * dc->height;
   *out_v = ndc;
   return true;
 }
@@ -315,7 +315,7 @@ CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, 
   return carbon_color_add(k_a, k_d);
 }
 
-CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
+CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
   if (vs_count < 3) return;
   for (usz i = 1; i + 1 < vs_count; ++i) {
     Vertex3D p1 = vs[0], p2 = vs[i], p3 = vs[i+1];
@@ -327,7 +327,7 @@ CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas dc, const Verte
   }
 }
 
-void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
+void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
   if (!c || !m || !m->vertices || !m->faces) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
@@ -336,7 +336,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Me
   for (usz f = 0; f < m->metadata.faces_count; ++f) {
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
     const Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];
-    if (dc.flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING) {
+    if (dc->flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING) {
       if (carbon_drawcanvas__is_back_face(cam_pos, v1.world, v2.world, v3.world)) continue;
     }
     Vertex3D pvs[4];
@@ -345,7 +345,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas dc, const CBN_Camera *c, const CBN_Me
   }
 }
 
-void carbon_drawcanvas_plane_xz(CBN_DrawCanvas dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
+void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
   if (!c) return;
   size = carbon_math_vec2_scale(size, 0.5);
   Vertex3D vs[4];
@@ -373,7 +373,7 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas dc, const CBN_Camera *c, CBN_Vec3
   }
 }
 
-void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r) {
+void carbon_drawcanvas_box(CBN_DrawCanvas *dc, CBN_Rect r) {
 #define PX(i, j, c) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz)(i), (usz)(j)), (c));
 #define OUTLINE(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR)
 #define TOPLEFT(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR)
@@ -485,7 +485,7 @@ void carbon_drawcanvas_box(CBN_DrawCanvas dc, CBN_Rect r) {
 #undef INSIDE
 }
 
-void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   static const char *glyphs = &carbon_drawcanvas__font[0][0][0];
   for (usz i = 0; *txt; ++i, ++txt) {
     i32 gx = position.x + (i * CARBON_DRAWCANVAS__FONT_WIDTH * size);
@@ -495,7 +495,7 @@ void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 positio
       for (usz dx = 0; dx < CARBON_DRAWCANVAS__FONT_WIDTH; ++dx) {
         i32 px = gx + dx*size;
         i32 py = gy + dy*size;
-        if (0 <= px && px < (i32) dc.width && 0 <= py && py < (i32) dc.height && glyph[dy*CARBON_DRAWCANVAS__FONT_WIDTH + dx]) {
+        if (0 <= px && px < (i32) dc->width && 0 <= py && py < (i32) dc->height && glyph[dy*CARBON_DRAWCANVAS__FONT_WIDTH + dx]) {
           carbon_drawcanvas_rect(dc, carbon_math_rect_sq(px, py, size), color);
         }
       }
@@ -503,7 +503,7 @@ void carbon_drawcanvas_text(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 positio
   }
 }
 
-void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   carbon_drawcanvas_text(dc, txt, carbon_math_vec2(position.x + 1 * size, position.y + 1 * size), size, 0x33333380);
   carbon_drawcanvas_text(dc, txt, position, size, color);
 }
