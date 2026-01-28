@@ -129,13 +129,7 @@ For more information, see <https://www.gnu.org/licenses/agpl-3.0>.
 
 As mentioned above, /Carbon/ is licensed under the GNU's *AGPL-3.0-only*, which means that any software created or that uses it is also subject to the same license. This implies that if you develop an application using /Carbon/, it must also be released as free software under the GNU's *AGPL-3.0-only*. This ensures that the freedoms to use, study, modify and share the software are preserved for everyone.
 
-If you prefer to release your application under a different, more commercially friendly license, there is an option available. You can purchase a copy of the *Carbon Runtime Library Exception (CRLE)*, which is in essence a /distinct commercial license/, for you to use this library without releasing your software under GNU's *AGPL-3.0-only*. Some key aspects of the *CRLE* are the following:
-- *One-Time Purchase (OTP):* Once obtaining a copy of the CRLE, it lasts forever without expiration date.
-- *Project-specific:* Each CRLE is tied to a single project of yours.
-- *Version compatibility:* Each CRLE applies to a specific branch or minor version of /Carbon/ (e.g. ~v1.0.y/lts~), enabling you to update the library to a more up-to-date version with the same CRLE.
-- *Professional support:* You also gain access to more advanced support regarding the library, as well as a private channel to make high-priority requests such as bug fixes or security vulnerabilities.
-
-For more details and to acquire a copy of the *CRLE*, please visit [[https://sparky-game.org/software/carbon][its official website]].
+If you prefer to release your application under a different, more commercially friendly license, there is an option available. You can purchase a distinct *commercial license* for you to use this library without releasing your software under the GNU's *AGPL-3.0-only*. For more details, please visit [[https://sparky-game.org/software/carbon][its official website]].
 
 * References
 
