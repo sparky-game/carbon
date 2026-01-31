@@ -1,5 +1,4 @@
 ["./" as images]
-icon.png
 yellow-card.png
 red-card.png
 

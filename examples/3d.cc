@@ -23,9 +23,9 @@ namespace res {
 
   static void Init(void) {
     CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
-    LoadPack("3d.skap", s_AssetPack);
+    LoadPack("assets.skap", s_AssetPack);
     cbn::mesh_mgr::Init();
-    LoadMesh("./teapot.obj", s_Mesh_Teapot);
+    LoadMesh("./3d_models/teapot.obj", s_Mesh_Teapot);
     CBN_INFO("Initialized resource manager successfully");
   }
 

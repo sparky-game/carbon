@@ -15,5 +15,5 @@ examples/*
 !examples/*.c
 !examples/*.cc
 !examples/README.org
+!examples/assets.d/
 !examples/pong.d/
-!examples/3d.d/

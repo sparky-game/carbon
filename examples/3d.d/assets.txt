@@ -1,5 +1,0 @@
-["./" as meshes]
-cube.obj
-penger.obj
-teacup.obj
-teapot.obj

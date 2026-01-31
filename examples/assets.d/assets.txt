@@ -1,0 +1,5 @@
+["./3d_models/" as meshes]
+teapot.obj
+tetrahedron.obj
+cube.obj
+octahedron.obj
