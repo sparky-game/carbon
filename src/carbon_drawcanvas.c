@@ -237,11 +237,11 @@ CBNINL void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CB
   }
 }
 
-CBNINL bool carbon_drawcanvas__is_back_face(CBN_Vec3 cam_pos, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3) {
-  // Back-face check with counter-clockwise (CCW) winding order
+CBNINL bool carbon_drawcanvas__is_back_face(const CBN_DrawCanvas *dc, CBN_Vec3 cam_pos, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3) {
   CBN_Vec3 N = carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1));
   CBN_Vec3 V = carbon_math_vec3_sub(cam_pos, v1);
-  return carbon_math_vec3_dot(N, V) <= 0;
+  f32 orientation = carbon_math_vec3_dot(N, V);
+  return dc->flags & CARBON_DRAWCANVAS_FLAG_FRONTFACE_CW ? orientation >= 0 : orientation <= 0;
 }
 
 CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
@@ -338,7 +338,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
     const Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];
     if (dc->flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING) {
-      if (carbon_drawcanvas__is_back_face(cam_pos, v1.world, v2.world, v3.world)) continue;
+      if (carbon_drawcanvas__is_back_face(dc, cam_pos, v1.world, v2.world, v3.world)) continue;
     }
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);

@@ -21,10 +21,11 @@ CBNDEF_PDS(CBN_DrawCanvas) {
 };
 
 /**
- * @brief ...
+ * @brief Set of optional flags to customize the renderer as you see fit.
  */
 enum {
-  CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING = 1 << 0
+  CARBON_DRAWCANVAS_FLAG_FRONTFACE_CW     = 1 << 0,
+  CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING = 1 << 1
 };
 
 typedef struct {
