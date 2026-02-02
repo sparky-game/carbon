@@ -49,10 +49,6 @@ void cbn::DrawCanvas::DrawTriangle(Vec2 v1, Vec2 v2, Vec2 v3, u32 color) {
   carbon_drawcanvas_triangle(this, v1, v2, v3, color);
 }
 
-void cbn::DrawCanvas::DrawTriangle3D(Vec3 v1, Vec3 v2, Vec3 v3, u32 color) {
-  carbon_drawcanvas_triangle_3d(this, v1, v2, v3, color);
-}
-
 void cbn::DrawCanvas::DrawRect(Rect r, u32 color) {
   carbon_drawcanvas_rect(this, r, color);
 }

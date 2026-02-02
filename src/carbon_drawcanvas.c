@@ -138,24 +138,6 @@ void carbon_drawcanvas_triangle(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CB
   }
 }
 
-void carbon_drawcanvas_triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
-  usz lx, hx, ly, hy;
-  if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
-  for (usz j = ly; j <= hy; ++j) {
-    for (usz i = lx; i <= hx; ++i) {
-      i32 u1, u2, det;
-      if (!carbon_drawcanvas__triangle_barycentric(v1.xy, v2.xy, v3.xy, i, j, &u1, &u2, &det)) continue;
-      f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
-      f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
-      usz idx = j * dc->width + i;
-      if (z < dc->zbuffer[idx]) {
-        dc->zbuffer[idx] = z;
-        carbon_drawcanvas__alpha_blending(&dc->pixels[idx], color);
-      }
-    }
-  }
-}
-
 CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas *dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
@@ -315,6 +297,25 @@ CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, 
   return carbon_color_add(k_a, k_d);
 }
 
+CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
+  // Barycentric-based 3D triangle rasterization algorithm
+  usz lx, hx, ly, hy;
+  if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
+  for (usz j = ly; j <= hy; ++j) {
+    for (usz i = lx; i <= hx; ++i) {
+      i32 u1, u2, det;
+      if (!carbon_drawcanvas__triangle_barycentric(v1.xy, v2.xy, v3.xy, i, j, &u1, &u2, &det)) continue;
+      f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
+      f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
+      usz idx = j * dc->width + i;
+      if (z < dc->zbuffer[idx]) {
+        dc->zbuffer[idx] = z;
+        carbon_drawcanvas__alpha_blending(&dc->pixels[idx], color);
+      }
+    }
+  }
+}
+
 CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
   if (vs_count < 3) return;
   for (usz i = 1; i + 1 < vs_count; ++i) {
@@ -323,7 +324,7 @@ CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vert
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p2.clip, &p2.screen)) continue;
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p3.clip, &p3.screen)) continue;
     u32 shade = carbon_drawcanvas__flat_shading(color, p1.world, p2.world, p3.world, light);
-    carbon_drawcanvas_triangle_3d(dc, p1.screen, p2.screen, p3.screen, shade);
+    carbon_drawcanvas__triangle_3d(dc, p1.screen, p2.screen, p3.screen, shade);
   }
 }
 
