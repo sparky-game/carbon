@@ -52,9 +52,9 @@ struct CBN_SlotMap_t {
   using Key = CBN_SlotMap_Key;
   using value_type = T;
   using iterator = value_type *;
-  using indices_type = CBN_List_t<Key>;
-  using data_type = CBN_List_t<value_type>;
-  using erase_type = CBN_List_t<u64>;
+  using indices_type = CBN_TList<Key>;
+  using data_type = CBN_TList<value_type>;
+  using erase_type = CBN_TList<u64>;
   /**
    * @brief carbon_slotmap_create
    * @return The SlotMap container.

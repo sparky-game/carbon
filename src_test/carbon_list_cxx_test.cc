@@ -35,7 +35,7 @@ TEST(pop_element) {
   l.Push(x);
   l.Push(i);
   carbon_should_be(2, l.size);
-  auto j = l.Pop();
+  auto j = l.PopBack();
   carbon_should_be(i, j);
   carbon_should_be(1, l.size);
   l.Free();

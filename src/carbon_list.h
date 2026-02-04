@@ -11,29 +11,24 @@
 
 /**
  * @brief Represents a sequence container that encapsulates dynamic size arrays.
- *
- * In C++, this is a templated class/struct, which means it's not a type by itself,
- * until it gets instantiated with the needed template arguments. The type `CBN_List`
- * is an alias for `CBN_List_t<void *>`, which provides full-compatibility with the
- * C API, even through C++ templates.
- *
- * @param T Type information of what will be stored in the container.
  */
-#ifdef __cplusplus
-template <typename T>
-#endif
-struct CBN_List_t {
+CBNDEF_PDS(CBN_List) {
   void *items;
   usz capacity;
   usz stride;
   usz size;
+};
+
+// Method declarations
 #ifdef __cplusplus
+template <typename T>
+struct CBN_TList : CBN_List_t {
   using value_type = T;
   using iterator = value_type *;
   /**
    * @see carbon_list_create
    */
-  static CBN_List_t make(void);
+  static CBN_TList make(void);
   /**
    * @see carbon_list_destroy
    */
@@ -43,9 +38,13 @@ struct CBN_List_t {
    */
   void Push(const value_type &value);
   /**
-   * @see carbon_list_pop
+   * @see carbon_list_pop_front
    */
-  value_type Pop(void);
+  value_type PopFront(void);
+  /**
+   * @see carbon_list_pop_back
+   */
+  value_type PopBack(void);
   /**
    * @see carbon_list_find
    */
@@ -72,12 +71,12 @@ struct CBN_List_t {
    * @see carbon_list_at
    */
   value_type &operator[](usz idx);
-#endif
 };
-#ifdef __cplusplus
-using CBN_List = CBN_List_t<void *>;
-#else
-typedef struct CBN_List_t CBN_List;
+namespace cbn {
+  template <typename T>
+  using List = CBN_TList<T>;
+}
+using CBN_List = CBN_TList<void *>;
 #endif
 
 /**
@@ -125,11 +124,18 @@ CBNDEF void carbon_list_destroy(CBN_List *l);
 CBNDEF void carbon_list_push(CBN_List *l, void *value);
 
 /**
- * @brief Removes the last element from the list (LIFO).
+ * @brief Removes the first element from the list (FIFO, e.g. queue).
  * @param l The list container.
  * @param out_value The value of the element popped out (output argument pointer).
  */
-CBNDEF void carbon_list_pop(CBN_List *l, void *out_value);
+CBNDEF void carbon_list_pop_front(CBN_List *l, void *out_value);
+
+/**
+ * @brief Removes the last element from the list (LIFO, e.g. stack).
+ * @param l The list container.
+ * @param out_value The value of the element popped out (output argument pointer).
+ */
+CBNDEF void carbon_list_pop_back(CBN_List *l, void *out_value);
 
 /**
  * @brief Obtains the index of the provided element, or -1 if not present.

@@ -117,7 +117,7 @@ CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) 
         CBN_ERROR("on line %zu, asset without group declaration makes no sense", line_n);
         return false;
       }
-      carbon_list_pop(asset_groups, &ag);
+      carbon_list_pop_back(asset_groups, &ag);
       carbon_strlist_push(&ag.assets, line);
       carbon_list_push(asset_groups, &ag);
       prev_line_was_new_group = false;

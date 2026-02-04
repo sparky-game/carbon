@@ -34,11 +34,29 @@ void carbon_list_push(CBN_List *l, void *value) {
     else l->capacity *= CARBON_LIST__RESIZE_FACTOR;
     l->items = carbon_memory_realloc(l->items, l->capacity * l->stride);
   }
-  carbon_memory_copy((void *) ((u64) l->items + (l->size * l->stride)), value, l->stride);
+  carbon_memory_copy((void *)((u64)l->items + (l->size * l->stride)), value, l->stride);
   ++l->size;
 }
 
-void carbon_list_pop(CBN_List *l, void *out_value) {
+void carbon_list_pop_front(CBN_List *l, void *out_value) {
+  if (!l || !out_value) {
+    CBN_ERROR("`l` and `out_value` must be valid pointers");
+    return;
+  }
+  if (!l->size) {
+    CBN_WARN("list is empty");
+    return;
+  }
+  carbon_memory_copy(out_value, l->items, l->stride);
+  if (l->size > 1) {
+    void *dst = l->items;
+    void *src = (void *)((u64)l->items + l->stride);
+    memmove(dst, src, (l->size - 1) * l->stride);
+  }
+  --l->size;
+}
+
+void carbon_list_pop_back(CBN_List *l, void *out_value) {
   if (!l || !out_value) {
     CBN_ERROR("`l` and `out_value` must be valid pointers");
     return;
@@ -72,8 +90,8 @@ void carbon_list_remove(CBN_List *l, usz idx) {
     CBN_ERROR("idx out of bounds (size: %$, idx: %$)", $(l->size), $(idx));
     return;
   }
-  void *dst = (void *) ((u64) l->items + (idx * l->stride));
-  void *src = (void *) ((u64) l->items + ((idx + 1) * l->stride));
+  void *dst = (void *)((u64)l->items + (idx * l->stride));
+  void *src = (void *)((u64)l->items + ((idx + 1) * l->stride));
   memmove(dst, src, (l->size - idx - 1) * l->stride);
   --l->size;
 }

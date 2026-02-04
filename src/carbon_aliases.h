@@ -12,8 +12,6 @@
 #ifdef __cplusplus
 namespace cbn {
   template <typename T>
-  using List = CBN_List_t<T>;
-  template <typename T>
   using CircularQueue = CBN_CircularQueue_t<T>;
   template <typename T>
   using CircularBuffer = CircularQueue<T>;

@@ -35,7 +35,7 @@ TEST(pop_element) {
   carbon_list_push(&l, &x);
   carbon_list_push(&l, &i);
   carbon_should_be(2, l.size);
-  carbon_list_pop(&l, &j);
+  carbon_list_pop_back(&l, &j);
   carbon_should_be(i, j);
   carbon_should_be(1, l.size);
   carbon_list_destroy(&l);
