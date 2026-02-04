@@ -34,6 +34,14 @@ struct CBN_TList : CBN_List_t {
    */
   void Free(void);
   /**
+   * @see carbon_list_front
+   */
+  value_type Front(void) const;
+  /**
+   * @see carbon_list_back
+   */
+  value_type Back(void) const;
+  /**
    * @see carbon_list_push
    */
   void Push(const value_type &value);
@@ -115,6 +123,20 @@ CBNDEF CBN_List carbon_list_create(usz stride);
  * @param l The list container.
  */
 CBNDEF void carbon_list_destroy(CBN_List *l);
+
+/**
+ * @brief Obtains the first element of the list.
+ * @param l The list container.
+ * @param out_value The value of the first element (output argument pointer).
+ */
+CBNDEF void carbon_list_front(CBN_List *l, void *out_value);
+
+/**
+ * @brief Obtains the last element of the list.
+ * @param l The list container.
+ * @param out_value The value of the last element (output argument pointer).
+ */
+CBNDEF void carbon_list_back(CBN_List *l, void *out_value);
 
 /**
  * @brief Appends a copy of the value to the end of the list.

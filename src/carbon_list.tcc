@@ -17,19 +17,33 @@ void CBN_TList<T>::Free(void) {
 }
 
 template <typename T>
+auto CBN_TList<T>::Front(void) const -> value_type {
+  value_type x;
+  carbon_list_front((CBN_List *) this, &x);
+  return x;
+}
+
+template <typename T>
+auto CBN_TList<T>::Back(void) const -> value_type {
+  value_type x;
+  carbon_list_back((CBN_List *) this, &x);
+  return x;
+}
+
+template <typename T>
 void CBN_TList<T>::Push(const value_type &value) {
   carbon_list_push((CBN_List *) this, (void *) &value);
 }
 
 template <typename T>
-typename CBN_TList<T>::value_type CBN_TList<T>::PopFront(void) {
+auto CBN_TList<T>::PopFront(void) -> value_type {
   value_type x;
   carbon_list_pop_front((CBN_List *) this, &x);
   return x;
 }
 
 template <typename T>
-typename CBN_TList<T>::value_type CBN_TList<T>::PopBack(void) {
+auto CBN_TList<T>::PopBack(void) -> value_type {
   value_type x;
   carbon_list_pop_back((CBN_List *) this, &x);
   return x;
@@ -51,17 +65,17 @@ void CBN_TList<T>::ShrinkToFit(void) {
 }
 
 template <typename T>
-typename CBN_TList<T>::iterator CBN_TList<T>::begin(void) const {
+auto CBN_TList<T>::begin(void) const -> iterator {
   return (iterator) items;
 }
 
 template <typename T>
-typename CBN_TList<T>::iterator CBN_TList<T>::end(void) const {
+auto CBN_TList<T>::end(void) const -> iterator {
   return (iterator) items + size;
 }
 
 template <typename T>
-typename CBN_TList<T>::value_type &CBN_TList<T>::operator[](usz idx) {
+auto CBN_TList<T>::operator[](usz idx) -> value_type& {
   return carbon_list_at(value_type, *this, idx);
 }
 

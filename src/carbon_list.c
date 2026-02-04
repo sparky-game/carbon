@@ -24,6 +24,30 @@ void carbon_list_destroy(CBN_List *l) {
   carbon_memory_set(l, 0, sizeof(*l));
 }
 
+void carbon_list_front(CBN_List *l, void *out_value) {
+  if (!l || !out_value) {
+    CBN_ERROR("`l` and `out_value` must be valid pointers");
+    return;
+  }
+  if (!l->size) {
+    CBN_WARN("list is empty");
+    return;
+  }
+  carbon_memory_copy(out_value, l->items, l->stride);
+}
+
+void carbon_list_back(CBN_List *l, void *out_value) {
+  if (!l || !out_value) {
+    CBN_ERROR("`l` and `out_value` must be valid pointers");
+    return;
+  }
+  if (!l->size) {
+    CBN_WARN("list is empty");
+    return;
+  }
+  carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
+}
+
 void carbon_list_push(CBN_List *l, void *value) {
   if (!l || !value) {
     CBN_ERROR("`l` and `value` must be valid pointers");
@@ -39,15 +63,8 @@ void carbon_list_push(CBN_List *l, void *value) {
 }
 
 void carbon_list_pop_front(CBN_List *l, void *out_value) {
-  if (!l || !out_value) {
-    CBN_ERROR("`l` and `out_value` must be valid pointers");
-    return;
-  }
-  if (!l->size) {
-    CBN_WARN("list is empty");
-    return;
-  }
-  carbon_memory_copy(out_value, l->items, l->stride);
+  carbon_list_front(l, out_value);
+  if (!l || !l->size || !out_value) return;
   if (l->size > 1) {
     void *dst = l->items;
     void *src = (void *)((u64)l->items + l->stride);
@@ -57,15 +74,8 @@ void carbon_list_pop_front(CBN_List *l, void *out_value) {
 }
 
 void carbon_list_pop_back(CBN_List *l, void *out_value) {
-  if (!l || !out_value) {
-    CBN_ERROR("`l` and `out_value` must be valid pointers");
-    return;
-  }
-  if (!l->size) {
-    CBN_WARN("list is empty");
-    return;
-  }
-  carbon_memory_copy(out_value, (void *) ((u64) l->items + ((l->size - 1) * l->stride)), l->stride);
+  carbon_list_back(l, out_value);
+  if (!l || !l->size || !out_value) return;
   --l->size;
 }
 
