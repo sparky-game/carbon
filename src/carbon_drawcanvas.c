@@ -4,6 +4,7 @@
 #include "carbon.inc"
 
 #define CARBON_DRAWCANVAS__AA_RES                2
+#define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON    0.2
 #define CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR     0x000000ff
 #define CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR     0xffffffff
 #define CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR 0x555555ff
@@ -245,8 +246,8 @@ CBNINL bool carbon_drawcanvas__is_back_face(const CBN_DrawCanvas *dc, CBN_Vec3 c
 }
 
 CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
-  // Intersects edge (a -> b) against plane (z + w = 0)
-  f32 n = -(a.clip.z + a.clip.w);
+  // Intersects edge (a -> b) against plane (z + w = ε)
+  f32 n = -(a.clip.z + a.clip.w - CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON);
   f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
   f32 t = 0;
   if (carbon_math_abs(d) > CARBON_EPS) t = n / d;
@@ -259,14 +260,15 @@ CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
 
 CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vertex3D v3, Vertex3D *out_poly) {
   // Sutherland-Hodgman polygon clipping algorithm
+  // Clips against plane (z + w >= ε)
   Vertex3D in[] = {v1, v2, v3};
   Vertex3D out[4];
   usz out_count = 0;
   for (usz i = 0; i < 3; ++i) {
     Vertex3D a = in[i];
     Vertex3D b = in[(i + 1) % 3];
-    bool is_in_a = a.clip.z + a.clip.w >= 0;
-    bool is_in_b = b.clip.z + b.clip.w >= 0;
+    bool is_in_a = a.clip.z + a.clip.w >= CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON;
+    bool is_in_b = b.clip.z + b.clip.w >= CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON;
     if (is_in_a && is_in_b)       out[out_count++] = b;
     else if (is_in_a && !is_in_b) out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
     else if (!is_in_a && is_in_b) {
@@ -279,7 +281,7 @@ CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vert
 }
 
 CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas *dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
-  if (v.w <= 0) return false;
+  // if (v.w < CARBON_EPS) return false;
   CBN_Vec3 ndc;
   if (!carbon_math_vec4_project_3d(v, &ndc)) return false;
   ndc.x = (ndc.x + 1)/2 * dc->width;

@@ -86,7 +86,7 @@ CBN_Vec4 carbon_math_vec4_lerp(CBN_Vec4 u, CBN_Vec4 v, f32 t) {
 }
 
 bool carbon_math_vec4_project_3d(CBN_Vec4 v, CBN_Vec3 *out_v) {
-  if (!out_v || !v.w) return false;
+  if (!out_v || v.w < CARBON_EPS) return false;
   *out_v = carbon_math_vec3(v.x/v.w, v.y/v.w, v.z/v.w);
   return true;
 }
