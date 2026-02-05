@@ -24,6 +24,10 @@ void cbn::Camera::Reset(const cbn::DrawCanvas &dc) {
   carbon_camera_reset(this, &dc);
 }
 
+void cbn::Camera::SetType(const Type t) {
+  carbon_camera_set_type(this, t);
+}
+
 Vec3 cbn::Camera::GetPosition(void) const {
   return carbon_camera_get_position(this);
 }
@@ -70,4 +74,8 @@ void cbn::Camera::Yaw(f32 amount) {
 
 void cbn::Camera::Pitch(f32 amount) {
   carbon_camera_pitch(this, amount);
+}
+
+void cbn::Camera::OrthoZoom(f32 amount) {
+  carbon_camera_ortho_zoom(this, amount);
 }

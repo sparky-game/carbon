@@ -14,9 +14,18 @@
  */
 typedef struct CBN_Camera CBN_Camera;
 
+/**
+ * @brief Types of 3D projections used to display the camera's frustum on a 2D canvas.
+ */
+typedef enum {
+  CARBON_CAMERA_TYPE_PERSPECTIVE,
+  CARBON_CAMERA_TYPE_ORTHOGRAPHIC
+} CBN_Camera_Type;
+
 // Method declarations
 #ifdef __cplusplus
 struct CBN_Camera {
+  using Type = CBN_Camera_Type;
   /**
    * @see carbon_camera_create
    */
@@ -30,6 +39,10 @@ struct CBN_Camera {
    * @see carbon_camera_reset
    */
   void Reset(const CBN_DrawCanvas &dc);
+  /**
+   * @see carbon_camera_set_type
+   */
+  void SetType(const Type t);
   /**
    * @see carbon_camera_get_position
    */
@@ -78,6 +91,10 @@ struct CBN_Camera {
    * @see carbon_camera_pitch
    */
   void Pitch(f32 amount);
+  /**
+   * @see carbon_camera_ortho_zoom
+   */
+  void OrthoZoom(f32 amount);
 };
 #endif
 CBNDEF_T(cbn, Camera, CBN_Camera);
@@ -101,6 +118,13 @@ CBNDEF void carbon_camera_destroy(CBN_Camera *c);
  * @param dc The DrawCanvas to get the needed info from.
  */
 CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc);
+
+/**
+ * @brief ...
+ * @param c The Camera object.
+ * @param t ...
+ */
+CBNDEF void carbon_camera_set_type(CBN_Camera *c, const CBN_Camera_Type t);
 
 /**
  * @brief Obtains the current position of the Camera as 3D vector.
@@ -185,6 +209,13 @@ CBNDEF void carbon_camera_yaw(CBN_Camera *c, f32 amount);
  * @param amount The amount to move.
  */
 CBNDEF void carbon_camera_pitch(CBN_Camera *c, f32 amount);
+
+/**
+ * @brief ...
+ * @param c The Camera object.
+ * @param amount ...
+ */
+CBNDEF void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount);
 
 // Local Variables:
 // mode: c++

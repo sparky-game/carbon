@@ -4,6 +4,7 @@
 #include "carbon.inc"
 
 struct CBN_Camera {
+  CBN_Camera_Type type;
   CBN_Vec3 position;
   f32 yaw;
   f32 pitch;
@@ -14,6 +15,7 @@ struct CBN_Camera {
   f32 near;
   f32 far;
   CBN_Mat4 proj;
+  f32 ortho_size;
 };
 
 CBN_Camera *carbon_camera_create(const CBN_DrawCanvas *dc) {
@@ -44,7 +46,33 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc) {
   c->aspect = (f32) dc->width / dc->height;
   c->near = 0.1;
   c->far = 100.0;
+  c->type = CARBON_CAMERA_TYPE_PERSPECTIVE;
   c->proj = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
+  c->ortho_size = 1;
+}
+
+CBNINL void carbon_camera__update_view(CBN_Camera *c) {
+  c->view = carbon_math_mat4_view(c->position, c->rotation);
+}
+
+CBNINL void carbon_camera__update_proj(CBN_Camera *c) {
+  switch (c->type) {
+  case CARBON_CAMERA_TYPE_PERSPECTIVE:
+    c->proj = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
+    break;
+  case CARBON_CAMERA_TYPE_ORTHOGRAPHIC: {
+    f32 hh = c->ortho_size;
+    f32 hw = hh * c->aspect;
+    c->proj = carbon_math_mat4_orthographic(-hw, hw, -hh, hh, c->near, c->far);
+  } break;
+  default: CARBON_UNREACHABLE;
+  }
+}
+
+void carbon_camera_set_type(CBN_Camera *c, const CBN_Camera_Type t) {
+  if (!c) return;
+  c->type = t;
+  carbon_camera__update_proj(c);
 }
 
 CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c) {
@@ -65,10 +93,6 @@ CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c) {
 CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c) {
   if (!c) return carbon_math_mat4_id();
   return c->proj;
-}
-
-CBNINL void carbon_camera__update_view(CBN_Camera *c) {
-  c->view = carbon_math_mat4_view(c->position, c->rotation);
 }
 
 CBNINL void carbon_camera__translate(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
@@ -128,4 +152,11 @@ void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
   if (!c || !amount) return;
   c->pitch = carbon_math_clamp(c->pitch + amount, -max_pitch, max_pitch);
   carbon_camera__update_rotation(c);
+}
+
+void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount) {
+  static const f32 max_zoom = 0.1;
+  if (!c) return;
+  c->ortho_size = CARBON_MAX(c->ortho_size + amount, max_zoom);
+  if (c->type == CARBON_CAMERA_TYPE_ORTHOGRAPHIC) carbon_camera__update_proj(c);
 }
