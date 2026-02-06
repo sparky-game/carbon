@@ -42,7 +42,6 @@ Many thanks to *all of you* who are reading this; I hope it'll be useful and it'
   - [[#build-from-source][Build from source]]
   - [[#examples][Examples]]
 - [[#licensing][Licensing]]
-- [[#references][References]]
 
 * Usage
 
@@ -130,7 +129,3 @@ For more information, see <https://www.gnu.org/licenses/agpl-3.0>.
 As mentioned above, /Carbon/ is licensed under the GNU's *AGPL-3.0-only*, which means that any software created or that uses it is also subject to the same license. This implies that if you develop an application using /Carbon/, it must also be released as free software under the GNU's *AGPL-3.0-only*. This ensures that the freedoms to use, study, modify and share the software are preserved for everyone.
 
 If you prefer to release your application under a different, more commercially friendly license, there is an option available. You can purchase a distinct *commercial license* for you to use this library without releasing your software under the GNU's *AGPL-3.0-only*. For more details, please visit [[https://sparky-game.org/software/carbon][its official website]].
-
-* References
-
-Checkout the [[../REFS][references list]] for the complete bibliography of the project.
