@@ -106,10 +106,6 @@ struct CBN_DrawCanvas : CBN_DrawCanvas_t {
    */
   void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color);
   /**
-   * @see carbon_drawcanvas_box
-   */
-  void DrawBox(CBN_Rect r);
-  /**
    * @see carbon_drawcanvas_text_with_shadow
    */
   void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color);
@@ -250,13 +246,6 @@ CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, cons
  * @param color The color to draw the plane with.
  */
 CBNDEF void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color);
-
-/**
- * @brief Draws a box to the canvas.
- * @param dc The DrawCanvas object.
- * @param r The spec of the desired box as a rectangle.
- */
-CBNDEF void carbon_drawcanvas_box(CBN_DrawCanvas *dc, CBN_Rect r);
 
 /**
  * @brief Draws text to the canvas with a specific color (using a default font).

@@ -3,12 +3,8 @@
 
 #include "carbon.inc"
 
-#define CARBON_DRAWCANVAS__AA_RES                2
-#define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON    0.2
-#define CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR     0x000000ff
-#define CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR     0xffffffff
-#define CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR 0x555555ff
-#define CARBON_DRAWCANVAS__BOX_INSIDE_COLOR      0xc6c6c6ff
+#define CARBON_DRAWCANVAS__AA_RES             2
+#define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON 0.2
 
 #include "carbon_drawcanvas_font.inl"
 
@@ -374,118 +370,6 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[2], vs[3], pvs);
     carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
   }
-}
-
-void carbon_drawcanvas_box(CBN_DrawCanvas *dc, CBN_Rect r) {
-#define PX(i, j, c) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz)(i), (usz)(j)), (c));
-#define OUTLINE(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_OUTLINE_COLOR)
-#define TOPLEFT(i, j)     PX(i, j, CARBON_DRAWCANVAS__BOX_TOPLEFT_COLOR)
-#define BOTTOMRIGHT(i, j) PX(i, j, CARBON_DRAWCANVAS__BOX_BOTTOMRIGHT_COLOR)
-#define INSIDE(i, j)      PX(i, j, CARBON_DRAWCANVAS__BOX_INSIDE_COLOR)
-  const usz x1 = r.x, y1 = r.y, x2 = x1 + r.w - 1, y2 = y1 + r.h - 1;
-  // Header
-  for (usz j = y1; j <= y1 + 1; ++j) {
-    for (usz i = x1 + 4; i <= x2 - 6; ++i) {
-      OUTLINE(i, j);
-    }
-  }
-  for (usz j = y1 + 2; j <= y1 + 3; ++j) {
-    OUTLINE(x1 + 2, j);
-    OUTLINE(x1 + 3, j);
-    for (usz i = x1 + 4; i <= x2 - 6; ++i) {
-      TOPLEFT(i, j);
-    }
-    OUTLINE(x2 - 5, j);
-    OUTLINE(x2 - 4, j);
-  }
-  for (usz j = y1 + 4; j <= y1 + 5; ++j) {
-    OUTLINE(x1 + 0, j);
-    OUTLINE(x1 + 1, j);
-    for (usz i = x1 + 2; i <= x2 - 6; ++i) {
-      TOPLEFT(i, j);
-    }
-    INSIDE(x2 - 5, j);
-    INSIDE(x2 - 4, j);
-    OUTLINE(x2 - 3, j);
-    OUTLINE(x2 - 2, j);
-  }
-  for (usz j = y1 + 6; j <= y1 + 7; ++j) {
-    OUTLINE(x1 + 0, j);
-    OUTLINE(x1 + 1, j);
-    for (usz i = x1 + 2; i <= x1 + 7; ++i) {
-      TOPLEFT(i, j);
-    }
-    for (usz i = x1 + 8; i <= x2 - 6; ++i) {
-      INSIDE(i, j);
-    }
-    for (usz i = x2 - 5; i <= x2 - 2; ++i) {
-      BOTTOMRIGHT(i, j);
-    }
-    OUTLINE(x2 - 1, j);
-    OUTLINE(x2 - 0, j);
-  }
-  // Content
-  for (usz j = y1 + 8; j <= y2 - 8; ++j) {
-    OUTLINE(x1 + 0, j);
-    OUTLINE(x1 + 1, j);
-    for (usz i = x1 + 2; i <= x1 + 5; ++i) {
-      TOPLEFT(i, j);
-    }
-    for (usz i = x1 + 6; i <= x2 - 6; ++i) {
-      INSIDE(i, j);
-    }
-    for (usz i = x2 - 5; i <= x2 - 2; ++i) {
-      BOTTOMRIGHT(i, j);
-    }
-    OUTLINE(x2 - 1, j);
-    OUTLINE(x2 - 0, j);
-  }
-  // Footer
-  for (usz j = y2 - 7; j <= y2 - 6; ++j) {
-    OUTLINE(x1 + 0, j);
-    OUTLINE(x1 + 1, j);
-    for (usz i = x1 + 2; i <= x1 + 5; ++i) {
-      TOPLEFT(i, j);
-    }
-    for (usz i = x1 + 6; i <= x2 - 8; ++i) {
-      INSIDE(i, j);
-    }
-    for (usz i = x2 - 7; i <= x2 - 2; ++i) {
-      BOTTOMRIGHT(i, j);
-    }
-    OUTLINE(x2 - 1, j);
-    OUTLINE(x2 - 0, j);
-  }
-  for (usz j = y2 - 5; j <= y2 - 4; ++j) {
-    OUTLINE(x1 + 2, j);
-    OUTLINE(x1 + 3, j);
-    INSIDE(x1 + 4, j);
-    INSIDE(x1 + 5, j);
-    for (usz i = x1 + 6; i <= x2 - 2; ++i) {
-      BOTTOMRIGHT(i, j);
-    }
-    OUTLINE(x2 - 1, j);
-    OUTLINE(x2 - 0, j);
-  }
-  for (usz j = y2 - 3; j <= y2 - 2; ++j) {
-    OUTLINE(x1 + 4, j);
-    OUTLINE(x1 + 5, j);
-    for (usz i = x1 + 6; i <= x2 - 4; ++i) {
-      BOTTOMRIGHT(i, j);
-    }
-    OUTLINE(x2 - 3, j);
-    OUTLINE(x2 - 2, j);
-  }
-  for (usz j = y2 - 1; j <= y2; ++j) {
-    for (usz i = x1 + 6; i <= x2 - 4; ++i) {
-      OUTLINE(i, j);
-    }
-  }
-#undef PX
-#undef OUTLINE
-#undef TOPLEFT
-#undef BOTTOMRIGHT
-#undef INSIDE
 }
 
 void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {

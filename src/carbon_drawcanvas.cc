@@ -69,10 +69,6 @@ void cbn::DrawCanvas::DrawPlaneXZ(const cbn::Camera &c, Vec3 center, Vec2 size, 
   carbon_drawcanvas_plane_xz(this, &c, center, size, color);
 }
 
-void cbn::DrawCanvas::DrawBox(Rect r) {
-  carbon_drawcanvas_box(this, r);
-}
-
 void cbn::DrawCanvas::DrawText(const char *txt, Vec2 position, usz size, u32 color) {
   carbon_drawcanvas_text_with_shadow(this, txt, position, size, color);
 }
