@@ -43,14 +43,13 @@ char *carbon_net_resolve_dns_to_ipv4(const char *domain) {
   char *x = xs[i];
   carbon_memory_set(x, 0, CARBON_NET_IPV4_MAX_LEN);
 #ifdef _WIN32
-  extern PSTR RtlIpv4AddressToStringA(const IP4_ADDRESS *, PSTR);
   PDNS_RECORD addrs = carbon_net__resolve_dns_to_addrs(domain);
   if (!addrs) return 0;
   PDNS_RECORD addr = addrs;
   while (addr) {
     switch (addr->wType) {
     case DNS_TYPE_A:
-      RtlIpv4AddressToStringA(&addr->Data.A.IpAddress, x);
+      RtlIpv4AddressToStringA((const IN_ADDR *) &addr->Data.A.IpAddress, x);
       break;
     default: CARBON_UNREACHABLE;
     }

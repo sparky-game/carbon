@@ -46,7 +46,7 @@
 #if defined(__APPLE__)
 #define LIBS "-framework CoreFoundation -lobjc "
 #elif defined (_WIN32)
-#define LIBS "-ldnsapi -lgdi32 -lntdll -static "
+#define LIBS "-ldnsapi -lws2_32 -lgdi32 -lntdll -lpthread -static "
 #else
 #define LIBS "-lm "
 #endif
@@ -352,12 +352,15 @@ static void examples_c_files(void) {
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CCLD    %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_C_COMPILER " -I . " C_STD " " WARNS " -fPIE " OPTIMIZATIONS);
+#ifdef _WIN32
+    carbon_strbuilder_add_cstr(&cmd, EXAMPLES_DIR "/");
+#endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".c");
     carbon_strbuilder_add_cstr(&cmd, " " BUILD_DIR "/libcarbon.a ");
     carbon_strbuilder_add_cstr(&cmd, LIBS);
 #ifdef _WIN32
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o " EXAMPLES_DIR "/%s", it.f));
 #else
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
 #endif
@@ -372,12 +375,15 @@ static void examples_cxx_files(void) {
   carbon_fs_pattern_match_foreach(files) {
     carbon_println("  CXXLD   %s", it.f);
     carbon_strbuilder_add_cstr(&cmd, CARBON_CXX_COMPILER " -I . " CXX_STD " " WARNS " -fPIE " OPTIMIZATIONS);
+#ifdef _WIN32
+    carbon_strbuilder_add_cstr(&cmd, EXAMPLES_DIR "/");
+#endif
     carbon_strbuilder_add_cstr(&cmd, it.f);
     carbon_string_strip_substr(it.f, ".cc");
     carbon_strbuilder_add_cstr(&cmd, " " BUILD_DIR "/libcarbon.a ");
     carbon_strbuilder_add_cstr(&cmd, LIBS);
 #ifdef _WIN32
-    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s", it.f));
+    carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o " EXAMPLES_DIR "/%s", it.f));
 #else
     carbon_strbuilder_add_cstr(&cmd, carbon_string_fmt("-o %s.bin", it.f));
 #endif

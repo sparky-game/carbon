@@ -26,6 +26,11 @@
 #define false 0
 #endif
 
+#ifdef _WIN32
+#undef near
+#undef far
+#endif
+
 #if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #define static_assert _Static_assert
 #endif
@@ -131,28 +136,34 @@
 #endif
 
 #define CARBON_COMPILER_PRAGMA(x) _Pragma(#x)
-#if defined(_WIN32) && defined(__MINGW64__)
-#define CARBON_C_COMPILER "gcc.exe"
-#define CARBON_CXX_COMPILER "g++.exe"
-#define CARBON_COMPILER_VERSION __VERSION__
-#elif defined(_WIN32) && defined(_MSC_VER)
-#define CARBON_C_COMPILER "cl.exe"
-#define CARBON_CXX_COMPILER "cl.exe"
-#define CARBON_COMPILER_VERSION _MSC_FULL_VER
-#elif defined(__clang__)
+#if defined(__clang__)  // LLVM
+#if defined(_WIN32) && defined(__MINGW64__)  // MinGW-LLVM
+#define CARBON_C_COMPILER "clang.exe"
+#define CARBON_CXX_COMPILER "clang++.exe"
+#else
 #define CARBON_C_COMPILER "clang"
 #define CARBON_CXX_COMPILER "clang++"
+#endif
 #define CARBON_COMPILER_VERSION __VERSION__
 #define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(clang diagnostic push)
 #define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(clang diagnostic ignored w)
 #define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(clang diagnostic pop)
-#elif defined(__GNUC__)
+#elif defined(__GNUC__)  // GCC
+#if defined(_WIN32) && defined(__MINGW64__)  // MinGW-GCC
+#define CARBON_C_COMPILER "gcc.exe"
+#define CARBON_CXX_COMPILER "g++.exe"
+#else
 #define CARBON_C_COMPILER "gcc"
 #define CARBON_CXX_COMPILER "g++"
+#endif
 #define CARBON_COMPILER_VERSION __VERSION__
 #define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(GCC diagnostic push)
 #define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(GCC diagnostic ignored w)
 #define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(GCC diagnostic pop)
+#elif defined(_WIN32) && defined(_MSC_VER)  // MSVC
+#define CARBON_C_COMPILER "cl.exe"
+#define CARBON_CXX_COMPILER "cl.exe"
+#define CARBON_COMPILER_VERSION _MSC_FULL_VER
 #else
 #warning Unrecognized compiler, using defaults
 #define CARBON_C_COMPILER "cc"

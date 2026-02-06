@@ -24,15 +24,14 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-// Windows
-#ifdef _WIN32
+#ifdef _WIN32  // Windows
 #define WIN32_LEAN_AND_MEAN
 #define OEMRESOURCE
+#define NOMINMAX
 #include <direct.h>
 #include <windows.h>
 #include <windns.h>
-// POSIX
-#else
+#else  // POSIX
 #include <glob.h>
 #include <poll.h>
 #include <netdb.h>
@@ -43,12 +42,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #endif
-// macOS
-#ifdef __APPLE__
+#ifdef __APPLE__  // macOS
 #include <mach-o/dyld.h>
 #endif
-// C++
-#ifdef __cplusplus
+#ifdef __cplusplus  // C++-only
 #include <tuple>
 #include <string>
 #include <memory>

@@ -283,11 +283,7 @@ f32 carbon_math_log10(f32 x) {
 }
 
 f32 carbon_math_exp10(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_exp10f)
-  return __builtin_exp10f(x);
-#else
   return carbon_math_exp2(CARBON_LOG2_10 * x);
-#endif
 }
 
 f32 carbon_math_ldexp10(f32 x, i32 exp) {
