@@ -35,6 +35,17 @@ typedef ptrdiff_t isz;
 typedef intptr_t iptr;
 typedef uintptr_t uptr;
 
+#if defined(CARBON_SIMD_HAS_AVX) || defined(CARBON_SIMD_HAS_AVX2) || defined(CARBON_SIMD_HAS_FMA_AVX) || defined(CARBON_SIMD_HAS_FMA_AVX2)
+typedef __m256 f32x8;
+#endif
+#if defined(CARBON_SIMD_HAS_SSE) || defined(CARBON_SIMD_HAS_SSE2) || defined(CARBON_SIMD_HAS_SSE3) || defined(CARBON_SIMD_HAS_SSSE3) || defined(CARBON_SIMD_HAS_SSE41) || defined(CARBON_SIMD_HAS_SSE42)
+typedef __m128 f32x4;
+#endif
+#if defined(CARBON_SIMD_HAS_NEON) || defined(CARBON_SIMD_HAS_NEON_FMA)
+typedef float32x2_t f32x2;
+typedef float32x4_t f32x4;
+#endif
+
 #ifdef __cplusplus
 namespace cbn {
   template <typename T, typename U = T>

@@ -12,7 +12,7 @@
 /**
  * @brief Represents a 4D vector with four 32-bit floating-point (f32) values.
  */
-CBNDEF_PDS(CBN_Vec4) {
+CBNDEF_PDS(alignas(16) CBN_Vec4) {
   union {
     struct { f32 x, y, z, w; };
     struct { CBN_Vec2 xy; CBN_Vec2 zw; };

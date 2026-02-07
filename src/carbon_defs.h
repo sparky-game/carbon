@@ -107,6 +107,16 @@
 #define CBNINL static inline
 #endif
 
+#ifndef __cplusplus
+#if defined(__GNUC__) || defined(__clang__)
+#define alignas(x) __attribute__((aligned(x)))
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define alignas(x) __declspec(align(16))
+#else
+#define alignas(x) _Alignas(x)
+#endif
+#endif
+
 /**
  * @brief Version check and string creation.
  */
