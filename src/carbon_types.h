@@ -55,6 +55,58 @@ namespace cbn {
 typedef _Bool bool;
 #endif
 
+// Seems that multi-billion dollar company is unable to implement `pthread_barrier_t` synchronization
+// object as part as the `pthread` library in macOS.
+// Fucking incompetent bitches... They glow in the dark, you can see them if you're driving, you
+// just run them over, that's what you do.
+#ifdef __APPLE__
+typedef i32 pthread_barrierattr_t;
+typedef struct {
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+  i32 count;
+  i32 trip_count;
+} pthread_barrier_t;
+CBNINL i32 pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, u32 count)
+{
+  CARBON_UNUSED(attr);
+  if (count == 0) {
+    errno = EINVAL;
+    return -1;
+  }
+  if (0 > pthread_mutex_init(&barrier->mutex, 0)) return -1;
+  if (0 > pthread_cond_init(&barrier->cond, 0)) {
+    pthread_mutex_destroy(&barrier->mutex);
+    return -1;
+  }
+  barrier->trip_count = count;
+  barrier->count = 0;
+  return 0;
+}
+CBNINL i32 pthread_barrier_destroy(pthread_barrier_t *barrier)
+{
+  pthread_cond_destroy(&barrier->cond);
+  pthread_mutex_destroy(&barrier->mutex);
+  return 0;
+}
+CBNINL i32 pthread_barrier_wait(pthread_barrier_t *barrier)
+{
+  pthread_mutex_lock(&barrier->mutex);
+  ++barrier->count;
+  if (barrier->count >= barrier->trip_count) {
+    barrier->count = 0;
+    pthread_cond_broadcast(&barrier->cond);
+    pthread_mutex_unlock(&barrier->mutex);
+    return 1;
+  }
+  else {
+    pthread_cond_wait(&barrier->cond, &barrier->mutex);
+    pthread_mutex_unlock(&barrier->mutex);
+    return 0;
+  }
+}
+#endif
+
 // Local Variables:
 // mode: c++
 // End:
