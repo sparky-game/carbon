@@ -37,16 +37,10 @@
 #define CARBON_VERSION_EXTRA "-dev"
 
 /*
-  Build options
-  =============
+  Global customization option flags
+  =================================
 
-  `#define` these options before including `carbon.h`, or pass them as compiler flags:
-
-  +------------------------+----------------------------------------------------------+
-  |  CARBON_TESTING_ENTRY  |  Redefines the `main` function, thus making it behave    |
-  |                        |  as a test suite entrypoint. It's only relevant to       |
-  |                        |  define it in the translation unit where we're defining  |
-  |                        |  the `main` function.                                    |
+  When building the library itself:
   +------------------------+----------------------------------------------------------+
   |   CARBON_NO_BUILTIN    |  Disables the use of the compiler's built-in functions,  |
   |                        |  replacing them by our own portable implementations.     |
@@ -56,5 +50,13 @@
   |                        |  but the target platform running the compiled code with  |
   |                        |  SIMD enabled must support the SIMD technology the       |
   |                        |  program has been built for.                             |
+  +------------------------+----------------------------------------------------------+
+
+  In the user's program, before including this header file.
+  +------------------------+----------------------------------------------------------+
+  |  CARBON_TESTING_ENTRY  |  Redefines the `main` function, thus making it behave    |
+  |                        |  as a test suite entrypoint. It's only relevant to       |
+  |                        |  define it in the translation unit where we're defining  |
+  |                        |  the `main` function.                                    |
   +------------------------+----------------------------------------------------------+
 */
