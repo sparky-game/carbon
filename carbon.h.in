@@ -1,29 +1,29 @@
 /*
-**  $$=================================================================================$$
-**  ||                                                                                 ||
-**  ||               ------                                                            ||
-**  ||            ------==+                                                            ||
-**  ||         ------=+++++                     _____            _                     ||
-**  ||      ------=+++++                       /  __ \          | |                    ||
-**  ||    =----=++++=           ------         | /  \/ __ _ _ __| |__   ___  _ __      ||
-**  ||    ***++++            ------=++         | |    / _` | '__| '_ \ / _ \| '_ \     ||
-**  ||    ***+++          ------=+++++         | \__/\ (_| | |  | |_) | (_) | | | |    ||
-**  ||    ***+++      ------==++++**++          \____/\__,_|_|  |_.__/ \___/|_| |_|    ||
-**  ||    ***+++     ++--==+++++****++                                                 ||
-**  ||    ***+++     ***+++++   ****++                  Make C Great Again             ||
-**  ||    ***+++      #*++      ****++             The ultimate C/C++ standard         ||
-**  ||    ***+++                ****++             library to enjoy programming        ||
-**  ||    **+----             :---=+++                                                 ||
-**  ||    *****=-----      ------=++++            Licensed under AGPL-3.0-only         ||
-**  ||      #*****=-----------=+++++                                                   ||
-**  ||         ******=-----=+++++                        Wasym A. Alonso               ||
-**  ||            ******=+++++                                                         ||
-**  ||               ***+++                          wasymatieh01@gmail.com            ||
-**  ||                                                                                 ||
-**  ||                                        https://github.com/sparky-game/carbon    ||
-**  ||                                                                                 ||
-**  ||                                                                                 ||
-**  $$=================================================================================$$
+  $$=================================================================================$$
+  ||                                                                                 ||
+  ||               ------                                                            ||
+  ||            ------==+                                                            ||
+  ||         ------=+++++                     _____            _                     ||
+  ||      ------=+++++                       /  __ \          | |                    ||
+  ||    =----=++++=           ------         | /  \/ __ _ _ __| |__   ___  _ __      ||
+  ||    ***++++            ------=++         | |    / _` | '__| '_ \ / _ \| '_ \     ||
+  ||    ***+++          ------=+++++         | \__/\ (_| | |  | |_) | (_) | | | |    ||
+  ||    ***+++      ------==++++**++          \____/\__,_|_|  |_.__/ \___/|_| |_|    ||
+  ||    ***+++     ++--==+++++****++                                                 ||
+  ||    ***+++     ***+++++   ****++                  Make C Great Again             ||
+  ||    ***+++      #*++      ****++             The ultimate C/C++ standard         ||
+  ||    ***+++                ****++             library to enjoy programming        ||
+  ||    **+----             :---=+++                                                 ||
+  ||    *****=-----      ------=++++            Licensed under AGPL-3.0-only         ||
+  ||      #*****=-----------=+++++                                                   ||
+  ||         ******=-----=+++++                        Wasym A. Alonso               ||
+  ||            ******=+++++                                                         ||
+  ||               ***+++                          wasymatieh01@gmail.com            ||
+  ||                                                                                 ||
+  ||                                        https://github.com/sparky-game/carbon    ||
+  ||                                                                                 ||
+  ||                                                                                 ||
+  $$=================================================================================$$
 */
 
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -37,18 +37,24 @@
 #define CARBON_VERSION_EXTRA "-dev"
 
 /*
-**  Build options
-**  =============
-**
-**  `#define` these options before including `carbon.h`, or pass them as compiler flags:
-**
-**  +------------------------+----------------------------------------------------------+
-**  |  CARBON_TESTING_ENTRY  |  Redefines the `main` function, thus making it behave    |
-**  |                        |  as a test suite entrypoint. It's only relevant to       |
-**  |                        |  define it in the translation unit where we're defining  |
-**  |                        |  the `main` function.                                    |
-**  +------------------------+----------------------------------------------------------+
-**  |   CARBON_NO_BUILTIN    |  Disables the use of the compiler's built-in functions,  |
-**  |                        |  replacing them by our own portable implementations.     |
-**  +-----------------------------------------------------------------------------------+
+  Build options
+  =============
+
+  `#define` these options before including `carbon.h`, or pass them as compiler flags:
+
+  +------------------------+----------------------------------------------------------+
+  |  CARBON_TESTING_ENTRY  |  Redefines the `main` function, thus making it behave    |
+  |                        |  as a test suite entrypoint. It's only relevant to       |
+  |                        |  define it in the translation unit where we're defining  |
+  |                        |  the `main` function.                                    |
+  +------------------------+----------------------------------------------------------+
+  |   CARBON_NO_BUILTIN    |  Disables the use of the compiler's built-in functions,  |
+  |                        |  replacing them by our own portable implementations.     |
+  +------------------------+----------------------------------------------------------+
+  | CARBON_SIMD_INTRINSICS |  Detects and uses SIMD intrinsics on the host            |
+  |                        |  compilation platform. It could improve performance,     |
+  |                        |  but the target platform running the compiled code with  |
+  |                        |  SIMD enabled must support the SIMD technology the       |
+  |                        |  program has been built for.                             |
+  +------------------------+----------------------------------------------------------+
 */

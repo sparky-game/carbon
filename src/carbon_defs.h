@@ -12,6 +12,9 @@
 #define CARBON_NAME "SPARKY Carbon"
 #define CARBON_VERSION "v" CARBON_VERSION_RAW
 
+/**
+ * @brief Language standards (C/C++) check.
+ */
 #if !defined(__cplusplus) && __STDC_VERSION__ != 201112L
 #error C11 standard is needed
 #endif
@@ -63,8 +66,12 @@
  */
 #define CARBON_SWAP(x, y) { x ^= y; y ^= x; x ^= y; }
 
+/**
+ * @brief Checks if the specified compiler's built-in function is available.
+ * @param x The built-in function's name to check.
+ */
 #if defined(__has_builtin) && !defined(CARBON_NO_BUILTIN)
-#define CARBON_HAS_BUILTIN __has_builtin
+#define CARBON_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #define CARBON_HAS_BUILTIN(...) false
 #endif
@@ -100,19 +107,25 @@
 #define CBNINL static inline
 #endif
 
+/**
+ * @brief Version check and string creation.
+ */
 #if !defined(CARBON_VERSION_MAJOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MAJOR) || !defined(CARBON_VERSION_MINOR) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_MINOR) || !defined(CARBON_VERSION_PATCH) || CARBON_MACRO_IS_EMPTY(CARBON_VERSION_PATCH) || !defined(CARBON_VERSION_EXTRA)
 #error Version information not valid
 #elif CARBON_VERSION_PATCH != 0
-#define CARBON_VERSION_RAW                                      \
-  CARBON_QUOTE(CARBON_VERSION_MAJOR)                            \
-  "." CARBON_QUOTE(CARBON_VERSION_MINOR)                        \
+#define CARBON_VERSION_RAW                                    \
+  CARBON_QUOTE(CARBON_VERSION_MAJOR)                          \
+  "." CARBON_QUOTE(CARBON_VERSION_MINOR)                      \
   "." CARBON_QUOTE(CARBON_VERSION_PATCH) CARBON_VERSION_EXTRA
 #elif CARBON_VERSION_PATCH == 0
-#define CARBON_VERSION_RAW                                      \
-  CARBON_QUOTE(CARBON_VERSION_MAJOR)                            \
+#define CARBON_VERSION_RAW                                    \
+  CARBON_QUOTE(CARBON_VERSION_MAJOR)                          \
   "." CARBON_QUOTE(CARBON_VERSION_MINOR) CARBON_VERSION_EXTRA
 #endif
 
+/**
+ * @brief CPU identification.
+ */
 #if defined(__amd64__) || defined(_M_AMD64)
 #define CARBON_CPU_ARCH "amd64"
 #elif defined(__aarch64__)
@@ -121,6 +134,9 @@
 #error CPU architecture is not supported
 #endif
 
+/**
+ * @brief OS identification.
+ */
 #if defined(__linux__)
 #define CARBON_TARGET_OS "linux"
 #elif defined(__APPLE__)
@@ -135,6 +151,9 @@
 #error Target OS is not supported
 #endif
 
+/**
+ * @brief Compiler identification.
+ */
 #define CARBON_COMPILER_PRAGMA(x) _Pragma(#x)
 #if defined(__clang__)  // LLVM
 #if defined(_WIN32) && defined(__MINGW64__)  // MinGW-LLVM
@@ -174,6 +193,55 @@
 #define CARBON_COMPILER CARBON_CXX_COMPILER
 #else
 #define CARBON_COMPILER CARBON_C_COMPILER
+#endif
+
+/**
+ * @brief SIMD instructions identification.
+ */
+#ifdef CARBON_SIMD_INTRINSICS
+// AVX
+#if defined(__FMA__) && defined(__AVX2__)
+#define CARBON_SIMD_HAS_FMA_AVX2
+#include <immintrin.h>
+#elif defined(__FMA__) && defined(__AVX__)
+#define CARBON_SIMD_HAS_FMA_AVX
+#include <immintrin.h>
+#elif defined(__AVX2__)
+#define CARBON_SIMD_HAS_AVX2
+#include <immintrin.h>
+#elif defined(__AVX__)
+#define CARBON_SIMD_HAS_AVX
+#include <immintrin.h>
+#endif
+// SSE
+#if defined(__SSE4_2__)
+#define CARBON_SIMD_HAS_SSE42
+#include <nmmintrin.h>
+#elif defined(__SSE4_1__)
+#define CARBON_SIMD_HAS_SSE41
+#include <smmintrin.h>
+#elif defined(__SSSE3__)
+#define CARBON_SIMD_HAS_SSSE3
+#include <tmmintrin.h>
+#elif defined(__SSE3__)
+#define CARBON_SIMD_HAS_SSE3
+#include <pmmintrin.h>
+#elif defined(__SSE2__) || defined(_M_AMD64)
+#define CARBON_SIMD_HAS_SSE2
+#include <emmintrin.h>
+#elif defined(__SSE__)
+#define CARBON_SIMD_HAS_SSE
+#include <xmmintrin.h>
+#endif
+// NEON
+#if defined(__ARM_NEON) || defined(__aarch64__)
+#if defined(__ARM_FEATURE_FMA)
+#define CARBON_SIMD_HAS_NEON_FMA
+#else
+#define CARBON_SIMD_HAS_NEON
+#endif
+#include <arm_neon.h>
+#endif
 #endif
 
 // Local Variables:
