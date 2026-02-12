@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_Quat carbon_math_quat_id(void) {
   return carbon_math_quat(0, 0, 0, 1);
 }

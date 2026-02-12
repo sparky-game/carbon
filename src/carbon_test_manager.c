@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 static CBN_Suite carbon_test_manager__test_suite;
 static CBN_CmdArgs carbon_test_manager__cmd_args;
 
@@ -20,8 +18,8 @@ void carbon_test_manager_argparse(i32 argc, char * const *argv) {
     "  -v, --version    output version information and exit\n"
     "\n"
     "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
-    "%s homepage: <https://github.com/sparky-game/carbon>\n";
-  static const char * const version_msg = "%s %s\n"
+    CARBON_LIBNAME " homepage: <https://github.com/sparky-game/carbon>\n";
+  static const char * const version_msg = CARBON_LIBNAME " " CARBON_VERSION_STR "\n"
     "Copyright (C) Wasym A. Alonso. All Rights Reserved.\n"
     "License AGPL-3.0-only: <https://www.gnu.org/licenses/agpl-3.0>.\n"
     "This is free software: you are free to change and redistribute it.\n"
@@ -38,11 +36,11 @@ void carbon_test_manager_argparse(i32 argc, char * const *argv) {
     return;
   }
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-h") || !carbon_string_cmp(argv[1], "--help"))) {
-    carbon_print(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME, CARBON_NAME);
+    carbon_print(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME);
     exit(0);
   }
   if (argc == 2 && (!carbon_string_cmp(argv[1], "-v") || !carbon_string_cmp(argv[1], "--version"))) {
-    carbon_print(version_msg, CARBON_NAME, CARBON_VERSION);
+    carbon_print(version_msg);
     exit(0);
   }
   CBN_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
@@ -162,7 +160,7 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
 }
 
 u8 carbon_test_manager_run_s(CBN_Suite *s) {
-  carbon_cprintln(CARBON_COLOR_CYAN, "*** %s (%s) ***", CARBON_NAME, CARBON_VERSION);
+  carbon_cprintln(CARBON_COLOR_CYAN, "*** " CARBON_LIBNAME " (" CARBON_VERSION_STR ") ***");
   carbon_println("=======================================");
   if (!s->tests || !s->n) {
     CBN_ERROR("`(Suite *) s` has not been initialized");

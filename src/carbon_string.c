@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_STRING_FMT_MAX_LEN     1024
 #define CARBON_STRING_FMT_MAX_BUFFERS 64
 

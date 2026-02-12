@@ -1,13 +1,22 @@
 /*
-**  $$==========================$$
-**  ||       Test Manager       ||
-**  $$==========================$$
+  $$==========================$$
+  ||       Test Manager       ||
+  $$==========================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#pragma once
+#ifdef CARBON_TESTING_ENTRY
+#define main(...)                                 \
+  main(int argc, char **argv) {                   \
+    carbon_test_manager_argparse(argc, argv);     \
+    carbon_test_manager_rebuild(__FILE__, argv);  \
+    return carbon_main();                         \
+  };                                              \
+  int carbon_main(__VA_ARGS__)
+
+CBNDEF int carbon_main(void);
+#endif
 
 #define CARBON_RUN_ALL carbon_test_manager_run
 #define CARBON_REGISTER_TEST(f) carbon_test_manager_register(f, CARBON_QUOTE(f), __FILE__)

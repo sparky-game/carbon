@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 void *carbon_memory_alloc(usz size) {
   void *p = __builtin_malloc(size);
   CBN_ASSERT(p && "failed to allocate memory");

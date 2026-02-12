@@ -1,13 +1,10 @@
 /*
-**  $$=======================$$
-**  ||       NeuralNet       ||
-**  $$=======================$$
+  $$=======================$$
+  ||       NeuralNet       ||
+  $$=======================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 #define CARBON_NN_IN(nn) (CBN_ASSERT((nn).arch_count > 0), (nn).as[0])
 #define CARBON_NN_OUT(nn) (CBN_ASSERT((nn).arch_count > 0), (nn).as[(nn).arch_count - 1])

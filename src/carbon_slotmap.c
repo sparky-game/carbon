@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBNINL u8 carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
   if (carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).gen != key.gen) return false;
   return true;

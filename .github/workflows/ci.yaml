@@ -5,25 +5,23 @@ on:
     branches: [master]
     paths:
       - '.github/workflows/ci.yaml'
-      - 'src/**'
-      - 'src_build/**'
-      - 'src_test/**'
-      - 'thirdparty/**'
-      - 'examples/**/*.c'
-      - 'examples/**/*.cc'
       - 'carbon.h.in'
+      - 'src/**'
+      - 'src_test/**'
+      - 'src_build/**'
+      - 'thirdparty/**'
+      - 'how_to/**'
   pull_request:
     branches: [master]
     types: [opened, synchronize]
     paths:
       - '.github/workflows/ci.yaml'
-      - 'src/**'
-      - 'src_build/**'
-      - 'src_test/**'
-      - 'thirdparty/**'
-      - 'examples/**/*.c'
-      - 'examples/**/*.cc'
       - 'carbon.h.in'
+      - 'src/**'
+      - 'src_test/**'
+      - 'src_build/**'
+      - 'thirdparty/**'
+      - 'how_to/**'
   schedule:
     - cron: '0 9 * * 5'
 
@@ -38,8 +36,6 @@ jobs:
     permissions:
       security-events: write
     strategy:
-      matrix:
-        compiler: [gcc, clang]
       fail-fast: false
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
@@ -57,13 +53,7 @@ jobs:
             libxcursor-dev        \
             libxrandr-dev         \
             libxi-dev
-      - name: bootstrap
-        run: ${{ matrix.compiler }} -std=c11 src_build/make.c -o make
       - name: build
-        run: ./make build
-      - name: test
-        run: ./make test
-      - name: examples
-        run: ./make examples
+        run: ./src_build/make.cc build
       - name: analyze
         uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 void carbon_sort_insertion(void *p, usz n, usz w, CBN_Sort_CmpFunc f_cmp) {
   u8 *a = (u8 *) p;
   u8 t[w];

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS      4
 #define CARBON_CRYPTO_SHA256_MAX_HEX_CSTRS    4
 #define CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS 4

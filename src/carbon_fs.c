@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define STBI_MALLOC  carbon_memory_alloc
 #define STBI_REALLOC carbon_memory_realloc
 #define STBI_FREE    carbon_memory_free
@@ -297,6 +295,10 @@ CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
 }
 
 u32 carbon_fs_get_file_size(const char *file) {
+  if (!carbon_fs_is_regular_file(file)) {
+    CBN_ERROR("file (`%s`) needs to be regular", file);
+    return 0;
+  }
   FILE *fd = fopen(file, "rb");
   if (!fd) {
     CBN_ERROR("unable to open file (`%s`)", file);
@@ -316,12 +318,12 @@ u32 carbon_fs_get_file_size(const char *file) {
 }
 
 bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
+  u32 n = carbon_fs_get_file_size(file);
   FILE *fd = fopen(file, "rb");
   if (!fd) {
     CBN_ERROR("unable to open file (`%s`)", file);
     return false;
   }
-  u32 n = carbon_fs_get_file_size(file);
   usz count = sb->size + n;
   if (count > sb->capacity) {
     sb->items = (char *) carbon_memory_realloc(sb->items, count);

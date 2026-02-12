@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_NET__RESOLVE_DNS_MAX_BUFFERS 4
 
 bool carbon_net_is_valid_ipv4(const char *ip) {

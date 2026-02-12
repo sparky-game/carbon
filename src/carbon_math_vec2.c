@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_Vec2 carbon_math_vec2(f32 x, f32 y) {
   return (CBN_Vec2){.c = {x, y}};
 }

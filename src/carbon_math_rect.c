@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_Rect carbon_math_rect(f32 x, f32 y, f32 w, f32 h) {
   return (CBN_Rect){x, y, w, h};
 }

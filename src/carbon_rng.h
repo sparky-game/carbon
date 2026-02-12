@@ -1,13 +1,10 @@
 /*
-**  $$============================================$$
-**  ||       Random Number Generators (RNG)       ||
-**  $$============================================$$
+  $$============================================$$
+  ||       Random Number Generators (RNG)       ||
+  $$============================================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 /**
  * @brief Generates a pseudo-random 32-bit unsigned integer using a Linear Congruential Generator (LCG).

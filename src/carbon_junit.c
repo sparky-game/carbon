@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define ISO_8601_FMT "%Y-%m-%dT%H:%M:%S%z"
 
 void carbon_junit_output(const CBN_List junit_tcs, const char *out_filename, const usz failed, const f64 runtime) {

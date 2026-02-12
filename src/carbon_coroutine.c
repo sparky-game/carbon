@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_COROUTINE__STACK_CAPACITY (1024 * getpagesize())
 
 #if defined(__linux__) && (defined(__amd64__) || defined(_M_AMD64))
@@ -311,7 +309,7 @@ usz carbon_coroutine_alive(void) {
   return carbon_coroutine__active.size;
 }
 
-void carbon_coroutine_go(void (*f)(void *), void *arg) {
+void carbon_coroutine_create(void (*f)(void *), void *arg) {
   usz id;
   if (carbon_coroutine__dead.size) {
     --carbon_coroutine__dead.size;

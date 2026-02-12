@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 struct CBN_Camera {
   CBN_Camera_Type type;
   CBN_Vec3 position;
@@ -37,17 +35,17 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc) {
     CBN_WARN("`c` is not a valid pointer, skipping reset");
     return;
   }
-  c->position = carbon_math_vec3_1(0);
-  c->yaw = 0;
-  c->pitch = 0;
-  c->rotation = carbon_math_quat_id();
-  c->view = carbon_math_mat4_view(c->position, c->rotation);
-  c->fov = 60;
-  c->aspect = (f32) dc->width / dc->height;
-  c->near = 0.1;
-  c->far = 100.0;
-  c->type = CARBON_CAMERA_TYPE_PERSPECTIVE;
-  c->proj = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
+  c->position   = carbon_math_vec3_1(0);
+  c->yaw        = 0;
+  c->pitch      = 0;
+  c->rotation   = carbon_math_quat_id();
+  c->view       = carbon_math_mat4_view(c->position, c->rotation);
+  c->fov        = 60;
+  c->aspect     = (f32) carbon_drawcanvas_width(dc) / carbon_drawcanvas_height(dc);
+  c->near       = 0.1;
+  c->far        = 100.0;
+  c->type       = CARBON_CAMERA_TYPE_PERSPECTIVE;
+  c->proj       = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
   c->ortho_size = 1;
 }
 

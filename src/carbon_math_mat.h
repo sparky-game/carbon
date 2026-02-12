@@ -1,13 +1,10 @@
 /*
-**  $$========================$$
-**  ||       Math (Mat)       ||
-**  $$========================$$
+  $$========================$$
+  ||       Math (Mat)       ||
+  $$========================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 typedef struct {
   f32 *items;

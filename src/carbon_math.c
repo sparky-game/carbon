@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 u32 carbon_math_bswap32(u32 x) {
 #if CARBON_HAS_BUILTIN(__builtin_bswap32)
   return __builtin_bswap32(x);

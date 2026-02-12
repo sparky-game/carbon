@@ -1,13 +1,10 @@
 /*
-**  $$=====================$$
-**  ||       Sorting       ||
-**  $$=====================$$
+  $$=====================$$
+  ||       Sorting       ||
+  $$=====================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 /**
  * @brief ...
@@ -17,7 +14,7 @@
  * @return ...
  */
 typedef i32 (*CBN_Sort_CmpFunc)(const void *, const void *);
-CBNDEF_T(cbn::sort, CmpFunc, CBN_Sort_CmpFunc);
+CBNDEF_AKA(cbn::sort, CmpFunc, CBN_Sort_CmpFunc);
 
 /**
  * @brief ...

@@ -25,10 +25,8 @@ jobs:
             libxcursor-dev        \
             libxrandr-dev         \
             libxi-dev
-      - name: bootstrap
-        run: cc -std=c11 src_build/make.c -o make
       - name: package
-        run: ./make
+        run: ./src_build/make.cc
       - name: release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         with:

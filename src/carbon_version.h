@@ -1,20 +1,21 @@
 /*
-**  $$=====================$$
-**  ||       Version       ||
-**  $$=====================$$
+  $$=====================$$
+  ||       Version       ||
+  $$=====================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#pragma once
-
 /**
  * @brief Gets the library API version at runtime.
- * @param major The major component of the version (output argument pointer).
- * @param minor The minor component of the version (output argument pointer).
- * @param patch The patch component of the version (output argument pointer).
- * @return The full version string formatted as `vX.Y.Z[-EXTRA]`.
+ * @return The version packed in u32 ([0x00, 0xMM, 0xNN, 0xPP]).
  */
-CBNDEF char *carbon_version(usz *major, usz *minor, usz *patch);
+CBNDEF u32 carbon_version(void);
 CBNDEF_FN(cbn, Version, carbon_version);
+
+/**
+ * @brief Gets the library API version (as string) at runtime.
+ * @return The version as a string.
+ */
+CBNDEF char *carbon_version_str(void);
+CBNDEF_FN(cbn, VersionStr, carbon_version_str);

@@ -1,13 +1,10 @@
 /*
-**  $$====================$$
-**  ||       String       ||
-**  $$====================$$
+  $$====================$$
+  ||       String       ||
+  $$====================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 /**
  * @brief Gets the number of characters in a C-style string.

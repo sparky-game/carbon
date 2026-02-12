@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 static i32 carbon_strlist__find_idx(CBN_StrList *sl, const char *s) {
   for (usz i = 0; i < sl->size; ++i) {
     if (!carbon_string_cmp(sl->items[i], s)) return i;

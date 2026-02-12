@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_NeuralNet carbon_nn_create(usz *arch, usz arch_count) {
   CBN_ASSERT(arch_count > 0);
   CBN_NeuralNet nn = {

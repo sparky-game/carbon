@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
+u32 carbon_version(void) {
+  return CARBON_VERSION;
+}
 
-char *carbon_version(usz *major, usz *minor, usz *patch) {
-  if (major) *major = CARBON_VERSION_MAJOR;
-  if (minor) *minor = CARBON_VERSION_MINOR;
-  if (patch) *patch = CARBON_VERSION_PATCH;
-  return (char *) CARBON_VERSION;
+char *carbon_version_str(void) {
+  return CARBON_VERSION_STR;
 }

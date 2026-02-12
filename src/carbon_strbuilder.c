@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv) {
   if (sb->size + sv.size > sb->capacity) {
     if (!sb->capacity) sb->capacity = 256;

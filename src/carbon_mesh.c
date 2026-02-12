@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_MESH__SZ_V  (m->metadata.vertices_count * sizeof(CBN_Vec3))
 #define CARBON_MESH__SZ_VT (m->metadata.texcoords_count * sizeof(CBN_Vec2))
 #define CARBON_MESH__SZ_VN (m->metadata.normals_count * sizeof(CBN_Vec3))

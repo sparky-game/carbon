@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_HashMap carbon_hashmap_create(usz capacity, usz stride) {
   CBN_HashMap_Node **buckets = (CBN_HashMap_Node **) carbon_memory_alloc(capacity * sizeof(CBN_HashMap_Node *));
   for (usz i = 0; i < capacity; ++i) buckets[i] = 0;

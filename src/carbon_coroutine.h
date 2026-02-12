@@ -1,13 +1,10 @@
 /*
-**  $$=======================$$
-**  ||       Coroutine       ||
-**  $$=======================$$
+  $$=======================$$
+  ||       Coroutine       ||
+  $$=======================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 /**
  * @brief Obtains the ID of the coroutine that governs the current scope.
@@ -32,7 +29,7 @@ CBNDEF_FN(cbn::co, Alive, carbon_coroutine_alive);
  * @param f The function containing the body of the coroutine.
  * @param arg The arbitrary amount of arguments passed to `f`.
  */
-CBNDEF void carbon_coroutine_go(void (*f)(void *), void *arg);
+CBNDEF void carbon_coroutine_create(void (*f)(void *), void *arg);
 
 /**
  * @brief Puts the current coroutine to sleep, and switches execution to the next one.

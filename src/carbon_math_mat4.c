@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
+#include "carbon_math_mat4_simd.inl"
 
 CBN_Mat4 carbon_math_mat4_zero(void) {
   return (CBN_Mat4) {
@@ -42,12 +42,16 @@ CBN_Vec3 carbon_math_mat4_mult_vec3(CBN_Mat4 m, CBN_Vec3 v) {
 }
 
 CBN_Vec4 carbon_math_mat4_mult_vec4(CBN_Mat4 m, CBN_Vec4 v) {
+#ifdef CARBON_SIMD_INTRINSICS
+  return carbon_math_mat4_mult_vec4__simd(m, v);
+#else
   return (CBN_Vec4) {
     .x = v.x * m.m[0][0] + v.y * m.m[0][1] + v.z * m.m[0][2] + v.w * m.m[0][3],
     .y = v.x * m.m[1][0] + v.y * m.m[1][1] + v.z * m.m[1][2] + v.w * m.m[1][3],
     .z = v.x * m.m[2][0] + v.y * m.m[2][1] + v.z * m.m[2][2] + v.w * m.m[2][3],
     .w = v.x * m.m[3][0] + v.y * m.m[3][1] + v.z * m.m[3][2] + v.w * m.m[3][3]
   };
+#endif
 }
 
 CBN_Mat4 carbon_math_mat4_from_quat(CBN_Quat q) {

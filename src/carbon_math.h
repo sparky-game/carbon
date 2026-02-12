@@ -1,13 +1,10 @@
 /*
-**  $$==================$$
-**  ||       Math       ||
-**  $$==================$$
+  $$==================$$
+  ||       Math       ||
+  $$==================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 #define CARBON_E        2.71828182845904523536
 #define CARBON_E_0_5    1.64872127070012814684
@@ -106,6 +103,7 @@ CBNDEF_FN(cbn::math, Round, carbon_math_round);
  * @return The largest integral value ≤ x.
  */
 CBNDEF f32 carbon_math_floor(f32 x);
+CBNDEF_FN(cbn::math, Floor, carbon_math_floor);
 
 /**
  * @brief Returns the smallest integral value great than or equal to the specified number.
@@ -113,6 +111,7 @@ CBNDEF f32 carbon_math_floor(f32 x);
  * @return The smallest integral value ≥ x.
  */
 CBNDEF f32 carbon_math_ceil(f32 x);
+CBNDEF_FN(cbn::math, Ceil, carbon_math_ceil);
 
 /**
  * @brief Restricts a number between a minimum and a maximum value.
@@ -137,6 +136,7 @@ CBNDEF f32 carbon_math_snap(f32 x, f32 dx);
  * @return The positive square root of x, provided x ≥ 0.
  */
 CBNDEF f32 carbon_math_sqrt(f32 x);
+CBNDEF_FN(cbn::math, Sqrt, carbon_math_sqrt);
 
 /**
  * @brief Returns the reciprocal (multiplicative inverse) of the square root of a specified number.
@@ -168,6 +168,7 @@ CBNDEF f32 carbon_math_fmod(f32 x, f32 y);
  * @return The result of x^y.
  */
 CBNDEF f32 carbon_math_pow(f32 x, f32 y);
+CBNDEF_FN(cbn::math, Pow, carbon_math_pow);
 
 /**
  * @brief Returns the base-2 logarithm of the specified number.
@@ -182,6 +183,7 @@ CBNDEF f32 carbon_math_log2(f32 x);
  * @return The result of 2^x.
  */
 CBNDEF f32 carbon_math_exp2(f32 x);
+CBNDEF_FN(cbn::math, Exp2, carbon_math_exp2);
 
 /**
  * @brief Multiplies a number by an integer power of 2.
@@ -227,6 +229,7 @@ CBNDEF f32 carbon_math_log10(f32 x);
  * @return The result of 10^x.
  */
 CBNDEF f32 carbon_math_exp10(f32 x);
+CBNDEF_FN(cbn::math, Exp10, carbon_math_exp10);
 
 /**
  * @brief Multiplies a number by an integer power of 10.
@@ -243,6 +246,7 @@ CBNDEF f32 carbon_math_ldexp10(f32 x, i32 exp);
  * @return A number y, such that 1/2 ≤ y < 1 and x = y * 2^n.
  */
 CBNDEF f32 carbon_math_frexp(f32 x, i32 *n);
+CBNDEF_FN(cbn::math, Frexp, carbon_math_frexp);
 
 /**
  * @brief Computes the logistic function (S-shaped sigmoid function/curve), mapping a number to a value in [0..1].
@@ -250,6 +254,7 @@ CBNDEF f32 carbon_math_frexp(f32 x, i32 *n);
  * @return The result of the application of the function.
  */
 CBNDEF f32 carbon_math_sigmoid(f32 x);
+CBNDEF_FN(cbn::math, Sigmoid, carbon_math_sigmoid);
 
 /**
  * @brief Performs linear interpolation from a to b by factor t.
@@ -281,6 +286,8 @@ CBNDEF_FN(cbn::math, SmoothStep, carbon_math_smoothstep);
  *   - If x ± ε ≈ y, then 0.
  */
 CBNDEF i8 carbon_math_cmp(f32 x, f32 y);
+CBNDEF_FN(cbn::math, Compare, carbon_math_cmp);
+CBNDEF_FN(cbn::math, cmp, Compare);
 
 /**
  * @brief Concatenates two unsigned integers together (e.g. `10` || `69` :: `1069`).
@@ -289,6 +296,7 @@ CBNDEF i8 carbon_math_cmp(f32 x, f32 y);
  * @return The unsigned integer representing their concatenation.
  */
 CBNDEF u64 carbon_math_concat(u64 x, u64 y);
+CBNDEF_FN(cbn::math, Concat, carbon_math_concat);
 
 /**
  * @brief Returns the Greatest Common Divisor (using Euclidean algorithm) of two integers.
@@ -297,6 +305,7 @@ CBNDEF u64 carbon_math_concat(u64 x, u64 y);
  * @return The GCD of `x` and `y`.
  */
 CBNDEF i32 carbon_math_egcd(i32 x, i32 y);
+CBNDEF_FN(cbn::math, eGCD, carbon_math_egcd);
 
 /**
  * @brief Returns the sine of the specified angle.
@@ -336,6 +345,7 @@ CBNDEF_FN(cbn::math, Tanh, carbon_math_tanh);
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
 CBNDEF f32 carbon_math_asin(f32 x);
+CBNDEF_FN(cbn::math, Asin, carbon_math_asin);
 
 /**
  * @brief Returns the angle whose tangent is the specified number.

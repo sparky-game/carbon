@@ -1,13 +1,10 @@
 /*
-**  $$=========================$$
-**  ||       Math (Quat)       ||
-**  $$=========================$$
+  $$=========================$$
+  ||       Math (Quat)       ||
+  $$=========================$$
 */
-
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
-
-#pragma once
 
 /**
  * @brief Represents a 4D vector that is used to encode 3D physical rotations.
@@ -16,7 +13,7 @@
  * by the angle θ, where `w = cos(θ/2)`.
  */
 typedef CBN_Vec4 CBN_Quat;
-CBNDEF_T(cbn::math, Quat, CBN_Quat);
+CBNDEF_AKA(cbn::math, Quat, CBN_Quat);
 
 /**
  * @brief Creates a quaternion.
@@ -72,7 +69,6 @@ CBNDEF CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
 /**
  * @brief Scales the quaternion by the specified scalar value.
  */
-//CBNDEF CBN_Quat carbon_math_quat_scale(CBN_Quat q, f32 s);
 #define carbon_math_quat_scale carbon_math_vec4_scale
 
 /**

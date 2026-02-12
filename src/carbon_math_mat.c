@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_Mat carbon_math_mat_create(usz rows, usz cols) {
   return (CBN_Mat) {
     .items = (f32 *) carbon_memory_alloc(rows * cols * sizeof(f32)),

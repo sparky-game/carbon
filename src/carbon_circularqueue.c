@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBN_CircularQueue carbon_circularqueue_create(usz capacity, usz stride) {
   return (CBN_CircularQueue) {
     .items = carbon_memory_alloc(capacity * stride),

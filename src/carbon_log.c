@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define carbon_log__printv(stream, x) fprintf(stream, carbon_log__var_to_spec(x), (x))
 
 CBNINL void carbon_log__print_boxed_var(FILE *stream, CBN_Log_BoxedVar x) {

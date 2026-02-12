@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 u32 carbon_color_from_hsv(f32 h, f32 s, f32 v) {
   f32 k = carbon_math_fmod(5 + h/60, 6);
   k = carbon_math_clamp(CARBON_MIN(4 - k, k), 0, 1);

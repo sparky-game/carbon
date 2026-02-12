@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 static CBN_SlotMap carbon_mesh__library;
 
 void carbon_mesh_manager_init(void) {

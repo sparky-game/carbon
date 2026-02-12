@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_LIST__RESIZE_FACTOR 2
 #define CARBON_LIST__FIRST_ALLOC_CAPACITY 2
 

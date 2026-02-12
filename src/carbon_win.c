@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 #define CARBON_WIN__DLDECL(name)                \
   typedef typeof(&name) name ## _ptr_t;         \
   static name ## _ptr_t name ## _ptr;
@@ -63,6 +61,12 @@ static bool carbon_win__keys[RGFW_keyLast];
 static bool carbon_win__prev_keys[RGFW_keyLast];
 static bool carbon_win__mouse_buttons[RGFW_mouseFinal];
 static bool carbon_win__prev_mouse_buttons[RGFW_mouseFinal];
+
+static pthread_t carbon_win__thread_id;
+static pthread_mutex_t carbon_win__thread_mut = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t carbon_win__thread_cond = PTHREAD_COND_INITIALIZER;
+static _Atomic bool carbon_win__thread_running;
+static _Atomic bool carbon_win__thread_ready;
 
 CBNINL void carbon_win__dl_open(void) {
 #if defined(__APPLE__)
@@ -205,9 +209,54 @@ CBNINL void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton
   carbon_win__mouse_buttons[button] = pressed ? true : false;
 }
 
+CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas *dc) {
+  RGFW_window *w = carbon_win__handle;
+  if (w->bufferSize.w == (u32) w->r.w && w->bufferSize.h == (u32) w->r.h) return;
+  w->bufferSize.w = w->r.w;
+  w->bufferSize.h = w->r.h;
+  CBN_DEBUG("buffer = %zux%zu", w->bufferSize.w, w->bufferSize.h);
+  const usz sz = w->bufferSize.w * w->bufferSize.h * 4;
+  w->buffer = (u8 *) carbon_memory_realloc(w->buffer, sz);
+  carbon_memory_set(w->buffer, 0, sz);
+  carbon_win__rebuild_xtable(w->bufferSize.w, carbon_drawcanvas_width(dc));
+  carbon_win__rebuild_ytable(w->bufferSize.h, carbon_drawcanvas_height(dc));
+}
+
+CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas *dc) {
+  // Nearest-neighbor interpolation algorithm
+  const u32 * restrict src = carbon_drawcanvas_pixels(dc);
+  const usz src_w = carbon_drawcanvas_width(dc);
+  u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
+  const usz dst_w = carbon_win__handle->bufferSize.w, dst_h = carbon_win__handle->bufferSize.h;
+  for (usz j = 0; j < dst_h; ++j) {
+    const usz y = carbon_win__ytable[j];
+    const u32 *r = src + y * src_w;
+    for (usz i = 0; i < dst_w; ++i) {
+      const usz x = carbon_win__xtable[i];
+      *dst++ = carbon_math_bswap32(r[x]);
+    }
+  }
+}
+
+CBNINL void *carbon_win__thread_fn(void *arg) {
+  const CBN_DrawCanvas *dc = (const CBN_DrawCanvas *)arg;
+  while (atomic_load(&carbon_win__thread_running)) {
+    pthread_mutex_lock(&carbon_win__thread_mut);
+    while (!atomic_load(&carbon_win__thread_ready) && atomic_load(&carbon_win__thread_running)) {
+      pthread_cond_wait(&carbon_win__thread_cond, &carbon_win__thread_mut);
+    }
+    pthread_mutex_unlock(&carbon_win__thread_mut);
+    if (atomic_exchange(&carbon_win__thread_ready, false)) {
+      carbon_win__resize_buf(dc);
+      carbon_win__upscale_buf(dc);
+    }
+  }
+  return 0;
+}
+
 void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   carbon_win__dl_open();
-  const usz w = dc->width, h = dc->height;
+  const usz w = carbon_drawcanvas_width(dc), h = carbon_drawcanvas_height(dc);
   carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter);
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(w, h));
   // TODO: investigate the height offset thing (+28) in other systems
@@ -220,9 +269,16 @@ void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   RGFW_setWindowResizeCallback(carbon_win__resize_callback);
   RGFW_setKeyCallback(carbon_win__key_callback);
   RGFW_setMouseButtonCallback(carbon_win__mouse_button_callback);
+  atomic_store(&carbon_win__thread_running, true);
+  CBN_ASSERT(0 == pthread_create(&carbon_win__thread_id, 0, carbon_win__thread_fn, (void *)dc));
 }
 
 void carbon_win_close(void) {
+  pthread_mutex_lock(&carbon_win__thread_mut);
+  atomic_store(&carbon_win__thread_running, false);
+  pthread_cond_signal(&carbon_win__thread_cond);
+  pthread_mutex_unlock(&carbon_win__thread_mut);
+  pthread_join(carbon_win__thread_id, 0);
   carbon_memory_free(carbon_win__xtable);
   carbon_memory_free(carbon_win__ytable);
   if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
@@ -274,38 +330,12 @@ u32 carbon_win_get_fps(void) {
   return carbon_win__fps;
 }
 
-CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas *dc) {
-  RGFW_window *w = carbon_win__handle;
-  if (w->bufferSize.w == (u32) w->r.w && w->bufferSize.h == (u32) w->r.h) return;
-  w->bufferSize.w = w->r.w;
-  w->bufferSize.h = w->r.h;
-  CBN_DEBUG("buffer = %zux%zu", w->bufferSize.w, w->bufferSize.h);
-  const usz sz = w->bufferSize.w * w->bufferSize.h * 4;
-  w->buffer = (u8 *) carbon_memory_realloc(w->buffer, sz);
-  carbon_memory_set(w->buffer, 0, sz);
-  carbon_win__rebuild_xtable(w->bufferSize.w, dc->width);
-  carbon_win__rebuild_ytable(w->bufferSize.h, dc->height);
-}
-
-CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas *dc) {
-  // Nearest-neighbor interpolation algorithm
-  const u32 * restrict src = dc->pixels;
-  const usz src_w = dc->width;
-  u32 * restrict dst = (u32 *) carbon_win__handle->buffer;
-  const usz dst_w = carbon_win__handle->bufferSize.w, dst_h = carbon_win__handle->bufferSize.h;
-  for (usz j = 0; j < dst_h; ++j) {
-    const usz y = carbon_win__ytable[j];
-    const u32 *r = src + y * src_w;
-    for (usz i = 0; i < dst_w; ++i) {
-      const usz x = carbon_win__xtable[i];
-      *dst++ = carbon_math_bswap32(r[x]);
-    }
-  }
-}
-
 void carbon_win_update(const CBN_DrawCanvas *dc) {
-  carbon_win__resize_buf(dc);
-  carbon_win__upscale_buf(dc);
+  CARBON_UNUSED(dc);
+  pthread_mutex_lock(&carbon_win__thread_mut);
+  atomic_store(&carbon_win__thread_ready, true);
+  pthread_cond_signal(&carbon_win__thread_cond);
+  pthread_mutex_unlock(&carbon_win__thread_mut);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }

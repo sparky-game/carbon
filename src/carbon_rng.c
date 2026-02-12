@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include "carbon.inc"
-
 CBNINL u32 carbon_rng__seed(void) {
   f64 t = carbon_time_get();
   union { f64 f; u64 i; } u = {t};
