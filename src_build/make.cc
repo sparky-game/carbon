@@ -7,8 +7,9 @@ exit;
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #include <cstdio>
-#include <format>
 #include <cassert>
+#include <cstring>
+#include <format>
 #include <fstream>
 #include <filesystem>
 namespace fs = std::filesystem;
