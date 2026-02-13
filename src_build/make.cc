@@ -1,6 +1,6 @@
 #if 0  // https://stackoverflow.com/a/29709521
 EXE="/tmp/a.out";
-c++ -std=c++20 -O3 -W "$0" -o $EXE && $EXE "$@";
+c++ -std=c++20 -O3 "$0" -o $EXE && $EXE "$@";
 exit;
 #endif
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -54,7 +54,7 @@ void prepare_unity_build(void) {
 
 void compile_and_link_lib(void) {
   printf("  CC      " OBJ_FILE "\n");
-  RunCmd(CC " -O3 -fPIC -W -c " SRC_FILE " -o " OBJ_FILE);
+  RunCmd(CC " -O3 -fPIC " WARNS " -c " SRC_FILE " -o " OBJ_FILE);
   printf("  AR      " BUILD_DIR "/" LIB_FILE "\n");
   RunCmd("ar -rcs " BUILD_DIR "/" LIB_FILE " " OBJ_FILE);
   printf("  LD      " BUILD_DIR "/" DLL_FILE "\n");
@@ -67,7 +67,7 @@ void compile_and_link_lib(void) {
 
 void test(void) {
   printf("  EXEC    " TEST_EXE "\n");
-  RunCmd(CXX " -O3 -W -Wno-return-type-c-linkage -I" BUILD_DIR " -I" TEST_DIR " " TEST_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " TEST_EXE);
+  RunCmd(CXX " -O3 " WARNS " -I" BUILD_DIR " -I" TEST_DIR " " TEST_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " TEST_EXE);
   RunCmd(TEST_EXE " -n");
   assert(fs::remove(TEST_EXE));
 }
@@ -80,14 +80,14 @@ void build_tutorials(void) {
     const auto f = p.replace_extension().c_str();
     if (ext == ".cc") {
       printf("  CXXLD   %s\n", f);
-      RunCmd(std::format(CXX " -O3 -W -Wno-return-type-c-linkage -I" BUILD_DIR " {}.cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o {}.exe", f, f).c_str());
+      RunCmd(std::format(CXX " -O3 " WARNS " -I" BUILD_DIR " {}.cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o {}.exe", f, f).c_str());
     }
   }
 }
 
 void create_skap_for_tutorials(void) {
   printf("  EXEC    " PACKER_EXE "\n");
-  RunCmd(CXX " -O3 -W -Wno-return-type-c-linkage -I" BUILD_DIR " " PACKER_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " PACKER_EXE);
+  RunCmd(CXX " -O3 " WARNS " -I" BUILD_DIR " " PACKER_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " PACKER_EXE);
   RunCmd(PACKER_EXE);
   assert(fs::remove(PACKER_EXE));
 }

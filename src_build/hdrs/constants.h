@@ -30,6 +30,8 @@
 #define CXX_STD "-std=c++20"
 #define CXX     "c++ " CXX_STD
 
+#define WARNS "-Wall -Wextra -Wno-return-type-c-linkage"
+
 #if defined(__APPLE__)
 #define LDFLAGS "-framework CoreFoundation -lobjc"
 #elif defined (_WIN32)
