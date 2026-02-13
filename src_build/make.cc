@@ -14,8 +14,8 @@ exit;
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include "hdrs/utils.hh"
 #include "hdrs/constants.h"
+#include "hdrs/utils.hh"
 #include "hdrs/header_files.hh"
 
 void hdr_amalgamation(void) {
@@ -54,11 +54,11 @@ void prepare_unity_build(void) {
 
 void compile_and_link_lib(void) {
   printf("  CC      " OBJ_FILE "\n");
-  RunCmd(CC " -O3 -fPIC " WARNS " -c " SRC_FILE " -o " OBJ_FILE);
-  printf("  AR      " BUILD_DIR "/" LIB_FILE "\n");
-  RunCmd("ar -rcs " BUILD_DIR "/" LIB_FILE " " OBJ_FILE);
-  printf("  LD      " BUILD_DIR "/" DLL_FILE "\n");
-  RunCmd(CC " -O3 " OBJ_FILE " -shared " LDFLAGS " -o " BUILD_DIR "/" DLL_FILE);
+  RunCmd(CC_CMD " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
+  printf("  AR      " LIB_FILE "\n");
+  RunCmd("ar -rcs " LIB_FILE " " OBJ_FILE);
+  printf("  LD      " DLL_FILE "\n");
+  RunCmd(CC_CMD " " OBJ_FILE " -shared " LDFLAGS " -o " DLL_FILE);
   printf("  RM      " SRC_FILE "\n");
   assert(fs::remove(SRC_FILE));
   printf("  RM      " OBJ_FILE "\n");
@@ -66,10 +66,7 @@ void compile_and_link_lib(void) {
 }
 
 void test(void) {
-  printf("  EXEC    " TEST_EXE "\n");
-  RunCmd(CXX " -O3 " WARNS " -I" BUILD_DIR " -I" TEST_DIR " " TEST_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " TEST_EXE);
-  RunCmd(TEST_EXE " -n");
-  assert(fs::remove(TEST_EXE));
+  RunMetaprogram(TEST_EXE);
 }
 
 void build_tutorials(void) {
@@ -80,16 +77,13 @@ void build_tutorials(void) {
     const auto f = p.replace_extension().c_str();
     if (ext == ".cc") {
       printf("  CXXLD   %s\n", f);
-      RunCmd(std::format(CXX " -O3 " WARNS " -I" BUILD_DIR " {}.cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o {}.exe", f, f).c_str());
+      RunCmd(std::format(CXX_CMD " {0}.cc " LIB_FILE " " LDFLAGS " -o {0}.exe", f).c_str());
     }
   }
 }
 
 void create_skap_for_tutorials(void) {
-  printf("  EXEC    " PACKER_EXE "\n");
-  RunCmd(CXX " -O3 " WARNS " -I" BUILD_DIR " " PACKER_EXE ".cc " BUILD_DIR "/" LIB_FILE " " LDFLAGS " -o " PACKER_EXE);
-  RunCmd(PACKER_EXE);
-  assert(fs::remove(PACKER_EXE));
+  RunMetaprogram(PACKER_EXE);
 }
 
 void tutorials(void) {
@@ -98,10 +92,12 @@ void tutorials(void) {
 }
 
 void clean(void) {
-  if (fs::remove_all(BUILD_DIR)) printf("  RM      " BUILD_DIR "\n");
-  if (fs::remove(PKG_FILE))      printf("  RM      " PKG_FILE "\n");
-  if (fs::remove(OBJ_FILE))      printf("  RM      " OBJ_FILE "\n");
-  if (fs::remove(SRC_FILE))      printf("  RM      " SRC_FILE "\n");
+  if (fs::remove_all(BUILD_DIR)) printf("  RM      " BUILD_DIR  "\n");
+  if (fs::remove(SRC_FILE))      printf("  RM      " SRC_FILE   "\n");
+  if (fs::remove(OBJ_FILE))      printf("  RM      " OBJ_FILE   "\n");
+  if (fs::remove(PKG_FILE))      printf("  RM      " PKG_FILE   "\n");
+  if (fs::remove(TEST_EXE))      printf("  RM      " TEST_EXE   "\n");
+  if (fs::remove(PACKER_EXE))    printf("  RM      " PACKER_EXE "\n");
   for (const auto &e : fs::directory_iterator(TUTORIAL_DIR)) {
     if (!e.is_regular_file()) continue;
     const auto p = e.path();

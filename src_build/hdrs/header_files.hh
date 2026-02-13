@@ -31,7 +31,7 @@ static constexpr std::array c_HeaderFiles {
   "slotmap.hh",
   "string.h",
   "strview.hh",
-  "strbuilder.hh",
+  "strbuilder.h", "strbuilder.hh",
   "strlist.hh",
   "binary.h",
   "sprite.hh",

@@ -6,8 +6,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_JUNIT_XML_OUT_FILENAME "carbon_results.xml"
-
 typedef struct {
   char *name;
   u8 has_failed;

@@ -10,41 +10,22 @@ CBNINL void carbon_test_manager__cleanup_and_exit(void) {
 }
 
 void carbon_test_manager_argparse(i32 argc, char * const *argv) {
-  static const char * const help_msg = "usage: %s [OPTION]\n"
-    "Options:\n"
-    "  -n, --no-output  disable JUnit XML test results output\n"
-    "  -o, --output     output JUnit XML test results to specific file (default: `%s`)\n"
-    "  -h, --help       display this help and exit\n"
-    "  -v, --version    output version information and exit\n"
-    "\n"
-    "Report bugs to: <https://github.com/sparky-game/carbon/issues>\n"
-    CARBON_LIBNAME " homepage: <https://github.com/sparky-game/carbon>\n";
-  static const char * const version_msg = CARBON_LIBNAME " " CARBON_VERSION_STR "\n"
-    "Copyright (C) Wasym A. Alonso. All Rights Reserved.\n"
-    "License AGPL-3.0-only: <https://www.gnu.org/licenses/agpl-3.0>.\n"
-    "This is free software: you are free to change and redistribute it.\n"
-    "There is NO WARRANTY, to the extent permitted by law.\n"
-    "\n"
-    "Written by Wasym A. Alonso\n";
+  const char *help_msg = carbon_string_fmt("usage: %s [-o <FILE.xml>]", argv[0]);
   if (argc == 1) return;
-  if (argc == 2 && (!carbon_string_cmp(argv[1], "-n") || !carbon_string_cmp(argv[1], "--no-output"))) {
-    carbon_test_manager__cmd_args.no_output = true;
-    return;
-  }
   if (argc == 3 && (!carbon_string_cmp(argv[1], "-o") || !carbon_string_cmp(argv[1], "--output"))) {
     carbon_test_manager__cmd_args.output = argv[2];
     return;
   }
-  if (argc == 2 && (!carbon_string_cmp(argv[1], "-h") || !carbon_string_cmp(argv[1], "--help"))) {
-    carbon_print(help_msg, argv[0], CARBON_JUNIT_XML_OUT_FILENAME);
+  if (argc == 2 && (!carbon_string_cmp(argv[1], "-h")    ||
+                    !carbon_string_cmp(argv[1], "help")  ||
+                    !carbon_string_cmp(argv[1], "-help") ||
+                    !carbon_string_cmp(argv[1], "--help"))) {
+    carbon_println(help_msg);
     exit(0);
   }
-  if (argc == 2 && (!carbon_string_cmp(argv[1], "-v") || !carbon_string_cmp(argv[1], "--version"))) {
-    carbon_print(version_msg);
-    exit(0);
-  }
-  CBN_ERROR("unrecognized option\n    Try '%s --help' for more information.", argv[0]);
-  exit(1);
+  CBN_ERROR("unrecognized option");
+  carbon_println(help_msg);
+  CARBON_UNREACHABLE;
 }
 
 void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) {
@@ -167,14 +148,14 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     return EXIT_FAILURE;
   }
   carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
-  if (carbon_test_manager__cmd_args.no_output) carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output disabled");
-  else carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output ?: CARBON_JUNIT_XML_OUT_FILENAME);
+  if (!carbon_test_manager__cmd_args.output) carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output disabled");
+  else carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output);
   carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
   carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
   carbon_println("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
-  CBN_Chrono chr = carbon_chrono_start();
+  CBN_Chrono timer = carbon_chrono_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 has_passed = s->tests[i].f();
     if (has_passed) {
@@ -185,7 +166,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
       carbon_ceprintln(CARBON_COLOR_RED, "(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
       ++failed;
     }
-    if (!carbon_test_manager__cmd_args.no_output) {
+    if (carbon_test_manager__cmd_args.output) {
       CBN_JUnitTestcase tjc = {
         .name = s->tests[i].name,
         .has_failed = !has_passed
@@ -193,29 +174,29 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
       carbon_list_push(&junit_testcase_infos, &tjc);
     }
   }
-  carbon_chrono_update(&chr), carbon_chrono_stop(&chr);
-  u32 total_time_micro = (u32) (chr.elapsed * 1e6);
+  carbon_chrono_update(&timer), carbon_chrono_stop(&timer);
+  u32 total_time_micro = (u32) (timer.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
   if (failed) {
-    if (!((i32) chr.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
-                                              failed,
-                                              passed,
-                                              total_time_micro);
+    if (!((i32) timer.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+                                                failed,
+                                                passed,
+                                                total_time_micro);
     else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
                          failed,
                          passed,
-                         chr.elapsed);
+                         timer.elapsed);
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) chr.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
-                                             passed,
-                                             total_time_micro);
+    if (!((i32) timer.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+                                               passed,
+                                               total_time_micro);
     else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
                         passed,
-                        chr.elapsed);
+                        timer.elapsed);
   }
-  if (!carbon_test_manager__cmd_args.no_output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, chr.elapsed);
+  if (carbon_test_manager__cmd_args.output) carbon_junit_output(junit_testcase_infos, carbon_test_manager__cmd_args.output, failed, timer.elapsed);
   carbon_list_destroy(&junit_testcase_infos);
   carbon_test_manager_cleanup(s);
   return status;

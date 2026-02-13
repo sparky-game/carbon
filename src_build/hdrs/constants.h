@@ -19,18 +19,24 @@
 #define HDR_FILE   NAME ".h"
 #define SRC_FILE   NAME ".c"
 #define OBJ_FILE   NAME ".o"
-#define LIB_FILE   "lib" NAME ".a"
-#define DLL_FILE   "lib" NAME ".so"
+#define LIB_FILE   BUILD_DIR "/lib" NAME ".a"
+#define DLL_FILE   BUILD_DIR "/lib" NAME ".so"
 #define PKG_FILE   BUILD_DIR ".tgz"
 #define TEST_EXE   SRC_BUILD_DIR "/meta/test"
 #define PACKER_EXE SRC_BUILD_DIR "/meta/packer"
 
+#define CC  "cc"
+#define CXX "c++"
+
 #define CC_STD  "-std=c11"
-#define CC      "cc " CC_STD
 #define CXX_STD "-std=c++20"
-#define CXX     "c++ " CXX_STD
 
 #define WARNS "-Wall -Wextra -Wno-return-type-c-linkage"
+
+#define INCLUDE_DIRS "-I" BUILD_DIR " -I" TEST_DIR
+
+#define CC_CMD  CC  " " CC_STD  " " INCLUDE_DIRS " " WARNS " -O3"
+#define CXX_CMD CXX " " CXX_STD " " INCLUDE_DIRS " " WARNS " -O3"
 
 #if defined(__APPLE__)
 #define LDFLAGS "-framework CoreFoundation -lobjc"
