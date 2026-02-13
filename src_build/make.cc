@@ -148,6 +148,12 @@ int main(int argc, char **argv) {
     else if (!std::strcmp(cmd, "pkg")) {
       pkg();
     }
+    else if (!std::strcmp(cmd, "-h")    ||
+             !std::strcmp(cmd, "help")  ||
+             !std::strcmp(cmd, "-help") ||
+             !std::strcmp(cmd, "--help")) {
+      print_usage();
+    }
     else {
       printf("unrecognized command\n");
       print_usage();
