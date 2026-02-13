@@ -25,18 +25,14 @@
 #define TEST_EXE   SRC_BUILD_DIR "/meta/test"
 #define PACKER_EXE SRC_BUILD_DIR "/meta/packer"
 
-#define CC  "cc"
-#define CXX "c++"
-
-#define CC_STD  "-std=c11"
-#define CXX_STD "-std=c++20"
-
-#define WARNS "-Wall -Wextra -Wno-return-type-c-linkage"
-
+#define CC           "cc"
+#define CXX          "c++"
+#define CC_STD       "-std=c11"
+#define CXX_STD      "-std=c++20"
+#define WARNS        "-Wall -Wextra -Wno-return-type-c-linkage"
 #define INCLUDE_DIRS "-I" BUILD_DIR " -I" TEST_DIR
-
-#define CC_CMD  CC  " " CC_STD  " " INCLUDE_DIRS " " WARNS " -O3"
-#define CXX_CMD CXX " " CXX_STD " " INCLUDE_DIRS " " WARNS " -O3"
+#define CC_CMD       CC  " " CC_STD  " " INCLUDE_DIRS " " WARNS " -O3"
+#define CXX_CMD      CXX " " CXX_STD " " INCLUDE_DIRS " " WARNS " -O3"
 
 #if defined(__APPLE__)
 #define LDFLAGS "-framework CoreFoundation -lobjc"
