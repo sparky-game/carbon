@@ -1,7 +1,7 @@
 #ifdef __cplusplus
 
 struct CBN_Vec3 : CBN_Vec3_t {
-  constexpr CBN_Vec3(f32 _x, f32 _y, f32 _z) : CBN_Vec3_t{_x, _y, _z} {}
+  constexpr CBN_Vec3(f32 _x, f32 _y, f32 _z) : CBN_Vec3_t{.c = {_x, _y, _z}} {}
   constexpr CBN_Vec3(f32 _x = 0) : CBN_Vec3(_x, _x, _x) {}
 
   CBN_Vec3 operator+(const CBN_Vec3 &v) const {

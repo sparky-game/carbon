@@ -4,7 +4,7 @@ struct CBN_Vec3;  // Forward declaration
 struct CBN_Vec4;  // Forward declaration
 
 struct CBN_Vec2 : CBN_Vec2_t {
-  constexpr CBN_Vec2(f32 _x, f32 _y) : CBN_Vec2_t{_x, _y} {}
+  constexpr CBN_Vec2(f32 _x, f32 _y) : CBN_Vec2_t{.c = {_x, _y}} {}
   constexpr CBN_Vec2(f32 _x = 0) : CBN_Vec2(_x, _x) {}
 
   CBN_Vec2 operator+(const CBN_Vec2 &v) const {
