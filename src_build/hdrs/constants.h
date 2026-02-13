@@ -29,7 +29,7 @@
 #define CXX          "c++"
 #define CC_STD       "-std=c11"
 #define CXX_STD      "-std=c++20"
-#define WARNS        "-Wall -Wextra -Wno-return-type-c-linkage"
+#define WARNS        "-Wall -Wextra -Wno-return-type-c-linkage -Wno-strict-aliasing"
 #define INCLUDE_DIRS "-I" BUILD_DIR " -I" TEST_DIR
 #define CC_CMD       CC  " " CC_STD  " " INCLUDE_DIRS " " WARNS " -O3"
 #define CXX_CMD      CXX " " CXX_STD " " INCLUDE_DIRS " " WARNS " -O3"
