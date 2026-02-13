@@ -25,6 +25,11 @@
 #define TEST_EXE   SRC_BUILD_DIR "/meta/test"
 #define PACKER_EXE SRC_BUILD_DIR "/meta/packer"
 
+#define CC_STD  "-std=c11"
+#define CC      "cc " CC_STD
+#define CXX_STD "-std=c++20"
+#define CXX     "c++ " CXX_STD
+
 #if defined(__APPLE__)
 #define LDFLAGS "-framework CoreFoundation -lobjc"
 #elif defined (_WIN32)
