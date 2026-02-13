@@ -125,8 +125,8 @@ void pkg(void) {
   RunCmd("tar -zcf " PKG_FILE " " BUILD_DIR);
 }
 
-void print_usage(void) {
-  printf("usage: make [clean|build|pkg]\n");
+void usage(void) {
+  printf("usage: make [clean|build]\n");
 }
 
 int main(int argc, char **argv) {
@@ -143,23 +143,20 @@ int main(int argc, char **argv) {
     else if (!std::strcmp(cmd, "build")) {
       build();
     }
-    else if (!std::strcmp(cmd, "pkg")) {
-      pkg();
-    }
     else if (!std::strcmp(cmd, "-h")    ||
              !std::strcmp(cmd, "help")  ||
              !std::strcmp(cmd, "-help") ||
              !std::strcmp(cmd, "--help")) {
-      print_usage();
+      usage();
     }
     else {
       printf("unrecognized command\n");
-      print_usage();
+      usage();
       return 1;
     }
   }
   else {
-    print_usage();
+    usage();
     return 1;
   }
 }
