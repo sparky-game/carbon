@@ -89,28 +89,11 @@ You might want to take a look to the [[https://github.com/sparky-game/carbon/rel
 
 ** Build from source
 
-If wanted to build /Carbon/ from source yourself, it can be done without any problems. We use a custom ~make~ utility (which uses /Carbon/ under the hood) as our build system to manage testing, compiling and packaging the library, both static and dynamic.
-
-This custom build system can rebuild itself properly (using our preferred compilation flags), which means that you'll only need to bootstrap it once:
-
-#+begin_src sh
-cc src_build/make.c -o make
-#+end_src
-
-Once built, we can take a look at the available subcommands and options by issuing the command ~./make help~. To run the full build pipeline it's just as easy as:
-
-#+begin_src sh
-./make
-#+end_src
-
-#+begin_quote
-[!TIP]
-Checkout the [[../INSTALL][installation instructions]] to make /Carbon/ available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
-#+end_quote
+If wanted to build /Carbon/ from source yourself, you can checkout the [[../INSTALL][installation instructions]], so /Carbon/ can be made available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
 
 ** Examples
 
-A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]]. One can issue the command ~./make examples~ to build them all: for each example source file (~.c~ or ~.cc~) it produces a ~.bin~ executable file, which can be run normally without problems.
+A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]].
 
 Furthermore, you can also take a look at the amalgamated distributable *header file* (~carbon.h~), where each module of the library is declared and documented. This is all the documentation you'll ever need, and it's also a good place to find new things /Carbon/ can do.
 

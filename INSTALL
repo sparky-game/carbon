@@ -5,8 +5,7 @@ You can download a pre-compiled package for your CPU's architecture and OS from:
 
 However, if you prefer to build it from source, you can do it with:
 ```
-cc src_build/make.c -o make
-./make
+./src_build/make.cc
 ```
 
 After obtaining either way the package file, you can install it to your desired location with:
