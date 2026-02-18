@@ -1,8 +1,3 @@
-#if 0  // https://stackoverflow.com/a/29709521
-EXE="/tmp/a.out";
-c++ -std=c++20 -O3 "$0" -o $EXE && $EXE "$@";
-exit;
-#endif
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
