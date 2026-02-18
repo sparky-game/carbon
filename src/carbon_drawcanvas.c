@@ -238,6 +238,29 @@ void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN
   carbon_drawcanvas_text(dc, txt, position, size, color);
 }
 
+void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  for (; *txt; ++txt) {
+    usz idx = *txt - CARBON_FONT_ASCII_START;
+    CBN_Font_Chardata cdata = f->metadata.cdata[idx];
+    usz src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
+    usz dst_w = sf*src_w, dst_h = sf*src_h;
+    for (usz dy = 0; dy < dst_h; ++dy) {
+      for (usz dx = 0; dx < dst_w; ++dx) {
+        i32 px = position.x + dx + sf*cdata.xoff;
+        i32 py = position.y + dy + sf*cdata.yoff;
+        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
+          usz sx = cdata.x0 + dx/sf, sy = cdata.y0 + dy/sf;
+          u32 alpha = f->data[sy*CARBON_FONT_DATA_SIZE + sx];
+          u32 rgba = (color & 0xffffff00) | alpha;
+          carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), rgba);
+        }
+      }
+    }
+    position.x += sf*cdata.xadvance;
+  }
+}
+
 usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
   return CARBON_DRAWCANVAS__MONOFONT_WIDTH * size * carbon_string_len(txt);
 }

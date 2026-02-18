@@ -173,7 +173,9 @@ CBNDEF void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2
  */
 CBNDEF void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
-// CBNDEF void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color);
+/**
+ */
+CBNDEF void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
 /**
  * @brief Measures text width (using a default font).
