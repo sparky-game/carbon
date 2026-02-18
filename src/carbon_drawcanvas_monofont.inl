@@ -3,8 +3,8 @@
 
 #pragma once
 
-#define CARBON_DRAWCANVAS__FONT_WIDTH  6
-#define CARBON_DRAWCANVAS__FONT_HEIGHT 9
+#define CARBON_DRAWCANVAS__MONOFONT_WIDTH  6
+#define CARBON_DRAWCANVAS__MONOFONT_HEIGHT 9
 
 /*
   TODO: define rest of font glyphs using this template:
@@ -19,7 +19,7 @@
   {0, 0, 0, 0, 0, 0}
 */
 
-static char carbon_drawcanvas__font[][CARBON_DRAWCANVAS__FONT_HEIGHT][CARBON_DRAWCANVAS__FONT_WIDTH] = {
+static char carbon_drawcanvas__monofont[][CARBON_DRAWCANVAS__MONOFONT_HEIGHT][CARBON_DRAWCANVAS__MONOFONT_WIDTH] = {
   ['!'] = {
     {0, 0, 1, 0, 0, 0},
     {0, 0, 1, 0, 0, 0},

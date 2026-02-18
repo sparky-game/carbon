@@ -12,7 +12,7 @@ struct CBN_DrawCanvas {
   u32 flags;
 };
 
-#include "carbon_drawcanvas_font.inl"
+#include "carbon_drawcanvas_monofont.inl"
 #include "carbon_drawcanvas_helpers.inl"
 #include "carbon_drawcanvas_st.inl"
 #include "carbon_drawcanvas_mt.inl"
@@ -216,16 +216,16 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec
 }
 
 void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
-  static const char *glyphs = &carbon_drawcanvas__font[0][0][0];
+  static const char *glyphs = &carbon_drawcanvas__monofont[0][0][0];
   for (usz i = 0; *txt; ++i, ++txt) {
-    i32 gx = position.x + (i * CARBON_DRAWCANVAS__FONT_WIDTH * size);
+    i32 gx = position.x + (i * CARBON_DRAWCANVAS__MONOFONT_WIDTH * size);
     i32 gy = position.y;
-    const char *glyph = &glyphs[(*txt) * CARBON_DRAWCANVAS__FONT_WIDTH * CARBON_DRAWCANVAS__FONT_HEIGHT];
-    for (usz dy = 0; dy < CARBON_DRAWCANVAS__FONT_HEIGHT; ++dy) {
-      for (usz dx = 0; dx < CARBON_DRAWCANVAS__FONT_WIDTH; ++dx) {
+    const char *glyph = &glyphs[(*txt) * CARBON_DRAWCANVAS__MONOFONT_WIDTH * CARBON_DRAWCANVAS__MONOFONT_HEIGHT];
+    for (usz dy = 0; dy < CARBON_DRAWCANVAS__MONOFONT_HEIGHT; ++dy) {
+      for (usz dx = 0; dx < CARBON_DRAWCANVAS__MONOFONT_WIDTH; ++dx) {
         i32 px = gx + dx*size;
         i32 py = gy + dy*size;
-        if (0 <= px && px < (i32) dc->width && 0 <= py && py < (i32) dc->height && glyph[dy*CARBON_DRAWCANVAS__FONT_WIDTH + dx]) {
+        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height && glyph[dy*CARBON_DRAWCANVAS__MONOFONT_WIDTH + dx]) {
           carbon_drawcanvas_rect(dc, carbon_math_rect_sq(px, py, size), color);
         }
       }
@@ -239,9 +239,9 @@ void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN
 }
 
 usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
-  return CARBON_DRAWCANVAS__FONT_WIDTH * size * carbon_string_len(txt);
+  return CARBON_DRAWCANVAS__MONOFONT_WIDTH * size * carbon_string_len(txt);
 }
 
 usz carbon_drawcanvas_get_text_height(usz size) {
-  return CARBON_DRAWCANVAS__FONT_HEIGHT * size;
+  return CARBON_DRAWCANVAS__MONOFONT_HEIGHT * size;
 }
