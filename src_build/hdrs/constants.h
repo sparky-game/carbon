@@ -35,7 +35,7 @@
 #define CXX_CMD      CXX " " CXX_STD " " INCLUDE_DIRS " " WARNS " -O3"
 
 #if defined(__APPLE__)
-#define LDFLAGS "-framework CoreFoundation -lobjc"
+#define LDFLAGS "-framework Cocoa -framework CoreVideo -framework IOKit"
 #elif defined (_WIN32)
 #define LDFLAGS "-ldnsapi -lws2_32 -lgdi32 -lntdll -lpthread -static"
 #else

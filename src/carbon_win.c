@@ -1,26 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_WIN__DLDECL(name)                \
-  typedef typeof(&name) name ## _ptr_t;         \
-  static name ## _ptr_t name ## _ptr;
-
-#if defined(__linux__) || defined(__FreeBSD__)
-#define CARBON_WIN__DLOPEN(lib, name)                           \
-  lib = dlmopen(LM_ID_NEWLM, name, RTLD_LAZY | RTLD_LOCAL);     \
-  CBN_ASSERT(lib && "Failed to load");
-#else
-#define CARBON_WIN__DLOPEN(lib, name)           \
-  lib = dlopen(name, RTLD_LAZY | RTLD_LOCAL);   \
-  CBN_ASSERT(lib && "Failed to load");
-#endif
-
-#define CARBON_WIN__DLSYM(lib, name)                    \
-  if (!name ## _ptr) {                                  \
-    name ## _ptr = (name ## _ptr_t) dlsym(lib, #name);  \
-    CBN_ASSERT(name ## _ptr && "Failed to load");       \
-  }
-
 // NOTE: we ignore here these warnings because RGFW do strange things
 // like shadowing variables, leaving labels unused, using deprecated functions, and such.
 CARBON_COMPILER_DIAG_BEGIN;
@@ -40,15 +20,6 @@ CARBON_COMPILER_DIAG_IGNORE("-Wdeprecated-declarations");
 #include "../thirdparty/RGFW/RGFW.h"
 CARBON_COMPILER_DIAG_END;
 
-#if defined(__APPLE__)
-#include "carbon_win_dl_cocoa.inl"
-#include "carbon_win_dl_corevideo.inl"
-#include "carbon_win_dl_iokit.inl"
-#elif defined(__linux__) || defined(__FreeBSD__)
-#include "carbon_win_dl_x11.inl"
-#include "carbon_win_dl_xrandr.inl"
-#endif
-
 static RGFW_window *carbon_win__handle;
 static usz *carbon_win__xtable;
 static usz *carbon_win__ytable;
@@ -67,28 +38,6 @@ static pthread_mutex_t carbon_win__thread_mut = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t carbon_win__thread_cond = PTHREAD_COND_INITIALIZER;
 static _Atomic bool carbon_win__thread_running;
 static _Atomic bool carbon_win__thread_ready;
-
-CBNINL void carbon_win__dl_open(void) {
-#if defined(__APPLE__)
-  CARBON_WIN__DLOPEN(carbon_win__dl_Cocoa, "/System/Library/Frameworks/Cocoa.framework/Cocoa");
-  CARBON_WIN__DLOPEN(carbon_win__dl_CoreVideo, "/System/Library/Frameworks/CoreVideo.framework/CoreVideo");
-  CARBON_WIN__DLOPEN(carbon_win__dl_IOKit, "/System/Library/Frameworks/IOKit.framework/IOKit");
-#elif defined(__linux__) || defined(__FreeBSD__)
-  CARBON_WIN__DLOPEN(carbon_win__dl_X11, "libX11.so");
-  CARBON_WIN__DLOPEN(carbon_win__dl_Xrandr, "libXrandr.so");
-#endif
-}
-
-CBNINL void carbon_win__dl_close(void) {
-#if defined(__APPLE__)
-  dlclose(carbon_win__dl_Cocoa);
-  dlclose(carbon_win__dl_CoreVideo);
-  dlclose(carbon_win__dl_IOKit);
-#elif defined(__linux__) || defined(__FreeBSD__)
-  dlclose(carbon_win__dl_X11);
-  dlclose(carbon_win__dl_Xrandr);
-#endif
-}
 
 CBNINL RGFW_key carbon_win__map_keycodes(const CBN_KeyCode key) {
   switch (key) {
@@ -255,7 +204,6 @@ CBNINL void *carbon_win__thread_fn(void *arg) {
 }
 
 void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
-  carbon_win__dl_open();
   const usz w = carbon_drawcanvas_width(dc), h = carbon_drawcanvas_height(dc);
   carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter);
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(w, h));
@@ -283,7 +231,6 @@ void carbon_win_close(void) {
   carbon_memory_free(carbon_win__ytable);
   if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
-  carbon_win__dl_close();
   CBN_INFO("Window closed successfully");
 }
 
