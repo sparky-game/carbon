@@ -342,6 +342,20 @@ bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   return true;
 }
 
+bool carbon_fs_write_entire_file(const CBN_StrBuilder *sb, const char *file) {
+  FILE *fd = fopen(file, "wb");
+  if (!fd) {
+    CBN_ERROR("unable to open file (`%s`)", file);
+    return false;
+  }
+  if (1 != fwrite(sb->items, sb->size, 1, fd)) {
+    CBN_ERROR("failed to write 1 item of %zuB (`%s`)", sb->size, file);
+    return false;
+  }
+  fclose(fd);
+  return true;
+}
+
 CBN_Image carbon_fs_read_img_from_file(const char *file) {
   CBN_Image img;
   carbon_memory_set(&img, 0, sizeof(img));

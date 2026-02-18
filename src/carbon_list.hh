@@ -36,7 +36,7 @@ CBNDEF_TAKA(cbn, List, CBN_List);
  * @param name The name to give to the iterator (optional; default = `it`).
  * @param l The List container.
  */
-#define carbon_list_foreach__named(T, name, l) for (struct { usz i; T var; } name = {0, carbon_list_at(T, l, 0)}; name.i < (l).size; ++name.i, name.i < (l).size ? name.var = carbon_list_at(T, l, name.i) : name.var)
+#define carbon_list_foreach__named(T, name, l) if ((l).size) for (struct { usz i; T var; } name = {0, carbon_list_at(T, l, 0)}; name.i < (l).size; ++name.i, name.i < (l).size ? name.var = carbon_list_at(T, l, name.i) : name.var)
 #define carbon_list_foreach__default(T, l) carbon_list_foreach__named(T, it, l)
 #define carbon_list_foreach__dispatcher(_1, _2, _3, NAME, ...) NAME
 #define carbon_list_foreach(...) carbon_list_foreach__dispatcher(__VA_ARGS__, carbon_list_foreach__named, carbon_list_foreach__default)(__VA_ARGS__)

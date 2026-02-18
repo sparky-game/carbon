@@ -40,7 +40,7 @@ static constexpr std::array c_HeaderFiles {
   "camera.hh",
   "win.hh",
   "drawcanvas.h", "drawcanvas.hh",
-  "fs.hh",
+  "fs.h", "fs.hh",
   "net.h",
   "socket.hh",
   "audio.hh",
