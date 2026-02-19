@@ -12,7 +12,7 @@ int main(void) {
   static const cbn::math::Vec2 v2 {center.x - size/2, center.y + delta/2};
   static const cbn::math::Vec2 v3 {center.x + size/2, center.y + delta/2};
   auto canvas = cbn::DrawCanvas::New(width, height);
-  canvas->OpenWindow("Triangle");
+  canvas->OpenWindow("Rotate");
   cbn::win::SetMaxFPS(60);
   f32 angle = 0;
   cbn::win::ForFrame([&](const auto dt){

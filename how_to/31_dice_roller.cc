@@ -151,7 +151,9 @@ struct Button {
   }
 
   consteval cbn::math::Rect HNext(usz padding) const {
-    return {};
+    auto r = m_Rect;
+    r.x += r.w + padding;
+    return r;
   }
 
   template <typename F>
