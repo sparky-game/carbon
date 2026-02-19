@@ -7,6 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 typedef CBN_SlotMap_Key CBN_Sprite_UID;
+CBNDEF_AKA(cbn::sprite_mgr, UID, CBN_Sprite_UID);
 
 // Forward declaration
 #ifdef __cplusplus
@@ -35,6 +36,16 @@ CBNDEF_FN(cbn::sprite_mgr, Shutdown, carbon_sprite_manager_shutdown);
  */
 CBNDEF bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
 
+#ifdef __cplusplus
+namespace cbn::sprite_mgr {
+  cbn::Opt<CBN_Sprite_UID> LoadFromFile(const char *file) {
+    CBN_Sprite_UID uid;
+    if (!carbon_sprite_manager_load_from_file(file, &uid)) return {};
+    return uid;
+  }
+}
+#endif
+
 /**
  * @param name ...
  * @param skap_handle ...
@@ -42,14 +53,6 @@ CBNDEF bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UI
  * @return ...
  */
 CBNDEF bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
-
-#ifdef __cplusplus
-cbn::Opt<CBN_Sprite_UID> carbon_sprite_manager_load(const char *file) {
-  CBN_Sprite_UID uid;
-  if (!carbon_sprite_manager_load_from_file(file, &uid)) return {};
-  return uid;
-}
-#endif
 
 /**
  * @brief ...

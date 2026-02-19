@@ -7,6 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #ifdef __cplusplus
+
 namespace cbn {
   template <typename... Args>
   constexpr void print(const char *msg, Args &&... args) {
@@ -92,34 +93,11 @@ namespace cbn {
 
   namespace audio {
     using UID = CBN_Audio_UID;
-    template <typename... Args>
-    [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load(cbn::meta::Forward<Args>(args))...);
-      else return carbon_audio_load(cbn::meta::Forward<Args>(args)...);
-    }
-    template <typename... Args>
-    [[nodiscard]] constexpr auto LoadStream(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_audio_load_stream(cbn::meta::Forward<Args>(args))...);
-      else return carbon_audio_load_stream(cbn::meta::Forward<Args>(args)...);
-    }
-  }
-
-  namespace sprite_mgr {
-    using UID = CBN_Sprite_UID;
-    template <typename... Args>
-    [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_sprite_manager_load(cbn::meta::Forward<Args>(args))...);
-      else return carbon_sprite_manager_load(cbn::meta::Forward<Args>(args)...);
-    }
   }
 
   namespace mesh_mgr {
     using UID = CBN_Mesh_UID;
-    template <typename... Args>
-    [[nodiscard]] constexpr auto Load(Args &&... args) {
-      if constexpr (sizeof...(args) > 1) return std::make_tuple(carbon_mesh_manager_load(cbn::meta::Forward<Args>(args))...);
-      else return carbon_mesh_manager_load(cbn::meta::Forward<Args>(args)...);
-    }
   }
 }
+
 #endif  // __cplusplus
