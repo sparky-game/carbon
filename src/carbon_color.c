@@ -50,6 +50,14 @@ u32 carbon_color_add(u32 c1, u32 c2) {
   return (r << 24) | (g << 16) | (b << 8) | a;
 }
 
+u32 carbon_color_lerp(u32 c1, u32 c2, f32 t) {
+  u32 r = carbon_math_lerp((c1 >> 24) & 0xff, (c2 >> 24) & 0xff, t);
+  u32 g = carbon_math_lerp((c1 >> 16) & 0xff, (c2 >> 16) & 0xff, t);
+  u32 b = carbon_math_lerp((c1 >> 8)  & 0xff, (c2 >> 8)  & 0xff, t);
+  u32 a = carbon_math_lerp((c1 >> 0)  & 0xff, (c2 >> 0)  & 0xff, t);
+  return (r << 24) | (g << 16) | (b << 8) | a;
+}
+
 u32 carbon_color_complementary(u32 color) {
   CBN_Vec3 hsv = carbon_color_to_hsv(color);
   hsv.x = carbon_math_fmod(hsv.x + 180, 360);

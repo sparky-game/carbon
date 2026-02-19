@@ -46,6 +46,16 @@ CBNDEF u32 carbon_color_add(u32 c1, u32 c2);
 CBNDEF_FN(cbn::color, Add, carbon_color_add);
 
 /**
+ * @brief Performs linear interpolation from c1 to c2 by factor t.
+ * @param c1 The first color.
+ * @param c2 The second color.
+ * @param t The interpolation factor in [0..1].
+ * @return The interpolated color between c1 and c2.
+ */
+CBNDEF u32 carbon_color_lerp(u32 c1, u32 c2, f32 t);
+CBNDEF_FN(cbn::color, Lerp, carbon_color_lerp);
+
+/**
  * @brief Computes the complementary color of the one provided (32-bit RGBA).
  * @param color The color.
  * @return The complementary 32-bit RGBA color.
