@@ -50,6 +50,6 @@ static constexpr std::array c_HeaderFiles {
   "nn.h",
   "test_manager.h",
   "junit.h",
-  "skap.hh",
+  "skap.h", "skap.hh",
   "aliases.hh",
 };

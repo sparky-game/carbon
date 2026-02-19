@@ -6,14 +6,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_WIN_KEYCODES                                             \
-  x(A) x(B) x(C) x(D) x(E) x(F) x(G) x(H) x(I) x(J) x(K) x(L) x(M)      \
-  x(N) x(O) x(P) x(Q) x(R) x(S) x(T) x(U) x(V) x(W) x(X) x(Y) x(Z)      \
-  x(Zero) x(One) x(Two) x(Three) x(Four) x(Five) x(Six) x(Seven)        \
-  x(Eight) x(Nine) x(BackQuote) x(F1) x(F2) x(F3) x(F4) x(F5) x(F6)     \
-  x(F7) x(F8) x(F9) x(F10) x(F11) x(F12) x(Escape) x(Tab) x(CapsLock)   \
-  x(LeftShift) x(LeftControl) x(LeftMeta) x(LeftAlt) x(Space)           \
-  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)      \
+#define CARBON_WIN_KEYCODES                                           \
+  x(A) x(B) x(C) x(D) x(E) x(F) x(G) x(H) x(I) x(J) x(K) x(L) x(M)    \
+  x(N) x(O) x(P) x(Q) x(R) x(S) x(T) x(U) x(V) x(W) x(X) x(Y) x(Z)    \
+  x(Zero) x(One) x(Two) x(Three) x(Four) x(Five) x(Six) x(Seven)      \
+  x(Eight) x(Nine) x(BackQuote) x(F1) x(F2) x(F3) x(F4) x(F5) x(F6)   \
+  x(F7) x(F8) x(F9) x(F10) x(F11) x(F12) x(Escape) x(Tab) x(CapsLock) \
+  x(LeftShift) x(LeftControl) x(LeftMeta) x(LeftAlt) x(Space)         \
+  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)    \
   x(UpArrow) x(DownArrow) x(LeftArrow) x(RightArrow)
 
 #ifdef __cplusplus
@@ -50,16 +50,22 @@ typedef enum {
 CBNDEF_AKA(cbn::win, MouseButton, CBN_MouseButton);
 
 /**
+ * @brief ...
+ * @param dc ...
+ * @param title ...
  */
 CBNDEF void carbon_win_open(const CBN_DrawCanvas *dc, const char *title);
 CBNDEF_FN(cbn::win, Open, carbon_win_open);
 
 /**
+ * @brief ...
  */
 CBNDEF void carbon_win_close(void);
 CBNDEF_FN(cbn::win, Close, carbon_win_close);
 
 /**
+ * @brief ...
+ * @param fps ...
  */
 CBNDEF void carbon_win_set_max_fps(u32 fps);
 CBNDEF_FN(cbn::win, SetMaxFPS, carbon_win_set_max_fps);
@@ -76,12 +82,22 @@ CBNDEF_FN(cbn::win, SetMaxFPS, carbon_win_set_max_fps);
 CBNDEF void carbon_win_set_icon(CBN_Image img);
 CBNDEF_FN(cbn::win, SetIcon, carbon_win_set_icon);
 
+/**
+ * @brief ...
+ * @return ...
+ */
 CBNDEF f64 carbon_win_get_deltatime(void);
 CBNDEF_FN(cbn::win, GetDeltaTime, carbon_win_get_deltatime);
 
+/**
+ * @brief ...
+ * @return ...
+ */
 CBNDEF u32 carbon_win_get_fps(void);
 CBNDEF_FN(cbn::win, GetFPS, carbon_win_get_fps);
 
+/**
+ */
 CBNDEF void carbon_win_update(const CBN_DrawCanvas *dc);
 CBNDEF_FN(cbn::win, Update, carbon_win_update);
 
