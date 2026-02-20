@@ -43,5 +43,5 @@
 #elif defined (_WIN32)
 #define LDFLAGS "-ldnsapi -lws2_32 -lgdi32 -lntdll -lpthread -static"
 #else
-#define LDFLAGS "-lm"
+#define LDFLAGS "-lX11 -lXrandr -lm"
 #endif
