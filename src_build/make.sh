@@ -2,7 +2,7 @@
 
 IN="${0%.*}.cc"
 OUT="${0%.*}"
-CXX="c++ -std=c++20 -O3"
+CMD="${CXX:-c++} -std=c++20 ${CXX:+-DCXX=\"$CXX\"} -O3 $IN -o $OUT"
 
 trap "rm -f $OUT" EXIT
-$CXX $IN -o $OUT && $OUT "$@"
+$CMD && $OUT "$@"

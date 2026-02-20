@@ -54,6 +54,6 @@ jobs:
             libxrandr-dev         \
             libxi-dev
       - name: build
-        run: ./src_build/make.sh build
+        run: CXX=clang++ ./src_build/make.sh build
       - name: analyze
         uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
