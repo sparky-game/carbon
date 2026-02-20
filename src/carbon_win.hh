@@ -20,12 +20,14 @@
 enum struct CBN_KeyCode {
 #define x(name) name,
   CARBON_WIN_KEYCODES
+  x(Count)
 #undef x
 };
 #else
 typedef enum {
 #define x(name) CARBON_KEY_CODE_ ## name,
   CARBON_WIN_KEYCODES
+  x(Count)
 #undef x
 } CBN_KeyCode;
 #endif
@@ -38,12 +40,14 @@ CBNDEF_AKA(cbn::win, KeyCode, CBN_KeyCode);
 enum struct CBN_MouseButton {
 #define x(name) name,
   CARBON_WIN_MOUSEBUTTONS
+  x(Count)
 #undef x
 };
 #else
 typedef enum {
 #define x(name) CARBON_MOUSE_BUTTON_ ## name,
   CARBON_WIN_MOUSEBUTTONS
+  x(Count)
 #undef x
 } CBN_MouseButton;
 #endif

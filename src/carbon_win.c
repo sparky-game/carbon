@@ -23,15 +23,18 @@ CARBON_COMPILER_DIAG_END;
 static RGFW_window *carbon_win__handle;
 static usz *carbon_win__xtable;
 static usz *carbon_win__ytable;
+static CBN_Image carbon_win__icon;
+static bool carbon_win__cursor_visible = true;
+
 static u32 carbon_win__max_fps;
 static u32 carbon_win__curr_fps;
 static u32 carbon_win__fps;
 static CBN_Chrono carbon_win__fps_timer;
-static CBN_Image carbon_win__icon;
-static bool carbon_win__keys[RGFW_keyLast];
-static bool carbon_win__prev_keys[RGFW_keyLast];
-static bool carbon_win__mouse_buttons[RGFW_mouseFinal];
-static bool carbon_win__prev_mouse_buttons[RGFW_mouseFinal];
+
+static bool carbon_win__keys[CARBON_KEY_CODE_Count];
+static bool carbon_win__prev_keys[CARBON_KEY_CODE_Count];
+static bool carbon_win__mouse_buttons[CARBON_MOUSE_BUTTON_Count];
+static bool carbon_win__prev_mouse_buttons[CARBON_MOUSE_BUTTON_Count];
 
 static pthread_t carbon_win__thread_id;
 static pthread_mutex_t carbon_win__thread_mut = PTHREAD_MUTEX_INITIALIZER;
@@ -39,88 +42,90 @@ static pthread_cond_t carbon_win__thread_cond = PTHREAD_COND_INITIALIZER;
 static _Atomic bool carbon_win__thread_running;
 static _Atomic bool carbon_win__thread_ready;
 
-CBNINL RGFW_key carbon_win__map_keycodes(const CBN_KeyCode key) {
+CBNINL CBN_KeyCode carbon_win__map_key_code(RGFW_key key) {
   switch (key) {
-  case CARBON_KEY_CODE_A:            return RGFW_a;
-  case CARBON_KEY_CODE_B:            return RGFW_b;
-  case CARBON_KEY_CODE_C:            return RGFW_c;
-  case CARBON_KEY_CODE_D:            return RGFW_d;
-  case CARBON_KEY_CODE_E:            return RGFW_e;
-  case CARBON_KEY_CODE_F:            return RGFW_f;
-  case CARBON_KEY_CODE_G:            return RGFW_g;
-  case CARBON_KEY_CODE_H:            return RGFW_h;
-  case CARBON_KEY_CODE_I:            return RGFW_i;
-  case CARBON_KEY_CODE_J:            return RGFW_j;
-  case CARBON_KEY_CODE_K:            return RGFW_k;
-  case CARBON_KEY_CODE_L:            return RGFW_l;
-  case CARBON_KEY_CODE_M:            return RGFW_m;
-  case CARBON_KEY_CODE_N:            return RGFW_n;
-  case CARBON_KEY_CODE_O:            return RGFW_o;
-  case CARBON_KEY_CODE_P:            return RGFW_p;
-  case CARBON_KEY_CODE_Q:            return RGFW_q;
-  case CARBON_KEY_CODE_R:            return RGFW_r;
-  case CARBON_KEY_CODE_S:            return RGFW_s;
-  case CARBON_KEY_CODE_T:            return RGFW_t;
-  case CARBON_KEY_CODE_U:            return RGFW_u;
-  case CARBON_KEY_CODE_V:            return RGFW_v;
-  case CARBON_KEY_CODE_W:            return RGFW_w;
-  case CARBON_KEY_CODE_X:            return RGFW_x;
-  case CARBON_KEY_CODE_Y:            return RGFW_y;
-  case CARBON_KEY_CODE_Z:            return RGFW_z;
-  case CARBON_KEY_CODE_Zero:         return RGFW_0;
-  case CARBON_KEY_CODE_One:          return RGFW_1;
-  case CARBON_KEY_CODE_Two:          return RGFW_2;
-  case CARBON_KEY_CODE_Three:        return RGFW_3;
-  case CARBON_KEY_CODE_Four:         return RGFW_4;
-  case CARBON_KEY_CODE_Five:         return RGFW_5;
-  case CARBON_KEY_CODE_Six:          return RGFW_6;
-  case CARBON_KEY_CODE_Seven:        return RGFW_7;
-  case CARBON_KEY_CODE_Eight:        return RGFW_8;
-  case CARBON_KEY_CODE_Nine:         return RGFW_9;
-  case CARBON_KEY_CODE_BackQuote:    return RGFW_backtick;
-  case CARBON_KEY_CODE_F1:           return RGFW_F1;
-  case CARBON_KEY_CODE_F2:           return RGFW_F2;
-  case CARBON_KEY_CODE_F3:           return RGFW_F3;
-  case CARBON_KEY_CODE_F4:           return RGFW_F4;
-  case CARBON_KEY_CODE_F5:           return RGFW_F5;
-  case CARBON_KEY_CODE_F6:           return RGFW_F6;
-  case CARBON_KEY_CODE_F7:           return RGFW_F7;
-  case CARBON_KEY_CODE_F8:           return RGFW_F8;
-  case CARBON_KEY_CODE_F9:           return RGFW_F9;
-  case CARBON_KEY_CODE_F10:          return RGFW_F10;
-  case CARBON_KEY_CODE_F11:          return RGFW_F11;
-  case CARBON_KEY_CODE_F12:          return RGFW_F12;
-  case CARBON_KEY_CODE_Escape:       return RGFW_escape;
-  case CARBON_KEY_CODE_Tab:          return RGFW_tab;
-  case CARBON_KEY_CODE_CapsLock:     return RGFW_capsLock;
-  case CARBON_KEY_CODE_LeftShift:    return RGFW_shiftL;
-  case CARBON_KEY_CODE_LeftControl:  return RGFW_controlL;
-  case CARBON_KEY_CODE_LeftMeta:     return RGFW_superL;
-  case CARBON_KEY_CODE_LeftAlt:      return RGFW_altL;
-  case CARBON_KEY_CODE_Space:        return RGFW_space;
-  case CARBON_KEY_CODE_RightAlt:     return RGFW_altR;
-  case CARBON_KEY_CODE_RightMeta:    return RGFW_superR;
-  case CARBON_KEY_CODE_RightControl: return RGFW_controlR;
-  case CARBON_KEY_CODE_RightShift:   return RGFW_shiftR;
-  case CARBON_KEY_CODE_Return:       return RGFW_return;
-  case CARBON_KEY_CODE_UpArrow:      return RGFW_up;
-  case CARBON_KEY_CODE_DownArrow:    return RGFW_down;
-  case CARBON_KEY_CODE_LeftArrow:    return RGFW_left;
-  case CARBON_KEY_CODE_RightArrow:   return RGFW_right;
-  default:                           return RGFW_keyNULL;
+  case RGFW_a:        return CARBON_KEY_CODE_A;
+  case RGFW_b:        return CARBON_KEY_CODE_B;
+  case RGFW_c:        return CARBON_KEY_CODE_C;
+  case RGFW_d:        return CARBON_KEY_CODE_D;
+  case RGFW_e:        return CARBON_KEY_CODE_E;
+  case RGFW_f:        return CARBON_KEY_CODE_F;
+  case RGFW_g:        return CARBON_KEY_CODE_G;
+  case RGFW_h:        return CARBON_KEY_CODE_H;
+  case RGFW_i:        return CARBON_KEY_CODE_I;
+  case RGFW_j:        return CARBON_KEY_CODE_J;
+  case RGFW_k:        return CARBON_KEY_CODE_K;
+  case RGFW_l:        return CARBON_KEY_CODE_L;
+  case RGFW_m:        return CARBON_KEY_CODE_M;
+  case RGFW_n:        return CARBON_KEY_CODE_N;
+  case RGFW_o:        return CARBON_KEY_CODE_O;
+  case RGFW_p:        return CARBON_KEY_CODE_P;
+  case RGFW_q:        return CARBON_KEY_CODE_Q;
+  case RGFW_r:        return CARBON_KEY_CODE_R;
+  case RGFW_s:        return CARBON_KEY_CODE_S;
+  case RGFW_t:        return CARBON_KEY_CODE_T;
+  case RGFW_u:        return CARBON_KEY_CODE_U;
+  case RGFW_v:        return CARBON_KEY_CODE_V;
+  case RGFW_w:        return CARBON_KEY_CODE_W;
+  case RGFW_x:        return CARBON_KEY_CODE_X;
+  case RGFW_y:        return CARBON_KEY_CODE_Y;
+  case RGFW_z:        return CARBON_KEY_CODE_Z;
+  case RGFW_0:        return CARBON_KEY_CODE_Zero;
+  case RGFW_1:        return CARBON_KEY_CODE_One;
+  case RGFW_2:        return CARBON_KEY_CODE_Two;
+  case RGFW_3:        return CARBON_KEY_CODE_Three;
+  case RGFW_4:        return CARBON_KEY_CODE_Four;
+  case RGFW_5:        return CARBON_KEY_CODE_Five;
+  case RGFW_6:        return CARBON_KEY_CODE_Six;
+  case RGFW_7:        return CARBON_KEY_CODE_Seven;
+  case RGFW_8:        return CARBON_KEY_CODE_Eight;
+  case RGFW_9:        return CARBON_KEY_CODE_Nine;
+  case RGFW_backtick: return CARBON_KEY_CODE_BackQuote;
+  case RGFW_F1:       return CARBON_KEY_CODE_F1;
+  case RGFW_F2:       return CARBON_KEY_CODE_F2;
+  case RGFW_F3:       return CARBON_KEY_CODE_F3;
+  case RGFW_F4:       return CARBON_KEY_CODE_F4;
+  case RGFW_F5:       return CARBON_KEY_CODE_F5;
+  case RGFW_F6:       return CARBON_KEY_CODE_F6;
+  case RGFW_F7:       return CARBON_KEY_CODE_F7;
+  case RGFW_F8:       return CARBON_KEY_CODE_F8;
+  case RGFW_F9:       return CARBON_KEY_CODE_F9;
+  case RGFW_F10:      return CARBON_KEY_CODE_F10;
+  case RGFW_F11:      return CARBON_KEY_CODE_F11;
+  case RGFW_F12:      return CARBON_KEY_CODE_F12;
+  case RGFW_escape:   return CARBON_KEY_CODE_Escape;
+  case RGFW_tab:      return CARBON_KEY_CODE_Tab;
+  case RGFW_capsLock: return CARBON_KEY_CODE_CapsLock;
+  case RGFW_shiftL:   return CARBON_KEY_CODE_LeftShift;
+  case RGFW_controlL: return CARBON_KEY_CODE_LeftControl;
+  case RGFW_superL:   return CARBON_KEY_CODE_LeftMeta;
+  case RGFW_altL:     return CARBON_KEY_CODE_LeftAlt;
+  case RGFW_space:    return CARBON_KEY_CODE_Space;
+  case RGFW_altR:     return CARBON_KEY_CODE_RightAlt;
+  case RGFW_superR:   return CARBON_KEY_CODE_RightMeta;
+  case RGFW_controlR: return CARBON_KEY_CODE_RightControl;
+  case RGFW_shiftR:   return CARBON_KEY_CODE_RightShift;
+  case RGFW_return:   return CARBON_KEY_CODE_Return;
+  case RGFW_up:       return CARBON_KEY_CODE_UpArrow;
+  case RGFW_down:     return CARBON_KEY_CODE_DownArrow;
+  case RGFW_left:     return CARBON_KEY_CODE_LeftArrow;
+  case RGFW_right:    return CARBON_KEY_CODE_RightArrow;
+  default:
+    CARBON_UNREACHABLE;
+    return CARBON_KEY_CODE_Count;
   }
 }
 
-CBNINL RGFW_mouseButton carbon_win__map_mouse_buttons(const CBN_MouseButton btn) {
+CBNINL CBN_MouseButton carbon_win__map_mouse_button(RGFW_mouseButton btn) {
   switch (btn) {
-  case CARBON_MOUSE_BUTTON_Left:       return RGFW_mouseLeft;
-  case CARBON_MOUSE_BUTTON_Right:      return RGFW_mouseRight;
-  case CARBON_MOUSE_BUTTON_Middle:     return RGFW_mouseMiddle;
-  case CARBON_MOUSE_BUTTON_ScrollUp:   return RGFW_mouseScrollUp;
-  case CARBON_MOUSE_BUTTON_ScrollDown: return RGFW_mouseScrollDown;
+  case RGFW_mouseLeft:       return CARBON_MOUSE_BUTTON_Left;
+  case RGFW_mouseRight:      return CARBON_MOUSE_BUTTON_Right;
+  case RGFW_mouseMiddle:     return CARBON_MOUSE_BUTTON_Middle;
+  case RGFW_mouseScrollUp:   return CARBON_MOUSE_BUTTON_ScrollUp;
+  case RGFW_mouseScrollDown: return CARBON_MOUSE_BUTTON_ScrollDown;
   default:
     CARBON_UNREACHABLE;
-    return RGFW_mouseFinal;
+    return CARBON_MOUSE_BUTTON_Count;
   }
 }
 
@@ -149,13 +154,13 @@ CBNINL void carbon_win__resize_callback(RGFW_window *win, RGFW_rect r) {
 CBNINL void carbon_win__key_callback(RGFW_window *win, u8 key, char keyChar, RGFW_keymod keyMod, RGFW_bool pressed) {
   CARBON_UNUSED(keyChar), CARBON_UNUSED(keyMod);
   if (win != carbon_win__handle) return;
-  carbon_win__keys[key] = pressed ? true : false;
+  carbon_win__keys[carbon_win__map_key_code(key)] = pressed ? true : false;
 }
 
 CBNINL void carbon_win__mouse_button_callback(RGFW_window* win, RGFW_mouseButton button, f64 scroll, RGFW_bool pressed) {
   CARBON_UNUSED(scroll);
   if (win != carbon_win__handle) return;
-  carbon_win__mouse_buttons[button] = pressed ? true : false;
+  carbon_win__mouse_buttons[carbon_win__map_mouse_button(button)] = pressed ? true : false;
 }
 
 CBNINL void carbon_win__resize_buf(const CBN_DrawCanvas *dc) {
@@ -288,8 +293,16 @@ void carbon_win_update(const CBN_DrawCanvas *dc) {
 }
 
 bool carbon_win_shouldclose(void) {
-  for (u8 i = 0; i < RGFW_keyLast; ++i)    carbon_win__prev_keys[i]          = carbon_win__keys[i];
-  for (u8 i = 0; i < RGFW_mouseFinal; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
+  for (CBN_KeyCode i = 0; i < CARBON_KEY_CODE_Count; ++i) carbon_win__prev_keys[i] = carbon_win__keys[i];
+  for (CBN_MouseButton i = 0; i < CARBON_MOUSE_BUTTON_Count; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
+  /* while (RGFW_window_checkEvent(carbon_win__handle)) { */
+  /*   RGFW_eventType e = carbon_win__handle->event.type; */
+  /*   if (e == RGFW_quit) return true; */
+  /*   if (!carbon_win__cursor_visible) { */
+  /*     if (e == RGFW_mouseEnter) RGFW_window_showMouse(carbon_win__handle, false); */
+  /*     if (e == RGFW_mouseLeave) RGFW_window_showMouse(carbon_win__handle, true); */
+  /*   } */
+  /* } */
   RGFW_window_checkEvent(carbon_win__handle);
   return carbon_win__handle->event.type == RGFW_quit;
 }
@@ -299,27 +312,27 @@ void carbon_win_exit(void) {
 }
 
 bool carbon_win_get_key_down(const CBN_KeyCode key) {
-  return carbon_win__keys[carbon_win__map_keycodes(key)] && !carbon_win__prev_keys[carbon_win__map_keycodes(key)];
+  return carbon_win__keys[key] && !carbon_win__prev_keys[key];
 }
 
 bool carbon_win_get_key(const CBN_KeyCode key) {
-  return carbon_win__keys[carbon_win__map_keycodes(key)];
+  return carbon_win__keys[key];
 }
 
 bool carbon_win_get_key_up(const CBN_KeyCode key) {
-  return !carbon_win__keys[carbon_win__map_keycodes(key)] && carbon_win__prev_keys[carbon_win__map_keycodes(key)];
+  return !carbon_win__keys[key] && carbon_win__prev_keys[key];
 }
 
 bool carbon_win_get_mouse_button_down(const CBN_MouseButton btn) {
-  return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && !carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
+  return carbon_win__mouse_buttons[btn] && !carbon_win__prev_mouse_buttons[btn];
 }
 
 bool carbon_win_get_mouse_button(const CBN_MouseButton btn) {
-  return carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)];
+  return carbon_win__mouse_buttons[btn];
 }
 
 bool carbon_win_get_mouse_button_up(const CBN_MouseButton btn) {
-  return !carbon_win__mouse_buttons[carbon_win__map_mouse_buttons(btn)] && carbon_win__prev_mouse_buttons[carbon_win__map_mouse_buttons(btn)];
+  return !carbon_win__mouse_buttons[btn] && carbon_win__prev_mouse_buttons[btn];
 }
 
 CBN_Vec2 carbon_win_get_mouse_position(void) {
@@ -328,5 +341,5 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
 }
 
 void carbon_win_set_mouse_visibility(bool visible) {
-  RGFW_window_showMouse(carbon_win__handle, visible);
+  carbon_win__cursor_visible = visible;
 }
