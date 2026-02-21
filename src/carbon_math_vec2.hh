@@ -11,11 +11,11 @@ struct CBN_Vec2 : CBN_Vec2_t {
     return carbon_math_vec2_add(*this, v);
   }
   
-  CBN_Vec2 operator+(f32 s) const {
+  constexpr CBN_Vec2 operator+(f32 s) const {
     return CBN_Vec2(x + s, y + s);
   }
   
-  friend CBN_Vec2 operator+(f32 s, const CBN_Vec2 &v) {
+  friend constexpr CBN_Vec2 operator+(f32 s, const CBN_Vec2 &v) {
     return v + s;
   }
   
