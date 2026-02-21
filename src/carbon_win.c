@@ -295,16 +295,15 @@ void carbon_win_update(const CBN_DrawCanvas *dc) {
 bool carbon_win_shouldclose(void) {
   for (CBN_KeyCode i = 0; i < CARBON_KEY_CODE_Count; ++i) carbon_win__prev_keys[i] = carbon_win__keys[i];
   for (CBN_MouseButton i = 0; i < CARBON_MOUSE_BUTTON_Count; ++i) carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
-  /* while (RGFW_window_checkEvent(carbon_win__handle)) { */
-  /*   RGFW_eventType e = carbon_win__handle->event.type; */
-  /*   if (e == RGFW_quit) return true; */
-  /*   if (!carbon_win__cursor_visible) { */
-  /*     if (e == RGFW_mouseEnter) RGFW_window_showMouse(carbon_win__handle, false); */
-  /*     if (e == RGFW_mouseLeave) RGFW_window_showMouse(carbon_win__handle, true); */
-  /*   } */
-  /* } */
-  RGFW_window_checkEvent(carbon_win__handle);
-  return carbon_win__handle->event.type == RGFW_quit;
+  while (RGFW_window_checkEvent(carbon_win__handle)) {
+    RGFW_eventType e = carbon_win__handle->event.type;
+    if (e == RGFW_quit) return true;
+    if (!carbon_win__cursor_visible) {
+      if (e == RGFW_mouseEnter) RGFW_window_showMouse(carbon_win__handle, false);
+      if (e == RGFW_mouseLeave) RGFW_window_showMouse(carbon_win__handle, true);
+    }
+  }
+  return false;
 }
 
 void carbon_win_exit(void) {
