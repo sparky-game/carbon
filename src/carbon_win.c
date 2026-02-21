@@ -341,4 +341,5 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
 
 void carbon_win_set_mouse_visibility(bool visible) {
   carbon_win__cursor_visible = visible;
+  RGFW_window_showMouse(carbon_win__handle, visible);
 }
