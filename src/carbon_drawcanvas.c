@@ -238,6 +238,14 @@ void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN
   carbon_drawcanvas_text(dc, txt, position, size, color);
 }
 
+usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
+  return CARBON_DRAWCANVAS__MONOFONT_WIDTH * size * carbon_string_len(txt);
+}
+
+usz carbon_drawcanvas_get_text_height(usz size) {
+  return CARBON_DRAWCANVAS__MONOFONT_HEIGHT * size;
+}
+
 void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
   for (; *txt; ++txt) {
@@ -261,10 +269,17 @@ void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, con
   }
 }
 
-usz carbon_drawcanvas_get_text_width(const char *txt, usz size) {
-  return CARBON_DRAWCANVAS__MONOFONT_WIDTH * size * carbon_string_len(txt);
+usz carbon_drawcanvas_get_text_width_with_font(const CBN_Font *f, const char *txt, usz size) {
+  f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  f32 width = 0;
+  for (; *txt; ++txt) {
+    usz idx = *txt - CARBON_FONT_ASCII_START;
+    width += sf * f->metadata.cdata[idx].xadvance;
+  }
+  return width;
 }
 
-usz carbon_drawcanvas_get_text_height(usz size) {
-  return CARBON_DRAWCANVAS__MONOFONT_HEIGHT * size;
+usz carbon_drawcanvas_get_text_height_with_font(const CBN_Font *f, usz size) {
+  f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  return sf * f->metadata.size;
 }

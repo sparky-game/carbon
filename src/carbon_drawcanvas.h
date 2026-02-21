@@ -174,10 +174,6 @@ CBNDEF void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2
 CBNDEF void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color);
 
 /**
- */
-CBNDEF void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color);
-
-/**
  * @brief Measures text width (using a default font).
  * @param txt The text to measure.
  * @param size The font size to use.
@@ -191,3 +187,31 @@ CBNDEF usz carbon_drawcanvas_get_text_width(const char *txt, usz size);
  * @return The height of the text using the specified font size.
  */
 CBNDEF usz carbon_drawcanvas_get_text_height(usz size);
+
+/**
+ * @brief Draws text to the canvas with a specific color and a specific font.
+ * @param dc The DrawCanvas object.
+ * @param f The font to use.
+ * @param txt The text to draw.
+ * @param position The position (top-left corner) to draw the text to.
+ * @param size The font size to use.
+ * @param color The color to draw the text with.
+ */
+CBNDEF void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color);
+
+/**
+ * @brief Measures text width with a specific font.
+ * @param f The font to use.
+ * @param txt The text to measure.
+ * @param size The font size to use.
+ * @return The width of the given text using the specified font size.
+ */
+CBNDEF usz carbon_drawcanvas_get_text_width_with_font(const CBN_Font *f, const char *txt, usz size);
+
+/**
+ * @brief Measures text height with a specific font.
+ * @param f The font to use.
+ * @param size The font size to use.
+ * @return The height of the text using the specified font size.
+ */
+CBNDEF usz carbon_drawcanvas_get_text_height_with_font(const CBN_Font *f, usz size);

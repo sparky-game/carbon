@@ -84,20 +84,32 @@ struct CBN_DrawCanvas {
     carbon_drawcanvas_plane_xz(this, &c, center, size, color);
   }
 
+  void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color) {
+    carbon_drawcanvas_text(this, txt, position, size, color);
+  }
+
   void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color) {
     carbon_drawcanvas_text_with_shadow(this, txt, position, size, color);
   }
 
-  void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color) {
-    carbon_drawcanvas_text(this, txt, position, size, color);
+  void DrawText(const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+    carbon_drawcanvas_text_with_font(this, f, txt, position, size, color);
   }
 
   static usz TextWidth(const char *txt, usz size) {
     return carbon_drawcanvas_get_text_width(txt, size);
   }
 
+  static usz TextWidth(const CBN_Font *f, const char *txt, usz size) {
+    return carbon_drawcanvas_get_text_width_with_font(f, txt, size);
+  }
+
   static usz TextHeight(usz size) {
     return carbon_drawcanvas_get_text_height(size);
+  }
+
+  static usz TextHeight(const CBN_Font *f, usz size) {
+    return carbon_drawcanvas_get_text_height_with_font(f, size);
   }
 
   u32 &operator()(usz i, usz j) const {
