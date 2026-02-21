@@ -2,7 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 CBN_Rect carbon_math_rect(f32 x, f32 y, f32 w, f32 h) {
-  return (CBN_Rect){x, y, w, h};
+  return (CBN_Rect){{{x, y}}, {{w, h}}};
 }
 
 CBN_Rect carbon_math_rect_v(CBN_Vec2 v, f32 w, f32 h) {

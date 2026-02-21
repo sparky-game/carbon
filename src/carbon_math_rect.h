@@ -10,8 +10,14 @@
  * @brief Represents the position and size of a rectangle with four 32-bit floating-point (f32) values.
  */
 CBNDEF_T(CBN_Rect) {
-  f32 x, y;
-  f32 w, h;
+  union {
+    struct { f32 x, y; };
+    CBN_Vec2 xy;
+  };
+  union {
+    struct { f32 w, h; };
+    CBN_Vec2 wh;
+  };
 };
 CBNDEF_AKA(cbn::math, Rect, CBN_Rect);
 
