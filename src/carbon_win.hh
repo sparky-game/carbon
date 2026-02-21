@@ -194,3 +194,17 @@ CBNDEF_FN(cbn::win, GetMousePosition, carbon_win_get_mouse_position);
  */
 CBNDEF void carbon_win_set_mouse_visibility(bool visible);
 CBNDEF_FN(cbn::win, SetMouseVisibility, carbon_win_set_mouse_visibility);
+
+/**
+ * @brief Sets the visibility state of the window border, between shown or hidden.
+ * @param visible A boolean value representing whether the window border must be visible or not.
+ */
+CBNDEF void carbon_win_set_border_visibility(bool visible);
+CBNDEF_FN(cbn::win, SetBorderVisibility, carbon_win_set_border_visibility);
+
+/**
+ * @brief Makes the window fullscreen or not.
+ * @param yn A boolean value representing whether the window must be in fullscreen or not.
+ */
+CBNDEF void carbon_win_set_fullscreen(bool yn);
+CBNDEF_FN(cbn::win, SetFullscreen, carbon_win_set_fullscreen);

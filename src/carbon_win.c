@@ -343,3 +343,11 @@ void carbon_win_set_mouse_visibility(bool visible) {
   carbon_win__cursor_visible = visible;
   RGFW_window_showMouse(carbon_win__handle, visible);
 }
+
+void carbon_win_set_border_visibility(bool visible) {
+  RGFW_window_setBorder(carbon_win__handle, visible);
+}
+
+void carbon_win_set_fullscreen(bool yn) {
+  RGFW_window_setFullscreen(carbon_win__handle, yn);
+}
