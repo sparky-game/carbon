@@ -13,12 +13,31 @@ namespace fs = std::filesystem;
 #include "hdrs/utils.hh"
 #include "hdrs/header_files.hh"
 
+void license_amalgamation(void) {
+  printf("  GEN     " THIRDPARTY_LICENSE_FILE "\n");
+  std::ofstream ofs {THIRDPARTY_LICENSE_FILE};
+  assert(ofs);
+  for (const auto &e : fs::directory_iterator(THIRDPARTY_DIR)) {
+    if (!e.is_directory()) continue;
+    const auto p = e.path();
+    const auto l = p / "LICENSE";
+    if (!fs::is_regular_file(l)) continue;
+    const auto name = p.filename();
+    ofs << "** " << name.c_str() << " **\n";
+    {// Dump the license text
+      std::ifstream ifs {l};
+      assert(ifs);
+      ofs << ifs.rdbuf() << "\n------\n\n";
+    }
+  }
+}
+
 void hdr_amalgamation(void) {
-  printf("  GEN     " BUILD_DIR "/" HDR_FILE "\n");
-  std::ofstream ofs {BUILD_DIR "/" HDR_FILE};
+  printf("  GEN     " HDR_FILE "\n");
+  std::ofstream ofs {HDR_FILE};
   assert(ofs);
   {// Header of the header
-    std::ifstream ifs {HDR_FILE ".in"};
+    std::ifstream ifs {HDR_IN_FILE};
     assert(ifs);
     ofs << ifs.rdbuf() << "\n";
   }
@@ -35,11 +54,11 @@ void hdr_amalgamation(void) {
   }
 }
 
-void prepare_unity_build(void) {
+void src_amalgamation(void) {
   printf("  GEN     " SRC_FILE "\n");
   std::ofstream ofs {SRC_FILE};
   assert(ofs);
-  ofs << "#include " << "\"" BUILD_DIR "/" HDR_FILE "\"" << "\n";
+  ofs << "#include " << "\"" HDR_FILE "\"" << "\n";
   for (const auto &e : fs::directory_iterator(SRC_DIR)) {
     if (!e.is_regular_file()) continue;
     const auto p = e.path();
@@ -60,10 +79,6 @@ void compile_and_link_lib(void) {
   assert(fs::remove(OBJ_FILE));
 }
 
-void test(void) {
-  RunMetaprogram(TEST_EXE);
-}
-
 void build_tutorials(void) {
   for (const auto &e : fs::directory_iterator(TUTORIAL_DIR)) {
     if (!e.is_regular_file()) continue;
@@ -77,13 +92,23 @@ void build_tutorials(void) {
   }
 }
 
-void create_skap_for_tutorials(void) {
+void build(void) {
+  printf("  MKDIR   " BUILD_DIR "\n");
+  fs::create_directory(BUILD_DIR);
+  license_amalgamation();
+  hdr_amalgamation();
+  src_amalgamation();
+  compile_and_link_lib();
+  RunMetaprogram(TEST_EXE);
+  build_tutorials();
   RunMetaprogram(PACKER_EXE);
 }
 
-void tutorials(void) {
-  build_tutorials();
-  create_skap_for_tutorials();
+void pkg(void) {
+  printf("  CP      ./LICENSE -> " BUILD_DIR "/LICENSE\n");
+  fs::copy_file("./LICENSE", BUILD_DIR "/LICENSE", fs::copy_options::overwrite_existing);
+  printf("  GZIP    " PKG_FILE "\n");
+  RunCmd("tar -zcf " PKG_FILE " " BUILD_DIR);
 }
 
 void clean(void) {
@@ -103,23 +128,6 @@ void clean(void) {
   }
 }
 
-void build(void) {
-  printf("  MKDIR   " BUILD_DIR "\n");
-  fs::create_directory(BUILD_DIR);
-  hdr_amalgamation();
-  prepare_unity_build();
-  compile_and_link_lib();
-  test();
-  tutorials();
-}
-
-void pkg(void) {
-  printf("  CP      ./LICENSE -> " BUILD_DIR "/LICENSE\n");
-  fs::copy_file("./LICENSE", BUILD_DIR "/LICENSE", fs::copy_options::overwrite_existing);
-  printf("  GZIP    " PKG_FILE "\n");
-  RunCmd("tar -zcf " PKG_FILE " " BUILD_DIR);
-}
-
 void usage(void) {
   printf("usage: make [clean|build]\n");
 }
@@ -132,18 +140,12 @@ int main(int argc, char **argv) {
   }
   else if (argc == 2) {
     const auto cmd = argv[1];
-    if (!std::strcmp(cmd, "clean")) {
-      clean();
-    }
-    else if (!std::strcmp(cmd, "build")) {
-      build();
-    }
+    if      (!std::strcmp(cmd, "clean")) clean();
+    else if (!std::strcmp(cmd, "build")) build();
     else if (!std::strcmp(cmd, "-h")    ||
              !std::strcmp(cmd, "help")  ||
              !std::strcmp(cmd, "-help") ||
-             !std::strcmp(cmd, "--help")) {
-      usage();
-    }
+             !std::strcmp(cmd, "--help")) usage();
     else {
       printf("unrecognized command\n");
       usage();
