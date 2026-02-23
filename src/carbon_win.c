@@ -25,6 +25,7 @@ static usz *carbon_win__xtable;
 static usz *carbon_win__ytable;
 static CBN_Image carbon_win__icon;
 static bool carbon_win__cursor_visible = true;
+static bool carbon_win__cursor_inside;
 
 static u32 carbon_win__max_fps;
 static u32 carbon_win__curr_fps;
@@ -299,8 +300,18 @@ bool carbon_win_shouldclose(void) {
     RGFW_eventType e = carbon_win__handle->event.type;
     if (e == RGFW_quit) return true;
     if (!carbon_win__cursor_visible) {
-      if (e == RGFW_mouseEnter) RGFW_window_showMouse(carbon_win__handle, false);
-      if (e == RGFW_mouseLeave) RGFW_window_showMouse(carbon_win__handle, true);
+      if (e == RGFW_mouseEnter) {
+        carbon_win__cursor_inside = true;
+        RGFW_window_showMouse(carbon_win__handle, false);
+      }
+      else if (e == RGFW_mouseLeave) {
+        carbon_win__cursor_inside = false;
+        RGFW_window_showMouse(carbon_win__handle, true);
+      }
+    }
+    else {
+      if      (e == RGFW_mouseEnter) carbon_win__cursor_inside = true;
+      else if (e == RGFW_mouseLeave) carbon_win__cursor_inside = false;
     }
   }
   return false;
@@ -341,7 +352,7 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
 
 void carbon_win_set_mouse_visibility(bool visible) {
   carbon_win__cursor_visible = visible;
-  RGFW_window_showMouse(carbon_win__handle, visible);
+  if (carbon_win__cursor_inside) RGFW_window_showMouse(carbon_win__handle, visible);
 }
 
 void carbon_win_set_border_visibility(bool visible) {
