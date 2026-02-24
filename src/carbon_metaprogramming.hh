@@ -273,9 +273,34 @@ namespace cbn::meta {
   /**
    */
   template <typename T>
+  struct IsVoid : Same<void, RemoveCV_t<T>> {};
+  template <typename T>
+  constexpr auto IsVoid_v = IsVoid<T>::value;
+
+  /**
+   */
+  template <typename T>
   constexpr T &&Forward(RemoveRef_t<T> &t) noexcept { return static_cast<T &&>(t); }
   template <typename T>
   constexpr T &&Forward(RemoveRef_t<T> &&t) noexcept = delete;
+
+  /**
+   */
+  template <typename T, typename U>
+  concept ConvertibleTo = (IsVoid_v<T> and IsVoid_v<U>) or requires (T &&t) {
+    requires requires (U (*f)()) {
+      f = nullptr;
+    };
+    [](U){}(Forward<T>(t));
+    static_cast<U>(Forward<T>(t));
+  };
+
+  /**
+   */
+  template <typename T, typename U>
+  struct IsConvertible : Constant<bool, ConvertibleTo<T, U>> {};
+  template <typename T, typename U>
+  constexpr auto IsConvertible_v = IsConvertible<T, U>::value;
 
   /**
    */
