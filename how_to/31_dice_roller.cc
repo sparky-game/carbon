@@ -18,7 +18,7 @@ namespace res {
   static constexpr auto c_Color_d20 = 0xf38000ff;
 
   static inline void LoadPack(const char *path, auto &var) {
-    if (auto i = cbn::SKAP::make(path)) var = *i;
+    if (auto i = cbn::SKAP::Open(path)) var = *i;
     else CARBON_UNREACHABLE;
   }
 

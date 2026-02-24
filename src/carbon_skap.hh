@@ -8,7 +8,7 @@ struct CBN_SKAP : CBN_SKAP_t {
     return carbon_skap_create(decl, skap);
   }
 
-  static cbn::Opt<CBN_SKAP> make(const char *skap) {
+  static cbn::Opt<CBN_SKAP> Open(const char *skap) {
     CBN_SKAP handle;
     if (!carbon_skap_open(skap, &handle)) return {};
     return handle;

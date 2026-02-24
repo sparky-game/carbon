@@ -9,7 +9,7 @@ namespace res {
   static cbn::mesh_mgr::UID s_Mesh_Teapot;
 
   static inline void LoadPack(const char *path, auto &var) {
-    if (auto i = cbn::SKAP::make(path)) var = *i;
+    if (auto i = cbn::SKAP::Open(path)) var = *i;
     else CARBON_UNREACHABLE;
   }
 
