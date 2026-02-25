@@ -170,7 +170,7 @@ CBNINL void carbon_skap__create_global_lists(void) {
 CBNINL void carbon_skap__destroy_global_lists(void) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
-    carbon_fs_destroy_img(&it.var);
+    carbon_image_destroy(&it.var);
   }
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
   carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
@@ -208,6 +208,34 @@ CBNINL void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_groups) 
   }
 }
 
+CBNINL void carbon_skap__append_idxs__images(CBN_SKAP_AssetIdx *idx, usz i, const char *name) {
+  CBN_Image asset = carbon_image_read_from_file(name);
+  carbon_list_push(&carbon_skap__assets[i], &asset);
+  idx->metadata.as_img = asset.metadata;
+}
+
+CBNINL void carbon_skap__append_idxs__binaries(CBN_SKAP_AssetIdx *idx, usz i, const char *name) {
+  CBN_Binary asset = {
+    .data = 0,
+    .metadata.size = carbon_fs_get_file_size(name)
+  };
+  asset.data = (u8 *) carbon_memory_alloc(asset.metadata.size);
+  {
+    FILE *asset_fd = fopen(name, "rb");
+    fread(asset.data, asset.metadata.size, 1, asset_fd);
+    fclose(asset_fd);
+  }
+  carbon_list_push(&carbon_skap__assets[i], &asset);
+  idx->metadata.as_bin = asset.metadata;
+}
+
+CBNINL void carbon_skap__append_idxs__meshes(CBN_SKAP_AssetIdx *idx, usz i, const char *name) {
+  CBN_Mesh asset = {0};
+  carbon_mesh_create_from_file(&asset, name);
+  carbon_list_push(&carbon_skap__assets[i], &asset);
+  idx->metadata.as_mesh = asset.metadata;
+}
+
 // @type_dependant
 CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
@@ -222,29 +250,15 @@ CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset
         strncpy(idx.name, asset_name, sizeof(idx.name));
         idx.metadata.type = carbon_skap__str2type(ag_it.var.type);
         switch (idx.metadata.type) {
-        case CARBON_SKAP_ASSET_TYPE_IMAGE: {
-          CBN_Image asset = carbon_fs_read_img_from_file(asset_name);
-          carbon_list_push(&carbon_skap__assets[i], &asset);
-          idx.metadata.as_img = asset.metadata;
-        } break;
-        case CARBON_SKAP_ASSET_TYPE_BINARY: {
-          CBN_Binary asset = {
-            .data = 0,
-            .metadata.size = carbon_fs_get_file_size(asset_name)
-          };
-          asset.data = (u8 *) carbon_memory_alloc(asset.metadata.size);
-          FILE *asset_fd = fopen(asset_name, "rb");
-          fread(asset.data, asset.metadata.size, 1, asset_fd);
-          fclose(asset_fd);
-          carbon_list_push(&carbon_skap__assets[i], &asset);
-          idx.metadata.as_bin = asset.metadata;
-        } break;
-        case CARBON_SKAP_ASSET_TYPE_MESH: {
-          CBN_Mesh asset = {0};
-          carbon_mesh_create_from_file(&asset, asset_name);
-          carbon_list_push(&carbon_skap__assets[i], &asset);
-          idx.metadata.as_mesh = asset.metadata;
-        } break;
+        case CARBON_SKAP_ASSET_TYPE_IMAGE:
+          carbon_skap__append_idxs__images(&idx, i, asset_name);
+          break;
+        case CARBON_SKAP_ASSET_TYPE_BINARY:
+          carbon_skap__append_idxs__binaries(&idx, i, asset_name);
+          break;
+        case CARBON_SKAP_ASSET_TYPE_MESH:
+          carbon_skap__append_idxs__meshes(&idx, i, asset_name);
+          break;
         case CARBON_SKAP_ASSET_TYPE_COUNT:
         default: CARBON_UNREACHABLE;
         }
@@ -275,7 +289,11 @@ CBNINL void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
     fwrite(idx, sizeof(*idx), 1, fd);
     // Return and write the blob
     fseek(fd, blob_loc, SEEK_SET);
-    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
+    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")",
+                   idx->name,
+                   skap,
+                   idx->blob_offset,
+                   idx->blob_size);
     fwrite(asset->data, idx->blob_size, 1, fd);
   }
 }
@@ -297,7 +315,11 @@ CBNINL void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
     fwrite(idx, sizeof(*idx), 1, fd);
     // Return and write the blob
     fseek(fd, blob_loc, SEEK_SET);
-    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
+    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")",
+                   idx->name,
+                   skap,
+                   idx->blob_offset,
+                   idx->blob_size);
     fwrite(asset->data, idx->blob_size, 1, fd);
   }
 }
@@ -323,7 +345,11 @@ CBNINL void carbon_skap__append_blobs__meshes(const char *skap, FILE *fd) {
     fwrite(idx, sizeof(*idx), 1, fd);
     // Return and write the blob
     fseek(fd, blob_loc, SEEK_SET);
-    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")", idx->name, skap, idx->blob_offset, idx->blob_size);
+    carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")",
+                   idx->name,
+                   skap,
+                   idx->blob_offset,
+                   idx->blob_size);
     fwrite(asset->vertices, sz_v, 1, fd);
     fwrite(asset->texcoords, sz_vt, 1, fd);
     fwrite(asset->normals, sz_vn, 1, fd);
@@ -500,7 +526,7 @@ bool carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_t
     fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
     if (idx.checksum != carbon_crypto_crc32(asset.data, idx.blob_size)) {
       CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
-      carbon_fs_destroy_img(&asset);
+      carbon_image_destroy(&asset);
       return false;
     }
     carbon_memory_copy(out_blob, &asset, sizeof(asset));

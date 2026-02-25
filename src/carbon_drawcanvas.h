@@ -28,6 +28,13 @@ typedef struct {
 } CBN_Transform;
 CBNDEF_AKA(cbn, Transform, CBN_Transform);
 
+// Forward declaration
+#ifdef __cplusplus
+struct CBN_Sprite;
+#else
+typedef struct CBN_Sprite_t CBN_Sprite;
+#endif
+
 /**
  * @brief Creates a new DrawCanvas object.
  * @param width The width to set the canvas to.

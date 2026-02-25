@@ -235,7 +235,7 @@ void carbon_win_close(void) {
   pthread_join(carbon_win__thread_id, 0);
   carbon_memory_free(carbon_win__xtable);
   carbon_memory_free(carbon_win__ytable);
-  if (carbon_win__icon.data) carbon_fs_destroy_img(&carbon_win__icon);
+  if (carbon_win__icon.data) carbon_image_destroy(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
   CBN_INFO("Window closed successfully");
 }

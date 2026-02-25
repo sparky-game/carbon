@@ -25,9 +25,9 @@ bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_
     return false;
   }
   CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
-  CBN_Image img = carbon_fs_read_img_from_file(file);
+  CBN_Image img = carbon_image_read_from_file(file);
   *sprite = carbon_sprite_from_img(&img);
-  carbon_fs_destroy_img(&img);
+  carbon_image_destroy(&img);
   *out_uid = carbon_slotmap_push(&carbon_sprite__library, &sprite);
   return true;
 }
@@ -44,7 +44,7 @@ bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap
     return false;
   }
   *sprite = carbon_sprite_from_img(&img);
-  carbon_fs_destroy_img(&img);
+  carbon_image_destroy(&img);
   *out_uid = carbon_slotmap_push(&carbon_sprite__library, &sprite);
   return true;
 }

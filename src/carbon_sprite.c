@@ -3,7 +3,7 @@
 
 CBN_Sprite carbon_sprite_from_img(const CBN_Image *img) {
   return (CBN_Sprite) {
-    .pixels = carbon_fs_img_8bit_to_32bit(img->data, img->metadata.width, img->metadata.height),
+    .pixels = carbon_image_8bit_to_32bit(img->data, img->metadata.width, img->metadata.height),
     .width = img->metadata.width,
     .height = img->metadata.height,
   };
