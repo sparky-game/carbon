@@ -37,7 +37,11 @@ jobs:
       security-events: write
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
+      matrix:
+        os:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
     if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: checkout-repo
