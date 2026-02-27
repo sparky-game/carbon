@@ -3,7 +3,7 @@
 
 #define CARBON_COROUTINE__STACK_CAPACITY (1024 * getpagesize())
 
-#if defined(__linux__) && defined(CARBON_CPU_ARCH_AMD64)
+#if defined(CARBON_CPU_ARCH_AMD64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rdi\n"                                \
   "pushq %rbp\n"                                \
@@ -13,6 +13,18 @@
   "pushq %r14\n"                                \
   "pushq %r15\n"
 
+#define CARBON_COROUTINE__RESTORE_REGISTERS     \
+  "movq %rdi, %rsp\n"                           \
+  "popq %r15\n"                                 \
+  "popq %r14\n"                                 \
+  "popq %r13\n"                                 \
+  "popq %r12\n"                                 \
+  "popq %rbx\n"                                 \
+  "popq %rbp\n"                                 \
+  "popq %rdi\n"                                 \
+  "ret\n"
+
+#if defined(__linux__)
 #define CARBON_COROUTINE__SLEEP_NONE            \
   "movq %rsp, %rdi\n"                           \
   "movq $0, %rsi\n"                             \
@@ -30,18 +42,26 @@
   "movq $2, %rsi\n"                             \
   "jmp carbon_coroutine__switch_ctx\n"
 
-#define CARBON_COROUTINE__RESTORE_REGISTERS     \
-  "movq %rdi, %rsp\n"                           \
-  "popq %r15\n"                                 \
-  "popq %r14\n"                                 \
-  "popq %r13\n"                                 \
-  "popq %r12\n"                                 \
-  "popq %rbx\n"                                 \
-  "popq %rbp\n"                                 \
-  "popq %rdi\n"                                 \
-  "ret\n"
+#elif defined(__APPLE__)
+#define CARBON_COROUTINE__SLEEP_NONE            \
+  "movq %rsp, %rdi\n"                           \
+  "movq $0, %rsi\n"                             \
+  "jmp _carbon_coroutine__switch_ctx\n"
 
-#elif defined(__APPLE__) && defined(CARBON_CPU_ARCH_AARCH64)
+#define CARBON_COROUTINE__SLEEP_READ            \
+  "movq %rdi, %rdx\n"                           \
+  "movq %rsp, %rdi\n"                           \
+  "movq $1, %rsi\n"                             \
+  "jmp _carbon_coroutine__switch_ctx\n"
+
+#define CARBON_COROUTINE__SLEEP_WRITE           \
+  "movq %rdi, %rdx\n"                           \
+  "movq %rsp, %rdi\n"                           \
+  "movq $2, %rsi\n"                             \
+  "jmp _carbon_coroutine__switch_ctx\n"
+#endif
+
+#elif defined(CARBON_CPU_ARCH_AARCH64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "sub sp, sp, #240\n"                          \
   "stp q8, q9, [sp, #0]\n"                      \
@@ -57,23 +77,6 @@
   "mov x1, x30\n"                               \
   "str x30, [sp, #224]\n"                       \
   "str x0, [sp, #232]\n"
-
-#define CARBON_COROUTINE__SLEEP_NONE            \
-  "mov x0, sp\n"                                \
-  "mov x1, #0\n"                                \
-  "b _carbon_coroutine__switch_ctx\n"
-
-#define CARBON_COROUTINE__SLEEP_READ            \
-  "mov x2, x0\n"                                \
-  "mov x0, sp\n"                                \
-  "mov x1, #1\n"                                \
-  "b _carbon_coroutine__switch_ctx\n"
-
-#define CARBON_COROUTINE__SLEEP_WRITE           \
-  "mov x2, x0\n"                                \
-  "mov x0, sp\n"                                \
-  "mov x1, #2\n"                                \
-  "b _carbon_coroutine__switch_ctx\n"
 
 #define CARBON_COROUTINE__RESTORE_REGISTERS     \
   "mov sp, x0\n"                                \
@@ -92,6 +95,43 @@
   "ldr x0, [sp, #232]\n"                        \
   "add sp, sp, #240\n"                          \
   "ret x1\n"
+
+#if defined(__linux__)
+#define CARBON_COROUTINE__SLEEP_NONE            \
+  "mov x0, sp\n"                                \
+  "mov x1, #0\n"                                \
+  "b carbon_coroutine__switch_ctx\n"
+
+#define CARBON_COROUTINE__SLEEP_READ            \
+  "mov x2, x0\n"                                \
+  "mov x0, sp\n"                                \
+  "mov x1, #1\n"                                \
+  "b carbon_coroutine__switch_ctx\n"
+
+#define CARBON_COROUTINE__SLEEP_WRITE           \
+  "mov x2, x0\n"                                \
+  "mov x0, sp\n"                                \
+  "mov x1, #2\n"                                \
+  "b carbon_coroutine__switch_ctx\n"
+
+#elif defined(__APPLE__)
+#define CARBON_COROUTINE__SLEEP_NONE            \
+  "mov x0, sp\n"                                \
+  "mov x1, #0\n"                                \
+  "b _carbon_coroutine__switch_ctx\n"
+
+#define CARBON_COROUTINE__SLEEP_READ            \
+  "mov x2, x0\n"                                \
+  "mov x0, sp\n"                                \
+  "mov x1, #1\n"                                \
+  "b _carbon_coroutine__switch_ctx\n"
+
+#define CARBON_COROUTINE__SLEEP_WRITE           \
+  "mov x2, x0\n"                                \
+  "mov x0, sp\n"                                \
+  "mov x1, #2\n"                                \
+  "b _carbon_coroutine__switch_ctx\n"
+#endif
 
 #elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
@@ -309,6 +349,65 @@ usz carbon_coroutine_alive(void) {
   return carbon_coroutine__active.size;
 }
 
+CBNINL void carbon_coroutine__prepare_stack(void ***rsp, void (*f)(void *), void *arg) {
+#if defined(CARBON_CPU_ARCH_AMD64) && !defined(_WIN32)  // System V AMD64
+  *(--*rsp) = (void *) carbon_coroutine__finish_current;
+  *(--*rsp) = (void *) f;
+  *(--*rsp) = arg;  // pushq %rdi
+  *(--*rsp) = 0;    // pushq %rbp
+  *(--*rsp) = 0;    // pushq %rbx
+  *(--*rsp) = 0;    // pushq %r12
+  *(--*rsp) = 0;    // pushq %r13
+  *(--*rsp) = 0;    // pushq %r14
+  *(--*rsp) = 0;    // pushq %r15
+#elif defined(CARBON_CPU_ARCH_AARCH64) && !defined(_WIN32)  // AAPCS64
+  *(--*rsp) = arg;  // x0
+  *(--*rsp) = (void *) carbon_coroutine__finish_current;
+  *(--*rsp) = (void *) f;
+  *(--*rsp) = 0;    // x19
+  *(--*rsp) = 0;    // x20
+  *(--*rsp) = 0;    // x21
+  *(--*rsp) = 0;    // x22
+  *(--*rsp) = 0;    // x23
+  *(--*rsp) = 0;    // x24
+  *(--*rsp) = 0;    // x25
+  *(--*rsp) = 0;    // x26
+  *(--*rsp) = 0;    // x27
+  *(--*rsp) = 0;    // x28
+  *(--*rsp) = 0;    // x29
+  *(--*rsp) = 0;    // x30
+  *(--*rsp) = 0;    // q8
+  *(--*rsp) = 0;    // q9
+  *(--*rsp) = 0;    // q10
+  *(--*rsp) = 0;    // q11
+  *(--*rsp) = 0;    // q12
+  *(--*rsp) = 0;    // q13
+  *(--*rsp) = 0;    // q14
+  *(--*rsp) = 0;    // q15
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+  *(--*rsp) = 0;    // ???
+#elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)  // Microsoft x64
+  *(--*rsp) = (void *) carbon_coroutine__finish_current;
+  *(--*rsp) = (void *) f;
+  *(--*rsp) = arg;  // pushq %rcx
+  *(--*rsp) = 0;    // pushq %rbx
+  *(--*rsp) = 0;    // pushq %rbp
+  *(--*rsp) = 0;    // pushq %rdi
+  *(--*rsp) = 0;    // pushq %rsi
+  *(--*rsp) = 0;    // pushq %r12
+  *(--*rsp) = 0;    // pushq %r13
+  *(--*rsp) = 0;    // pushq %r14
+  *(--*rsp) = 0;    // pushq %r15
+#else
+#error Target platform is not supported
+#endif
+}
+
 void carbon_coroutine_create(void (*f)(void *), void *arg) {
   usz id;
   if (carbon_coroutine__dead.size) {
@@ -323,62 +422,7 @@ void carbon_coroutine_create(void (*f)(void *), void *arg) {
     CBN_ASSERT(carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp != CARBON_COROUTINE__ALLOC_STACK_FAILED);
   }
   void **rsp = (void **) ((u8 *) carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp + CARBON_COROUTINE__STACK_CAPACITY);
-#if defined(__linux__) && defined(CARBON_CPU_ARCH_AMD64)
-  *(--rsp) = (void *) carbon_coroutine__finish_current;
-  *(--rsp) = (void *) f;
-  *(--rsp) = arg;  // pushq %rdi
-  *(--rsp) = 0;    // pushq %rbp
-  *(--rsp) = 0;    // pushq %rbx
-  *(--rsp) = 0;    // pushq %r12
-  *(--rsp) = 0;    // pushq %r13
-  *(--rsp) = 0;    // pushq %r14
-  *(--rsp) = 0;    // pushq %r15
-#elif defined(__APPLE__) && defined(CARBON_CPU_ARCH_AARCH64)
-  *(--rsp) = arg;  // x0
-  *(--rsp) = (void *) carbon_coroutine__finish_current;
-  *(--rsp) = (void *) f;
-  *(--rsp) = 0;    // x19
-  *(--rsp) = 0;    // x20
-  *(--rsp) = 0;    // x21
-  *(--rsp) = 0;    // x22
-  *(--rsp) = 0;    // x23
-  *(--rsp) = 0;    // x24
-  *(--rsp) = 0;    // x25
-  *(--rsp) = 0;    // x26
-  *(--rsp) = 0;    // x27
-  *(--rsp) = 0;    // x28
-  *(--rsp) = 0;    // x29
-  *(--rsp) = 0;    // x30
-  *(--rsp) = 0;    // q8
-  *(--rsp) = 0;    // q9
-  *(--rsp) = 0;    // q10
-  *(--rsp) = 0;    // q11
-  *(--rsp) = 0;    // q12
-  *(--rsp) = 0;    // q13
-  *(--rsp) = 0;    // q14
-  *(--rsp) = 0;    // q15
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-  *(--rsp) = 0;    // ???
-#elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)
-  *(--rsp) = (void *) carbon_coroutine__finish_current;
-  *(--rsp) = (void *) f;
-  *(--rsp) = arg;  // pushq %rcx
-  *(--rsp) = 0;    // pushq %rbx
-  *(--rsp) = 0;    // pushq %rbp
-  *(--rsp) = 0;    // pushq %rdi
-  *(--rsp) = 0;    // pushq %rsi
-  *(--rsp) = 0;    // pushq %r12
-  *(--rsp) = 0;    // pushq %r13
-  *(--rsp) = 0;    // pushq %r14
-  *(--rsp) = 0;    // pushq %r15
-#else
-#error Target platform is not supported
-#endif
+  carbon_coroutine__prepare_stack(&rsp, f, arg);
   carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsp = rsp;
   carbon_list_push(&carbon_coroutine__active, &id);
 }
