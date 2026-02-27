@@ -27,11 +27,7 @@ f32 carbon_math_abs(f32 x) {
 }
 
 f32 carbon_math_round(f32 x) {
-#if defined(CARBON_CPU_ARCH_AMD64)
-  f32 res;
-  __asm__("roundss $4, %1, %0" : "=x"(res) : "x"(x));
-  return res;
-#elif defined(CARBON_CPU_ARCH_AARCH64)
+#if defined(CARBON_CPU_ARCH_AARCH64)
   f32 res;
   __asm__("frinta %s0, %s1" : "=w"(res) : "w"(x));
   return res;
