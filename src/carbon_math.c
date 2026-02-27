@@ -2,16 +2,23 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 u32 carbon_math_bswap32(u32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_bswap32)
-  return __builtin_bswap32(x);
+#if defined(CARBON_CPU_ARCH_AMD64)
+  __asm__("bswapl %0" : "=r"(x) : "0"(x));
+  return x;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  u32 res;
+  __asm__("rev %w0, %w1" : "=r"(res) : "r"(x));
+  return res;
 #else
   return ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8) | ((x & 0x00ff0000) >> 8) | ((x & 0xff000000) >> 24);
 #endif
 }
 
 f32 carbon_math_abs(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_fabsf)
-  return __builtin_fabsf(x);
+#if defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("fabs %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
 #else
   union { f32 f; u32 i; } u = {x};
   u.i &= 0x7fffffff;
@@ -20,16 +27,28 @@ f32 carbon_math_abs(f32 x) {
 }
 
 f32 carbon_math_round(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_roundf)
-  return __builtin_roundf(x);
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("roundss $4, %1, %0" : "=x"(res) : "x"(x));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("frinta %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
 #else
   return x >= 0 ? (i32) (x + 0.5) : (i32) (x - 0.5);
 #endif
 }
 
 f32 carbon_math_floor(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_floorf)
-  return __builtin_floorf(x);
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("roundss $1, %1, %0" : "=x"(res) : "x"(x));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("frintm %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
 #else
   union { f32 f; u32 i; } u = {x};
   i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
@@ -54,8 +73,14 @@ f32 carbon_math_floor(f32 x) {
 }
 
 f32 carbon_math_ceil(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_ceilf)
-  return __builtin_ceilf(x);
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("roundss $2, %1, %0" : "=x"(res) : "x"(x));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("frintp %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
 #else
   union { f32 f; u32 i; } u = {x};
   i32 e = (i32) (u.i >> 23 & 0xff) - 0x7f;
@@ -91,8 +116,14 @@ f32 carbon_math_snap(f32 x, f32 dx) {
 }
 
 f32 carbon_math_sqrt(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_sqrtf)
-  return __builtin_sqrtf(x);
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("sqrtss %1, %0" : "=x"(res) : "x"(x));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("fsqrt %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
 #else
   if (!x || x < 0) return 0;
   if (x == 0.5) return CARBON_1_SQRT2;
@@ -111,6 +142,15 @@ f32 carbon_math_sqrt(f32 x) {
 }
 
 f32 carbon_math_rsqrt(f32 x) {
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("rsqrtss %1, %0" : "=x"(res) : "x"(x));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("frsqrte %s0, %s1" : "=w"(res) : "w"(x));
+  return res;
+#else
   // Fast Inverse Square Root algorithm
   f32 x2 = x/2, y = x;
   i32 i = *((i32 *) &y);      // evil floating point bit level hacking
@@ -118,6 +158,7 @@ f32 carbon_math_rsqrt(f32 x) {
   y = *((f32 *) &i);
   y *= (1.5 - (x2 * y * y));
   return y;
+#endif
 }
 
 i32 carbon_math_imod(i32 x, i32 y) {
