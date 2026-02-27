@@ -83,6 +83,9 @@ u64 carbon_rng_mt19937_64_rand(void) {
   return x;
 }
 
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+
 CBNINL i32 carbon_rng__ascending_order(const void *a, const void *b) {
   const i32 x = *(const i32 *) a;
   const i32 y = *(const i32 *) b;
@@ -110,7 +113,7 @@ u32 carbon_rng_roll_dice(const char *expr) {
     return 0;
   }
   p += cs;
-  CBN_Sort_CmpFunc f_cmp;
+  CBN_Sort_CmpFunc f_cmp = 0;
   if (!*p) x = n;
   else if (!carbon_string_cmp_n(p, "kl", 2)) {
     if (1 != sscanf(p + 2, "%u", &x)) {
@@ -140,7 +143,7 @@ u32 carbon_rng_roll_dice(const char *expr) {
   }
   u32 rolls[256] = {0};
   for (usz i = 0; i < n; ++i) rolls[i] = carbon_rng_lcg_range(1, s);
-  carbon_sort_insertion(rolls, n, sizeof(u32), f_cmp);
+  if (x < n) carbon_sort_insertion(rolls, n, sizeof(u32), f_cmp);
   u32 sum = 0;
   for (usz i = 0; i < x; ++i) sum += rolls[i];
   return sum;
