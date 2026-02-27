@@ -3,7 +3,7 @@
 
 #define CARBON_COROUTINE__STACK_CAPACITY (1024 * getpagesize())
 
-#if defined(__linux__) && (defined(__amd64__) || defined(_M_AMD64))
+#if defined(__linux__) && defined(CARBON_CPU_ARCH_AMD64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rdi\n"                                \
   "pushq %rbp\n"                                \
@@ -41,7 +41,7 @@
   "popq %rdi\n"                                 \
   "ret\n"
 
-#elif defined(__APPLE__) && defined(__aarch64__)
+#elif defined(__APPLE__) && defined(CARBON_CPU_ARCH_AARCH64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "sub sp, sp, #240\n"                          \
   "stp q8, q9, [sp, #0]\n"                      \
@@ -93,7 +93,7 @@
   "add sp, sp, #240\n"                          \
   "ret x1\n"
 
-#elif defined(_WIN32) && (defined(__amd64__) || defined(_M_AMD64))
+#elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rcx\n"                                \
   "pushq %rbx\n"                                \
@@ -323,7 +323,7 @@ void carbon_coroutine_create(void (*f)(void *), void *arg) {
     CBN_ASSERT(carbon_list_at(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp != CARBON_COROUTINE__ALLOC_STACK_FAILED);
   }
   void **rsp = (void **) ((u8 *) carbon_list_at_raw(CBN_Coroutine_CTX, carbon_coroutine__ctxs, id).rsbp + CARBON_COROUTINE__STACK_CAPACITY);
-#if defined(__linux__) && (defined(__amd64__) || defined(_M_AMD64))
+#if defined(__linux__) && defined(CARBON_CPU_ARCH_AMD64)
   *(--rsp) = (void *) carbon_coroutine__finish_current;
   *(--rsp) = (void *) f;
   *(--rsp) = arg;  // pushq %rdi
@@ -333,7 +333,7 @@ void carbon_coroutine_create(void (*f)(void *), void *arg) {
   *(--rsp) = 0;    // pushq %r13
   *(--rsp) = 0;    // pushq %r14
   *(--rsp) = 0;    // pushq %r15
-#elif defined(__APPLE__) && defined(__aarch64__)
+#elif defined(__APPLE__) && defined(CARBON_CPU_ARCH_AARCH64)
   *(--rsp) = arg;  // x0
   *(--rsp) = (void *) carbon_coroutine__finish_current;
   *(--rsp) = (void *) f;
@@ -364,7 +364,7 @@ void carbon_coroutine_create(void (*f)(void *), void *arg) {
   *(--rsp) = 0;    // ???
   *(--rsp) = 0;    // ???
   *(--rsp) = 0;    // ???
-#elif defined(_WIN32) && (defined(__amd64__) || defined(_M_AMD64))
+#elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)
   *(--rsp) = (void *) carbon_coroutine__finish_current;
   *(--rsp) = (void *) f;
   *(--rsp) = arg;  // pushq %rcx

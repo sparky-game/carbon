@@ -138,9 +138,11 @@
 /**
  * @brief CPU identification.
  */
-#if defined(__amd64__) || defined(_M_AMD64)
+#if defined(__x86_64__) || defined(__amd64__) || defined(_M_AMD64)
+#define CARBON_CPU_ARCH_AMD64
 #define CARBON_CPU_ARCH "amd64"
 #elif defined(__aarch64__)
+#define CARBON_CPU_ARCH_AARCH64
 #define CARBON_CPU_ARCH "aarch64"
 #else
 #error CPU architecture is not supported
@@ -238,7 +240,7 @@
 #elif defined(__SSE3__)
 #define CARBON_SIMD_HAS_SSE3
 #include <pmmintrin.h>
-#elif defined(__SSE2__) || defined(_M_AMD64)
+#elif defined(__SSE2__) || defined(CARBON_CPU_ARCH_AMD64)
 #define CARBON_SIMD_HAS_SSE2
 #include <emmintrin.h>
 #elif defined(__SSE__)
@@ -246,7 +248,7 @@
 #include <xmmintrin.h>
 #endif
 // NEON
-#if defined(__ARM_NEON) || defined(__aarch64__)
+#if defined(__ARM_NEON) || defined(CARBON_CPU_ARCH_AARCH64)
 #if defined(__ARM_FEATURE_FMA)
 #define CARBON_SIMD_HAS_NEON_FMA
 #else
