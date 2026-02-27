@@ -1,7 +1,27 @@
 #ifdef __cplusplus
 
 template <typename T>
-concept CBN_SKAP_ValidAssetType = cbn::meta::Allowed<T, CBN_Image, CBN_Binary, CBN_Mesh>;
+struct CBN_SKAP_AssetTrait;
+
+template <>
+struct CBN_SKAP_AssetTrait<CBN_Image>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_IMAGE>
+{};
+
+template <>
+struct CBN_SKAP_AssetTrait<CBN_Binary>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_BINARY>
+{};
+
+template <>
+struct CBN_SKAP_AssetTrait<CBN_Mesh>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_MESH>
+{};
+
+template <typename T>
+concept CBN_SKAP_ValidAssetType = requires {
+  {CBN_SKAP_AssetTrait<T>::value} -> cbn::meta::ConvertibleTo<CBN_SKAP_AssetType>;
+};
 
 struct CBN_SKAP : CBN_SKAP_t {
   static bool Create(const char *decl, const char *skap) {
@@ -65,10 +85,7 @@ struct CBN_SKAP : CBN_SKAP_t {
 private:
   template <CBN_SKAP_ValidAssetType T>
   static consteval CBN_SKAP_AssetType GetAssetType(void) {
-    if constexpr      (cbn::meta::Same_v<T, CBN_Image>)  return CARBON_SKAP_ASSET_TYPE_IMAGE;
-    else if constexpr (cbn::meta::Same_v<T, CBN_Binary>) return CARBON_SKAP_ASSET_TYPE_BINARY;
-    else if constexpr (cbn::meta::Same_v<T, CBN_Mesh>)   return CARBON_SKAP_ASSET_TYPE_MESH;
-    else static_assert(cbn::meta::AlwaysFalse_v<T>, "unsupported type");
+    return CBN_SKAP_AssetTrait<T>::value;
   }
 };
 
