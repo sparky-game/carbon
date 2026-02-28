@@ -40,8 +40,11 @@ bool carbon_fs_is_directory(const char *file) {
 }
 
 bool carbon_fs_rename(const char *oldie, const char *newie) {
+#ifdef _WIN32
+  if (carbon_fs_exists(newie) && !carbon_fs_remove(newie)) return false;
+#endif
   if (-1 == rename(oldie, newie)) {
-    CBN_ERROR("unable to rename %s -> %s", oldie, newie);
+    CBN_ERROR("unable to rename `%s` -> `%s` (reason: `%s`)", oldie, newie, strerror(errno));
     return false;
   }
   return true;
@@ -62,7 +65,7 @@ i32 carbon_fs_mtime(const char *file) {
 
 bool carbon_fs_remove(const char *file) {
   if (-1 == remove(file)) {
-    CBN_ERROR("unable to remove file `%s`", file);
+    CBN_ERROR("unable to remove file `%s` (reason: `%s`)", file, strerror(errno));
     return false;
   }
   return true;
