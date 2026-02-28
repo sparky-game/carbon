@@ -26,6 +26,7 @@
 #ifdef _WIN32
 #undef near
 #undef far
+#undef Yield
 #endif
 
 #if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))

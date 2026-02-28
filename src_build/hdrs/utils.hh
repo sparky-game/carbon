@@ -12,5 +12,9 @@ inline void RunMetaprogram(const char *exe) {
   printf("  EXEC    %s\n", exe);
   RunCmd(std::format(CXX_CMD " {0}.cc " LIB_FILE " " LDFLAGS " -o {0}", exe).c_str());
   RunCmd(exe);
+#ifdef _WIN32
+  assert(fs::remove(std::format("{}.exe", exe).c_str()));
+#else
   assert(fs::remove(exe));
+#endif
 }

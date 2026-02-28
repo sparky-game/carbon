@@ -23,7 +23,7 @@ void license_amalgamation(void) {
     const auto l = p / "LICENSE";
     if (!fs::is_regular_file(l)) continue;
     const auto name = p.filename();
-    ofs << "** " << name.c_str() << " **\n";
+    ofs << "** " << name.string() << " **\n";
     {// Dump the license text
       std::ifstream ifs {l};
       assert(ifs);
@@ -84,9 +84,9 @@ void build_tutorials(void) {
     if (!e.is_regular_file()) continue;
     auto p = e.path();
     const auto ext = p.extension();
-    const auto f = p.replace_extension().c_str();
+    const auto f = p.replace_extension().string();
     if (ext == ".cc") {
-      printf("  CXXLD   %s\n", f);
+      printf("  CXXLD   %s\n", f.c_str());
       RunCmd(std::format(CXX_CMD " {0}.cc " LIB_FILE " " LDFLAGS " -o {0}.exe", f).c_str());
     }
   }
@@ -122,7 +122,7 @@ void clean(void) {
     if (!e.is_regular_file()) continue;
     const auto p = e.path();
     if (p.extension() == ".exe") {
-      printf("  RM      %s\n", p.c_str());
+      printf("  RM      %s\n", p.string().c_str());
       fs::remove(p);
     }
   }
@@ -133,7 +133,11 @@ void usage(void) {
 }
 
 int main(int argc, char **argv) {
-  assert(fs::path(__FILE__).parent_path() == SRC_BUILD_DIR);
+  {// Check running from expected dir
+    auto act = fs::path(__FILE__).parent_path().lexically_normal();
+    auto exp = fs::path(SRC_BUILD_DIR).lexically_normal();
+    assert(act == exp);
+  }
   if (argc == 1) {
     build();
     pkg();

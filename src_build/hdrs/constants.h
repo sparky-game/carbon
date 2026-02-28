@@ -17,17 +17,21 @@
   "-" CARBON_TARGET_OS                          \
   "-" CARBON_CPU_ARCH
 
-#define HDR_NAME                NAME ".h"
-#define HDR_IN_FILE             HDR_NAME ".in"
-#define HDR_FILE                BUILD_DIR "/" HDR_NAME
-#define SRC_FILE                NAME ".c"
-#define OBJ_FILE                NAME ".o"
-#define LIB_FILE                BUILD_DIR "/lib" NAME ".a"
-#define DLL_FILE                BUILD_DIR "/lib" NAME ".so"
-#define PKG_FILE                BUILD_DIR ".tgz"
+#define HDR_NAME    NAME ".h"
+#define HDR_IN_FILE HDR_NAME ".in"
+#define HDR_FILE    BUILD_DIR "/" HDR_NAME
+#define SRC_FILE    NAME ".c"
+#define OBJ_FILE    NAME ".o"
+#define LIB_FILE    BUILD_DIR "/lib" NAME ".a"
+#ifdef _WIN32
+#define DLL_FILE BUILD_DIR "/lib" NAME ".dll"
+#else
+#define DLL_FILE BUILD_DIR "/lib" NAME ".so"
+#endif
+#define PKG_FILE BUILD_DIR ".tgz"
 #define THIRDPARTY_LICENSE_FILE BUILD_DIR "/LICENSE.THIRDPARTY"
-#define TEST_EXE                SRC_BUILD_DIR "/meta/test"
-#define PACKER_EXE              SRC_BUILD_DIR "/meta/packer"
+#define TEST_EXE   SRC_BUILD_DIR "/meta/test"
+#define PACKER_EXE SRC_BUILD_DIR "/meta/packer"
 
 #ifndef CC
 #define CC "cc"
