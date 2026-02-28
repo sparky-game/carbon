@@ -3,7 +3,7 @@
 
 #define CARBON_COROUTINE__STACK_CAPACITY (1024 * getpagesize())
 
-#if defined(CARBON_CPU_ARCH_AMD64)
+#if defined(CARBON_CPU_ARCH_AMD64) && !defined(_WIN32)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rdi\n"                                \
   "pushq %rbp\n"                                \
@@ -61,7 +61,7 @@
   "jmp _carbon_coroutine__switch_ctx\n"
 #endif
 
-#elif defined(CARBON_CPU_ARCH_AARCH64)
+#elif defined(CARBON_CPU_ARCH_AARCH64) && !defined(_WIN32)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "sub sp, sp, #240\n"                          \
   "stp q8, q9, [sp, #0]\n"                      \
@@ -133,7 +133,7 @@
   "b _carbon_coroutine__switch_ctx\n"
 #endif
 
-#elif defined(_WIN32) && defined(CARBON_CPU_ARCH_AMD64)
+#elif defined(CARBON_CPU_ARCH_AMD64) && defined(_WIN32)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rcx\n"                                \
   "pushq %rbx\n"                                \
