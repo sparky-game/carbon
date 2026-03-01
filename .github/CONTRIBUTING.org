@@ -7,7 +7,7 @@ Thank you for your interest in contributing to this project, it is extremely app
 [!IMPORTANT]
 In order to accept your contribution is necessary to accept the terms of the [[https://gist.github.com/iWas-Coder/d75ad634d2c00d02785273ddf5c25a70][Sparky Contributor License Agreement (SCLA)]].
 
-We use it to be able to sell copies of the *CRLE (Carbon Runtime Library Exception)*, which is in essence a /distinct commercial license/, for you to use this library without releasing your software under GNU's *AGPL-3.0-only*. The CRLE is just a license/legal agreement, it doesn't contain any modified versions of the library and *never* will be.
+We use it to be able to sell copies of the *commercial license* of /Carbon/, for you to use it without releasing your software under GNU's *AGPL-3.0-only*. That paid license is just a legal agreement, it doesn't contain any modified versions of the library and *NEVER* will.
 #+end_quote
 
 * Submitting changes
