@@ -211,7 +211,8 @@ CBNINL void *carbon_win__thread_fn(void *arg) {
 
 void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   const usz w = carbon_drawcanvas_width(dc), h = carbon_drawcanvas_height(dc);
-  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter);
+  carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter | RGFW_windowCenterCursor);
+  RGFW_window_raise(carbon_win__handle);
   RGFW_window_initBufferSize(carbon_win__handle, RGFW_AREA(w, h));
   // TODO: investigate the height offset thing (+28) in other systems
   RGFW_window_setMinSize(carbon_win__handle, RGFW_AREA(w, h + 28));
