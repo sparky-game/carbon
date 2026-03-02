@@ -6,52 +6,32 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_WIN_KEYCODES                                           \
-  x(A) x(B) x(C) x(D) x(E) x(F) x(G) x(H) x(I) x(J) x(K) x(L) x(M)    \
-  x(N) x(O) x(P) x(Q) x(R) x(S) x(T) x(U) x(V) x(W) x(X) x(Y) x(Z)    \
-  x(Zero) x(One) x(Two) x(Three) x(Four) x(Five) x(Six) x(Seven)      \
-  x(Eight) x(Nine) x(BackQuote) x(F1) x(F2) x(F3) x(F4) x(F5) x(F6)   \
-  x(F7) x(F8) x(F9) x(F10) x(F11) x(F12) x(Escape) x(Tab) x(CapsLock) \
-  x(LeftShift) x(LeftControl) x(LeftMeta) x(LeftAlt) x(Space)         \
-  x(RightAlt) x(RightMeta) x(RightControl) x(RightShift) x(Return)    \
-  x(UpArrow) x(DownArrow) x(LeftArrow) x(RightArrow)
+/**
+ * @brief ...
+ */
+#define CARBON_WIN_KEYCODES(x, p)                                       \
+  x(p, A) x(p, B) x(p, C) x(p, D) x(p, E) x(p, F) x(p, G) x(p, H)       \
+  x(p, I) x(p, J) x(p, K) x(p, L) x(p, M) x(p, N) x(p, O) x(p, P)       \
+  x(p, Q) x(p, R) x(p, S) x(p, T) x(p, U) x(p, V) x(p, W) x(p, X)       \
+  x(p, Y) x(p, Z) x(p, Zero) x(p, One) x(p, Two) x(p, Three) x(p, Four) \
+  x(p, Five) x(p, Six) x(p, Seven) x(p, Eight) x(p, Nine)               \
+  x(p, BackQuote) x(p, F1) x(p, F2) x(p, F3) x(p, F4) x(p, F5) x(p, F6) \
+  x(p, F7) x(p, F8) x(p, F9) x(p, F10) x(p, F11) x(p, F12) x(p, Escape) \
+  x(p, Tab) x(p, CapsLock) x(p, LeftShift) x(p, LeftCtrl)               \
+  x(p, LeftMeta) x(p, LeftAlt) x(p, Space) x(p, RightAlt)               \
+  x(p, RightMeta) x(p, RightCtrl) x(p, RightShift) x(p, Return)         \
+  x(p, UpArrow) x(p, DownArrow) x(p, LeftArrow) x(p, RightArrow)
+CBNDEF_ENUM(CBN_Win_KeyCode, CARBON_WIN_KEYCODES);
+CBNDEF_AKA(cbn::win, KeyCode, CBN_Win_KeyCode);
 
-#ifdef __cplusplus
-enum struct CBN_KeyCode {
-#define x(name) name,
-  CARBON_WIN_KEYCODES
-  x(Count)
-#undef x
-};
-#else
-typedef enum {
-#define x(name) CARBON_KEY_CODE_ ## name,
-  CARBON_WIN_KEYCODES
-  x(Count)
-#undef x
-} CBN_KeyCode;
-#endif
-CBNDEF_AKA(cbn::win, KeyCode, CBN_KeyCode);
-
-#define CARBON_WIN_MOUSEBUTTONS                         \
-  x(Left) x(Right) x(Middle) x(ScrollUp) x(ScrollDown)
-
-#ifdef __cplusplus
-enum struct CBN_MouseButton {
-#define x(name) name,
-  CARBON_WIN_MOUSEBUTTONS
-  x(Count)
-#undef x
-};
-#else
-typedef enum {
-#define x(name) CARBON_MOUSE_BUTTON_ ## name,
-  CARBON_WIN_MOUSEBUTTONS
-  x(Count)
-#undef x
-} CBN_MouseButton;
-#endif
-CBNDEF_AKA(cbn::win, MouseButton, CBN_MouseButton);
+/**
+ * @brief ...
+ */
+#define CARBON_WIN_MOUSEBUTTONS(x, p)           \
+  x(p, Left) x(p, Right) x(p, Middle)           \
+  x(p, ScrollUp) x(p, ScrollDown)
+CBNDEF_ENUM(CBN_Win_MouseButton, CARBON_WIN_MOUSEBUTTONS);
+CBNDEF_AKA(cbn::win, MouseButton, CBN_Win_MouseButton);
 
 /**
  * @brief ...
@@ -129,6 +109,7 @@ namespace cbn::win {
 #endif
 
 /**
+ * @brief Requests the main window loop to be ended immediately, but gracefully nonetheless.
  */
 CBNDEF void carbon_win_exit(void);
 CBNDEF_FN(cbn::win, Exit, carbon_win_exit);
@@ -138,7 +119,7 @@ CBNDEF_FN(cbn::win, Exit, carbon_win_exit);
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was pressed or not.
  */
-CBNDEF bool carbon_win_get_key_down(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key_down(CBN_Win_KeyCode key);
 CBNDEF_FN(cbn::win, GetKeyDown, carbon_win_get_key_down);
 
 /**
@@ -146,7 +127,7 @@ CBNDEF_FN(cbn::win, GetKeyDown, carbon_win_get_key_down);
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key is being pressed or not.
  */
-CBNDEF bool carbon_win_get_key(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key(CBN_Win_KeyCode key);
 CBNDEF_FN(cbn::win, GetKey, carbon_win_get_key);
 
 /**
@@ -154,7 +135,7 @@ CBNDEF_FN(cbn::win, GetKey, carbon_win_get_key);
  * @param key The KeyCode to evaluate.
  * @return A boolean value representing whether the key was released or not.
  */
-CBNDEF bool carbon_win_get_key_up(const CBN_KeyCode key);
+CBNDEF bool carbon_win_get_key_up(CBN_Win_KeyCode key);
 CBNDEF_FN(cbn::win, GetKeyUp, carbon_win_get_key_up);
 
 /**
@@ -162,7 +143,7 @@ CBNDEF_FN(cbn::win, GetKeyUp, carbon_win_get_key_up);
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was pressed or not.
  */
-CBNDEF bool carbon_win_get_mouse_button_down(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button_down(CBN_Win_MouseButton btn);
 CBNDEF_FN(cbn::win, GetMouseButtonDown, carbon_win_get_mouse_button_down);
 
 /**
@@ -170,7 +151,7 @@ CBNDEF_FN(cbn::win, GetMouseButtonDown, carbon_win_get_mouse_button_down);
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button is being pressed or not.
  */
-CBNDEF bool carbon_win_get_mouse_button(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button(CBN_Win_MouseButton btn);
 CBNDEF_FN(cbn::win, GetMouseButton, carbon_win_get_mouse_button);
 
 /**
@@ -178,7 +159,7 @@ CBNDEF_FN(cbn::win, GetMouseButton, carbon_win_get_mouse_button);
  * @param btn The MouseButton to evaluate.
  * @return A boolean value representing whether the mouse button was released or not.
  */
-CBNDEF bool carbon_win_get_mouse_button_up(const CBN_MouseButton btn);
+CBNDEF bool carbon_win_get_mouse_button_up(CBN_Win_MouseButton btn);
 CBNDEF_FN(cbn::win, GetMouseButtonUp, carbon_win_get_mouse_button_up);
 
 /**

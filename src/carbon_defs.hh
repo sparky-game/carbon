@@ -7,6 +7,11 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 /**
+ * @brief Library printable name.
+ */
+#define CARBON_LIBNAME "SPARKY Carbon"
+
+/**
  * @brief Language standards (C/C++) check.
  */
 #if !defined(__cplusplus) && __STDC_VERSION__ != 201112L
@@ -38,6 +43,16 @@
 #define restrict __restrict
 #else
 #define typeof(x) __typeof__(x)
+#endif
+
+#ifndef __cplusplus
+#if defined(__GNUC__) || defined(__clang__)
+#define alignas(x) __attribute__((aligned(x)))
+#elif defined(_WIN32) && defined(_MSC_VER)
+#define alignas(x) __declspec(align(x))
+#else
+#define alignas(x) _Alignas(x)
+#endif
 #endif
 
 #define CARBON_QUOTE(x) CARBON_QUOTE__2_ELECTRIC_BOOGALOO(x)
@@ -86,6 +101,8 @@
 #define CBNDEF_FN(ns, f, cfn) namespace ns {constexpr auto f = cfn;}
 #define CBNDEF_AKA(ns, aka, type) namespace ns {using aka = type;}
 #define CBNDEF_TAKA(ns, aka, type) namespace ns {template <typename T> using aka = type ## _tt<T>;}
+#define CBNDEF_ENUM(name, xlist) enum struct name {xlist(CBNDEF_ENUM__X,) CBNDEF_ENUM__X(,Count)}
+#define CBNDEF_ENUM__X(p, x) x,
 #else
 #define CBNDEF extern
 #define CBNDEF_T(name) typedef struct name ## _t name; struct name ## _t
@@ -93,6 +110,8 @@
 #define CBNDEF_FN(...)
 #define CBNDEF_AKA(...)
 #define CBNDEF_TAKA(...)
+#define CBNDEF_ENUM(name, xlist) typedef enum {xlist(CBNDEF_ENUM__X, name) CBNDEF_ENUM__X(name, Count)} name
+#define CBNDEF_ENUM__X(p, x) p ## _ ## x,
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -101,16 +120,6 @@
 #define CBNINL __forceinline
 #else
 #define CBNINL static inline
-#endif
-
-#ifndef __cplusplus
-#if defined(__GNUC__) || defined(__clang__)
-#define alignas(x) __attribute__((aligned(x)))
-#elif defined(_WIN32) && defined(_MSC_VER)
-#define alignas(x) __declspec(align(16))
-#else
-#define alignas(x) _Alignas(x)
-#endif
 #endif
 
 /**
@@ -258,5 +267,3 @@
 #include <arm_neon.h>
 #endif
 #endif
-
-#define CARBON_LIBNAME "SPARKY Carbon"

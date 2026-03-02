@@ -43,21 +43,21 @@ static constexpr auto Color_FG  = 0xffdd33ff;
 void camera_update(cbn::Camera &c, const f64 dt) {
   {// Translation
     static constexpr auto speed = 4;
-    if (cbn::win::GetKey(cbn::win::KeyCode::W)) c.MoveForward(speed * dt);
-    if (cbn::win::GetKey(cbn::win::KeyCode::S)) c.MoveBackward(speed * dt);
-    if (cbn::win::GetKey(cbn::win::KeyCode::A)) c.MoveLeft(speed * dt);
-    if (cbn::win::GetKey(cbn::win::KeyCode::D)) c.MoveRight(speed * dt);
-    if (cbn::win::GetKey(cbn::win::KeyCode::Space)) c.MoveUp(speed * dt);
-    if (cbn::win::GetKey(cbn::win::KeyCode::LeftControl)) c.MoveDown(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::W))        c.MoveForward(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::S))        c.MoveBackward(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::A))        c.MoveLeft(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::D))        c.MoveRight(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::Space))    c.MoveUp(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::LeftCtrl)) c.MoveDown(speed * dt);
   }
   {// Rotation
     static constexpr auto speed = 70;
     c.Pitch((cbn::win::GetKey(cbn::win::KeyCode::I) - cbn::win::GetKey(cbn::win::KeyCode::K)) * speed * dt);
-    c.Yaw((cbn::win::GetKey(cbn::win::KeyCode::J) - cbn::win::GetKey(cbn::win::KeyCode::L)) * speed * dt);
+    c.Yaw((cbn::win::GetKey(cbn::win::KeyCode::J)   - cbn::win::GetKey(cbn::win::KeyCode::L)) * speed * dt);
   }
   {// Orthographic size
     static constexpr auto speed = 3;
-    if (cbn::win::GetKey(cbn::win::KeyCode::UpArrow)) c.OrthoZoom(speed * dt);
+    if (cbn::win::GetKey(cbn::win::KeyCode::UpArrow))   c.OrthoZoom(speed * dt);
     if (cbn::win::GetKey(cbn::win::KeyCode::DownArrow)) c.OrthoZoom(-speed * dt);
   }
 }
