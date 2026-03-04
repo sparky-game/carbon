@@ -138,7 +138,7 @@ bool carbon_image_write_to_file_linearly(u8 *pixels, CBN_Image_Format fmt, usz w
 }
 
 void carbon_image_destroy(CBN_Image *img) {
-  carbon_memory_free(img->data);
+  if (img->data) carbon_memory_free(img->data);
   carbon_memory_set(img, 0, sizeof(*img));
 }
 

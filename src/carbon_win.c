@@ -236,14 +236,14 @@ void carbon_win_close(void) {
   pthread_join(carbon_win__thread_id, 0);
   carbon_memory_free(carbon_win__xtable);
   carbon_memory_free(carbon_win__ytable);
-  if (carbon_win__icon.data) carbon_image_destroy(&carbon_win__icon);
+  carbon_image_destroy(&carbon_win__icon);
   RGFW_window_close(carbon_win__handle);
   CBN_INFO("Window closed successfully");
 }
 
 void carbon_win_set_max_fps(u32 fps) {
   carbon_win__max_fps = fps;
-  CBN_INFO("Window max FPS set to %$", $(carbon_win__max_fps));
+  CBN_INFO("Window max FPS set to %u", carbon_win__max_fps);
 }
 
 void carbon_win_set_icon(CBN_Image img) {
