@@ -56,15 +56,6 @@ CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas *dc, CBN_Vec2 
   return true;
 }
 
-CBNINL bool carbon_drawcanvas__triangle_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz x, usz y, i32 *u1, i32 *u2, i32 *det) {
-  *det = (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
-  *u1  = (v2.y - v3.y) * (x - v3.x) + (v3.x - v2.x) * (y - v3.y);
-  *u2  = (v3.y - v1.y) * (x - v3.x) + (v1.x - v3.x) * (y - v3.y);
-  i32 u3 = *det - *u1 - *u2;
-  i8 det_sign = CARBON_SIGN(*det);
-  return (CARBON_SIGN(*u1) == det_sign || !*u1) && (CARBON_SIGN(*u2) == det_sign || !*u2) && (CARBON_SIGN(u3) == det_sign || !u3);
-}
-
 CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas *dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
   if (!r.w || !r.h) return false;
   i32 ox1 = r.x;
@@ -164,10 +155,9 @@ CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_
   if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
   for (usz j = ly; j <= hy; ++j) {
     for (usz i = lx; i <= hx; ++i) {
-      i32 u1, u2, det;
-      if (!carbon_drawcanvas__triangle_barycentric(v1.xy, v2.xy, v3.xy, i, j, &u1, &u2, &det)) continue;
-      f32 w1 = (f32) u1/det, w2 = (f32) u2/det, w3 = 1 - w1 - w2;
-      f32 z = v1.z*w1 + v2.z*w2 + v3.z*w3;
+      CBN_Vec3 u;
+      if (!carbon_math_vec2_barycentric(v1.xy, v2.xy, v3.xy, carbon_math_vec2(i, j), &u)) continue;
+      f32 z = v1.z*u.x + v2.z*u.y + v3.z*u.z;
       usz idx = j * dc->width + i;
       if (z < dc->zbuffer[idx]) {
         dc->zbuffer[idx] = z;

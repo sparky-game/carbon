@@ -1,6 +1,5 @@
 #ifdef __cplusplus
 
-struct CBN_Vec3;  // Forward declaration
 struct CBN_Vec4;  // Forward declaration
 
 struct CBN_Vec2 : CBN_Vec2_t {

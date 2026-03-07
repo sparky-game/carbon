@@ -17,6 +17,13 @@ CBNDEF_T(CBN_Vec2) {
 };
 CBNDEF_AKA(cbn::math, Vec2, CBN_Vec2);
 
+// Forward declarations
+#ifdef __cplusplus
+struct CBN_Vec3;
+#else
+typedef struct CBN_Vec3_t CBN_Vec3;
+#endif
+
 /**
  * @brief Creates a 2D vector.
  * @param x The value to assign to the X field.
@@ -184,6 +191,10 @@ CBNDEF CBN_Vec2 carbon_math_vec2_rotate(CBN_Vec2 v, f32 angle);
  * @return The rotated 2D vector.
  */
 CBNDEF CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pivot);
+
+/**
+ */
+CBNDEF bool carbon_math_vec2_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, CBN_Vec2 p, CBN_Vec3 *u);
 
 /**
  * @brief Returns the string representation of the 2D vector using default formatting.

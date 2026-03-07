@@ -98,6 +98,21 @@ CBN_Vec2 carbon_math_vec2_rotate_around_pivot(CBN_Vec2 v, f32 angle, CBN_Vec2 pi
   return carbon_math_vec2_add(r, pivot);
 }
 
+bool carbon_math_vec2_barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, CBN_Vec2 p, CBN_Vec3 *u) {
+  f32 det = (v1.x - v3.x)*(v2.y - v3.y) - (v2.x - v3.x)*(v1.y - v3.y);
+  if (carbon_math_abs(det) < CARBON_EPS) return false;
+  f32 u1 = ((v2.y - v3.y)*(p.x - v3.x) + (v3.x - v2.x)*(p.y - v3.y))/det;
+  f32 u2 = ((v3.y - v1.y)*(p.x - v3.x) + (v1.x - v3.x)*(p.y - v3.y))/det;
+  f32 u3 = 1 - u1 - u2;
+  if (u1 < -CARBON_EPS || u2 < -CARBON_EPS || u3 < -CARBON_EPS) return false;
+  if (u) {
+    u->x = u1;
+    u->y = u2;
+    u->z = u3;
+  }
+  return true;
+}
+
 char *carbon_math_vec2_to_cstr(CBN_Vec2 v) {
   return carbon_string_fmt("(%.3f, %.3f)", v.x, v.y);
 }
