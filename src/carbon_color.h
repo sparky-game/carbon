@@ -6,6 +6,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+typedef struct {
+  u8 r, g, b, a;
+} CBN_Color;
+static_assert(sizeof(CBN_Color) == sizeof(u32), "Color is defined as 8-bit/ch RGBA");
+CBNDEF_AKA(cbn, Color, CBN_Color);
+
 /**
  * @brief Transforms HSV color into RGB (A always set to 0xff).
  * @param h Hue, in [0..360] range.
