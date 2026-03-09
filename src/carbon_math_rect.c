@@ -26,10 +26,10 @@ bool carbon_math_rect_overlaps(CBN_Rect r1, CBN_Rect r2) {
 }
 
 CBN_Rect carbon_math_rect_intersection(CBN_Rect r1, CBN_Rect r2) {
-  f32 left   = CARBON_MAX(r1.x, r2.x);
-  f32 top    = CARBON_MAX(r1.y, r2.y);
-  f32 right  = CARBON_MIN(r1.x + r1.w, r2.x + r2.w);
-  f32 bottom = CARBON_MIN(r1.y + r1.h, r2.y + r2.h);
+  f32 left   = carbon_math_max(r1.x, r2.x);
+  f32 top    = carbon_math_max(r1.y, r2.y);
+  f32 right  = carbon_math_min(r1.x + r1.w, r2.x + r2.w);
+  f32 bottom = carbon_math_min(r1.y + r1.h, r2.y + r2.h);
   CBN_Rect r = carbon_math_rect_sq(left, top, 0);
   if (right > left && bottom > top) {
     r.w = right - left;

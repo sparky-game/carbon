@@ -100,6 +100,42 @@ f32 carbon_math_ceil(f32 x) {
 #endif
 }
 
+f32 carbon_math_min(f32 x, f32 y) {
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("minss %2, %0" : "=x"(res) : "0"(x) : "x"(y));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("fmin %s0, %s1, %s2" : "=w"(res) : "w"(x), "w"(y));
+  return res;
+#else
+  return x < y ? x : y;
+#endif
+}
+
+f32 carbon_math_min_3(f32 x, f32 y, f32 z) {
+  return carbon_math_min(x, carbon_math_min(y, z));
+}
+
+f32 carbon_math_max(f32 x, f32 y) {
+#if defined(CARBON_CPU_ARCH_AMD64)
+  f32 res;
+  __asm__("maxss %2, %0" : "=x"(res) : "0"(x) : "x"(y));
+  return res;
+#elif defined(CARBON_CPU_ARCH_AARCH64)
+  f32 res;
+  __asm__("fmax %s0, %s1, %s2" : "=w"(res) : "w"(x), "w"(y));
+  return res;
+#else
+  return x > y ? x : y;
+#endif
+}
+
+f32 carbon_math_max_3(f32 x, f32 y, f32 z) {
+  return carbon_math_max(x, carbon_math_max(y, z));
+}
+
 f32 carbon_math_clamp(f32 x, f32 min, f32 max) {
   return x <= min ? min : x >= max ? max : x;
 }

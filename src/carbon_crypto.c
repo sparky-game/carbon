@@ -473,7 +473,7 @@ CBNINL void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const u8 *ms
   ctx->rest = (ctx->rest + msg_size) % 136;
   if (idx) {
     u16 left = 136 - idx;
-    carbon_memory_copy((u8 *) ctx->msg + idx, msg, CARBON_MIN(msg_size, left));
+    carbon_memory_copy((u8 *) ctx->msg + idx, msg, carbon_math_min(msg_size, left));
     if (msg_size < left) return;
     carbon_crypto_keccak256__process_blk(ctx->hash, ctx->msg);
     msg += left;

@@ -144,7 +144,7 @@ CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, 
   static const f32 n_a = 0.2;
   const u32 k_a = carbon_color_scale(color, n_a);
   const CBN_Vec3 N = carbon_math_vec3_norm(carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1)));
-  const f32 n_d = CARBON_MAX(0, carbon_math_vec3_dot(N, L));
+  const f32 n_d = carbon_math_max(0, carbon_math_vec3_dot(N, L));
   const u32 k_d = carbon_color_scale(color, n_d);
   return carbon_color_add(k_a, k_d);
 }

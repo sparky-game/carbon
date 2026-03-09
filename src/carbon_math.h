@@ -33,36 +33,6 @@
 #define CARBON_INF      1e40
 
 /**
- * @brief Returns the smaller of two numbers.
- * @param x The first number.
- * @param y The second number.
- */
-#define CARBON_MIN(x, y) (x < y ? x : y)
-
-/**
- * @brief Returns the smaller of three numbers.
- * @param x The first number.
- * @param y The second number.
- * @param z The third number.
- */
-#define CARBON_MIN3(x, y, z) CARBON_MIN(x, CARBON_MIN(y, z))
-
-/**
- * @brief Returns the larger of two numbers.
- * @param x The first number.
- * @param y The second number.
- */
-#define CARBON_MAX(x, y) (x > y ? x : y)
-
-/**
- * @brief Returns the larger of three numbers.
- * @param x The first number.
- * @param y The second number.
- * @param z The third number.
- */
-#define CARBON_MAX3(x, y, z) CARBON_MAX(x, CARBON_MAX(y, z))
-
-/**
  * @brief Returns an integer {-1, 0, 1} that indicates the sign of a number.
  * @param x The number.
  */
@@ -112,6 +82,44 @@ CBNDEF_FN(cbn::math, Floor, carbon_math_floor);
  */
 CBNDEF f32 carbon_math_ceil(f32 x);
 CBNDEF_FN(cbn::math, Ceil, carbon_math_ceil);
+
+/**
+ * @brief Returns the smaller of two numbers.
+ * @param x The first number.
+ * @param y The second number.
+ * @return The minimum of the two.
+ */
+CBNDEF f32 carbon_math_min(f32 x, f32 y);
+CBNDEF_FN(cbn::math, Min, carbon_math_min);
+
+/**
+ * @brief Returns the smaller of three numbers.
+ * @param x The first number.
+ * @param y The second number.
+ * @param z The third number.
+ * @return The minimum of the three.
+ */
+CBNDEF f32 carbon_math_min_3(f32 x, f32 y, f32 z);
+CBNDEF_FN(cbn::math, Min3, carbon_math_min_3);
+
+/**
+ * @brief Returns the larger of two numbers.
+ * @param x The first number.
+ * @param y The second number.
+ * @return The maximum of the two.
+ */
+CBNDEF f32 carbon_math_max(f32 x, f32 y);
+CBNDEF_FN(cbn::math, Max, carbon_math_max);
+
+/**
+ * @brief Returns the larger of three numbers.
+ * @param x The first number.
+ * @param y The second number.
+ * @param z The third number.
+ * @return The maximum of the three.
+ */
+CBNDEF f32 carbon_math_max_3(f32 x, f32 y, f32 z);
+CBNDEF_FN(cbn::math, Max3, carbon_math_max_3);
 
 /**
  * @brief Restricts a number between a minimum and a maximum value.

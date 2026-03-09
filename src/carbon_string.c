@@ -103,9 +103,9 @@ usz carbon_string_lev_dist(const char *s1, const char *s2) {
   for (usz i = 1; i <= n; ++i) {
     for (usz j = 1; j <= m; ++j) {
       if (s1[i - 1] == s2[j - 1]) CARBON_MAT_AT(dp, i, j) = CARBON_MAT_AT(dp, i - 1, j - 1);
-      else CARBON_MAT_AT(dp, i, j) = 1 + CARBON_MIN3(CARBON_MAT_AT(dp, i - 1, j),
-                                                     CARBON_MAT_AT(dp, i, j - 1),
-                                                     CARBON_MAT_AT(dp, i - 1, j - 1));
+      else CARBON_MAT_AT(dp, i, j) = 1 + carbon_math_min_3(CARBON_MAT_AT(dp, i - 1, j),
+                                                           CARBON_MAT_AT(dp, i, j - 1),
+                                                           CARBON_MAT_AT(dp, i - 1, j - 1));
     }
   }
   usz dist = CARBON_MAT_AT(dp, n, m);

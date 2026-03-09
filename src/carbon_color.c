@@ -11,13 +11,13 @@
 
 u32 carbon_color_from_hsv(f32 h, f32 s, f32 v) {
   f32 k = carbon_math_fmod(5 + h/60, 6);
-  k = carbon_math_clamp(CARBON_MIN(4 - k, k), 0, 1);
+  k = carbon_math_clamp(carbon_math_min(4 - k, k), 0, 1);
   u32 r = (v - v*s*k) * 0xff;
   k = carbon_math_fmod(3 + h/60, 6);
-  k = carbon_math_clamp(CARBON_MIN(4 - k, k), 0, 1);
+  k = carbon_math_clamp(carbon_math_min(4 - k, k), 0, 1);
   u32 g = (v - v*s*k) * 0xff;
   k = carbon_math_fmod(1 + h/60, 6);
-  k = carbon_math_clamp(CARBON_MIN(4 - k, k), 0, 1);
+  k = carbon_math_clamp(carbon_math_min(4 - k, k), 0, 1);
   u32 b = (v - v*s*k) * 0xff;
   return CBN_COLOR__U32_4(r, g, b, 0xff);
 }
@@ -27,7 +27,8 @@ CBN_Vec3 carbon_color_to_hsv(u32 color) {
   f32 r = (f32)CBN_COLOR__R(color)/0xff;
   f32 g = (f32)CBN_COLOR__G(color)/0xff;
   f32 b = (f32)CBN_COLOR__B(color)/0xff;
-  f32 min = CARBON_MIN3(r, g, b), max = CARBON_MAX3(r, g, b), delta = max - min;
+  f32 min = carbon_math_min_3(r, g, b), max = carbon_math_max_3(r, g, b);
+  f32 delta = max - min;
   hsv.z = max;
   if (delta < CARBON_EPS || max <= 0) {
     hsv.x = hsv.y = 0;

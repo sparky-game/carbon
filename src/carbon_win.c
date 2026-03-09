@@ -132,17 +132,17 @@ CBNINL CBN_Win_MouseButton carbon_win__map_mouse_button(RGFW_mouseButton btn) {
 
 CBNINL void carbon_win__rebuild_xtable(usz dst_w, usz src_w) {
   carbon_win__xtable = (usz *) carbon_memory_realloc(carbon_win__xtable, dst_w * sizeof(usz));
-  const f32 sf = (f32) src_w / dst_w;
+  const f32 sf = (f32)src_w/dst_w;
   for (usz i = 0; i < dst_w; ++i) {
-    carbon_win__xtable[i] = CARBON_MIN(i * sf, src_w - 1);
+    carbon_win__xtable[i] = carbon_math_min(i * sf, src_w - 1);
   }
 }
 
 CBNINL void carbon_win__rebuild_ytable(usz dst_h, usz src_h) {
   carbon_win__ytable = (usz *) carbon_memory_realloc(carbon_win__ytable, dst_h * sizeof(usz));
-  const f32 sf = (f32) src_h / dst_h;
+  const f32 sf = (f32)src_h/dst_h;
   for (usz j = 0; j < dst_h; ++j) {
-    carbon_win__ytable[j] = CARBON_MIN(j * sf, src_h - 1);
+    carbon_win__ytable[j] = carbon_math_min(j * sf, src_h - 1);
   }
 }
 

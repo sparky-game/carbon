@@ -155,6 +155,6 @@ void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
 void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount) {
   static const f32 max_zoom = 0.1;
   if (!c) return;
-  c->ortho_size = CARBON_MAX(c->ortho_size + amount, max_zoom);
+  c->ortho_size = carbon_math_max(c->ortho_size + amount, max_zoom);
   if (c->type == CARBON_CAMERA_TYPE_ORTHOGRAPHIC) carbon_camera__update_proj(c);
 }
