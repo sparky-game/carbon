@@ -69,6 +69,15 @@ u32 carbon_color_lerp(u32 c1, u32 c2, f32 t) {
   return CBN_COLOR__U32_4(r, g, b, a);
 }
 
+u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t) {
+  CBN_Color c1_rgba = CBN_COLOR__RGBA(c1), c2_rgba = CBN_COLOR__RGBA(c2), c3_rgba = CBN_COLOR__RGBA(c3);
+  u32 r = c1_rgba.r*t.x + c2_rgba.r*t.y + c3_rgba.r*t.z;
+  u32 g = c1_rgba.g*t.x + c2_rgba.g*t.y + c3_rgba.g*t.z;
+  u32 b = c1_rgba.b*t.x + c2_rgba.b*t.y + c3_rgba.b*t.z;
+  u32 a = c1_rgba.a*t.x + c2_rgba.a*t.y + c3_rgba.a*t.z;
+  return CBN_COLOR__U32_4(r, g, b, a);
+}
+
 u32 carbon_color_complementary(u32 color) {
   CBN_Vec3 hsv = carbon_color_to_hsv(color);
   hsv.x = carbon_math_fmod(hsv.x + 180, 360);

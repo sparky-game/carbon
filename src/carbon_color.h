@@ -62,6 +62,17 @@ CBNDEF u32 carbon_color_lerp(u32 c1, u32 c2, f32 t);
 CBNDEF_FN(cbn::color, Lerp, carbon_color_lerp);
 
 /**
+ * @brief Performs 3-way linear interpolation between c1, c2 and c3 by 3D factor t.
+ * @param c1 The first color.
+ * @param c2 The second color.
+ * @param c3 The third color.
+ * @param t The 3D interpolation factor, where `t.x + t.y + t.z = 1` (L¹ norm).
+ * @return The interpolated color between c1, c2 and c3.
+ */
+CBNDEF u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t);
+CBNDEF_FN(cbn::color, Lerp3, carbon_color_lerp_3);
+
+/**
  * @brief Computes the complementary color of the one provided (32-bit RGBA).
  * @param color The color.
  * @return The complementary 32-bit RGBA color.
