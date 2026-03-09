@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_DRAWCANVAS__AA_RES             2
+#define CARBON_DRAWCANVAS__CIRCLE_AA          2
 #define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON 0.2
 
 struct CBN_DrawCanvas {
@@ -128,15 +128,15 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u
   for (i32 j = y1; j <= y2; ++j) {
     for (i32 i = x1; i <= x2; ++i) {
       i64 n = 0;
-      for (i64 sx = 0; sx < CARBON_DRAWCANVAS__AA_RES; ++sx) {
-        for (i64 sy = 0; sy < CARBON_DRAWCANVAS__AA_RES; ++sy) {
-          i64 res = CARBON_DRAWCANVAS__AA_RES + 1;
-          i64 dx = (i * res * 2) + 2 + (sx * 2) - (res * center.x * 2) - res;
-          i64 dy = (j * res * 2) + 2 + (sy * 2) - (res * center.y * 2) - res;
-          if (dx*dx + dy*dy <= (i64) (res*res * radius*radius * 4)) ++n;
+      for (i64 sx = 0; sx < CARBON_DRAWCANVAS__CIRCLE_AA; ++sx) {
+        for (i64 sy = 0; sy < CARBON_DRAWCANVAS__CIRCLE_AA; ++sy) {
+          i64 res = CARBON_DRAWCANVAS__CIRCLE_AA;
+          i64 dx = 2*i*res + 2*sx + 1 - 2*res*center.x;
+          i64 dy = 2*j*res + 2*sy + 1 - 2*res*center.y;
+          if (dx*dx + dy*dy <= (i64)(4 * res*res * radius*radius)) ++n;
         }
       }
-      u32 aa_alpha = ((color >> 0) & 0xff) * (n / CARBON_DRAWCANVAS__AA_RES / CARBON_DRAWCANVAS__AA_RES);
+      u32 aa_alpha = (color & 0xff) * n / (CARBON_DRAWCANVAS__CIRCLE_AA*CARBON_DRAWCANVAS__CIRCLE_AA);
       u32 aa_color = (color & 0xffffff00) | aa_alpha;
       carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), aa_color);
     }
