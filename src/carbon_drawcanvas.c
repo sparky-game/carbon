@@ -97,10 +97,10 @@ void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 co
 }
 
 void carbon_drawcanvas_triangle(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
-  usz lx, hx, ly, hy;
-  if (!carbon_drawcanvas__triangle_norm(dc, v1, v2, v3, &lx, &hx, &ly, &hy)) return;
-  for (usz j = ly; j <= hy; ++j) {
-    for (usz i = lx; i <= hx; ++i) {
+  CBN_Vec2 lo, hi;
+  if (!carbon_drawcanvas__triangle_aabb(dc, v1, v2, v3, &lo, &hi)) return;
+  for (usz j = lo.y; j <= hi.y; ++j) {
+    for (usz i = lo.x; i <= hi.x; ++i) {
       if (!carbon_math_vec2_barycentric(v1, v2, v3, carbon_math_vec2(i, j), 0)) continue;
       carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), color);
     }

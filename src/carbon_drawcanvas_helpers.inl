@@ -37,23 +37,15 @@ CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
   *dst = (r << 24) | (g << 16) | (b << 8) | 0xff;
 }
 
-CBNINL bool carbon_drawcanvas__triangle_norm(const CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, usz *lx, usz *hx, usz *ly, usz *hy) {
-  *lx = *hx = v1.x;
-  *ly = *hy = v1.y;
-  if (*lx > v2.x) *lx = v2.x;
-  if (*hx < v2.x) *hx = v2.x;
-  if (*ly > v2.y) *ly = v2.y;
-  if (*hy < v2.y) *hy = v2.y;
-  if (*lx > v3.x) *lx = v3.x;
-  if (*hx < v3.x) *hx = v3.x;
-  if (*ly > v3.y) *ly = v3.y;
-  if (*hy < v3.y) *hy = v3.y;
-  *lx = carbon_math_clamp(*lx, 0, dc->width - 1);
-  *hx = carbon_math_clamp(*hx, 0, dc->width - 1);
-  *ly = carbon_math_clamp(*ly, 0, dc->height - 1);
-  *hy = carbon_math_clamp(*hy, 0, dc->height - 1);
-  if (*lx > *hx || *ly > *hy) return false;
-  return true;
+CBNINL bool carbon_drawcanvas__triangle_aabb(const CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, CBN_Vec2 *lo, CBN_Vec2 *hi) {
+  lo->x = carbon_math_min_3(v1.x, v2.x, v3.x);
+  lo->y = carbon_math_min_3(v1.y, v2.y, v3.y);
+  hi->x = carbon_math_max_3(v1.x, v2.x, v3.x);
+  hi->y = carbon_math_max_3(v1.y, v2.y, v3.y);
+  const CBN_Vec2 scr = carbon_math_vec2(dc->width - 1, dc->height - 1);
+  *lo = carbon_math_vec2_clamp(*lo, carbon_math_vec2_1(0), scr);
+  *hi = carbon_math_vec2_clamp(*hi, carbon_math_vec2_1(0), scr);
+  return lo->x <= hi->x && lo->y <= hi->y;
 }
 
 CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas *dc, const CBN_Rect r, i32 *x1, i32 *x2, i32 *y1, i32 *y2) {
@@ -151,10 +143,10 @@ CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, 
 
 CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
   // Barycentric-based 3D triangle rasterization algorithm
-  usz lx, hx, ly, hy;
-  if (!carbon_drawcanvas__triangle_norm(dc, v1.xy, v2.xy, v3.xy, &lx, &hx, &ly, &hy)) return;
-  for (usz j = ly; j <= hy; ++j) {
-    for (usz i = lx; i <= hx; ++i) {
+  CBN_Vec2 lo, hi;
+  if (!carbon_drawcanvas__triangle_aabb(dc, v1.xy, v2.xy, v3.xy, &lo, &hi)) return;
+  for (usz j = lo.y; j <= hi.y; ++j) {
+    for (usz i = lo.x; i <= hi.x; ++i) {
       CBN_Vec3 u;
       if (!carbon_math_vec2_barycentric(v1.xy, v2.xy, v3.xy, carbon_math_vec2(i, j), &u)) continue;
       f32 z = v1.z*u.x + v2.z*u.y + v3.z*u.z;
