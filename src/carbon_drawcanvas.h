@@ -116,6 +116,18 @@ CBNDEF void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2,
 CBNDEF void carbon_drawcanvas_triangle(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color);
 
 /**
+ * @brief Draws a color-interpolated triangle to the canvas.
+ * @param dc The DrawCanvas object.
+ * @param v1 The first vertex of the triangle.
+ * @param v2 The second vertex of the triangle.
+ * @param v3 The third vertex of the triangle.
+ * @param c1 The color at v1.
+ * @param c2 The color at v2.
+ * @param c3 The color at v3.
+ */
+CBNDEF void carbon_drawcanvas_triangle_3(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 c1, u32 c2, u32 c3);
+
+/**
  * @brief Draws a rectangle to the canvas with a specific color.
  * @param dc The DrawCanvas object.
  * @param r The rectangle to draw.

@@ -64,6 +64,10 @@ struct CBN_DrawCanvas {
     carbon_drawcanvas_triangle(this, v1, v2, v3, color);
   }
 
+  void DrawTriangle3(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 c1, u32 c2, u32 c3) {
+    carbon_drawcanvas_triangle_3(this, v1, v2, v3, c1, c2, c3);
+  }
+
   void DrawRect(CBN_Rect r, u32 color) {
     carbon_drawcanvas_rect(this, r, color);
   }

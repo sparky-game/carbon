@@ -97,12 +97,17 @@ void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 co
 }
 
 void carbon_drawcanvas_triangle(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
+  carbon_drawcanvas_triangle_3(dc, v1, v2, v3, color, color, color);
+}
+
+void carbon_drawcanvas_triangle_3(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 c1, u32 c2, u32 c3) {
   CBN_Vec2 lo, hi;
   if (!carbon_drawcanvas__triangle_aabb(dc, v1, v2, v3, &lo, &hi)) return;
   for (usz j = lo.y; j <= hi.y; ++j) {
     for (usz i = lo.x; i <= hi.x; ++i) {
-      if (!carbon_math_vec2_barycentric(v1, v2, v3, carbon_math_vec2(i, j), 0)) continue;
-      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), color);
+      CBN_Vec3 u;
+      if (!carbon_math_vec2_barycentric(v1, v2, v3, carbon_math_vec2(i, j), &u)) continue;
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), carbon_color_lerp_3(c1, c2, c3, u));
     }
   }
 }
