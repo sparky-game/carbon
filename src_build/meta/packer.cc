@@ -3,7 +3,7 @@
 
 #include <carbon.h>
 
-#include "../hdrs/constants.h"
+#include "../hdrs/dirs_n_files.h"
 
 int main(void) {
   const auto skap = TUTORIAL_DIR "/assets.skap";

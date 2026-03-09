@@ -9,7 +9,8 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include "hdrs/constants.h"
+#include "hdrs/dirs_n_files.h"
+#include "hdrs/compiler_flags.h"
 #include "hdrs/utils.hh"
 #include "hdrs/header_files.hh"
 
