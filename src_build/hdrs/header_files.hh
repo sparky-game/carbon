@@ -33,6 +33,7 @@ static constexpr std::array c_HeaderFiles {
   "strview.hh",
   "strbuilder.h", "strbuilder.hh",
   "strlist.hh",
+  "ui.h",
   "binary.h",
   "font.h", "font.hh",
   "mesh.hh",
