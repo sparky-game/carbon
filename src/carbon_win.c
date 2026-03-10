@@ -348,7 +348,9 @@ bool carbon_win_get_mouse_button_up(CBN_Win_MouseButton btn) {
 
 CBN_Vec2 carbon_win_get_mouse_position(void) {
   RGFW_point p = RGFW_window_getMousePoint(carbon_win__handle);
-  return carbon_math_vec2(p.x, p.y);
+  usz w = carbon_win__handle->bufferSize.w, h = carbon_win__handle->bufferSize.h;
+  usz x = carbon_math_clamp(p.x, 0, w-1), y = carbon_math_clamp(p.y, 0, h-1);
+  return carbon_math_vec2(carbon_win__xtable[x], carbon_win__ytable[y]);
 }
 
 void carbon_win_set_mouse_visibility(bool visible) {
