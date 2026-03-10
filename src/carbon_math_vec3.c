@@ -57,6 +57,12 @@ CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v) {
   return carbon_math_vec3_scale(v, carbon_math_rsqrt(sqlen));
 }
 
+CBN_Vec3 carbon_math_vec3_max(CBN_Vec3 u, CBN_Vec3 v) {
+  return carbon_math_vec3(carbon_math_max(u.x, v.x),
+                          carbon_math_max(u.y, v.y),
+                          carbon_math_max(u.z, v.z));
+}
+
 char *carbon_math_vec3_to_cstr(CBN_Vec3 v) {
   return carbon_string_fmt("(%.3f, %.3f, %.3f)", v.x, v.y, v.z);
 }

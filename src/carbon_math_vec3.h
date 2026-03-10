@@ -130,6 +130,14 @@ CBNDEF f32 carbon_math_vec3_len(CBN_Vec3 v);
 CBNDEF CBN_Vec3 carbon_math_vec3_norm(CBN_Vec3 v);
 
 /**
+ * @brief Returns the component-wise maximum of two 3D vectors.
+ * @param u The first 3D vector.
+ * @param v The second 3D vector.
+ * @return The resultant 3D vector.
+ */
+CBNDEF CBN_Vec3 carbon_math_vec3_max(CBN_Vec3 u, CBN_Vec3 v);
+
+/**
  * @brief Returns the string representation of the 3D vector using default formatting.
  * @param v The 3D vector.
  * @return The serialized 3D vector as `(X, Y, Z)`.
