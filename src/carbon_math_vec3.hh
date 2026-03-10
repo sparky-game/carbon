@@ -34,6 +34,10 @@ struct CBN_Vec3 : CBN_Vec3_t {
     return carbon_math_vec3_dot(*this, v);
   }
 
+  CBN_Vec3 operator/(f32 s) const {
+    return carbon_math_vec3_scale(*this, 1/s);
+  }
+
   CBN_Vec3 Cross(const CBN_Vec3 &v) const {
     return carbon_math_vec3_cross(*this, v);
   }
