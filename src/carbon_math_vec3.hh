@@ -118,4 +118,10 @@ struct CBN_Vec3 : CBN_Vec3_t {
   CBN_Vec3 zzz(void) const { return CBN_Vec3(z);       }
 };
 
+inline cbn::Pair<bool, CBN_Vec3> CBN_Vec2::Barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3) const {
+  CBN_Vec3 u;
+  auto ok = carbon_math_vec2_barycentric(v1, v2, v3, *this, &u);
+  return {ok, u};
+}
+
 #endif

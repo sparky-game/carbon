@@ -138,6 +138,8 @@ struct CBN_Vec2 : CBN_Vec2_t {
     return carbon_math_vec2_rotate_around_pivot(*this, angle, pivot);
   }
 
+  cbn::Pair<bool, CBN_Vec3> Barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3) const;
+
   const char *ToString(void) const {
     return carbon_math_vec2_to_cstr(*this);
   }
