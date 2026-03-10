@@ -55,8 +55,6 @@ namespace cbn {
       consteval f64 operator""_pi(const u64 n)   { return n * pi; }
       consteval f64 operator""_pi(const flong n) { return n * pi; }
     }
-    void ClampAt(auto &x, auto min, auto max) { x = Clamp(x, min, max); }
-    void LerpAt(auto &a, auto b, auto t)      { a = Lerp(a, b, t); }
     template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
       if constexpr (meta::Float<T> or meta::Float<U>) {
