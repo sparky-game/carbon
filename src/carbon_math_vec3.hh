@@ -7,20 +7,20 @@ struct CBN_Vec3 : CBN_Vec3_t {
   CBN_Vec3 operator+(const CBN_Vec3 &v) const {
     return carbon_math_vec3_add(*this, v);
   }
-  
+
   CBN_Vec3 operator+(f32 s) const {
     return CBN_Vec3(x + s, y + s, z + s);
   }
-  
+
   friend CBN_Vec3 operator+(f32 s, const CBN_Vec3 &v) {
     return v + s;
   }
-  
+
   CBN_Vec3 &operator+=(const CBN_Vec3 &v) {
     *this = *this + v;
     return *this;
   }
-  
+
   CBN_Vec3 &operator+=(f32 s) {
     *this = *this + s;
     return *this;
