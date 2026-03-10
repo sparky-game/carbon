@@ -13,7 +13,7 @@ CBNDEF_T(CBN_StrView) {
   const char *data;
   usz size;
 };
-CBNDEF_AKA(cbn::str, View, CBN_StrView);
+CBNDEF_TAKA(cbn::str, View, CBN_StrView);
 
 // Forward declaration
 #ifdef __cplusplus

@@ -53,7 +53,7 @@ CBNDEF_T(CBN_SKAP) {
   usz type_counters[CARBON_SKAP_ASSET_TYPE_COUNT];
   CBN_HashMap idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 };
-CBNDEF_AKA(cbn, SKAP, CBN_SKAP);
+CBNDEF_TAKA(cbn, SKAP, CBN_SKAP);
 
 /**
  * @brief Creates a SKAP from a declarations (DECL) file.

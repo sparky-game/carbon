@@ -16,7 +16,7 @@ CBNDEF_T(alignas(16) CBN_Mat4) {
     f32 c[4*4];
   };
 };
-CBNDEF_AKA(cbn::math, Mat4, CBN_Mat4);
+CBNDEF_TAKA(cbn::math, Mat4, CBN_Mat4);
 
 /**
  * @brief Creates a zeroed-out 4x4 matrix.

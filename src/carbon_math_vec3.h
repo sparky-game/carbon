@@ -17,7 +17,7 @@ CBNDEF_T(CBN_Vec3) {
     f32 c[3];
   };
 };
-CBNDEF_AKA(cbn::math, Vec3, CBN_Vec3);
+CBNDEF_TAKA(cbn::math, Vec3, CBN_Vec3);
 
 // Swizzling
 #define CARBON_VEC_xz(v) carbon_math_vec2((v).x, (v).z)

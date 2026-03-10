@@ -10,7 +10,7 @@
  * @brief Represents a 2D canvas to draw things to.
  */
 typedef struct CBN_DrawCanvas CBN_DrawCanvas;
-CBNDEF_AKA(cbn, DrawCanvas, CBN_DrawCanvas);
+CBNDEF_TAKA(cbn, DrawCanvas, CBN_DrawCanvas);
 
 /**
  * @brief Set of optional flags to customize the renderer as you see fit.
@@ -26,7 +26,7 @@ typedef struct {
   CBN_Vec3 rotation;
   CBN_Vec3 scale;
 } CBN_Transform;
-CBNDEF_AKA(cbn, Transform, CBN_Transform);
+CBNDEF_TAKA(cbn, Transform, CBN_Transform);
 
 // Forward declaration
 #ifdef __cplusplus

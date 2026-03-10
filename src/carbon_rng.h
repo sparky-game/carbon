@@ -15,7 +15,7 @@
  * @return A pseudo-random 32-bit unsigned integer X, such that 0 ≤ X ≤ 2^32-1.
  */
 CBNDEF u32 carbon_rng_lcg(void);
-CBNDEF_FN(cbn::rng, LCG, carbon_rng_lcg);
+CBNDEF_AKA(cbn::rng, LCG, carbon_rng_lcg);
 
 /**
  * @brief Generates a pseudo-random 32-bit unsigned integer using a LCG within a specified range.
@@ -25,7 +25,7 @@ CBNDEF_FN(cbn::rng, LCG, carbon_rng_lcg);
  * @return A pseudo-random 32-bit unsigned integer X, such that min ≤ X ≤ max.
  */
 CBNDEF u32 carbon_rng_lcg_range(u32 min, u32 max);
-CBNDEF_FN(cbn::rng, LCGr, carbon_rng_lcg_range);
+CBNDEF_AKA(cbn::rng, LCGr, carbon_rng_lcg_range);
 
 /**
  * @brief Generates a pseudo-random 32-bit floating-point using a LCG.
@@ -33,7 +33,7 @@ CBNDEF_FN(cbn::rng, LCGr, carbon_rng_lcg_range);
  * @return A pseudo-random 32-bit floating-point X, such that 0 ≤ X < 1.
  */
 CBNDEF f32 carbon_rng_lcgf(void);
-CBNDEF_FN(cbn::rng, LCGf, carbon_rng_lcgf);
+CBNDEF_AKA(cbn::rng, LCGf, carbon_rng_lcgf);
 
 /**
  * @brief Generates a pseudo-random 32-bit floating-point using a LCG within a specified range.
@@ -43,12 +43,12 @@ CBNDEF_FN(cbn::rng, LCGf, carbon_rng_lcgf);
  * @return A pseudo-random 32-bit floating-point X, such that min ≤ X < max.
  */
 CBNDEF f32 carbon_rng_lcgf_range(f32 min, f32 max);
-CBNDEF_FN(cbn::rng, LCGfr, carbon_rng_lcgf_range);
+CBNDEF_AKA(cbn::rng, LCGfr, carbon_rng_lcgf_range);
 
 CBNDEF void carbon_rng_mt19937_64_srand(u64 seed);
 
 CBNDEF u64 carbon_rng_mt19937_64_rand(void);
-CBNDEF_FN(cbn::rng, MT19937, carbon_rng_mt19937_64_rand);
+CBNDEF_AKA(cbn::rng, MT19937, carbon_rng_mt19937_64_rand);
 
 /**
  * @brief ...
@@ -56,4 +56,4 @@ CBNDEF_FN(cbn::rng, MT19937, carbon_rng_mt19937_64_rand);
  * @return ...
  */
 CBNDEF u32 carbon_rng_roll_dice(const char *expr);
-CBNDEF_FN(cbn::rng, RollDice, carbon_rng_roll_dice);
+CBNDEF_AKA(cbn::rng, RollDice, carbon_rng_roll_dice);

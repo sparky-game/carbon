@@ -21,7 +21,7 @@ CBNDEF_T(CBN_Socket) {
   char ip[CARBON_NET_IPV4_MAX_LEN];
   u16 port;
 };
-CBNDEF_AKA(cbn::net, Socket, CBN_Socket);
+CBNDEF_TAKA(cbn::net, Socket, CBN_Socket);
 
 
 /**
@@ -114,7 +114,7 @@ struct CBN_Socket_UDP : CBN_Socket {
 
   static cbn::Opt<CBN_Socket_UDP> make_async(void);
 };
-CBNDEF_AKA(cbn::net::udp, Socket, CBN_Socket_UDP);
+CBNDEF_TAKA(cbn::net::udp, Socket, CBN_Socket_UDP);
 
 struct CBN_Socket_TCP : CBN_Socket {
   static cbn::Opt<CBN_Socket_TCP> make(void) {
@@ -139,5 +139,5 @@ struct CBN_Socket_TCP : CBN_Socket {
     return sock;
   }
 };
-CBNDEF_AKA(cbn::net::tcp, Socket, CBN_Socket_TCP);
+CBNDEF_TAKA(cbn::net::tcp, Socket, CBN_Socket_TCP);
 #endif

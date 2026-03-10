@@ -15,7 +15,7 @@ CBNDEF_TT(CBN_List) {
   usz stride;
   usz size;
 };
-CBNDEF_TAKA(cbn, List, CBN_List);
+CBNDEF_TTAKA(cbn, List, CBN_List);
 
 /**
  * @brief Gets the element in the provided List at a specific index.

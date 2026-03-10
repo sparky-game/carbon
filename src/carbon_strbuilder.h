@@ -14,7 +14,7 @@ CBNDEF_T(CBN_StrBuilder) {
   usz size;
   usz capacity;
 };
-CBNDEF_AKA(cbn::str, Builder, CBN_StrBuilder);
+CBNDEF_TAKA(cbn::str, Builder, CBN_StrBuilder);
 
 /**
  * @brief Appends a copy of the StrView to the end of the StrBuilder's buffer.

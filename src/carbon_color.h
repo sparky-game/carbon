@@ -10,7 +10,7 @@ typedef struct {
   u8 r, g, b, a;
 } CBN_Color;
 static_assert(sizeof(CBN_Color) == sizeof(u32), "Color is defined as 8-bit/ch RGBA");
-CBNDEF_AKA(cbn, Color, CBN_Color);
+CBNDEF_TAKA(cbn, Color, CBN_Color);
 
 /**
  * @brief Transforms HSV color into RGB (A always set to 0xff).
@@ -20,7 +20,7 @@ CBNDEF_AKA(cbn, Color, CBN_Color);
  * @return 32-bit RGBA color value (A always set to 0xff).
  */
 CBNDEF u32 carbon_color_from_hsv(f32 h, f32 s, f32 v);
-CBNDEF_FN(cbn::color, FromHSV, carbon_color_from_hsv);
+CBNDEF_AKA(cbn::color, FromHSV, carbon_color_from_hsv);
 
 /**
  * @brief Transforms 32-bit RGBA color into HSV.
@@ -31,7 +31,7 @@ CBNDEF_FN(cbn::color, FromHSV, carbon_color_from_hsv);
  *   .z := Value, in [0..1] range.
  */
 CBNDEF CBN_Vec3 carbon_color_to_hsv(u32 color);
-CBNDEF_FN(cbn::color, ToHSV, carbon_color_to_hsv);
+CBNDEF_AKA(cbn::color, ToHSV, carbon_color_to_hsv);
 
 /**
  * @brief Scales the 32-bit RGBA color by the specified scalar value (A is left untouched).
@@ -40,7 +40,7 @@ CBNDEF_FN(cbn::color, ToHSV, carbon_color_to_hsv);
  * @return The scaled 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_scale(u32 color, f32 s);
-CBNDEF_FN(cbn::color, Scale, carbon_color_scale);
+CBNDEF_AKA(cbn::color, Scale, carbon_color_scale);
 
 /**
  * @brief Adds up two 32-bit RGBA colors together.
@@ -49,7 +49,7 @@ CBNDEF_FN(cbn::color, Scale, carbon_color_scale);
  * @return The resultant 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_add(u32 c1, u32 c2);
-CBNDEF_FN(cbn::color, Add, carbon_color_add);
+CBNDEF_AKA(cbn::color, Add, carbon_color_add);
 
 /**
  * @brief Performs linear interpolation from c1 to c2 by factor t.
@@ -59,7 +59,7 @@ CBNDEF_FN(cbn::color, Add, carbon_color_add);
  * @return The interpolated color between c1 and c2.
  */
 CBNDEF u32 carbon_color_lerp(u32 c1, u32 c2, f32 t);
-CBNDEF_FN(cbn::color, Lerp, carbon_color_lerp);
+CBNDEF_AKA(cbn::color, Lerp, carbon_color_lerp);
 
 /**
  * @brief Performs 3-way linear interpolation between c1, c2 and c3 by 3D factor t.
@@ -70,7 +70,7 @@ CBNDEF_FN(cbn::color, Lerp, carbon_color_lerp);
  * @return The interpolated color between c1, c2 and c3.
  */
 CBNDEF u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t);
-CBNDEF_FN(cbn::color, Lerp3, carbon_color_lerp_3);
+CBNDEF_AKA(cbn::color, Lerp3, carbon_color_lerp_3);
 
 /**
  * @brief Computes the complementary color of the one provided (32-bit RGBA).
@@ -78,7 +78,7 @@ CBNDEF_FN(cbn::color, Lerp3, carbon_color_lerp_3);
  * @return The complementary 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_complementary(u32 color);
-CBNDEF_FN(cbn::color, Complementary, carbon_color_complementary);
+CBNDEF_AKA(cbn::color, Complementary, carbon_color_complementary);
 
 /**
  * @brief Transforms 32-bit RGBA color into normalized 4D vector.
@@ -86,7 +86,7 @@ CBNDEF_FN(cbn::color, Complementary, carbon_color_complementary);
  * @return The resultant normalized RGBA color (as 4D vector).
  */
 CBNDEF CBN_Vec4 carbon_color_to_normalized(u32 color);
-CBNDEF_FN(cbn::color, ToNormalized, carbon_color_to_normalized);
+CBNDEF_AKA(cbn::color, ToNormalized, carbon_color_to_normalized);
 
 /**
  * @brief Transforms normalized 4D vector into 32-bit RGBA color.
@@ -94,4 +94,4 @@ CBNDEF_FN(cbn::color, ToNormalized, carbon_color_to_normalized);
  * @return The resultant 32-bit RGBA color.
  */
 CBNDEF u32 carbon_color_from_normalized(CBN_Vec4 v);
-CBNDEF_FN(cbn::color, FromNormalized, carbon_color_from_normalized);
+CBNDEF_AKA(cbn::color, FromNormalized, carbon_color_from_normalized);

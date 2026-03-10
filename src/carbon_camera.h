@@ -10,7 +10,7 @@
  * @brief Represents a 3D camera for rendering.
  */
 typedef struct CBN_Camera CBN_Camera;
-CBNDEF_AKA(cbn, Camera, CBN_Camera);
+CBNDEF_TAKA(cbn, Camera, CBN_Camera);
 
 /**
  * @brief Types of 3D projections used to display the camera's frustum on a 2D canvas.

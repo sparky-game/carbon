@@ -25,7 +25,7 @@ CBNDEF_T(CBN_PatternMatchedFiles) {
  * @return ...
  */
 CBNDEF bool carbon_fs_exists(const char *file);
-CBNDEF_FN(cbn::fs, Exists, carbon_fs_exists);
+CBNDEF_AKA(cbn::fs, Exists, carbon_fs_exists);
 
 /**
  * @brief ...
@@ -33,7 +33,7 @@ CBNDEF_FN(cbn::fs, Exists, carbon_fs_exists);
  * @return ...
  */
 CBNDEF bool carbon_fs_is_regular_file(const char *file);
-CBNDEF_FN(cbn::fs, IsFile, carbon_fs_is_regular_file);
+CBNDEF_AKA(cbn::fs, IsFile, carbon_fs_is_regular_file);
 
 /**
  * @brief ...
@@ -41,7 +41,7 @@ CBNDEF_FN(cbn::fs, IsFile, carbon_fs_is_regular_file);
  * @return ...
  */
 CBNDEF bool carbon_fs_is_directory(const char *file);
-CBNDEF_FN(cbn::fs, IsDir, carbon_fs_is_directory);
+CBNDEF_AKA(cbn::fs, IsDir, carbon_fs_is_directory);
 
 /**
  * @brief ...
@@ -50,8 +50,8 @@ CBNDEF_FN(cbn::fs, IsDir, carbon_fs_is_directory);
  * @return ...
  */
 CBNDEF bool carbon_fs_rename(const char *oldie, const char *newie);
-CBNDEF_FN(cbn::fs, Rename, carbon_fs_rename);
-CBNDEF_FN(cbn::fs, mv, Rename);
+CBNDEF_AKA(cbn::fs, Rename, carbon_fs_rename);
+CBNDEF_AKA(cbn::fs, mv, Rename);
 
 /**
  * @brief ...
@@ -59,7 +59,7 @@ CBNDEF_FN(cbn::fs, mv, Rename);
  * @return ...
  */
 CBNDEF i32 carbon_fs_mtime(const char *file);
-CBNDEF_FN(cbn::fs, LastMod, carbon_fs_mtime);
+CBNDEF_AKA(cbn::fs, LastMod, carbon_fs_mtime);
 
 // CBNDEF void carbon_fs_copy(const char *from, const char *to, bool recursive);
 
@@ -69,8 +69,8 @@ CBNDEF_FN(cbn::fs, LastMod, carbon_fs_mtime);
  * @return ...
  */
 CBNDEF bool carbon_fs_remove(const char *file);
-CBNDEF_FN(cbn::fs, Remove, carbon_fs_remove);
-CBNDEF_FN(cbn::fs, rm, Remove);
+CBNDEF_AKA(cbn::fs, Remove, carbon_fs_remove);
+CBNDEF_AKA(cbn::fs, rm, Remove);
 
 // CBNDEF bool carbon_fs_remove_all(const char *file);
 
@@ -80,8 +80,8 @@ CBNDEF_FN(cbn::fs, rm, Remove);
  * @return ...
  */
 CBNDEF bool carbon_fs_change_directory(const char *path);
-CBNDEF_FN(cbn::fs, ChangeDir, carbon_fs_change_directory);
-CBNDEF_FN(cbn::fs, cd, ChangeDir);
+CBNDEF_AKA(cbn::fs, ChangeDir, carbon_fs_change_directory);
+CBNDEF_AKA(cbn::fs, cd, ChangeDir);
 
 /**
  * @brief ...
@@ -89,8 +89,8 @@ CBNDEF_FN(cbn::fs, cd, ChangeDir);
  * @return ...
  */
 CBNDEF bool carbon_fs_create_directory(const char *path);
-CBNDEF_FN(cbn::fs, CreateDir, carbon_fs_create_directory);
-CBNDEF_FN(cbn::fs, mkdir, CreateDir);
+CBNDEF_AKA(cbn::fs, CreateDir, carbon_fs_create_directory);
+CBNDEF_AKA(cbn::fs, mkdir, CreateDir);
 
 /**
  * @brief ...
@@ -98,23 +98,23 @@ CBNDEF_FN(cbn::fs, mkdir, CreateDir);
  * @return ...
  */
 CBNDEF bool carbon_fs_create_directories(const char *path);
-CBNDEF_FN(cbn::fs, CreateDirs, carbon_fs_create_directories);
-CBNDEF_FN(cbn::fs, mkdir_p, CreateDirs);
+CBNDEF_AKA(cbn::fs, CreateDirs, carbon_fs_create_directories);
+CBNDEF_AKA(cbn::fs, mkdir_p, CreateDirs);
 
 /**
  * @brief ...
  * @return ...
  */
 CBNDEF char *carbon_fs_get_curr_directory(void);
-CBNDEF_FN(cbn::fs, GetCurrDir, carbon_fs_get_curr_directory);
-CBNDEF_FN(cbn::fs, cwd, GetCurrDir);
+CBNDEF_AKA(cbn::fs, GetCurrDir, carbon_fs_get_curr_directory);
+CBNDEF_AKA(cbn::fs, cwd, GetCurrDir);
 
 /**
  * @brief ...
  * @return ...
  */
 CBNDEF char *carbon_fs_get_bin_directory(void);
-CBNDEF_FN(cbn::fs, GetBinDir, carbon_fs_get_bin_directory);
+CBNDEF_AKA(cbn::fs, GetBinDir, carbon_fs_get_bin_directory);
 
 /**
  * @brief ...
@@ -122,8 +122,8 @@ CBNDEF_FN(cbn::fs, GetBinDir, carbon_fs_get_bin_directory);
  * @return ...
  */
 CBNDEF char *carbon_fs_get_directory(const char *path);
-CBNDEF_FN(cbn::fs, GetDir, carbon_fs_get_directory);
-CBNDEF_FN(cbn::fs, dirname, GetDir);
+CBNDEF_AKA(cbn::fs, GetDir, carbon_fs_get_directory);
+CBNDEF_AKA(cbn::fs, dirname, GetDir);
 
 CBNDEF CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
 
@@ -133,7 +133,7 @@ CBNDEF CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
  * @return ...
  */
 CBNDEF u32 carbon_fs_get_file_size(const char *file);
-CBNDEF_FN(cbn::fs, Size, carbon_fs_get_file_size);
+CBNDEF_AKA(cbn::fs, Size, carbon_fs_get_file_size);
 
 /**
  * @brief Reads all the data from the given file into a StrBuilder object.
@@ -142,9 +142,9 @@ CBNDEF_FN(cbn::fs, Size, carbon_fs_get_file_size);
  * @return A boolean value representing the success of the operation.
  */
 CBNDEF bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
-CBNDEF_FN(cbn::fs, ReadFile, carbon_fs_read_entire_file);
+CBNDEF_AKA(cbn::fs, ReadFile, carbon_fs_read_entire_file);
 
 /**
  */
 CBNDEF bool carbon_fs_write_entire_file(const CBN_StrBuilder *sb, const char *file);
-CBNDEF_FN(cbn::fs, WriteFile, carbon_fs_write_entire_file);
+CBNDEF_AKA(cbn::fs, WriteFile, carbon_fs_write_entire_file);

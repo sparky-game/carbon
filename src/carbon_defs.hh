@@ -96,20 +96,20 @@
 
 #ifdef __cplusplus
 #define CBNDEF extern "C"
+#define CBNDEF_AKA(ns, aka, var) namespace ns {constexpr auto aka = var;}
 #define CBNDEF_T(name) struct name; struct name ## _t
+#define CBNDEF_TAKA(ns, aka, type) namespace ns {using aka = type;}
 #define CBNDEF_TT(name) template <typename T> struct name ## _tt; typedef name ## _tt<void*> name; struct name ## _t
-#define CBNDEF_FN(ns, f, cfn) namespace ns {constexpr auto f = cfn;}
-#define CBNDEF_AKA(ns, aka, type) namespace ns {using aka = type;}
-#define CBNDEF_TAKA(ns, aka, type) namespace ns {template <typename T> using aka = type ## _tt<T>;}
+#define CBNDEF_TTAKA(ns, aka, type) namespace ns {template <typename T> using aka = type ## _tt<T>;}
 #define CBNDEF_ENUM(name, xlist) enum struct name {xlist(CBNDEF_ENUM__X,) CBNDEF_ENUM__X(,Count)}
 #define CBNDEF_ENUM__X(p, x) x,
 #else
 #define CBNDEF extern
-#define CBNDEF_T(name) typedef struct name ## _t name; struct name ## _t
-#define CBNDEF_TT(name) CBNDEF_T(name)
-#define CBNDEF_FN(...)
 #define CBNDEF_AKA(...)
+#define CBNDEF_T(name) typedef struct name ## _t name; struct name ## _t
 #define CBNDEF_TAKA(...)
+#define CBNDEF_TT(name) CBNDEF_T(name)
+#define CBNDEF_TTAKA(...)
 #define CBNDEF_ENUM(name, xlist) typedef enum {xlist(CBNDEF_ENUM__X, name) CBNDEF_ENUM__X(name, Count)} name
 #define CBNDEF_ENUM__X(p, x) p ## _ ## x,
 #endif

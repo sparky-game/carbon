@@ -16,7 +16,7 @@ CBNDEF_TT(CBN_CircularQueue) {
   usz size;
   i32 head, tail;
 };
-CBNDEF_TAKA(cbn, CircularQueue, CBN_CircularQueue);
+CBNDEF_TTAKA(cbn, CircularQueue, CBN_CircularQueue);
 
 #define carbon_circularqueue_at_raw(T, cq, i) ((T *) (cq).items)[(i)]
 #define carbon_circularqueue_at(T, cq, i) (CBN_ASSERT((i) < (cq).size && "CircularQueue index out of bounds"), CBN_ASSERT(sizeof(T) == (cq).stride && "CircularQueue type doesn't match"), carbon_circularqueue_at_raw(T, cq, i))

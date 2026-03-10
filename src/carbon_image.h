@@ -32,7 +32,7 @@ CBNDEF_T(CBN_Image) {
   u8 *data;
   CBN_Image_Metadata metadata;
 };
-CBNDEF_AKA(cbn, Image, CBN_Image);
+CBNDEF_TAKA(cbn, Image, CBN_Image);
 
 /**
  */

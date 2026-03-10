@@ -29,7 +29,7 @@ CBNDEF_TT(CBN_SlotMap) {
   CBN_List data;
   CBN_List erase;
 };
-CBNDEF_TAKA(cbn, SlotMap, CBN_SlotMap);
+CBNDEF_TTAKA(cbn, SlotMap, CBN_SlotMap);
 
 #define carbon_slotmap_foreach(T, sm) for (struct { usz i; T var; } it = {0, carbon_list_at(T, sm.data, 0)}; it.i < (sm.data).size; ++it.i, it.i < (sm.data).size ? it.var = carbon_list_at(T, sm.data, it.i) : it.var)
 

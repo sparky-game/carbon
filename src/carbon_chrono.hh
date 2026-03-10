@@ -13,7 +13,7 @@ CBNDEF_T(CBN_Chrono) {
   f64 initial;
   f64 elapsed;
 };
-CBNDEF_AKA(cbn::time, Chrono, CBN_Chrono);
+CBNDEF_TAKA(cbn::time, Chrono, CBN_Chrono);
 
 /**
  * @brief Creates and starts the chrono.

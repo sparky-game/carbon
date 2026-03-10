@@ -14,7 +14,7 @@
  * @return A boolean value indicating whether is valid or not.
  */
 CBNDEF bool carbon_net_is_valid_ipv4(const char *ip);
-CBNDEF_FN(cbn::net, IsValidIPv4, carbon_net_is_valid_ipv4);
+CBNDEF_AKA(cbn::net, IsValidIPv4, carbon_net_is_valid_ipv4);
 
 /**
  * @brief Translate via DNS lookup a domain name to IPv4 address format.
@@ -22,4 +22,4 @@ CBNDEF_FN(cbn::net, IsValidIPv4, carbon_net_is_valid_ipv4);
  * @return A string representing the resolved IPv4 address.
  */
 CBNDEF char *carbon_net_resolve_dns_to_ipv4(const char *domain);
-CBNDEF_FN(cbn::net, ResolveDNS, carbon_net_resolve_dns_to_ipv4);
+CBNDEF_AKA(cbn::net, ResolveDNS, carbon_net_resolve_dns_to_ipv4);

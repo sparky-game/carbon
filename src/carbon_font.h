@@ -25,7 +25,7 @@ CBNDEF_T(CBN_Font) {
   CBN_Font_Metadata metadata;
   u8 data[CARBON_FONT_DATA_SIZE*CARBON_FONT_DATA_SIZE];
 };
-CBNDEF_AKA(cbn, Font, CBN_Font);
+CBNDEF_TAKA(cbn, Font, CBN_Font);
 
 /**
  */

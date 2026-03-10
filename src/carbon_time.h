@@ -20,8 +20,8 @@ typedef struct {
  * @return The obtained timestamp in seconds.
  */
 CBNDEF f64 carbon_time_get(void);
-CBNDEF_FN(cbn::time, Get, carbon_time_get);
-CBNDEF_FN(cbn::time, now, Get);
+CBNDEF_AKA(cbn::time, Get, carbon_time_get);
+CBNDEF_AKA(cbn::time, now, Get);
 
 /**
  * @brief Returns the current timestamp in the ISO-8601 format.

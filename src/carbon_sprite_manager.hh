@@ -7,7 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 typedef CBN_SlotMap_Key CBN_Sprite_UID;
-CBNDEF_AKA(cbn::sprite_mgr, UID, CBN_Sprite_UID);
+CBNDEF_TAKA(cbn::sprite_mgr, UID, CBN_Sprite_UID);
 
 // Forward declaration
 #ifdef __cplusplus
@@ -20,13 +20,13 @@ typedef struct CBN_SKAP_t CBN_SKAP;
  * @brief Initializes the sprite subsystem.
  */
 CBNDEF void carbon_sprite_manager_init(void);
-CBNDEF_FN(cbn::sprite_mgr, Init, carbon_sprite_manager_init);
+CBNDEF_AKA(cbn::sprite_mgr, Init, carbon_sprite_manager_init);
 
 /**
  * @brief Shutdowns the sprite subsystem.
  */
 CBNDEF void carbon_sprite_manager_shutdown(void);
-CBNDEF_FN(cbn::sprite_mgr, Shutdown, carbon_sprite_manager_shutdown);
+CBNDEF_AKA(cbn::sprite_mgr, Shutdown, carbon_sprite_manager_shutdown);
 
 /**
  * @brief ...
@@ -60,4 +60,4 @@ CBNDEF bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKA
  * @return ...
  */
 CBNDEF CBN_Sprite *carbon_sprite_manager_lookup(const CBN_Sprite_UID uid);
-CBNDEF_FN(cbn::sprite_mgr, Lookup, carbon_sprite_manager_lookup);
+CBNDEF_AKA(cbn::sprite_mgr, Lookup, carbon_sprite_manager_lookup);

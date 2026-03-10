@@ -19,7 +19,7 @@ CBNDEF_T(CBN_Rect) {
     CBN_Vec2 wh;
   };
 };
-CBNDEF_AKA(cbn::math, Rect, CBN_Rect);
+CBNDEF_TAKA(cbn::math, Rect, CBN_Rect);
 
 /**
  * @brief Creates a rectangle.

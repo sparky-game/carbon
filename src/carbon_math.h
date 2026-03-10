@@ -57,7 +57,7 @@ CBNDEF u32 carbon_math_bswap32(u32 x);
  * @return The non-negative value of x without regard to its sign.
  */
 CBNDEF f32 carbon_math_abs(f32 x);
-CBNDEF_FN(cbn::math, Abs, carbon_math_abs);
+CBNDEF_AKA(cbn::math, Abs, carbon_math_abs);
 
 /**
  * @brief Rounds a number to the nearest integral value.
@@ -65,7 +65,7 @@ CBNDEF_FN(cbn::math, Abs, carbon_math_abs);
  * @return The rounded integral value of x.
  */
 CBNDEF f32 carbon_math_round(f32 x);
-CBNDEF_FN(cbn::math, Round, carbon_math_round);
+CBNDEF_AKA(cbn::math, Round, carbon_math_round);
 
 /**
  * @brief Returns the largest integral value less than or equal to the specified number.
@@ -73,7 +73,7 @@ CBNDEF_FN(cbn::math, Round, carbon_math_round);
  * @return The largest integral value ≤ x.
  */
 CBNDEF f32 carbon_math_floor(f32 x);
-CBNDEF_FN(cbn::math, Floor, carbon_math_floor);
+CBNDEF_AKA(cbn::math, Floor, carbon_math_floor);
 
 /**
  * @brief Returns the smallest integral value great than or equal to the specified number.
@@ -81,7 +81,7 @@ CBNDEF_FN(cbn::math, Floor, carbon_math_floor);
  * @return The smallest integral value ≥ x.
  */
 CBNDEF f32 carbon_math_ceil(f32 x);
-CBNDEF_FN(cbn::math, Ceil, carbon_math_ceil);
+CBNDEF_AKA(cbn::math, Ceil, carbon_math_ceil);
 
 /**
  * @brief Returns the smaller of two numbers.
@@ -90,7 +90,7 @@ CBNDEF_FN(cbn::math, Ceil, carbon_math_ceil);
  * @return The minimum of the two.
  */
 CBNDEF f32 carbon_math_min(f32 x, f32 y);
-CBNDEF_FN(cbn::math, Min, carbon_math_min);
+CBNDEF_AKA(cbn::math, Min, carbon_math_min);
 
 /**
  * @brief Returns the smaller of three numbers.
@@ -100,7 +100,7 @@ CBNDEF_FN(cbn::math, Min, carbon_math_min);
  * @return The minimum of the three.
  */
 CBNDEF f32 carbon_math_min_3(f32 x, f32 y, f32 z);
-CBNDEF_FN(cbn::math, Min3, carbon_math_min_3);
+CBNDEF_AKA(cbn::math, Min3, carbon_math_min_3);
 
 /**
  * @brief Returns the larger of two numbers.
@@ -109,7 +109,7 @@ CBNDEF_FN(cbn::math, Min3, carbon_math_min_3);
  * @return The maximum of the two.
  */
 CBNDEF f32 carbon_math_max(f32 x, f32 y);
-CBNDEF_FN(cbn::math, Max, carbon_math_max);
+CBNDEF_AKA(cbn::math, Max, carbon_math_max);
 
 /**
  * @brief Returns the larger of three numbers.
@@ -119,7 +119,7 @@ CBNDEF_FN(cbn::math, Max, carbon_math_max);
  * @return The maximum of the three.
  */
 CBNDEF f32 carbon_math_max_3(f32 x, f32 y, f32 z);
-CBNDEF_FN(cbn::math, Max3, carbon_math_max_3);
+CBNDEF_AKA(cbn::math, Max3, carbon_math_max_3);
 
 /**
  * @brief Restricts a number between a minimum and a maximum value.
@@ -128,7 +128,7 @@ CBNDEF_FN(cbn::math, Max3, carbon_math_max_3);
  * @param max The maximum value.
  */
 CBNDEF f32 carbon_math_clamp(f32 x, f32 min, f32 max);
-CBNDEF_FN(cbn::math, Clamp, carbon_math_clamp);
+CBNDEF_AKA(cbn::math, Clamp, carbon_math_clamp);
 
 /**
  * @brief Snaps a number to the next integer up or down, depending on whether Δx is positive or negative.
@@ -144,7 +144,7 @@ CBNDEF f32 carbon_math_snap(f32 x, f32 dx);
  * @return The positive square root of x, provided x ≥ 0.
  */
 CBNDEF f32 carbon_math_sqrt(f32 x);
-CBNDEF_FN(cbn::math, Sqrt, carbon_math_sqrt);
+CBNDEF_AKA(cbn::math, Sqrt, carbon_math_sqrt);
 
 /**
  * @brief Returns the reciprocal (multiplicative inverse) of the square root of a specified number.
@@ -176,7 +176,7 @@ CBNDEF f32 carbon_math_fmod(f32 x, f32 y);
  * @return The result of x^y.
  */
 CBNDEF f32 carbon_math_pow(f32 x, f32 y);
-CBNDEF_FN(cbn::math, Pow, carbon_math_pow);
+CBNDEF_AKA(cbn::math, Pow, carbon_math_pow);
 
 /**
  * @brief Returns the base-2 logarithm of the specified number.
@@ -191,7 +191,7 @@ CBNDEF f32 carbon_math_log2(f32 x);
  * @return The result of 2^x.
  */
 CBNDEF f32 carbon_math_exp2(f32 x);
-CBNDEF_FN(cbn::math, Exp2, carbon_math_exp2);
+CBNDEF_AKA(cbn::math, Exp2, carbon_math_exp2);
 
 /**
  * @brief Multiplies a number by an integer power of 2.
@@ -214,7 +214,7 @@ CBNDEF f32 carbon_math_log(f32 x);
  * @return The result of e^x.
  */
 CBNDEF f32 carbon_math_exp(f32 x);
-CBNDEF_FN(cbn::math, Exp, carbon_math_exp);
+CBNDEF_AKA(cbn::math, Exp, carbon_math_exp);
 
 /**
  * @brief Multiplies a number by an integer power of e.
@@ -237,7 +237,7 @@ CBNDEF f32 carbon_math_log10(f32 x);
  * @return The result of 10^x.
  */
 CBNDEF f32 carbon_math_exp10(f32 x);
-CBNDEF_FN(cbn::math, Exp10, carbon_math_exp10);
+CBNDEF_AKA(cbn::math, Exp10, carbon_math_exp10);
 
 /**
  * @brief Multiplies a number by an integer power of 10.
@@ -254,7 +254,7 @@ CBNDEF f32 carbon_math_ldexp10(f32 x, i32 exp);
  * @return A number y, such that 1/2 ≤ y < 1 and x = y * 2^n.
  */
 CBNDEF f32 carbon_math_frexp(f32 x, i32 *n);
-CBNDEF_FN(cbn::math, Frexp, carbon_math_frexp);
+CBNDEF_AKA(cbn::math, Frexp, carbon_math_frexp);
 
 /**
  * @brief Computes the logistic function (S-shaped sigmoid function/curve), mapping a number to a value in [0..1].
@@ -262,7 +262,7 @@ CBNDEF_FN(cbn::math, Frexp, carbon_math_frexp);
  * @return The result of the application of the function.
  */
 CBNDEF f32 carbon_math_sigmoid(f32 x);
-CBNDEF_FN(cbn::math, Sigmoid, carbon_math_sigmoid);
+CBNDEF_AKA(cbn::math, Sigmoid, carbon_math_sigmoid);
 
 /**
  * @brief Performs linear interpolation from a to b by factor t.
@@ -272,7 +272,7 @@ CBNDEF_FN(cbn::math, Sigmoid, carbon_math_sigmoid);
  * @return The interpolated value between a and b.
  */
 CBNDEF f32 carbon_math_lerp(f32 a, f32 b, f32 t);
-CBNDEF_FN(cbn::math, Lerp, carbon_math_lerp);
+CBNDEF_AKA(cbn::math, Lerp, carbon_math_lerp);
 
 /**
  * @brief Computes the interpolation factor of x between two values following 3t²-2t³.
@@ -282,7 +282,7 @@ CBNDEF_FN(cbn::math, Lerp, carbon_math_lerp);
  * @return The interpolation factor in [0..1].
  */
 CBNDEF f32 carbon_math_smoothstep(f32 a, f32 b, f32 x);
-CBNDEF_FN(cbn::math, SmoothStep, carbon_math_smoothstep);
+CBNDEF_AKA(cbn::math, SmoothStep, carbon_math_smoothstep);
 
 /**
  * @brief Compares two numbers with a floating-point tolerance (ε).
@@ -294,8 +294,8 @@ CBNDEF_FN(cbn::math, SmoothStep, carbon_math_smoothstep);
  *   - If x ± ε ≈ y, then 0.
  */
 CBNDEF i8 carbon_math_cmp(f32 x, f32 y);
-CBNDEF_FN(cbn::math, Compare, carbon_math_cmp);
-CBNDEF_FN(cbn::math, cmp, Compare);
+CBNDEF_AKA(cbn::math, Compare, carbon_math_cmp);
+CBNDEF_AKA(cbn::math, cmp, Compare);
 
 /**
  * @brief Concatenates two unsigned integers together (e.g. `10` || `69` :: `1069`).
@@ -304,7 +304,7 @@ CBNDEF_FN(cbn::math, cmp, Compare);
  * @return The unsigned integer representing their concatenation.
  */
 CBNDEF u64 carbon_math_concat(u64 x, u64 y);
-CBNDEF_FN(cbn::math, Concat, carbon_math_concat);
+CBNDEF_AKA(cbn::math, Concat, carbon_math_concat);
 
 /**
  * @brief Returns the Greatest Common Divisor (using Euclidean algorithm) of two integers.
@@ -313,7 +313,7 @@ CBNDEF_FN(cbn::math, Concat, carbon_math_concat);
  * @return The GCD of `x` and `y`.
  */
 CBNDEF i32 carbon_math_egcd(i32 x, i32 y);
-CBNDEF_FN(cbn::math, eGCD, carbon_math_egcd);
+CBNDEF_AKA(cbn::math, eGCD, carbon_math_egcd);
 
 /**
  * @brief Returns the sine of the specified angle.
@@ -321,7 +321,7 @@ CBNDEF_FN(cbn::math, eGCD, carbon_math_egcd);
  * @return The sine of x.
  */
 CBNDEF f32 carbon_math_sin(f32 x);
-CBNDEF_FN(cbn::math, Sin, carbon_math_sin);
+CBNDEF_AKA(cbn::math, Sin, carbon_math_sin);
 
 /**
  * @brief Returns the cosine of the specified angle.
@@ -329,7 +329,7 @@ CBNDEF_FN(cbn::math, Sin, carbon_math_sin);
  * @return The cosine of x.
  */
 CBNDEF f32 carbon_math_cos(f32 x);
-CBNDEF_FN(cbn::math, Cos, carbon_math_cos);
+CBNDEF_AKA(cbn::math, Cos, carbon_math_cos);
 
 /**
  * @brief Returns the tangent of the specified angle.
@@ -337,7 +337,7 @@ CBNDEF_FN(cbn::math, Cos, carbon_math_cos);
  * @return The tangent of x.
  */
 CBNDEF f32 carbon_math_tan(f32 x);
-CBNDEF_FN(cbn::math, Tan, carbon_math_tan);
+CBNDEF_AKA(cbn::math, Tan, carbon_math_tan);
 
 /**
  * @brief Returns the hyperbolic tangent of the specified angle.
@@ -345,7 +345,7 @@ CBNDEF_FN(cbn::math, Tan, carbon_math_tan);
  * @return The hyperbolic tangent of x.
  */
 CBNDEF f32 carbon_math_tanh(f32 x);
-CBNDEF_FN(cbn::math, Tanh, carbon_math_tanh);
+CBNDEF_AKA(cbn::math, Tanh, carbon_math_tanh);
 
 /**
  * @brief Returns the angle whose sine is the specified number.
@@ -353,7 +353,7 @@ CBNDEF_FN(cbn::math, Tanh, carbon_math_tanh);
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
 CBNDEF f32 carbon_math_asin(f32 x);
-CBNDEF_FN(cbn::math, Asin, carbon_math_asin);
+CBNDEF_AKA(cbn::math, Asin, carbon_math_asin);
 
 /**
  * @brief Returns the angle whose tangent is the specified number.
@@ -361,7 +361,7 @@ CBNDEF_FN(cbn::math, Asin, carbon_math_asin);
  * @return An angle θ, in radians, such that -π/2 ≤ θ ≤ π/2.
  */
 CBNDEF f32 carbon_math_atan(f32 x);
-CBNDEF_FN(cbn::math, Atan, carbon_math_atan);
+CBNDEF_AKA(cbn::math, Atan, carbon_math_atan);
 
 /**
  * @brief Returns the angle whose tangent is the quotient of the two specified numbers.
@@ -370,4 +370,4 @@ CBNDEF_FN(cbn::math, Atan, carbon_math_atan);
  * @return An angle θ, in radians, such that tan(θ) = y/x, where (x, y) is a point in the Cartesian plane.
  */
 CBNDEF f32 carbon_math_atan2(f32 y, f32 x);
-CBNDEF_FN(cbn::math, Atan2, carbon_math_atan2);
+CBNDEF_AKA(cbn::math, Atan2, carbon_math_atan2);

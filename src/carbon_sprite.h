@@ -14,7 +14,7 @@ CBNDEF_T(CBN_Sprite) {
   usz width;
   usz height;
 };
-CBNDEF_AKA(cbn, Sprite, CBN_Sprite);
+CBNDEF_TAKA(cbn, Sprite, CBN_Sprite);
 
 /**
  * @brief Creates a Sprite from an Image object.

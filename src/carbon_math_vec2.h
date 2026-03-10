@@ -15,7 +15,7 @@ CBNDEF_T(CBN_Vec2) {
     f32 c[2];
   };
 };
-CBNDEF_AKA(cbn::math, Vec2, CBN_Vec2);
+CBNDEF_TAKA(cbn::math, Vec2, CBN_Vec2);
 
 // Forward declarations
 #ifdef __cplusplus

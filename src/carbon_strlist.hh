@@ -15,7 +15,7 @@ CBNDEF_T(CBN_StrList) {
   usz capacity;
   u8 unique;
 };
-CBNDEF_AKA(cbn::str, List, CBN_StrList);
+CBNDEF_TAKA(cbn::str, List, CBN_StrList);
 
 #define carbon_strlist_at(sl, i) (CBN_ASSERT(0 <= (i32) (i) && (i) < (sl).size && "StrList index out of bounds"), ((sl).items)[(i)])
 

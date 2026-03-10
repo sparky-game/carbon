@@ -14,7 +14,7 @@
  * @return ...
  */
 typedef i32 (*CBN_Sort_CmpFunc)(const void *, const void *);
-CBNDEF_AKA(cbn::sort, CmpFunc, CBN_Sort_CmpFunc);
+CBNDEF_TAKA(cbn::sort, CmpFunc, CBN_Sort_CmpFunc);
 
 /**
  * @brief ...
@@ -24,4 +24,4 @@ CBNDEF_AKA(cbn::sort, CmpFunc, CBN_Sort_CmpFunc);
  * @param f_cmp ...
  */
 void carbon_sort_insertion(void *p, usz n, usz w, CBN_Sort_CmpFunc f_cmp);
-CBNDEF_FN(cbn::sort, Insertion, carbon_sort_insertion);
+CBNDEF_AKA(cbn::sort, Insertion, carbon_sort_insertion);

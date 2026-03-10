@@ -14,4 +14,4 @@ typedef struct {
   u8 *data;
   CBN_Binary_Metadata metadata;
 } CBN_Binary;
-CBNDEF_AKA(cbn, Binary, CBN_Binary);
+CBNDEF_TAKA(cbn, Binary, CBN_Binary);

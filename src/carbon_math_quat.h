@@ -13,7 +13,7 @@
  * by the angle θ, where `w = cos(θ/2)`.
  */
 typedef CBN_Vec4 CBN_Quat;
-CBNDEF_AKA(cbn::math, Quat, CBN_Quat);
+CBNDEF_TAKA(cbn::math, Quat, CBN_Quat);
 
 /**
  * @brief Creates a quaternion.

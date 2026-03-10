@@ -28,7 +28,7 @@ CBNDEF_T(CBN_Mesh) {
   usz (*faces)[CARBON_MESH_FACE_COMPS][3];
   CBN_Mesh_Metadata metadata;
 };
-CBNDEF_AKA(cbn, Mesh, CBN_Mesh);
+CBNDEF_TAKA(cbn, Mesh, CBN_Mesh);
 
 CBNDEF bool carbon_mesh_create_from_file(CBN_Mesh *m, const char *file);
 

@@ -19,27 +19,27 @@ typedef struct CBN_SKAP_t CBN_SKAP;
  * @brief Initializes the audio subsystem.
  */
 CBNDEF void carbon_audio_init(void);
-CBNDEF_FN(cbn::audio, Init, carbon_audio_init);
+CBNDEF_AKA(cbn::audio, Init, carbon_audio_init);
 
 /**
  * @brief Shutdowns the audio subsystem.
  */
 CBNDEF void carbon_audio_shutdown(void);
-CBNDEF_FN(cbn::audio, Shutdown, carbon_audio_shutdown);
+CBNDEF_AKA(cbn::audio, Shutdown, carbon_audio_shutdown);
 
 /**
  * @brief Gets the current global engine volume level.
  * @return 32-bit float in [0..1] for normal levels, or in [1..+inf) if amplified.
  */
 CBNDEF f32 carbon_audio_get_volume(void);
-CBNDEF_FN(cbn::audio, GetVolume, carbon_audio_get_volume);
+CBNDEF_AKA(cbn::audio, GetVolume, carbon_audio_get_volume);
 
 /**
  * @brief Sets the desired global engine volume level.
  * @param volume 32-bit float in [0..1] for normal levels, or in [1..+inf] for amplification.
  */
 CBNDEF void carbon_audio_set_volume(const f32 volume);
-CBNDEF_FN(cbn::audio, SetVolume, carbon_audio_set_volume);
+CBNDEF_AKA(cbn::audio, SetVolume, carbon_audio_set_volume);
 
 /**
  * @brief ...
@@ -94,14 +94,14 @@ cbn::Opt<CBN_Audio_UID> carbon_audio_load_stream(const char *file) {
  * @param uid ...
  */
 CBNDEF void carbon_audio_play(const CBN_Audio_UID uid);
-CBNDEF_FN(cbn::audio, Play, carbon_audio_play);
+CBNDEF_AKA(cbn::audio, Play, carbon_audio_play);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_stop(const CBN_Audio_UID uid);
-CBNDEF_FN(cbn::audio, Stop, carbon_audio_stop);
+CBNDEF_AKA(cbn::audio, Stop, carbon_audio_stop);
 
 /**
  * @brief ...
@@ -109,7 +109,7 @@ CBNDEF_FN(cbn::audio, Stop, carbon_audio_stop);
  * @return ... in (0..+inf) ...
  */
 CBNDEF f32 carbon_audio_get_pitch(const CBN_Audio_UID uid);
-CBNDEF_FN(cbn::audio, GetPitch, carbon_audio_get_pitch);
+CBNDEF_AKA(cbn::audio, GetPitch, carbon_audio_get_pitch);
 
 /**
  * @brief ...
@@ -117,11 +117,11 @@ CBNDEF_FN(cbn::audio, GetPitch, carbon_audio_get_pitch);
  * @param pitch ... in (0..+inf) ...
  */
 CBNDEF void carbon_audio_set_pitch(const CBN_Audio_UID uid, const f32 pitch);
-CBNDEF_FN(cbn::audio, SetPitch, carbon_audio_set_pitch);
+CBNDEF_AKA(cbn::audio, SetPitch, carbon_audio_set_pitch);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_shift_pitch(const CBN_Audio_UID uid);
-CBNDEF_FN(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);
+CBNDEF_AKA(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);

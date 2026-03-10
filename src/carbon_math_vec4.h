@@ -19,7 +19,7 @@ CBNDEF_T(alignas(16) CBN_Vec4) {
     f32 c[4];
   };
 };
-CBNDEF_AKA(cbn::math, Vec4, CBN_Vec4);
+CBNDEF_TAKA(cbn::math, Vec4, CBN_Vec4);
 
 /**
  * @brief Creates a 4D vector.
