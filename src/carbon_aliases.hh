@@ -47,11 +47,12 @@ namespace cbn {
   }
 
   namespace math {
-    constexpr auto ToRadians(const auto angle) { return CARBON_TO_RADIANS(angle); }
+    constexpr auto ToRadians(const auto phi)   { return CARBON_TO_RADIANS(phi); }
+    constexpr auto FromRadians(const auto phi) { return CARBON_FROM_RADIANS(phi); }
     namespace literals {
+      constexpr auto pi = CARBON_PI;
       consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
       consteval f64 operator""_deg(const flong n) { return ToRadians(n); }
-      constexpr auto pi = CARBON_PI;
       consteval f64 operator""_pi(const u64 n)   { return n * pi; }
       consteval f64 operator""_pi(const flong n) { return n * pi; }
     }

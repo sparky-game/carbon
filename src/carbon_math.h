@@ -44,7 +44,13 @@
  * @brief Converts degrees to radians.
  * @param angle The angle in degrees.
  */
-#define CARBON_TO_RADIANS(angle) ((angle) * CARBON_PI / 180)
+#define CARBON_TO_RADIANS(phi) ((phi) * CARBON_PI/180)
+
+/**
+ * @brief Converts radians to degrees.
+ * @param angle The angle in radians.
+ */
+#define CARBON_FROM_RADIANS(phi) ((phi) * 180/CARBON_PI)
 
 /**
  * @brief Reverses the order of the bytes in the provided 32-bit unsigned integer (e.g. 0xAABBCCDD -> 0xDDCCBBAA).
