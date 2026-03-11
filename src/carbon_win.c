@@ -37,12 +37,6 @@ static bool carbon_win__prev_keys[CBN_Win_KeyCode_Count];
 static bool carbon_win__mouse_buttons[CBN_Win_MouseButton_Count];
 static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 
-static pthread_t carbon_win__thread_id;
-static pthread_mutex_t carbon_win__thread_mut = PTHREAD_MUTEX_INITIALIZER;
-static pthread_cond_t carbon_win__thread_cond = PTHREAD_COND_INITIALIZER;
-static _Atomic bool carbon_win__thread_running;
-static _Atomic bool carbon_win__thread_ready;
-
 CBNINL CBN_Win_KeyCode carbon_win__map_key_code(RGFW_key key) {
   switch (key) {
   case RGFW_a:        return CBN_Win_KeyCode_A;
@@ -193,22 +187,6 @@ CBNINL void carbon_win__upscale_buf(const CBN_DrawCanvas *dc) {
   }
 }
 
-CBNINL void *carbon_win__thread_fn(void *arg) {
-  const CBN_DrawCanvas *dc = (const CBN_DrawCanvas *)arg;
-  while (atomic_load(&carbon_win__thread_running)) {
-    pthread_mutex_lock(&carbon_win__thread_mut);
-    while (!atomic_load(&carbon_win__thread_ready) && atomic_load(&carbon_win__thread_running)) {
-      pthread_cond_wait(&carbon_win__thread_cond, &carbon_win__thread_mut);
-    }
-    pthread_mutex_unlock(&carbon_win__thread_mut);
-    if (atomic_exchange(&carbon_win__thread_ready, false)) {
-      carbon_win__resize_buf(dc);
-      carbon_win__upscale_buf(dc);
-    }
-  }
-  return 0;
-}
-
 void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   const usz w = carbon_drawcanvas_width(dc), h = carbon_drawcanvas_height(dc);
   carbon_win__handle = RGFW_createWindow(title, RGFW_RECT(0, 0, w, h), RGFW_windowCenter | RGFW_windowCenterCursor);
@@ -224,16 +202,9 @@ void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
   RGFW_setWindowResizeCallback(carbon_win__resize_callback);
   RGFW_setKeyCallback(carbon_win__key_callback);
   RGFW_setMouseButtonCallback(carbon_win__mouse_button_callback);
-  atomic_store(&carbon_win__thread_running, true);
-  CBN_ASSERT(0 == pthread_create(&carbon_win__thread_id, 0, carbon_win__thread_fn, (void *)dc));
 }
 
 void carbon_win_close(void) {
-  pthread_mutex_lock(&carbon_win__thread_mut);
-  atomic_store(&carbon_win__thread_running, false);
-  pthread_cond_signal(&carbon_win__thread_cond);
-  pthread_mutex_unlock(&carbon_win__thread_mut);
-  pthread_join(carbon_win__thread_id, 0);
   carbon_memory_free(carbon_win__xtable);
   carbon_memory_free(carbon_win__ytable);
   carbon_image_destroy(&carbon_win__icon);
@@ -285,11 +256,8 @@ u32 carbon_win_get_fps(void) {
 }
 
 void carbon_win_update(const CBN_DrawCanvas *dc) {
-  CARBON_UNUSED(dc);
-  pthread_mutex_lock(&carbon_win__thread_mut);
-  atomic_store(&carbon_win__thread_ready, true);
-  pthread_cond_signal(&carbon_win__thread_cond);
-  pthread_mutex_unlock(&carbon_win__thread_mut);
+  carbon_win__resize_buf(dc);
+  carbon_win__upscale_buf(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
   carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
 }
