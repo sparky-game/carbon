@@ -37,6 +37,16 @@ static bool carbon_win__prev_keys[CBN_Win_KeyCode_Count];
 static bool carbon_win__mouse_buttons[CBN_Win_MouseButton_Count];
 static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 
+#if defined(_WIN32)
+// ...
+#elif defined(__APPLE__)
+#include "carbon_win_macos.m"
+#elif defined(__linux__)
+// ...
+#else
+#error Target platform is not supported
+#endif
+
 CBNINL CBN_Win_KeyCode carbon_win__map_key_code(RGFW_key key) {
   switch (key) {
   case RGFW_a:        return CBN_Win_KeyCode_A;
