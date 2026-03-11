@@ -61,13 +61,13 @@ You might want to take a look to the [[https://github.com/sparky-game/carbon/rel
 You can checkout the [[../INSTALL][installation instructions]], so /Carbon/ can be made available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
 #+end_quote
 
-** Examples
+** Tutorials
 
-A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../examples][examples]].
+A good place to start learning and discovering all the things you can do with /Carbon/ is *reading* and *executing* the [[../how_to][tutorials]].
 
 Furthermore, you can also take a look at the amalgamated distributable *header file* (~carbon.h~), where each module of the library is declared and documented. This is all the documentation you'll ever need, and it's also a good place to find new things /Carbon/ can do.
 
-Lastly, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../src_test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs. One can issue the command ~./make test~ to build and run all tests.
+Lastly, for a more advanced understanding of all available and tested functionality that /Carbon/ provides, *reading* the [[../src_test][tests]] is a great next step. There it can be learnt both how to work with the different modules, and how to use /Carbon/ itself to test your own applications and programs.
 
 * Licensing
 
