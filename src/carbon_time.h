@@ -45,5 +45,7 @@ CBNDEF char *carbon_time_get_iso8601(void);
 CBNDEF u64 carbon_time_get_yyyymmddhhmmss(void);
 
 CBNDEF void carbon_time_sleep(u64 ms);
+
 CBNDEF u64 carbon_time_snowflake_get(void);
+
 CBNDEF CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake);
