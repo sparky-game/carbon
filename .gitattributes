@@ -3,6 +3,3 @@
 *.png binary
 *.gif binary
 *.ogg binary
-
-*.sh linguist-vendored
-*.bat linguist-vendored
