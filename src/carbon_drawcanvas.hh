@@ -76,6 +76,10 @@ struct CBN_DrawCanvas {
     carbon_drawcanvas_circle(this, center, radius, color);
   }
 
+  void DrawAnnulus(CBN_Vec2 center, usz radius_out, usz radius_in, u32 color) {
+    carbon_drawcanvas_annulus(this, center, radius_out, radius_in, color);
+  }
+
   void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = cbn::math::Vec2(1)) {
     carbon_drawcanvas_sprite(this, s, position, scale);
   }

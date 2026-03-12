@@ -145,6 +145,16 @@ CBNDEF void carbon_drawcanvas_rect(CBN_DrawCanvas *dc, CBN_Rect r, u32 color);
 CBNDEF void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u32 color);
 
 /**
+ * @brief Draws an annulus to the canvas with a specific color.
+ * @param dc The DrawCanvas object.
+ * @param center The position of the center of the annulus.
+ * @param radius_out The outter radius of the annulus.
+ * @param radius_in The inner radius of the annulus.
+ * @param color The color to draw the annulus with.
+ */
+CBNDEF void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius_out, usz radius_in, u32 color);
+
+/**
  * @brief Draws a sprite to the canvas.
  * @param dc The DrawCanvas object.
  * @param sprite The sprite to draw.

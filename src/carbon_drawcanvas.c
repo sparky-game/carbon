@@ -148,6 +148,31 @@ void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u
   }
 }
 
+void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius_out, usz radius_in, u32 color) {
+  CBN_ASSERT(radius_in < radius_out);
+  i32 x1, x2, y1, y2;
+  CBN_Rect xywh = carbon_math_rect_sq(center.x - radius_out, center.y - radius_out, 2*radius_out);
+  if (!carbon_drawcanvas__rect_normalize(dc, xywh, &x1, &x2, &y1, &y2)) return;
+  for (i32 j = y1; j <= y2; ++j) {
+    for (i32 i = x1; i <= x2; ++i) {
+      i64 n = 0;
+      for (i64 sx = 0; sx < CARBON_DRAWCANVAS__CIRCLE_AA; ++sx) {
+        for (i64 sy = 0; sy < CARBON_DRAWCANVAS__CIRCLE_AA; ++sy) {
+          i64 res = CARBON_DRAWCANVAS__CIRCLE_AA;
+          i64 dx = 2*i*res + 2*sx + 1 - 2*res*center.x;
+          i64 dy = 2*j*res + 2*sy + 1 - 2*res*center.y;
+          i64 d_sq = dx*dx + dy*dy;
+          if (d_sq <= (i64)(4 * res*res * radius_out*radius_out) &&
+              d_sq >= (i64)(4 * res*res * radius_in*radius_in)) ++n;
+        }
+      }
+      u32 aa_alpha = (color & 0xff) * n / (CARBON_DRAWCANVAS__CIRCLE_AA*CARBON_DRAWCANVAS__CIRCLE_AA);
+      u32 aa_color = (color & 0xffffff00) | aa_alpha;
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, i, j), aa_color);
+    }
+  }
+}
+
 void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale) {
   const f32 sw = s->width * scale.x, sh = s->height * scale.y;
   const CBN_Rect r_dc = carbon_math_rect(0, 0, dc->width, dc->height);
