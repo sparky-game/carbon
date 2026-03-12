@@ -265,11 +265,22 @@ u32 carbon_win_get_fps(void) {
   return carbon_win__fps;
 }
 
+CBNINL void carbon_win__update_fps(void) {
+  static f64 start;
+  f64 t = start ? carbon_time_get() - start : 0;
+  if (carbon_win__max_fps) {
+    f64 tgt = 1/carbon_win__max_fps;
+    if (t < tgt) carbon_time_sleep((tgt - t) * 1e3);
+  }
+  carbon_win__curr_fps = t > 0 ? 1/t : 0;
+  start = carbon_time_get();
+}
+
 void carbon_win_update(const CBN_DrawCanvas *dc) {
   carbon_win__resize_buf(dc);
   carbon_win__upscale_buf(dc);
   RGFW_window_swapBuffers(carbon_win__handle);
-  carbon_win__curr_fps = RGFW_window_checkFPS(carbon_win__handle, carbon_win__max_fps);
+  carbon_win__update_fps();
 }
 
 bool carbon_win_shouldclose(void) {
