@@ -69,7 +69,11 @@ void src_amalgamation(void) {
 
 void compile_and_link_lib(void) {
   printf("  CC      " OBJ_FILE "\n");
+#ifdef __APPLE__
+  RunCmd(CC_CMD " -x objective-c -fPIC -c " SRC_FILE " -o " OBJ_FILE);
+#else
   RunCmd(CC_CMD " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
+#endif
   printf("  AR      " LIB_FILE "\n");
   RunCmd("ar -rcs " LIB_FILE " " OBJ_FILE);
   printf("  LD      " DLL_FILE "\n");

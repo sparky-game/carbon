@@ -40,7 +40,7 @@ static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 #if defined(_WIN32)
 // ...
 #elif defined(__APPLE__)
-#include "carbon_win_macos.m"
+// #include "carbon_win_macos.m"
 #elif defined(__linux__)
 // ...
 #else
