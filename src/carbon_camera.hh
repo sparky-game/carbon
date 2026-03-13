@@ -14,7 +14,7 @@ struct CBN_Camera {
     carbon_camera_reset(this, &dc);
   }
 
-  void SetType(const Type t) {
+  void SetType(Type t) {
     carbon_camera_set_type(this, t);
   }
 

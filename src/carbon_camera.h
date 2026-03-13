@@ -47,7 +47,7 @@ CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc);
  * @param c The Camera object.
  * @param t ...
  */
-CBNDEF void carbon_camera_set_type(CBN_Camera *c, const CBN_Camera_Type t);
+CBNDEF void carbon_camera_set_type(CBN_Camera *c, CBN_Camera_Type t);
 
 /**
  * @brief Obtains the current position of the Camera as 3D vector.
