@@ -60,6 +60,15 @@ u32 carbon_color_add(u32 c1, u32 c2) {
   return CBN_COLOR__U32_4(r, g, b, a);
 }
 
+u32 carbon_color_mult(u32 c1, u32 c2) {
+  CBN_Color c1_rgba = CBN_COLOR__RGBA(c1), c2_rgba = CBN_COLOR__RGBA(c2);
+  u32 r = (c1_rgba.r * c2_rgba.r)/0xff;
+  u32 g = (c1_rgba.g * c2_rgba.g)/0xff;
+  u32 b = (c1_rgba.b * c2_rgba.b)/0xff;
+  u32 a = (c1_rgba.a * c2_rgba.a)/0xff;
+  return CBN_COLOR__U32_4(r, g, b, a);
+}
+
 u32 carbon_color_lerp(u32 c1, u32 c2, f32 t) {
   CBN_Color c1_rgba = CBN_COLOR__RGBA(c1), c2_rgba = CBN_COLOR__RGBA(c2);
   u32 r = carbon_math_lerp(c1_rgba.r, c2_rgba.r, t);

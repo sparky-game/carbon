@@ -52,6 +52,15 @@ CBNDEF u32 carbon_color_add(u32 c1, u32 c2);
 CBNDEF_AKA(cbn::color, Add, carbon_color_add);
 
 /**
+ * @brief Multiplies two 32-bit RGBA colors together.
+ * @param c1 The first color.
+ * @param c2 The second color.
+ * @return The resultant 32-bit RGBA color.
+ */
+CBNDEF u32 carbon_color_mult(u32 c1, u32 c2);
+CBNDEF_AKA(cbn::color, Mult, carbon_color_mult);
+
+/**
  * @brief Performs linear interpolation from c1 to c2 by factor t.
  * @param c1 The first color.
  * @param c2 The second color.
