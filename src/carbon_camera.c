@@ -63,6 +63,7 @@ CBNINL void carbon_camera__update_proj(CBN_Camera *c) {
     f32 hw = hh * c->aspect;
     c->proj = carbon_math_mat4_orthographic(-hw, hw, -hh, hh, c->near, c->far);
   } break;
+  case CBN_Camera_Type_Count:
   default: CARBON_UNREACHABLE;
   }
 }
