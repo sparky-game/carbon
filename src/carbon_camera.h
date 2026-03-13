@@ -15,10 +15,10 @@ CBNDEF_TAKA(cbn, Camera, CBN_Camera);
 /**
  * @brief Types of 3D projections used to display the camera's frustum on a 2D canvas.
  */
-typedef enum {
-  CARBON_CAMERA_TYPE_PERSPECTIVE,
-  CARBON_CAMERA_TYPE_ORTHOGRAPHIC
-} CBN_Camera_Type;
+#define CARBON_CAMERA_TYPES(x, p)               \
+  x(p, Perspective)                             \
+  x(p, Orthographic)
+CBNDEF_ENUM(CBN_Camera_Type, CARBON_CAMERA_TYPES);
 
 typedef struct CBN_DrawCanvas CBN_DrawCanvas;  // Forward declaration
 

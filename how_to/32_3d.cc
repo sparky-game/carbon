@@ -134,7 +134,7 @@ int main(void) {
   static constexpr auto RRF = 80;
   auto canvas = cbn::DrawCanvas::New(16*RRF, 9*RRF);
   auto cam = canvas->CreateCamera();
-  cam->SetType(CARBON_CAMERA_TYPE_ORTHOGRAPHIC);
+  cam->SetType(cbn::Camera::Type::Orthographic);
   res::Init();
   canvas->OpenWindow("3D");
   cbn::win::ForFrame([&](const auto dt){

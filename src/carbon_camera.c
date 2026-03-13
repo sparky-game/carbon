@@ -44,7 +44,7 @@ void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc) {
   c->aspect     = (f32) carbon_drawcanvas_width(dc) / carbon_drawcanvas_height(dc);
   c->near       = 0.1;
   c->far        = 100.0;
-  c->type       = CARBON_CAMERA_TYPE_PERSPECTIVE;
+  c->type       = CBN_Camera_Type_Perspective;
   c->proj       = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
   c->ortho_size = 1;
 }
@@ -55,10 +55,10 @@ CBNINL void carbon_camera__update_view(CBN_Camera *c) {
 
 CBNINL void carbon_camera__update_proj(CBN_Camera *c) {
   switch (c->type) {
-  case CARBON_CAMERA_TYPE_PERSPECTIVE:
+  case CBN_Camera_Type_Perspective:
     c->proj = carbon_math_mat4_perspective(c->fov, c->aspect, c->near, c->far);
     break;
-  case CARBON_CAMERA_TYPE_ORTHOGRAPHIC: {
+  case CBN_Camera_Type_Orthographic: {
     f32 hh = c->ortho_size;
     f32 hw = hh * c->aspect;
     c->proj = carbon_math_mat4_orthographic(-hw, hw, -hh, hh, c->near, c->far);
@@ -156,5 +156,5 @@ void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount) {
   static const f32 max_zoom = 0.1;
   if (!c) return;
   c->ortho_size = carbon_math_max(c->ortho_size + amount, max_zoom);
-  if (c->type == CARBON_CAMERA_TYPE_ORTHOGRAPHIC) carbon_camera__update_proj(c);
+  if (c->type == CBN_Camera_Type_Orthographic) carbon_camera__update_proj(c);
 }
