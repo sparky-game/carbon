@@ -18,9 +18,9 @@ struct CBN_DrawCanvas {
 #include "carbon_drawcanvas_mt.inl"
 
 CBN_DrawCanvas *carbon_drawcanvas_create(usz width, usz height) {
-  CBN_DrawCanvas *dc = (CBN_DrawCanvas *) carbon_memory_alloc(sizeof(CBN_DrawCanvas));
-  dc->pixels  = (u32 *) carbon_memory_alloc(width * height * sizeof(u32));
-  dc->zbuffer = (f32 *) carbon_memory_alloc(width * height * sizeof(f32));
+  CBN_DrawCanvas *dc = carbon_memory_alloc(sizeof(CBN_DrawCanvas));
+  dc->pixels  = carbon_memory_alloc(width * height * sizeof(u32));
+  dc->zbuffer = carbon_memory_alloc(width * height * sizeof(f32));
   dc->width   = width;
   dc->height  = height;
   dc->flags   = 0;
