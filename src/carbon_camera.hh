@@ -6,14 +6,10 @@ struct CBN_Camera {
   static cbn::Scope<CBN_Camera> New(const CBN_DrawCanvas *dc) {
     return {
       carbon_camera_create(dc),
-      [](CBN_Camera *c){ if (c) c->Free(); }
+      [](CBN_Camera *c){ carbon_camera_destroy(c); }
     };
   }
   
-  void Free(void) {
-    carbon_camera_destroy(this);
-  }
-
   void Reset(const CBN_DrawCanvas &dc) {
     carbon_camera_reset(this, &dc);
   }

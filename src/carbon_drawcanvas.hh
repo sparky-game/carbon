@@ -4,12 +4,8 @@ struct CBN_DrawCanvas {
   static cbn::Scope<CBN_DrawCanvas> New(usz width, usz height) {
     return {
       carbon_drawcanvas_create(width, height),
-      [](cbn::DrawCanvas *dc){ if (dc) dc->Free(); }
+      [](cbn::DrawCanvas *dc){ carbon_drawcanvas_destroy(dc); }
     };
-  }
-
-  void Free(void) {
-    carbon_drawcanvas_destroy(this);
   }
 
   void OpenWindow(const char *title) const {
