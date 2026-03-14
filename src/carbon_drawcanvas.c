@@ -2,6 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #define CARBON_DRAWCANVAS__CIRCLE_AA          2
+#define CARBON_DRAWCANVAS__MAX_LIGHTS         8
 #define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON 0.2
 
 struct CBN_DrawCanvas {
@@ -10,6 +11,8 @@ struct CBN_DrawCanvas {
   usz width;
   usz height;
   u32 flags;
+  CBN_Light lights[CARBON_DRAWCANVAS__MAX_LIGHTS];
+  usz lights_count;
 };
 
 #include "carbon_drawcanvas_monofont.inl"
@@ -19,19 +22,17 @@ struct CBN_DrawCanvas {
 
 CBN_DrawCanvas *carbon_drawcanvas_create(usz width, usz height) {
   CBN_DrawCanvas *dc = carbon_memory_alloc(sizeof(CBN_DrawCanvas));
-  dc->pixels  = carbon_memory_alloc(width * height * sizeof(u32));
-  dc->zbuffer = carbon_memory_alloc(width * height * sizeof(f32));
-  dc->width   = width;
-  dc->height  = height;
-  dc->flags   = 0;
+  dc->pixels       = carbon_memory_alloc(width * height * sizeof(u32));
+  dc->zbuffer      = carbon_memory_alloc(width * height * sizeof(f32));
+  dc->width        = width;
+  dc->height       = height;
+  dc->flags        = 0;
+  dc->lights_count = 0;
   return dc;
-
 }
+
 void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc) {
-  if (!dc) {
-    CBN_WARN("`dc` is not a valid pointer, skipping destruction");
-    return;
-  }
+  if (!dc) return;
   carbon_memory_free(dc->pixels);
   carbon_memory_free(dc->zbuffer);
   carbon_memory_set(dc, 0, sizeof(*dc));
@@ -66,6 +67,12 @@ void carbon_drawcanvas_flags_disable(CBN_DrawCanvas *dc, u32 flags) {
 void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags) {
   if (!dc) return;
   dc->flags ^= flags;
+}
+
+void carbon_drawcanvas_add_light(CBN_DrawCanvas *dc, CBN_Light light) {
+  if (!dc) return;
+  if (dc->lights_count >= CARBON_DRAWCANVAS__MAX_LIGHTS) return;
+  dc->lights[dc->lights_count++] = light;
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
@@ -202,7 +209,6 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
   if (!c || !m || !m->vertices || !m->faces) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
-  const CBN_Vec3 light = carbon_math_vec3_norm(carbon_math_vec3(0, 0, 1));
   const CBN_Vec3 cam_pos = carbon_camera_get_position(c);
   for (usz f = 0; f < m->metadata.faces_count; ++f) {
     const usz *i = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
@@ -212,7 +218,7 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
     }
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
   }
 }
 
@@ -231,16 +237,15 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec
     CBN_Vec4 v = carbon_math_vec4_3(vs[i].world, 1);
     vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
   }
-  const CBN_Vec3 light = carbon_math_vec3_norm(carbon_math_vec3_1(1));
   {// First triangle
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[1], vs[2], pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
   }
   {// Second triangle
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[2], vs[3], pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, light, color);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
   }
 }
 

@@ -48,6 +48,10 @@ struct CBN_DrawCanvas {
     carbon_drawcanvas_flags_toggle(this, fs);
   }
 
+  void AddLight(CBN_Light light) {
+    carbon_drawcanvas_add_light(this, light);
+  }
+
   void Fill(u32 color) {
     carbon_drawcanvas_fill(this, color);
   }

@@ -132,13 +132,34 @@ CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas *dc, co
   return true;
 }
 
-CBNINL u32 carbon_drawcanvas__flat_shading(u32 color, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, CBN_Vec3 L) {
+CBNINL u32 carbon_drawcanvas__flat_shading(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
   static const f32 n_a = 0.2;
-  const u32 k_a = carbon_color_scale(color, n_a);
   const CBN_Vec3 N = carbon_math_vec3_norm(carbon_math_vec3_cross(carbon_math_vec3_sub(v2, v1), carbon_math_vec3_sub(v3, v1)));
-  const f32 n_d = carbon_math_max(0, carbon_math_vec3_dot(N, L));
-  const u32 k_d = carbon_color_scale(color, n_d);
-  return carbon_color_add(k_a, k_d);
+  const CBN_Vec3 centroid = carbon_math_vec3_scale(carbon_math_vec3_add(carbon_math_vec3_add(v1, v2), v3), 1/3.f);
+  u32 k = carbon_color_scale(color, n_a);
+  for (usz i = 0; i < dc->lights_count; ++i) {
+    const CBN_Light *l = &dc->lights[i];
+    CBN_Vec3 L = carbon_math_vec3_1(0);
+    f32 att = 1;
+    switch (l->type) {
+    case CBN_LightType_Directional:
+      L = l->as_dir.direction;
+      break;
+    case CBN_LightType_Point: {
+      CBN_Vec3 diff = carbon_math_vec3_sub(l->as_point.position, centroid);
+      f32 d = carbon_math_vec3_len(diff);
+      L = carbon_math_vec3_scale(diff, 1/d);
+      att = carbon_math_max(0, 1 - (d/l->as_point.range));
+      att *= att;
+    } break;
+    case CBN_LightType_Count:
+    default: CARBON_UNREACHABLE;
+    }
+    const f32 n_d = carbon_math_max(0, carbon_math_vec3_dot(N, L)) * l->intensity * att;
+    const u32 k_d = carbon_color_mult(carbon_color_scale(color, n_d), l->color);
+    k = carbon_color_add(k, k_d);
+  }
+  return k;
 }
 
 CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
@@ -159,14 +180,14 @@ CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_
   }
 }
 
-CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, CBN_Vec3 light, u32 color) {
+CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, u32 color) {
   if (vs_count < 3) return;
   for (usz i = 1; i + 1 < vs_count; ++i) {
     Vertex3D p1 = vs[0], p2 = vs[i], p3 = vs[i+1];
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p1.clip, &p1.screen)) continue;
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p2.clip, &p2.screen)) continue;
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p3.clip, &p3.screen)) continue;
-    u32 shade = carbon_drawcanvas__flat_shading(color, p1.world, p2.world, p3.world, light);
+    u32 shade = carbon_drawcanvas__flat_shading(dc, p1.world, p2.world, p3.world, color);
     carbon_drawcanvas__triangle_3d(dc, p1.screen, p2.screen, p3.screen, shade);
   }
 }

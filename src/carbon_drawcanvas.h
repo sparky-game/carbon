@@ -21,12 +21,43 @@ enum {
   CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING = 1 << 2
 };
 
+/**
+ * @brief Represents ...
+ */
 typedef struct {
   CBN_Vec3 position;
   CBN_Vec3 rotation;
   CBN_Vec3 scale;
 } CBN_Transform;
 CBNDEF_TAKA(cbn, Transform, CBN_Transform);
+
+/**
+ * @brief ...
+ */
+#define CARBON_LIGHT_TYPES(x, p)                \
+  x(p, Directional)                             \
+  x(p, Point)
+CBNDEF_ENUM(CBN_LightType, CARBON_LIGHT_TYPES);
+CBNDEF_TAKA(cbn, LightType, CBN_LightType);
+
+/**
+ * @brief Represents ...
+ */
+typedef struct {
+  CBN_LightType type;
+  u32 color;
+  f32 intensity;
+  union {
+    struct {
+      CBN_Vec3 direction;
+    } as_dir;
+    struct {
+      CBN_Vec3 position;
+      f32 range;
+    } as_point;
+  };
+} CBN_Light;
+CBNDEF_TAKA(cbn, Light, CBN_Light);
 
 // Forward declaration
 #ifdef __cplusplus
@@ -50,14 +81,23 @@ CBNDEF CBN_DrawCanvas *carbon_drawcanvas_create(usz width, usz height);
 CBNDEF void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
 
 /**
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @return ...
  */
 CBNDEF u32 *carbon_drawcanvas_pixels(const CBN_DrawCanvas *dc);
 
 /**
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @return ...
  */
 CBNDEF usz carbon_drawcanvas_width(const CBN_DrawCanvas *dc);
 
 /**
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @return ...
  */
 CBNDEF usz carbon_drawcanvas_height(const CBN_DrawCanvas *dc);
 
@@ -88,6 +128,13 @@ CBNDEF void carbon_drawcanvas_flags_disable(CBN_DrawCanvas *dc, u32 flags);
  * @param flags The flag(s) to toggle.
  */
 CBNDEF void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags);
+
+/**
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @param light The light definition to add.
+ */
+CBNDEF void carbon_drawcanvas_add_light(CBN_DrawCanvas *dc, CBN_Light light);
 
 /**
  * @brief Fills the DrawCanvas with the specified color.

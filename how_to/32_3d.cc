@@ -131,10 +131,17 @@ void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
 }
 
 int main(void) {
-  static constexpr auto RRF = 80;
-  auto canvas = cbn::DrawCanvas::New(16*RRF, 9*RRF);
+  auto canvas = cbn::DrawCanvas::New(1280, 720);
   auto cam = canvas->CreateCamera();
   cam->SetType(cbn::Camera::Type::Orthographic);
+  canvas->AddLight(cbn::Light{
+      .type = cbn::LightType::Directional,
+      .color = 0xffffffff,
+      .intensity = 1,
+      .as_dir = {
+        .direction = cbn::math::Vec3(1, 2, 1).Normalize()
+      }
+    });
   res::Init();
   canvas->OpenWindow("3D");
   cbn::win::ForFrame([&](const auto dt){

@@ -50,6 +50,10 @@ struct CBN_Vec3 : CBN_Vec3_t {
     return carbon_math_vec3_max(*this, v);
   }
 
+  CBN_Vec3 Normalize(void) const {
+    return carbon_math_vec3_norm(*this);
+  }
+
   CBN_Quat ToQuat(void) const;
   //{
   //  return carbon_math_quat_from_euler(*this);
