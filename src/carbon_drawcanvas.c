@@ -222,6 +222,56 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
   }
 }
 
+void carbon_drawcanvas_cube(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Transform t, u32 color) {
+  static const CBN_Vec3 vs[] = {
+    {{{-1, -1,  1}}},  // [0] front bottom-left
+    {{{ 1, -1,  1}}},  // [1] front bottom-right
+    {{{ 1,  1,  1}}},  // [2] front top-right
+    {{{-1,  1,  1}}},  // [3] front top-left
+    {{{-1, -1, -1}}},  // [4] back bottom-left
+    {{{ 1, -1, -1}}},  // [5] back bottom-right
+    {{{ 1,  1, -1}}},  // [6] back top-right
+    {{{-1,  1, -1}}}   // [7] back top-left
+  };
+  static const CBN_Vec2 ts[] = {
+    {{{1/4.f, 1/3.f}}}, {{{2/4.f, 1/3.f}}}, {{{2/4.f, 2/3.f}}}, {{{1/4.f, 2/3.f}}},  // [0..3]   front
+    {{{2/4.f, 1/3.f}}}, {{{3/4.f, 1/3.f}}}, {{{3/4.f, 2/3.f}}}, {{{2/4.f, 2/3.f}}},  // [4..7]   right
+    {{{3/4.f, 1/3.f}}}, {{{4/4.f, 1/3.f}}}, {{{4/4.f, 2/3.f}}}, {{{3/4.f, 2/3.f}}},  // [8..11]  back
+    {{{    0, 1/3.f}}}, {{{1/4.f, 1/3.f}}}, {{{1/4.f, 2/3.f}}}, {{{    0, 2/3.f}}},  // [12..15] left
+    {{{1/4.f, 2/3.f}}}, {{{2/4.f, 2/3.f}}}, {{{2/4.f, 3/3.f}}}, {{{1/4.f, 3/3.f}}},  // [16..19] top
+    {{{1/4.f,     0}}}, {{{2/4.f,     0}}}, {{{2/4.f, 1/3.f}}}, {{{1/4.f, 1/3.f}}}   // [20..23] bottom
+  };
+  static const CBN_Vec3 ns[] = {
+    {{{ 0,  0,  1}}},  // [0] front
+    {{{ 1,  0,  0}}},  // [1] right
+    {{{ 0,  0, -1}}},  // [2] back
+    {{{-1,  0,  0}}},  // [3] left
+    {{{ 0,  1,  0}}},  // [4] top
+    {{{ 0, -1,  0}}}   // [5] bottom
+  };
+  static const usz fs[][CARBON_MESH_FACE_COMPS][3] = {// {{v[3]}, {vt[3]}, {vn[3]}}
+    {{0, 1, 2}, { 0,  1,  2}, {0, 0, 0}}, {{0, 2, 3}, { 0,  2,  3}, {0, 0, 0}},  // front
+    {{1, 5, 6}, { 4,  5,  6}, {1, 1, 1}}, {{1, 6, 2}, { 4,  6,  7}, {1, 1, 1}},  // right
+    {{5, 4, 7}, { 8,  9, 10}, {2, 2, 2}}, {{5, 7, 6}, { 8, 10, 11}, {2, 2, 2}},  // back
+    {{4, 0, 3}, {12, 13, 14}, {3, 3, 3}}, {{4, 3, 7}, {12, 14, 15}, {3, 3, 3}},  // left
+    {{3, 2, 6}, {16, 17, 18}, {4, 4, 4}}, {{3, 6, 7}, {16, 18, 19}, {4, 4, 4}},  // top
+    {{4, 5, 1}, {20, 21, 22}, {5, 5, 5}}, {{4, 1, 0}, {20, 22, 23}, {5, 5, 5}}   // bottom
+  };
+  static const CBN_Mesh m = {
+    .vertices  = (void *)vs,
+    .texcoords = (void *)ts,
+    .normals   = (void *)ns,
+    .faces     = (void *)fs,
+    .metadata  = (CBN_Mesh_Metadata){
+      .vertices_count  = 8,
+      .texcoords_count = 6*4,  // 6 faces, 4 corners per face
+      .normals_count   = 6,    // 6 faces
+      .faces_count     = 6*2   // 6 faces, 2 triangles per face
+    }
+  };
+  carbon_drawcanvas_mesh(dc, c, &m, t, color);
+}
+
 void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
   if (!c) return;
   size = carbon_math_vec2_scale(size, 0.5);

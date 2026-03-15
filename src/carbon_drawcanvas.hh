@@ -88,6 +88,10 @@ struct CBN_DrawCanvas {
     carbon_drawcanvas_mesh(this, &c, m, t, color);
   }
 
+  void DrawCube(const CBN_Camera *c, CBN_Transform t, u32 color) {
+    carbon_drawcanvas_cube(this, c, t, color);
+  }
+
   void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
     carbon_drawcanvas_plane_xz(this, &c, center, size, color);
   }
