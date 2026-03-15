@@ -72,8 +72,8 @@ CBNINL void carbon_win__renderer_init(void *view, usz w, usz h) {
   carbon_win__mtl_layer.device          = carbon_win__mtl_device;
   carbon_win__mtl_layer.pixelFormat     = MTLPixelFormatBGRA8Unorm;
   carbon_win__mtl_layer.framebufferOnly = NO;
-  ns_view.wantsLayer = YES;
-  ns_view.layer      = carbon_win__mtl_layer;
+  cbn_view.wantsLayer = YES;
+  cbn_view.layer      = carbon_win__mtl_layer;
   // ...
 }
 
