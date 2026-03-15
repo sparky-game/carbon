@@ -76,9 +76,9 @@ CBNINL CBN_Vec4 carbon_math_mat4_mult_vec4__simd(CBN_Mat4 m, CBN_Vec4 v) {
   f32x4 r2 = vld1q_f32(m.m[2]);
   f32x4 r3 = vld1q_f32(m.m[3]);
   f32x4 m0 = vmulq_f32(vec, r0);
-  f32x4 m1 = vmulq_f32(vec, r0);
-  f32x4 m2 = vmulq_f32(vec, r0);
-  f32x4 m3 = vmulq_f32(vec, r0);
+  f32x4 m1 = vmulq_f32(vec, r1);
+  f32x4 m2 = vmulq_f32(vec, r2);
+  f32x4 m3 = vmulq_f32(vec, r3);
   f32x2 m01l = vadd_f32(vget_low_f32(m0), vget_high_f32(m0));
   f32x2 m01h = vadd_f32(vget_low_f32(m1), vget_high_f32(m1));
   f32x2 m23l = vadd_f32(vget_low_f32(m2), vget_high_f32(m2));
