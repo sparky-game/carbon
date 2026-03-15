@@ -80,9 +80,15 @@ CBNDEF f32 carbon_rng_normal_dist(f32(*gen)(void), f32 mu, f32 sigma);
 CBNDEF_AKA(cbn::rng, NormalDist, carbon_rng_normal_dist);
 
 /**
- * @brief ...
- * @param expr ...
- * @return ...
+ * @brief Rolls dice and returns the sum according to the provided expression.
+ *
+ * It parses and evaluates a dice expression of the form `{N}d{S}[kl|kh{X}]`, where
+ * N dice of S faces are rolled and, optionally, only the lowest (kl) or highest (kh)
+ * X results are kept and summed. If no suffix is provided, all N rolls are summed.
+ * Rolls are generated via LCG. Valid die sizes are: 4,6,8,10,12,20,100.
+ *
+ * @param expr The dice expression string (e.g. `4d6kh3` := roll 4d6, keep highest 3).
+ * @return Sum of the selected rolls, or 0 on any parse or validation error.
  */
 CBNDEF u32 carbon_rng_roll_dice(const char *expr);
 CBNDEF_AKA(cbn::rng, RollDice, carbon_rng_roll_dice);

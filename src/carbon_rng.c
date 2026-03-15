@@ -119,12 +119,6 @@ CBNINL i32 carbon_rng__descending_order(const void *a, const void *b) {
   return (y > x) - (y < x);
 }
 
-// {N}d{S}k[l|h]{X}
-// N := number of dice to be rolled
-// S := number of faces of each die
-// kl{X} := keep lowest X rolls
-// kh{X} := keep highest X rolls
-// e.g. `4d6kh3` := Roll 4 d6 dice, keep the highest 3 values, and sum them up.
 u32 carbon_rng_roll_dice(const char *expr) {
   const char *p = expr;
   u32 n, s, x;
