@@ -86,6 +86,27 @@ u64 carbon_rng_mt19937_64_rand(void) {
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
+bool carbon_rng_bernoulli_dist(f32(*gen)(void), f32 p) {
+  return gen() < p;
+}
+
+f32 carbon_rng_normal_dist(f32(*gen)(void), f32 mu, f32 sigma) {
+  static bool cached = false;
+  static f32 z1;
+  if (cached) {
+    cached = false;
+    return mu + z1*sigma;
+  }
+  f32 u1 = gen(), u2 = gen();
+  if (u1 <= 0) u1 = CARBON_EPS;
+  f32 R = carbon_math_sqrt(-2 * carbon_math_log(u1));
+  f32 phi = CARBON_2PI * u2;
+  f32 z0 = R * carbon_math_cos(phi);
+  z1 = R * carbon_math_sin(phi);
+  cached = true;
+  return mu + z0*sigma;
+}
+
 CBNINL i32 carbon_rng__ascending_order(const void *a, const void *b) {
   const i32 x = *(const i32 *) a;
   const i32 y = *(const i32 *) b;
