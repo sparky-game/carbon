@@ -42,6 +42,7 @@ static id<MTLCommandQueue> carbon_win__mtl_queue;
 static CAMetalLayer *carbon_win__mtl_layer;
 static id<MTLRenderPipelineState> carbon_win__mtl_pipeline;
 static id<MTLTexture> carbon_win__mtl_texture;
+static id<MTLBuffer> carbon_win__mtl_buffer;
 
 CBN_Vec2 carbon_win_get_mouse_position(void) {
   NSPoint m = [carbon_win__window mouseLocationOutsideOfEventStream];
@@ -69,12 +70,21 @@ void carbon_win_set_fullscreen(bool yn) {
 }
 
 CBNINL void carbon_win__renderer_upload_texture(void) {
+  if (carbon_win__mtl_buffer)  [carbon_win__mtl_buffer  release];
+  if (carbon_win__mtl_texture) [carbon_win__mtl_texture release];
+  NSUInteger bytes_per_row = carbon_win__renderer_w * 4;
+  NSUInteger total_bytes   = carbon_win__renderer_h * bytes_per_row;
+  carbon_win__mtl_buffer = [carbon_win__mtl_device newBufferWithLength:total_bytes
+                                                               options:MTLResourceStorageModeShared];
   MTLTextureDescriptor *desc = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm
                                                                                   width:carbon_win__renderer_w
                                                                                  height:carbon_win__renderer_h
                                                                               mipmapped:NO];
-  desc.usage = MTLTextureUsageShaderRead;
-  carbon_win__mtl_texture = [carbon_win__mtl_device newTextureWithDescriptor:desc];
+  desc.usage       = MTLTextureUsageShaderRead;
+  desc.storageMode = MTLStorageModeShared;
+  carbon_win__mtl_texture = [carbon_win__mtl_buffer newTextureWithDescriptor:desc
+                                                                      offset:0
+                                                                 bytesPerRow:bytes_per_row];
 }
 
 CBNINL void carbon_win__renderer_init(usz w, usz h) {
@@ -167,6 +177,7 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
 }
 
 CBNINL void carbon_win__renderer_shutdown(void) {
+  [carbon_win__mtl_buffer   release];
   [carbon_win__mtl_texture  release];
   [carbon_win__mtl_pipeline release];
   [carbon_win__mtl_layer    release];
@@ -297,10 +308,7 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
     carbon_win__renderer_h = h;
     carbon_win__renderer_upload_texture();
   }
-  [carbon_win__mtl_texture replaceRegion:MTLRegionMake2D(0, 0, carbon_win__renderer_w, carbon_win__renderer_h)
-                             mipmapLevel:0
-                               withBytes:pixels
-                             bytesPerRow:carbon_win__renderer_w * 4];
+  carbon_memory_copy(carbon_win__mtl_buffer.contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
   id<CAMetalDrawable> drawable = [carbon_win__mtl_layer nextDrawable];
   if (!drawable) return;
   MTLRenderPassDescriptor *pass = [MTLRenderPassDescriptor renderPassDescriptor];
