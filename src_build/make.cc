@@ -67,10 +67,21 @@ void src_amalgamation(void) {
   }
 }
 
+void build_and_embed_shader(void) {
+#ifdef __APPLE__
+  printf("  METAL   " SHADER_OUT_FILE "\n");
+  RunCmd("xcrun --sdk macosx metal " SHADER_IN_FILE " -o " SHADER_OUT_FILE " -target air64-apple-macos11.0");
+#else
+#error Not implemented yet
+#endif
+  printf("  GEN     " SHADER_INL_FILE "\n");
+  RunCmd("xxd -i " SHADER_OUT_FILE " > " SHADER_INL_FILE);
+}
+
 void compile_and_link_lib(void) {
   printf("  CC      " OBJ_FILE "\n");
 #ifdef __APPLE__
-  RunCmd(CC_CMD " -x objective-c -fPIC -c " SRC_FILE " -o " OBJ_FILE);
+  RunCmd(CC_CMD " -x objective-c -include " SHADER_INL_FILE " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
 #else
   RunCmd(CC_CMD " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
 #endif
@@ -82,6 +93,10 @@ void compile_and_link_lib(void) {
   assert(fs::remove(SRC_FILE));
   printf("  RM      " OBJ_FILE "\n");
   assert(fs::remove(OBJ_FILE));
+  printf("  RM      " SHADER_OUT_FILE "\n");
+  assert(fs::remove(SHADER_OUT_FILE));
+  printf("  RM      " SHADER_INL_FILE "\n");
+  assert(fs::remove(SHADER_INL_FILE));
 }
 
 void build_tutorials(void) {
@@ -103,6 +118,7 @@ void build(void) {
   license_amalgamation();
   hdr_amalgamation();
   src_amalgamation();
+  build_and_embed_shader();
   compile_and_link_lib();
   RunMetaprogram(TEST_EXE);
   build_tutorials();

@@ -28,8 +28,7 @@ CBNDEF_TAKA(cbn::win, KeyCode, CBN_Win_KeyCode);
  * @brief ...
  */
 #define CARBON_WIN_MOUSEBUTTONS(x, p)           \
-  x(p, Left) x(p, Right) x(p, Middle)           \
-  x(p, ScrollUp) x(p, ScrollDown)
+  x(p, Left) x(p, Right) x(p, Middle)
 CBNDEF_ENUM(CBN_Win_MouseButton, CARBON_WIN_MOUSEBUTTONS);
 CBNDEF_TAKA(cbn::win, MouseButton, CBN_Win_MouseButton);
 

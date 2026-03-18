@@ -23,12 +23,23 @@
 #define SRC_FILE    NAME ".c"
 #define OBJ_FILE    NAME ".o"
 #define LIB_FILE    BUILD_DIR "/lib" NAME ".a"
+
 #ifdef _WIN32
 #define DLL_FILE BUILD_DIR "/lib" NAME ".dll"
 #else
 #define DLL_FILE BUILD_DIR "/lib" NAME ".so"
 #endif
+
 #define PKG_FILE BUILD_DIR ".tgz"
 #define THIRDPARTY_LICENSE_FILE BUILD_DIR "/LICENSE.THIRDPARTY"
 #define TEST_EXE   SRC_BUILD_DIR "/meta/test"
 #define PACKER_EXE SRC_BUILD_DIR "/meta/packer"
+
+#ifdef __APPLE__
+#define SHADER_NAME NAME "_win_shader"
+#define SHADER_IN_FILE SRC_DIR "/" SHADER_NAME ".metal"
+#define SHADER_OUT_FILE SHADER_NAME ".metallib"
+#define SHADER_INL_FILE SHADER_OUT_FILE ".inl"
+#else
+#error Not implemented yet
+#endif
