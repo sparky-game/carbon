@@ -82,9 +82,32 @@ CBNINL void carbon_win__renderer_upload_texture(void) {
                                                                               mipmapped:NO];
   desc.usage       = MTLTextureUsageShaderRead;
   desc.storageMode = MTLStorageModeShared;
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+  desc.swizzle = MTLTextureSwizzleChannelsMake(MTLTextureSwizzleAlpha,
+                                               MTLTextureSwizzleBlue,
+                                               MTLTextureSwizzleGreen,
+                                               MTLTextureSwizzleRed);
+#endif
   carbon_win__mtl_texture = [carbon_win__mtl_buffer newTextureWithDescriptor:desc
                                                                       offset:0
                                                                  bytesPerRow:bytes_per_row];
+}
+
+CBNINL void carbon_win__create_system_menu(const char *title) {
+  NSMenuItem *main_item = [NSMenuItem new];
+  {
+    NSMenu *menu = [NSMenu new];
+    [menu addItem:main_item];
+    [carbon_win__app setMainMenu:menu];
+  }
+  {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:[NSString stringWithUTF8String:title]];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Quit"
+                                                  action:@selector(terminate:)
+                                           keyEquivalent:@"q"];
+    [menu addItem:item];
+    [main_item setSubmenu:menu];
+  }
 }
 
 CBNINL void carbon_win__renderer_init(usz w, usz h) {
@@ -130,29 +153,14 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
   carbon_win__renderer_upload_texture();
 }
 
-CBNINL void carbon_win__create_system_menu(const char *title) {
-  NSMenuItem *main_item = [NSMenuItem new];
-  {
-    NSMenu *menu = [NSMenu new];
-    [menu addItem:main_item];
-    [carbon_win__app setMainMenu:menu];
-  }
-  {
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:[NSString stringWithUTF8String:title]];
-    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Quit"
-                                                  action:@selector(terminate:)
-                                           keyEquivalent:@"q"];
-    [menu addItem:item];
-    [main_item setSubmenu:menu];
-  }
-}
-
 CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
   carbon_win__app = [NSApplication sharedApplication];
   [carbon_win__app setActivationPolicy:NSApplicationActivationPolicyRegular];
   carbon_win__window = [[NSWindow alloc]
                          initWithContentRect:NSMakeRect(0, 0, w, h)
-                                   styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
+                                   styleMask:NSWindowStyleMaskTitled
+                         | NSWindowStyleMaskClosable
+                         | NSWindowStyleMaskResizable
                                      backing:NSBackingStoreBuffered
                                        defer:NO];
   CBNView *view = [[CBNView alloc] initWithFrame:NSMakeRect(0, 0, w, h)];
@@ -259,15 +267,13 @@ CBNINL CBN_Win_KeyCode carbon_win__map_key_code(u16 key) {
   case kVK_RightOption:  return CBN_Win_KeyCode_RightAlt;
   case kVK_RightControl: return CBN_Win_KeyCode_RightCtrl;
   case kVK_RightShift:   return CBN_Win_KeyCode_RightShift;
+    // `CBN_Win_KeyCode_RightMeta` not supported
   case kVK_Return:       return CBN_Win_KeyCode_Return;
   case kVK_UpArrow:      return CBN_Win_KeyCode_UpArrow;
   case kVK_DownArrow:    return CBN_Win_KeyCode_DownArrow;
   case kVK_LeftArrow:    return CBN_Win_KeyCode_LeftArrow;
   case kVK_RightArrow:   return CBN_Win_KeyCode_RightArrow;
-    // `CBN_Win_KeyCode_RightMeta` not supported
-  default:
-    CARBON_UNREACHABLE;
-    return CBN_Win_KeyCode_Count;
+  default:               return CBN_Win_KeyCode_Count;
   }
 }
 
@@ -279,9 +285,21 @@ CBNINL bool carbon_win__poll_event(void) {
   if (!e) return false;
   switch ([e type]) {
   case NSEventTypeKeyUp:
-  case NSEventTypeKeyDown:
-    carbon_win__keys[carbon_win__map_key_code([e keyCode])] = [e type] == NSEventTypeKeyDown;
-    break;
+  case NSEventTypeKeyDown: {
+    u16 s = [e keyCode];
+    CBN_Win_KeyCode k = carbon_win__map_key_code(s);
+    if (k != CBN_Win_KeyCode_Count) {
+      carbon_win__keys[k] = [e type] == NSEventTypeKeyDown;
+    }
+  } break;
+  case NSEventTypeFlagsChanged: {
+    NSEventModifierFlags f = [e modifierFlags];
+    carbon_win__keys[CBN_Win_KeyCode_LeftCtrl]  = !!(f & NSEventModifierFlagControl);
+    carbon_win__keys[CBN_Win_KeyCode_LeftShift] = !!(f & NSEventModifierFlagShift);
+    carbon_win__keys[CBN_Win_KeyCode_LeftAlt]   = !!(f & NSEventModifierFlagOption);
+    carbon_win__keys[CBN_Win_KeyCode_LeftMeta]  = !!(f & NSEventModifierFlagCommand);
+    carbon_win__keys[CBN_Win_KeyCode_CapsLock]  = !!(f & NSEventModifierFlagCapsLock);
+  } break;
   case NSEventTypeLeftMouseUp:
   case NSEventTypeLeftMouseDown:
     carbon_win__mouse_buttons[CBN_Win_MouseButton_Left] = [e type] == NSEventTypeLeftMouseDown;
