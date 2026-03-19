@@ -1,8 +1,8 @@
-#version 330 core
+#version 450
 
-in vec2 uv;
-out vec4 color;
-uniform sampler2D tex;
+layout(location = 0) in vec2 uv;
+layout(location = 0) out vec4 color;
+layout(binding  = 0) uniform sampler2D tex;
 
 void main() {
   color = texture(tex, uv);

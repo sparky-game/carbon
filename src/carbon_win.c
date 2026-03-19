@@ -20,8 +20,8 @@ static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 // ...
 #elif defined(__APPLE__)
 #include "carbon_win_macos.m"
-#elif defined(__linux__)
-// ...
+#elif defined(__linux__) || defined(__FreeBSD__)
+#include "carbon_win_x11.inl"
 #else
 #error Target platform is not supported
 #endif

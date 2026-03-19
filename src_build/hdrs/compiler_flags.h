@@ -17,6 +17,8 @@
 #define LDFLAGS "-framework Metal -framework QuartzCore -framework AppKit"
 #elif defined (_WIN32)
 #define LDFLAGS "-ldnsapi -lws2_32 -lgdi32 -lntdll -lpthread -static"
+#elif defined(__linux__) || defined(__FreeBSD__)
+#define LDFLAGS "-lX11 -lGL"
 #else
-#define LDFLAGS "-lX11 -lXrandr -lm"
+#error Target platform is not supported
 #endif
