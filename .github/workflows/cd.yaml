@@ -25,10 +25,10 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: install-dependencies
         run: |
-          sudo apt-get install -y \
-            libx11-dev            \
-            libxrandr-dev         \
-            mesa-common-dev       \
+          sudo apt-get update && sudo apt-get install -y \
+            libx11-dev      \
+            libxrandr-dev   \
+            mesa-common-dev \
             glslang-tools
       - name: package
         run: CXX=clang++ ./src_build/make.sh

@@ -53,10 +53,10 @@ jobs:
           languages: c-cpp
       - name: install-dependencies
         run: |
-          sudo apt-get install -y \
-            libx11-dev            \
-            libxrandr-dev         \
-            mesa-common-dev       \
+          sudo apt-get update && sudo apt-get install -y \
+            libx11-dev      \
+            libxrandr-dev   \
+            mesa-common-dev \
             glslang-tools
       - name: build
         run: CXX=clang++ ./src_build/make.sh build
