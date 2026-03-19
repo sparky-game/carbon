@@ -27,9 +27,9 @@ jobs:
         run: |
           sudo apt-get install -y \
             libx11-dev            \
-            libxcursor-dev        \
             libxrandr-dev         \
-            libxi-dev
+            mesa-common-dev       \
+            glslang-tools
       - name: package
         run: CXX=clang++ ./src_build/make.sh
       - name: release
