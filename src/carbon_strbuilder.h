@@ -11,8 +11,8 @@
  */
 CBNDEF_T(CBN_StrBuilder) {
   char *items;
-  usz size;
   usz capacity;
+  usz size;
 };
 CBNDEF_TAKA(cbn::str, Builder, CBN_StrBuilder);
 
