@@ -39,8 +39,11 @@
 #endif
 
 #ifdef __cplusplus
-#define typeof(x) decltype(x)
 #define restrict __restrict
+#endif
+
+#ifdef __cplusplus
+#define typeof(x) decltype(x)
 #else
 #define typeof(x) __typeof__(x)
 #endif
