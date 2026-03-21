@@ -10,7 +10,7 @@
  * @brief Represents a sequence container that encapsulates dynamic size arrays.
  */
 CBNDEF_TT(CBN_List) {
-  void *items;
+  u8 *items;
   usz capacity;
   usz stride;
   usz size;
@@ -30,8 +30,9 @@ CBNDEF_TTAKA(cbn, List, CBN_List);
  * @brief Loops through the provided List with a custom-defined iterator.
  *
  * The iterator consists of the following elements:
- *   - `i`  :: The index of the actual element being evaluated.
+ *   - `i`   :: The index of the actual element being evaluated.
  *   - `var` :: The actual element being evaluated, as an object of type T.
+ *
  * @param T The underlying type the List was created to handle.
  * @param name The name to give to the iterator (optional; default = `it`).
  * @param l The List container.
@@ -40,6 +41,21 @@ CBNDEF_TTAKA(cbn, List, CBN_List);
 #define carbon_list_foreach__default(T, l) carbon_list_foreach__named(T, it, l)
 #define carbon_list_foreach__dispatcher(_1, _2, _3, NAME, ...) NAME
 #define carbon_list_foreach(...) carbon_list_foreach__dispatcher(__VA_ARGS__, carbon_list_foreach__named, carbon_list_foreach__default)(__VA_ARGS__)
+
+/**
+ * @brief Loops through the provided List with a type-erased raw iterator.
+ *
+ * The iterator consists of the following elements:
+ *   - `i`   :: The index of the actual element being evaluated.
+ *   - `ptr` :: A raw pointer (void *) to the actual element being evaluated.
+ *
+ * @param name The name to give to the iterator (optional; default = `it`).
+ * @param l The List container.
+ */
+#define carbon_list_foreach_raw__named(name, l) if ((l).size) for (struct { usz i; void *ptr; } name = {0, (l).items}; name.i < (l).size; ++name.i, name.ptr = (l).items + name.i*(l).stride)
+#define carbon_list_foreach_raw__default(l) carbon_list_foreach_raw__named(it, l)
+#define carbon_list_foreach_raw__dispatcher(_1, _2, NAME, ...) NAME
+#define carbon_list_foreach_raw(...) carbon_list_foreach_raw__dispatcher(__VA_ARGS__, carbon_list_foreach_raw__named, carbon_list_foreach_raw__default)(__VA_ARGS__)
 
 /**
  * @brief Creates a new list container.
