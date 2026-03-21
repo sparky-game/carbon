@@ -25,7 +25,7 @@ static constexpr std::array c_HeaderFiles {
   "should.h",
   "time.h",
   "chrono.hh",
-  "list.hh",
+  "list.h", "list.hh",
   "circularqueue.hh",
   "hashmap.h",
   "slotmap.hh",
