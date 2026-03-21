@@ -3,3 +3,5 @@
 *.png binary
 *.gif binary
 *.ogg binary
+
+*.inl linguist-language=c
