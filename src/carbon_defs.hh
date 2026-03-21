@@ -92,9 +92,9 @@
 #define CARBON_STATIC_NOTIMPLEMENTED static_assert(false, "not yet implemented")
 
 #ifdef __cplusplus
-#define CARBON_TYPE_IS_SAME(T, U) cbn::meta::Same_v<T, U>
+#define typeeq(T, U) cbn::meta::Same_v<T, U>
 #else
-#define CARBON_TYPE_IS_SAME(T, U) __builtin_types_compatible_p(T, U)
+#define typeeq(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
 #ifdef __cplusplus

@@ -37,41 +37,41 @@ CBNDEF_TAKA(cbn::log, Color, CBN_Log_Color);
 #endif
 #define carbon_log__var_to_spec(x)              \
   _Generic((x),                                 \
-           u8:           "%hhu",                \
-           i8:           "%hhd",                \
-           u16:          "%hu",                 \
-           i16:          "%hd",                 \
-           u32:          "%u",                  \
-           i32:          "%d",                  \
-           u64:          "%llu",                \
-           i64:          "%lld",                \
-           carbon_log__var_to_spec__platform_t  \
-           f32:          "%f",                  \
-           f64:          "%lf",                 \
-           char:         "%c",                  \
-           char *:       "%s",                  \
-           const char *: "%s",                  \
-           default:      "<'Stuff' At %p>")
+  u8:           "%hhu",                         \
+  i8:           "%hhd",                         \
+  u16:          "%hu",                          \
+  i16:          "%hd",                          \
+  u32:          "%u",                           \
+  i32:          "%d",                           \
+  u64:          "%llu",                         \
+  i64:          "%lld",                         \
+  carbon_log__var_to_spec__platform_t           \
+  f32:          "%f",                           \
+  f64:          "%lf",                          \
+  char:         "%c",                           \
+  char *:       "%s",                           \
+  const char *: "%s",                           \
+  default:      "<'Stuff' At %p>")
 #else
 template <typename T>
 constexpr auto carbon_log__var_to_spec(T) {
-  if constexpr      (CARBON_TYPE_IS_SAME(T, u8))           return "%hhu";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, i8))           return "%hhd";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, u16))          return "%hu";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, i16))          return "%hd";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, u32))          return "%u";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, i32))          return "%d";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, u64))          return "%llu";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, i64))          return "%lld";
+  if constexpr      (typeeq(T, u8))           return "%hhu";
+  else if constexpr (typeeq(T, i8))           return "%hhd";
+  else if constexpr (typeeq(T, u16))          return "%hu";
+  else if constexpr (typeeq(T, i16))          return "%hd";
+  else if constexpr (typeeq(T, u32))          return "%u";
+  else if constexpr (typeeq(T, i32))          return "%d";
+  else if constexpr (typeeq(T, u64))          return "%llu";
+  else if constexpr (typeeq(T, i64))          return "%lld";
 #ifndef _WIN32
-  else if constexpr (CARBON_TYPE_IS_SAME(T, usz))          return "%zu";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, isz))          return "%zd";
+  else if constexpr (typeeq(T, usz))          return "%zu";
+  else if constexpr (typeeq(T, isz))          return "%zd";
 #endif
-  else if constexpr (CARBON_TYPE_IS_SAME(T, f32))          return "%f";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, f64))          return "%lf";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, char))         return "%c";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, char *))       return "%s";
-  else if constexpr (CARBON_TYPE_IS_SAME(T, const char *)) return "%s";
+  else if constexpr (typeeq(T, f32))          return "%f";
+  else if constexpr (typeeq(T, f64))          return "%lf";
+  else if constexpr (typeeq(T, char))         return "%c";
+  else if constexpr (typeeq(T, char *))       return "%s";
+  else if constexpr (typeeq(T, const char *)) return "%s";
   else return "<'Stuff' At %p>";
 }
 #endif
