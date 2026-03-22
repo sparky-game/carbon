@@ -5,7 +5,7 @@ struct CBN_List_tt : CBN_List_t {
   using value_type = T;
   using iterator = value_type *;
 
-  static CBN_List_tt make(void) {
+  static CBN_List_tt New(void) {
     auto l = carbon_list_create(sizeof(value_type));
     return *(CBN_List_tt *) &l;
   }
