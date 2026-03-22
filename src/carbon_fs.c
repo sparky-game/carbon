@@ -315,7 +315,7 @@ bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file) {
   }
   usz count = sb->size + n;
   if (count > sb->capacity) {
-    sb->items = (char *) carbon_memory_realloc(sb->items, count);
+    sb->items = carbon_memory_realloc(sb->items, count);
     sb->capacity = count;
   }
   if (1 != fread(sb->items + sb->size, n, 1, fd)) {
