@@ -30,6 +30,10 @@ struct CBN_List_tt : CBN_List_t {
     carbon_list_push((CBN_List *) this, (void *) &value);
   }
 
+  void PushRange(CBN_Span range) {
+    carbon_list_push_range((CBN_List *) this, range);
+  }
+
   value_type PopFront(void) {
     value_type x;
     carbon_list_pop_front((CBN_List *) this, &x);

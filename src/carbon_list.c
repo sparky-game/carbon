@@ -60,6 +60,20 @@ void carbon_list_push(CBN_List *l, void *value) {
   ++l->size;
 }
 
+void carbon_list_push_range(CBN_List *l, CBN_Span range) {
+  if (!l || !range.data) {
+    CBN_ERROR("`l` and `range.data` must be valid pointers");
+    return;
+  }
+  if (l->size + range.size > l->capacity) {
+    if (!l->capacity) l->capacity = CARBON_LIST__FIRST_ALLOC_CAPACITY;
+    while (l->size + range.size > l->capacity) l->capacity *= CARBON_LIST__RESIZE_FACTOR;
+    l->items = carbon_memory_realloc(l->items, l->capacity * l->stride);
+  }
+  carbon_memory_copy(l->items + l->size*l->stride, range.data, range.size*l->stride);
+  l->size += range.size;
+}
+
 void carbon_list_pop_front(CBN_List *l, void *out_value) {
   carbon_list_front(l, out_value);
   if (!l || !l->size || !out_value) return;

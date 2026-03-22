@@ -92,6 +92,13 @@ CBNDEF void carbon_list_back(CBN_List *l, void *out_value);
 CBNDEF void carbon_list_push(CBN_List *l, void *value);
 
 /**
+ * @brief Appends a copy of the range of values to the end of the list.
+ * @param l The list container.
+ * @param range The Span representing the contiguous block of values to append.
+ */
+CBNDEF void carbon_list_push_range(CBN_List *l, CBN_Span range);
+
+/**
  * @brief Removes the first element from the list (FIFO, e.g. queue).
  * @param l The list container.
  * @param out_value The value of the element popped out (output argument pointer).
