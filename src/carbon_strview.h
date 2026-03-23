@@ -12,6 +12,9 @@
 CBNDEF_TEQ(CBN_StrView, CBN_Span);
 CBNDEF_TAKA(cbn::str, View, CBN_StrView);
 
+// Forward declaration
+CBNDEF_TEQ(CBN_StrBuilder, CBN_List);
+
 /**
  * @brief Creates a StrView from a char buffer pointer and its size.
  * @param data The pointer to the char buffer.

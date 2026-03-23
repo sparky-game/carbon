@@ -38,7 +38,9 @@ struct alignas(16) CBN_Vec4 : CBN_Vec4_t {
     return -v + s;
   }
 
-  CBN_Vec4 operator*(const CBN_Vec4 &v) const;
+  CBN_Vec4 operator*(const CBN_Vec4 &v) const {
+    return carbon_math_vec4_mult(*this, v);
+  }
   
   CBN_Vec4 operator*(f32 s) const {
     return carbon_math_vec4_scale(*this, s);

@@ -1,7 +1,5 @@
 #ifdef __cplusplus
 
-struct CBN_Vec4;  // Forward declaration
-
 struct CBN_Vec2 : CBN_Vec2_t {
   constexpr CBN_Vec2(f32 _x, f32 _y) : CBN_Vec2_t{.c = {_x, _y}} {}
   constexpr CBN_Vec2(f32 _x = 0) : CBN_Vec2(_x, _x) {}

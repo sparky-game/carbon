@@ -23,11 +23,7 @@ CBNDEF_TAKA(cbn::math, Vec3, CBN_Vec3);
 #define CARBON_VEC_xz(v) carbon_math_vec2((v).x, (v).z)
 
 // Forward declarations
-#ifdef __cplusplus
-typedef struct CBN_Vec4 CBN_Quat;
-#else
-typedef struct CBN_Vec4_t CBN_Quat;
-#endif
+CBNDEF_TEQ(CBN_Quat, CBN_Vec4);
 
 /**
  * @brief Creates a 3D vector.

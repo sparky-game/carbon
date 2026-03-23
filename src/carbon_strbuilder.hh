@@ -30,7 +30,7 @@ struct CBN_StrBuilder : CBN_StrBuilder_t {
   }
 
   CBN_StrView ToString(void) const {
-    return CBN_StrView::New(*this);
+    return CBN_StrView(*this);
   }
 
   bool ToFile(const char *file) const;

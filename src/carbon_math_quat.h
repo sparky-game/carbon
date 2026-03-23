@@ -12,7 +12,7 @@
  * Is used to efficiently rotate an object about the (x, y, z) 3D vector
  * by the angle θ, where `w = cos(θ/2)`.
  */
-typedef CBN_Vec4 CBN_Quat;
+CBNDEF_TEQ(CBN_Quat, CBN_Vec4);
 CBNDEF_TAKA(cbn::math, Quat, CBN_Quat);
 
 /**
@@ -25,6 +25,21 @@ CBNDEF_TAKA(cbn::math, Quat, CBN_Quat);
  * @return The newly created quaternion.
  */
 CBNDEF CBN_Quat carbon_math_quat_id(void);
+
+/**
+ * @brief Converts an Euler angle rotation specified as a 3D vector to a quaternion.
+ * @param v The 3D vector.
+ * @return The resultant quaternion.
+ */
+CBNDEF CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v);
+
+/**
+ * @brief Creates a quaternion from the given 3D axis and angle.
+ * @param axis The 3D axis.
+ * @param angle The angle of rotation, in degrees.
+ * @return The resultant quaternion.
+ */
+CBNDEF CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
 
 /**
  * @brief Returns a quaternion being the conjugate of the provided one.
@@ -45,21 +60,6 @@ CBNDEF CBN_Quat carbon_math_quat_mult(CBN_Quat p, CBN_Quat q);
  * @brief Computes the dot product between two quaternions.
  */
 #define carbon_math_quat_dot carbon_math_vec4_dot
-
-/**
- * @brief Converts an Euler angle rotation specified as a 3D vector to a quaternion.
- * @param v The 3D vector.
- * @return The resultant quaternion.
- */
-CBNDEF CBN_Quat carbon_math_quat_from_euler(CBN_Vec3 v);
-
-/**
- * @brief Creates a quaternion from the given 3D axis and angle.
- * @param axis The 3D axis.
- * @param angle The angle of rotation, in degrees.
- * @return The resultant quaternion.
- */
-CBNDEF CBN_Quat carbon_math_quat_from_axis_angle(CBN_Vec3 axis, f32 angle);
 
 /**
  * @brief Returns the string representation of the quaternion using default formatting.

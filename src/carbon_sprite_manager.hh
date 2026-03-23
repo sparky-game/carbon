@@ -10,11 +10,7 @@ typedef CBN_SlotMap_Key CBN_Sprite_UID;
 CBNDEF_TAKA(cbn::sprite_mgr, UID, CBN_Sprite_UID);
 
 // Forward declaration
-#ifdef __cplusplus
-struct CBN_SKAP;
-#else
-typedef struct CBN_SKAP_t CBN_SKAP;
-#endif
+CBNDEF_T(CBN_SKAP);
 
 /**
  * @brief Initializes the sprite subsystem.

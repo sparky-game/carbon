@@ -60,11 +60,7 @@ typedef struct {
 CBNDEF_TAKA(cbn, Light, CBN_Light);
 
 // Forward declaration
-#ifdef __cplusplus
-struct CBN_Sprite;
-#else
-typedef struct CBN_Sprite_t CBN_Sprite;
-#endif
+CBNDEF_T(CBN_Sprite);
 
 /**
  * @brief Creates a new DrawCanvas object.

@@ -157,11 +157,11 @@
 #ifdef __cplusplus
 #define CBNDEF_T(name) struct name; struct name ## _t
 #define CBNDEF_TT(name) template <typename T> struct name ## _tt; typedef name ## _tt<void*> name; struct name ## _t
-#define CBNDEF_TEQ(name, other) typedef other name ## _t; struct name;
+#define CBNDEF_TEQ(name, other) typedef other name ## _t; struct name
 #else
 #define CBNDEF_T(name) typedef struct name ## _t name; struct name ## _t
 #define CBNDEF_TT(name) CBNDEF_T(name)
-#define CBNDEF_TEQ(name, other) typedef other name ## _t; typedef name ## _t name;
+#define CBNDEF_TEQ(name, other) typedef other name ## _t; typedef name ## _t name
 #endif
 
 /**

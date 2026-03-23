@@ -20,7 +20,8 @@ CBNDEF_TAKA(cbn, Camera, CBN_Camera);
   x(p, Orthographic)
 CBNDEF_ENUM(CBN_Camera_Type, CARBON_CAMERA_TYPES);
 
-typedef struct CBN_DrawCanvas CBN_DrawCanvas;  // Forward declaration
+// Forward declaration
+typedef struct CBN_DrawCanvas CBN_DrawCanvas;
 
 /**
  * @brief Creates a new Camera object.

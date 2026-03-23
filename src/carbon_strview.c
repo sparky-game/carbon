@@ -5,10 +5,7 @@
 #define CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS 4
 
 CBN_StrView carbon_strview_from_buf(const char *data, usz size) {
-  return (CBN_StrView) {
-    .data = (u8 *)data,
-    .size = size
-  };
+  return carbon_span_from_buf((void *)data, size);
 }
 
 CBN_StrView carbon_strview_from_cstr(const char *s) {

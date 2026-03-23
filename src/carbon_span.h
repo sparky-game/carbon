@@ -16,15 +16,15 @@ CBNDEF_T(CBN_Span) {
 CBNDEF_TAKA(cbn, Span, CBN_Span);
 
 // Forward declaration
-#ifdef __cplusplus
-struct CBN_StrBuilder;
-#else
-typedef struct CBN_List_t CBN_StrBuilder;
-#endif
+CBNDEF_TT(CBN_List);
 
 /**
- * @brief Creates a Span from a StrBuilder object holding some data.
- * @param sb The StrBuilder holding the data.
- * @return The Span representing the provided StrBuilder object.
  */
-CBNDEF CBN_Span carbon_span_from_strbuilder(const CBN_StrBuilder *sb);
+CBNDEF CBN_Span carbon_span_from_buf(void *data, usz size);
+
+/**
+ * @brief Creates a Span from a List object holding some data.
+ * @param l The List holding the data.
+ * @return The Span representing the provided List object.
+ */
+CBNDEF CBN_Span carbon_span_from_list(const CBN_List *l);
