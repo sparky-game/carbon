@@ -105,6 +105,21 @@
 #define CBNINL static inline
 #endif
 
+/**
+ * @brief Annotates a function with printf-like format checking attributes.
+ * @param fmt Index (1-based) of the format specifier string parameter.
+ * @param args Index (1-based) of the first variadic argument, or 0 for va_list variants.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+#ifdef __MINGW_PRINTF_FORMAT
+#define CBNFMT(fmt, args) __attribute__((format(__MINGW_PRINTF_FORMAT, fmt, args)))
+#else
+#define CBNFMT(fmt, args) __attribute__((format(printf, fmt, args)))
+#endif
+#else
+#define CBNFMT(fmt, args)
+#endif
+
 #ifdef __cplusplus
 #define CBNDEF extern "C"
 #else

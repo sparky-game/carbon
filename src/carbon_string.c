@@ -28,21 +28,26 @@ char *carbon_string_dup(const char *s) {
   return (char *) carbon_memory_copy(data, s, len);
 }
 
-char *carbon_string_fmt(const char *s, ...) {
+char *carbon_string_vfmt(const char *s, va_list args) {
   static usz i = 0;
   static char xs[CARBON_STRING_FMT_MAX_BUFFERS][CARBON_STRING_FMT_MAX_LEN];
   char *x = xs[i];
   carbon_memory_set(x, 0, CARBON_STRING_FMT_MAX_LEN);
-  va_list args;
-  va_start(args, s);
   i32 bytes = vsnprintf(x, CARBON_STRING_FMT_MAX_LEN, s, args);
-  va_end(args);
   if (bytes >= CARBON_STRING_FMT_MAX_LEN) {
     char *trunc_x = xs[i] + CARBON_STRING_FMT_MAX_LEN - 4;
     snprintf(trunc_x, 4, "...");
   }
   ++i;
   if (i >= CARBON_STRING_FMT_MAX_BUFFERS) i = 0;
+  return x;
+}
+
+char *carbon_string_fmt(const char *s, ...) {
+  va_list args;
+  va_start(args, s);
+  char *x = carbon_string_vfmt(s, args);
+  va_end(args);
   return x;
 }
 

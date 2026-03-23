@@ -56,11 +56,23 @@ CBNDEF_AKA(cbn::str, Duplicate, carbon_string_dup);
 CBNDEF_AKA(cbn::str, dup, Duplicate);
 
 /**
+ * @brief Formats a string using a format specifier and a variadic list of arguments.
+ * @param s The format specifier string.
+ * @param args The va_list of arguments to substitute into the format string.
+ * @return A pointer to the formatted string.
  */
-CBNDEF char *carbon_string_fmt(const char *s, ...);
-CBNDEF_AKA(cbn::str, Format, carbon_string_fmt);
-CBNDEF_AKA(cbn::str, fmt, Format);
+CBNDEF char *carbon_string_vfmt(const char *s, va_list args) CBNFMT(1, 0);
 
+/**
+ * @brief Formats a string using a format specifier and a variadic list of arguments.
+ * @param s The format specifier string.
+ * @param [...] The variadic arguments to substitute into the format string.
+ * @return A pointer to the formatted string.
+ */
+CBNDEF char *carbon_string_fmt(const char *s, ...) CBNFMT(1, 2);
+
+/**
+ */
 CBNDEF void carbon_string_strip_substr(char *s, const char *sub);
 
 /**

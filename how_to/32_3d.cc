@@ -96,7 +96,7 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
     }
   }
   {// Bottom-left info
-    const char *text = cbn::str::fmt("Camera: [Pos = %s, Rot = %s]", c.GetPosition().ToString(), c.GetRotation().ToString());
+    const auto text = cbn::str::fmt("Camera: [Pos = %s, Rot = %s]", c.GetPosition().ToString(), c.GetRotation().ToString());
     static const auto text_pos = cbn::math::Vec2(text_padding, dc.Height() - text_padding - text_height);
     dc.DrawText(text, text_pos, text_size, color);
   }

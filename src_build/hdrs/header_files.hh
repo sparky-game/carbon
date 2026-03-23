@@ -30,7 +30,7 @@ static constexpr std::array c_HeaderFiles {
   "circularqueue.hh",
   "hashmap.h",
   "slotmap.hh",
-  "string.h",
+  "string.h", "string.hh",
   "strview.h", "strview.hh",
   "strbuilder.h", "strbuilder.hh",
   "strlist.hh",
