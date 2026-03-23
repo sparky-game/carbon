@@ -4,13 +4,13 @@ template <typename T>
 struct CBN_SKAP_AssetTrait;
 
 template <>
-struct CBN_SKAP_AssetTrait<CBN_Image>
-  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_IMAGE>
+struct CBN_SKAP_AssetTrait<CBN_Span>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_BINARY>
 {};
 
 template <>
-struct CBN_SKAP_AssetTrait<CBN_Binary>
-  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_BINARY>
+struct CBN_SKAP_AssetTrait<CBN_Image>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_IMAGE>
 {};
 
 template <>

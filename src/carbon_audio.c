@@ -27,26 +27,20 @@ void carbon_audio_init(void) {
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
   carbon_audio__sounds = carbon_slotmap_create(sizeof(ma_sound *));
   carbon_audio__decoders = carbon_list_create(sizeof(ma_decoder *));
-  carbon_audio__binaries = carbon_list_create(sizeof(CBN_Binary));
+  carbon_audio__binaries = carbon_list_create(sizeof(CBN_Span));
   CBN_INFO("Initialized audio subsystem successfully");
 }
 
 void carbon_audio_shutdown(void) {
-  if (carbon_audio__sounds.size) {
-    carbon_slotmap_foreach(ma_sound *, carbon_audio__sounds) {
-      ma_sound_uninit(it.var);
-      carbon_memory_free(it.var);
-    }
+  carbon_slotmap_foreach(ma_sound *, carbon_audio__sounds) {
+    ma_sound_uninit(it.var);
+    carbon_memory_free(it.var);
   }
-  if (carbon_audio__decoders.size) {
-    carbon_list_foreach(ma_decoder *, carbon_audio__decoders) {
-      ma_decoder_uninit(it.var);
-    }
+  carbon_list_foreach(ma_decoder *, carbon_audio__decoders) {
+    ma_decoder_uninit(it.var);
   }
-  if (carbon_audio__binaries.size) {
-    carbon_list_foreach(CBN_Binary, carbon_audio__binaries) {
-      carbon_memory_free(it.var.data);
-    }
+  carbon_list_foreach(CBN_Span, carbon_audio__binaries) {
+    carbon_memory_free(it.var.data);
   }
   carbon_list_destroy(&carbon_audio__decoders);
   carbon_list_destroy(&carbon_audio__binaries);
@@ -92,11 +86,11 @@ CBNINL bool carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *sk
     return false;
   }
   // Lookup binary from SKAP
-  CBN_Binary bin;
+  CBN_Span bin;
   if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_BINARY, name, &bin)) return false;
   // Create decoder
   ma_decoder *decoder = (ma_decoder *) carbon_memory_alloc(sizeof(ma_decoder));
-  if (MA_SUCCESS != ma_decoder_init_memory(bin.data, bin.metadata.size, 0, decoder)) {
+  if (MA_SUCCESS != ma_decoder_init_memory(bin.data, bin.size, 0, decoder)) {
     CBN_ERROR("Failed to create decoder");
     carbon_memory_free(decoder);
     carbon_memory_free(bin.data);

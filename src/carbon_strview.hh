@@ -1,16 +1,15 @@
 #ifdef __cplusplus
 
 struct CBN_StrView : CBN_StrView_t {
-  static CBN_StrView make(const char *data, usz size) {
+  static CBN_StrView New(const char *data, usz size) {
     return carbon_strview_from_buf(data, size);
   }
 
-  static CBN_StrView make(const char *s) {
+  static CBN_StrView New(const char *s) {
     return carbon_strview_from_cstr(s);
   }
-
   
-  static CBN_StrView make(const CBN_StrBuilder &sb) {
+  static CBN_StrView New(const CBN_StrBuilder &sb) {
     return carbon_strview_from_strbuilder(&sb);
   }
 
@@ -59,7 +58,7 @@ struct CBN_StrView : CBN_StrView_t {
   }
   
   bool operator==(const char *s) const {
-    return *this == make(s);
+    return *this == New(s);
   }
   
   friend bool operator==(const char *s, const CBN_StrView &sv) {
@@ -78,5 +77,11 @@ struct CBN_StrView : CBN_StrView_t {
     return !(s == sv);
   }
 };
+
+namespace cbn::str::literals {
+  inline View operator""_sv(const char *s, usz len) {
+    return View::New(s, len);
+  }
+}
 
 #endif

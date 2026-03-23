@@ -6,39 +6,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_SKAP_DECL_FILE_MAX_LINE_LEN 256
-#define CARBON_SKAP_DECL_FILE_MAX_PATH_LEN 127
-#define CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN 63
-
 typedef enum {
-  CARBON_SKAP_ASSET_TYPE_IMAGE,
   CARBON_SKAP_ASSET_TYPE_BINARY,
+  CARBON_SKAP_ASSET_TYPE_IMAGE,
   CARBON_SKAP_ASSET_TYPE_MESH,
+  // CARBON_SKAP_ASSET_TYPE_FONT,
   CARBON_SKAP_ASSET_TYPE_COUNT
 } CBN_SKAP_AssetType;
-
-typedef struct {
-  CBN_SKAP_AssetType type;
-  union {
-    CBN_Image_Metadata as_img;
-    CBN_Binary_Metadata as_bin;
-    CBN_Mesh_Metadata as_mesh;
-  };
-} CBN_SKAP_AssetMetadata;
-
-typedef struct {
-  char name[CARBON_SKAP_DECL_FILE_MAX_LINE_LEN];
-  usz blob_offset;
-  usz blob_size;
-  u32 checksum;
-  CBN_SKAP_AssetMetadata metadata;
-} CBN_SKAP_AssetIdx;
-
-typedef struct {
-  char path[CARBON_SKAP_DECL_FILE_MAX_PATH_LEN + 1];
-  char type[CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN + 1];
-  CBN_StrList assets;
-} CBN_SKAP_AssetGroup;
 
 typedef struct {
   char signature[4];

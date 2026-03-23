@@ -6,7 +6,7 @@
 
 CBN_StrView carbon_strview_from_buf(const char *data, usz size) {
   return (CBN_StrView) {
-    .data = data,
+    .data = (u8 *)data,
     .size = size
   };
 }
@@ -16,7 +16,7 @@ CBN_StrView carbon_strview_from_cstr(const char *s) {
 }
 
 CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb) {
-  return carbon_strview_from_buf(sb->items, sb->size);
+  return carbon_strview_from_buf((const char *)sb->items, sb->size);
 }
 
 char *carbon_strview_to_cstr(CBN_StrView sv) {
@@ -34,13 +34,13 @@ char *carbon_strview_to_cstr(CBN_StrView sv) {
 CBN_StrView carbon_strview_trim_left(CBN_StrView sv) {
   usz i = 0;
   while (i < sv.size && isspace(sv.data[i])) ++i;
-  return carbon_strview_from_buf(sv.data + i, sv.size - i);
+  return carbon_strview_from_buf((const char *)sv.data + i, sv.size - i);
 }
 
 CBN_StrView carbon_strview_trim_right(CBN_StrView sv) {
   usz i = 0;
   while (i < sv.size && isspace(sv.data[sv.size - 1 - i])) ++i;
-  return carbon_strview_from_buf(sv.data, sv.size - i);
+  return carbon_strview_from_buf((const char *)sv.data, sv.size - i);
 }
 
 CBN_StrView carbon_strview_trim_both(CBN_StrView sv) {
@@ -50,7 +50,7 @@ CBN_StrView carbon_strview_trim_both(CBN_StrView sv) {
 CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c) {
   usz i = 0;
   while (i < sv->size && sv->data[i] != c) ++i;
-  CBN_StrView new_sv = carbon_strview_from_buf(sv->data, i);
+  CBN_StrView new_sv = carbon_strview_from_buf((const char *)sv->data, i);
   if (i < sv->size) {
     sv->size -= i + 1;
     sv->data += i + 1;
@@ -65,7 +65,7 @@ CBN_StrView carbon_strview_chop(CBN_StrView *sv, char c) {
 CBN_StrView carbon_strview_chop_by_space(CBN_StrView *sv) {
   usz i = 0;
   while (i < sv->size && !isspace(sv->data[i])) ++i;
-  CBN_StrView new_sv = carbon_strview_from_buf(sv->data, i);
+  CBN_StrView new_sv = carbon_strview_from_buf((const char *)sv->data, i);
   if (i < sv->size) {
     sv->size -= i + 1;
     sv->data += i + 1;

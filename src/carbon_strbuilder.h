@@ -9,11 +9,7 @@
 /**
  * @brief Represents a mutable string of characters.
  */
-CBNDEF_T(CBN_StrBuilder) {
-  char *items;
-  usz capacity;
-  usz size;
-};
+CBNDEF_TEQ(CBN_StrBuilder, CBN_List);
 CBNDEF_TAKA(cbn::str, Builder, CBN_StrBuilder);
 
 /**

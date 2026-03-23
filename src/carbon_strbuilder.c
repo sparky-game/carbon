@@ -2,13 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 void carbon_strbuilder_add_strview(CBN_StrBuilder *sb, CBN_StrView sv) {
-  if (sb->size + sv.size > sb->capacity) {
-    if (!sb->capacity) sb->capacity = 256;
-    while (sb->size + sv.size > sb->capacity) sb->capacity *= 2;
-    sb->items = (char *) carbon_memory_realloc(sb->items, sb->capacity * sizeof(char));
-  }
-  carbon_memory_copy(sb->items + sb->size, sv.data, sv.size * sizeof(char));
-  sb->size += sv.size;
+  carbon_list_push_range(sb, sv);
 }
 
 void carbon_strbuilder_add_cstr(CBN_StrBuilder *sb, const char *s) {
@@ -20,10 +14,5 @@ void carbon_strbuilder_add_null(CBN_StrBuilder *sb) {
 }
 
 void carbon_strbuilder_free(CBN_StrBuilder *sb) {
-  if (!sb) {
-    CBN_WARN("`sb` is not a valid pointer, skipping free");
-    return;
-  }
-  carbon_memory_free(sb->items);
-  carbon_memory_set(sb, 0, sizeof(*sb));
+  carbon_list_destroy(sb);
 }

@@ -9,18 +9,8 @@
 /**
  * @brief Represents a view into a string of characters, whilst not owning the actual memory.
  */
-CBNDEF_T(CBN_StrView) {
-  const char *data;
-  usz size;
-};
+CBNDEF_TEQ(CBN_StrView, CBN_Span);
 CBNDEF_TAKA(cbn::str, View, CBN_StrView);
-
-// Forward declaration
-#ifdef __cplusplus
-struct CBN_StrBuilder;
-#else
-typedef struct CBN_StrBuilder_t CBN_StrBuilder;
-#endif
 
 /**
  * @brief Creates a StrView from a char buffer pointer and its size.

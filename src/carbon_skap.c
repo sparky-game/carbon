@@ -2,37 +2,105 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #define CARBON_SKAP__HEX_SPEC "%#012x"
+#define CARBON_SKAP__DECL_FILE_MAX_LINE_LEN 256
+#define CARBON_SKAP__DECL_FILE_MAX_PATH_LEN 127
+#define CARBON_SKAP__DECL_FILE_MAX_TYPE_LEN 63
 
-// @type_dependant
-static const char * const carbon_skap__allowed_types[] = {
-  "images",
-  "binaries",
-  "meshes"
+typedef struct {
+  CBN_SKAP_AssetType type;
+  union {
+    usz as_bin;
+    CBN_Image_Metadata as_img;
+    CBN_Mesh_Metadata as_mesh;
+  };
+} CBN_SKAP_AssetMetadata;
+
+typedef struct {
+  char name[CARBON_SKAP__DECL_FILE_MAX_LINE_LEN];
+  usz blob_offset;
+  usz blob_size;
+  u32 checksum;
+  CBN_SKAP_AssetMetadata metadata;
+} CBN_SKAP_AssetIdx;
+
+typedef struct {
+  char path[CARBON_SKAP__DECL_FILE_MAX_PATH_LEN + 1];
+  char type[CARBON_SKAP__DECL_FILE_MAX_TYPE_LEN + 1];
+  CBN_StrList assets;
+} CBN_SKAP_AssetGroup;
+
+typedef void (*CBN_SKAP_AssetDestroyFunc)(void *);
+
+#define CARBON_SKAP__ASSET_TYPES                                        \
+  x(CBN_Span, CARBON_SKAP_ASSET_TYPE_BINARY, carbon_skap__destroy_binary) \
+  x(CBN_Image, CARBON_SKAP_ASSET_TYPE_IMAGE, carbon_image_destroy)      \
+  x(CBN_Mesh, CARBON_SKAP_ASSET_TYPE_MESH, carbon_mesh_destroy)
+
+#define x(t, v, d) t: v,
+#define carbon_skap__type(t) _Generic((t), CARBON_SKAP__ASSET_TYPES)
+#undef x
+
+static usz carbon_skap__type2size[] = {
+#define x(t, v, d) [v] = sizeof(t),
+  CARBON_SKAP__ASSET_TYPES
+#undef x
 };
-static_assert(CARBON_SKAP_ASSET_TYPE_COUNT == CARBON_ARRAY_LEN(carbon_skap__allowed_types),
-              "Amount of allowed asset types has changed");
+static_assert(CARBON_ARRAY_LEN(carbon_skap__type2size) == CARBON_SKAP_ASSET_TYPE_COUNT,
+              "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
+
+CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
+static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
+              "Has to match the expected function type");
+
+static CBN_SKAP_AssetDestroyFunc carbon_skap__type2destroy[] = {
+#define x(t, v, d) [v] = (CBN_SKAP_AssetDestroyFunc) d,
+  CARBON_SKAP__ASSET_TYPES
+#undef x
+};
+static_assert(CARBON_ARRAY_LEN(carbon_skap__type2destroy) == CARBON_SKAP_ASSET_TYPE_COUNT,
+              "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
+
+static char * const carbon_skap__type2str[] = {
+  [CARBON_SKAP_ASSET_TYPE_IMAGE] = "images",
+  [CARBON_SKAP_ASSET_TYPE_BINARY] = "binaries",
+  [CARBON_SKAP_ASSET_TYPE_MESH] = "meshes",
+};
+static_assert(CARBON_ARRAY_LEN(carbon_skap__type2str) == CARBON_SKAP_ASSET_TYPE_COUNT,
+              "@new_asset_type: add its type-str equivalence");
+
+CBNINL CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
+  static_assert(3 == CARBON_SKAP_ASSET_TYPE_COUNT,
+                "@new_asset_type: add its str-type equivalence");
+  if (!carbon_string_cmp(s, "images"))   return CARBON_SKAP_ASSET_TYPE_IMAGE;
+  if (!carbon_string_cmp(s, "binaries")) return CARBON_SKAP_ASSET_TYPE_BINARY;
+  if (!carbon_string_cmp(s, "meshes"))   return CARBON_SKAP_ASSET_TYPE_MESH;
+  CARBON_UNREACHABLE;
+  return CARBON_SKAP_ASSET_TYPE_COUNT;
+}
+
+CBNINL char *carbon_skap__str2hint(const char *s) {
+  static_assert(3 == CARBON_SKAP_ASSET_TYPE_COUNT,
+                "@new_asset_type: add its str-hint equivalence");
+  if (!carbon_string_cmp(s, "image") ||
+      !carbon_string_cmp(s, "img")   ||
+      !carbon_string_cmp(s, "imgs")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_IMAGE];
+  if (!carbon_string_cmp(s, "binary") ||
+      !carbon_string_cmp(s, "bin")    ||
+      !carbon_string_cmp(s, "bins")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_BINARY];
+  if (!carbon_string_cmp(s, "mesh")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_MESH];
+  return 0;
+}
 
 static CBN_List carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_COUNT];
 
-// @type_dependant
-CBNINL CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
-  if (!carbon_string_cmp(s, "images")) return CARBON_SKAP_ASSET_TYPE_IMAGE;
-  else if (!carbon_string_cmp(s, "binaries")) return CARBON_SKAP_ASSET_TYPE_BINARY;
-  else if (!carbon_string_cmp(s, "meshes")) return CARBON_SKAP_ASSET_TYPE_MESH;
-  else {
-    CARBON_UNREACHABLE;
-    return CARBON_SKAP_ASSET_TYPE_COUNT;
-  };
-}
-
 CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) {
   bool first = true;
   bool prev_line_was_new_group = false;
   usz line_n = 1;
-  char line[CARBON_SKAP_DECL_FILE_MAX_LINE_LEN];
-  while (fgets(line, CARBON_SKAP_DECL_FILE_MAX_LINE_LEN, decl_fd)) {
+  char line[CARBON_SKAP__DECL_FILE_MAX_LINE_LEN];
+  while (fgets(line, CARBON_SKAP__DECL_FILE_MAX_LINE_LEN, decl_fd)) {
     line[strcspn(line, "\r")] = 0;
     line[strcspn(line, "\n")] = 0;
     CBN_SKAP_AssetGroup ag;
@@ -65,9 +133,9 @@ CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) 
       if (first) first = false;
       if (2 != sscanf(line,
                       "[\"%"
-                      CARBON_QUOTE(CARBON_SKAP_DECL_FILE_MAX_PATH_LEN)
+                      CARBON_QUOTE(CARBON_SKAP__DECL_FILE_MAX_PATH_LEN)
                       "[^\"]\" as %"
-                      CARBON_QUOTE(CARBON_SKAP_DECL_FILE_MAX_TYPE_LEN)
+                      CARBON_QUOTE(CARBON_SKAP__DECL_FILE_MAX_TYPE_LEN)
                       "[^]]",
                       ag.path, ag.type)) {
         CBN_ERROR("on line %zu, syntax error; expected expression `[\"<PATH>\" as <TYPE>]`", line_n);
@@ -76,27 +144,15 @@ CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) 
       // Check whether type is valid
       bool type_is_valid = false;
       for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-        if (!carbon_string_cmp(ag.type, carbon_skap__allowed_types[i])) {
+        if (!carbon_string_cmp(ag.type, carbon_skap__type2str[i])) {
           type_is_valid = true;
           break;
         }
       }
-      // @type_dependant
       if (!type_is_valid) {
-        if (!carbon_string_cmp(ag.type, "image") ||
-            !carbon_string_cmp(ag.type, "img")   ||
-            !carbon_string_cmp(ag.type, "imgs")) {
-          CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `images`?", line_n, ag.type);
-        }
-        else if (!carbon_string_cmp(ag.type, "binary") ||
-                 !carbon_string_cmp(ag.type, "bin")    ||
-                 !carbon_string_cmp(ag.type, "bins")) {
-          CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `binaries`?", line_n, ag.type);
-        }
-        else if (!carbon_string_cmp(ag.type, "mesh")) {
-          CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `meshes`?", line_n, ag.type);
-        }
-        else CBN_ERROR("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
+        const char *hint = carbon_skap__str2hint(ag.type);
+        if (hint) CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `%s`?", line_n, ag.type, hint);
+        else      CBN_ERROR("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
         return false;
       }
       // Check whether path is valid
@@ -155,32 +211,19 @@ CBNINL void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
   carbon_list_destroy(asset_groups);
 }
 
-// @type_dependant
 CBNINL void carbon_skap__create_global_lists(void) {
-  carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE] = carbon_list_create(sizeof(CBN_Image));
-  carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY] = carbon_list_create(sizeof(CBN_Binary));
-  carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH] = carbon_list_create(sizeof(CBN_Mesh));
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
+    carbon_skap__assets[i] = carbon_list_create(carbon_skap__type2size[i]);
     carbon_skap__asset_idxs[i] = carbon_list_create(sizeof(CBN_SKAP_AssetIdx));
     carbon_skap__asset_idx_locs[i] = carbon_list_create(sizeof(usz));
   }
 }
 
-// @type_dependant
 CBNINL void carbon_skap__destroy_global_lists(void) {
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
-  carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
-    carbon_image_destroy(&it.var);
-  }
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
-  carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
-    carbon_memory_free(it.var.data);
-  }
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH].size) return;
-  carbon_list_foreach(CBN_Mesh, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH]) {
-    carbon_mesh_destroy(&it.var);
-  }
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
+    carbon_list_foreach_raw(carbon_skap__assets[i]) {
+      carbon_skap__type2destroy[i](it.ptr);
+    }
     carbon_list_destroy(&carbon_skap__assets[i]);
     carbon_list_destroy(&carbon_skap__asset_idxs[i]);
     carbon_list_destroy(&carbon_skap__asset_idx_locs[i]);
@@ -200,7 +243,7 @@ CBNINL void carbon_skap__append_type_counters(FILE *fd, CBN_List *asset_groups) 
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     usz asset_count = 0;
     carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      if (!carbon_string_cmp(it.var.type, carbon_skap__allowed_types[i])) {
+      if (!carbon_string_cmp(it.var.type, carbon_skap__type2str[i])) {
         asset_count += it.var.assets.size;
       }
     }
@@ -215,18 +258,18 @@ CBNINL void carbon_skap__append_idxs__image(CBN_SKAP_AssetIdx *idx, usz i, const
 }
 
 CBNINL void carbon_skap__append_idxs__binary(CBN_SKAP_AssetIdx *idx, usz i, const char *name) {
-  CBN_Binary asset = {
+  CBN_Span asset = {
     .data = 0,
-    .metadata.size = carbon_fs_get_file_size(name)
+    .size = carbon_fs_get_file_size(name)
   };
-  asset.data = (u8 *) carbon_memory_alloc(asset.metadata.size);
+  asset.data = (u8 *) carbon_memory_alloc(asset.size);
   {
     FILE *asset_fd = fopen(name, "rb");
-    fread(asset.data, asset.metadata.size, 1, asset_fd);
+    fread(asset.data, asset.size, 1, asset_fd);
     fclose(asset_fd);
   }
   carbon_list_push(&carbon_skap__assets[i], &asset);
-  idx->metadata.as_bin = asset.metadata;
+  idx->metadata.as_bin = asset.size;
 }
 
 CBNINL void carbon_skap__append_idxs__mesh(CBN_SKAP_AssetIdx *idx, usz i, const char *name) {
@@ -240,7 +283,7 @@ CBNINL void carbon_skap__append_idxs__mesh(CBN_SKAP_AssetIdx *idx, usz i, const 
 CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
-      if (!ag_it.var.assets.size || carbon_string_cmp(ag_it.var.type, carbon_skap__allowed_types[i])) continue;
+      if (!ag_it.var.assets.size || carbon_string_cmp(ag_it.var.type, carbon_skap__type2str[i])) continue;
       carbon_strlist_foreach(ag_it.var.assets) {
         const char *cwd = carbon_fs_get_curr_directory();
         CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
@@ -300,15 +343,15 @@ CBNINL void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
 
 CBNINL void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
   if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
-  carbon_list_foreach(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
-    CBN_Binary *asset = &carbon_list_at_raw(CBN_Binary, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
+  carbon_list_foreach(CBN_Span, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
+    CBN_Span *asset = &carbon_list_at_raw(CBN_Span, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
     CBN_SKAP_AssetIdx *idx = &carbon_list_at_raw(CBN_SKAP_AssetIdx, carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
     usz *loc = &carbon_list_at_raw(usz, carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
     // Save the position where the blob needs to be written
     usz blob_loc = ftell(fd);
     // Complete the empty fields in the idx struct
     idx->blob_offset = blob_loc;
-    idx->blob_size = idx->metadata.as_bin.size;
+    idx->blob_size = idx->metadata.as_bin;
     idx->checksum = carbon_crypto_crc32(asset->data, idx->blob_size);
     // Go back and overwrite the idx with its complete version
     fseek(fd, *loc, SEEK_SET);
@@ -434,7 +477,7 @@ bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
       fread(&idx, sizeof(idx), 1, out_handle->fd);
       // CBN_DEBUG("----------------------------------------");
       // CBN_DEBUG("idx.name = `%s`", idx.name);
-      // CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__allowed_types[idx.metadata.type]);
+      // CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__type2str[idx.metadata.type]);
       // CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
       // CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
       // CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
@@ -476,11 +519,11 @@ void carbon_skap_print(const CBN_SKAP *handle) {
   carbon_println("  - build_ver: %$", $(handle->header.build_ver));
   carbon_println("type_counters:");
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %$: %zu", $(carbon_skap__allowed_types[i]), carbon_skap_count_of(handle, (CBN_SKAP_AssetType) i));
+    carbon_println("  - %$: %zu", $(carbon_skap__type2str[i]), carbon_skap_count_of(handle, (CBN_SKAP_AssetType) i));
   }
   carbon_println("idxs:");
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %$:", $(carbon_skap__allowed_types[i]));
+    carbon_println("  - %$:", $(carbon_skap__type2str[i]));
     // TODO: we need to iterate the hashmaps, not the type_counters
     for (usz j = 0; j < handle->type_counters[i]; ++j) {
       carbon_println("      - (...)");
@@ -503,7 +546,7 @@ CBNINL bool carbon_skap_lookup__image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx 
   return true;
 }
 
-CBNINL bool carbon_skap_lookup__binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *idx, CBN_Binary *out_blob) {
+CBNINL bool carbon_skap_lookup__binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *idx, CBN_Span *out_blob) {
   u8 *p_data = carbon_memory_alloc(idx->blob_size);
   fseek(handle->fd, idx->blob_offset, SEEK_SET);
   fread(p_data, idx->blob_size, 1, handle->fd);
@@ -514,7 +557,7 @@ CBNINL bool carbon_skap_lookup__binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx
     return false;
   }
   out_blob->data = p_data;
-  out_blob->metadata = idx->metadata.as_bin;
+  out_blob->size = idx->metadata.as_bin;
   return true;
 }
 
@@ -560,7 +603,7 @@ bool carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_t
     return false;
   }
   if (!handle->type_counters[asset_type]) {
-    CBN_ERROR("No assets of the asset_type (`%s`) requested", carbon_skap__allowed_types[asset_type]);
+    CBN_ERROR("No assets of the asset_type (`%s`) requested", carbon_skap__type2str[asset_type]);
     return false;
   }
   CBN_SKAP_AssetIdx idx;

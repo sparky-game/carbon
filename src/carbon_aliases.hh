@@ -80,14 +80,6 @@ namespace cbn {
     }
   }
 
-  namespace str {
-    namespace literals {
-      inline View operator""_sv(const char *s, usz len) {
-        return View::make(s, len);
-      }
-    }
-  }
-
   namespace audio {
     using UID = CBN_Audio_UID;
   }
