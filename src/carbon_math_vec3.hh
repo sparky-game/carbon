@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
 struct CBN_Vec3 : CBN_Vec3_t {
   constexpr CBN_Vec3(f32 _x, f32 _y, f32 _z) : CBN_Vec3_t{.c = {_x, _y, _z}} {}
   constexpr CBN_Vec3(f32 _x = 0) : CBN_Vec3(_x, _x, _x) {}
+  constexpr CBN_Vec3(const CBN_Vec2 &v, f32 _z = 0) : CBN_Vec3(v.x, v.y, _z) {}
 
   CBN_Vec3 operator+(const CBN_Vec3 &v) const {
     return carbon_math_vec3_add(*this, v);

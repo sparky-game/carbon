@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
 #define VWRAP(fn, vfn)                                \
