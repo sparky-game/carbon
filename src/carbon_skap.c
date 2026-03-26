@@ -31,6 +31,10 @@ typedef struct {
 
 typedef void (*CBN_SKAP_AssetDestroyFunc)(void *);
 
+CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
+static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
+              "Has to match the expected function type");
+
 #define CARBON_SKAP__ASSET_TYPES                                        \
   x(CBN_Span, CARBON_SKAP_ASSET_TYPE_BINARY, carbon_skap__destroy_binary) \
   x(CBN_Image, CARBON_SKAP_ASSET_TYPE_IMAGE, carbon_image_destroy)      \
@@ -47,10 +51,6 @@ static usz carbon_skap__type2size[] = {
 };
 static_assert(CARBON_ARRAY_LEN(carbon_skap__type2size) == CARBON_SKAP_ASSET_TYPE_COUNT,
               "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
-
-CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
-static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
-              "Has to match the expected function type");
 
 static CBN_SKAP_AssetDestroyFunc carbon_skap__type2destroy[] = {
 #define x(t, v, d) [v] = (CBN_SKAP_AssetDestroyFunc) d,

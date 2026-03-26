@@ -9,16 +9,29 @@
 /**
  * @brief Represents ...
  */
-CBNDEF_T(CBN_Span) {
+CBNDEF_TT(CBN_Span) {
   u8 *data;
   usz size;
 };
-CBNDEF_TAKA(cbn, Span, CBN_Span);
+CBNDEF_TTAKA(cbn, Span, CBN_Span);
 
 // Forward declaration
 CBNDEF_TT(CBN_List);
 
 /**
+ * @brief Gets the element in the provided Span at a specific index.
+ * @param T The underlying type you want the Span to represent.
+ * @param l The Span.
+ * @param i The index to access.
+ */
+#define carbon_span_at_raw(T, s, i) ((T *) (s).data)[(i)]
+#define carbon_span_at(T, s, i) (CBN_ASSERT((i) < (s).size && "Span index out of bounds"), carbon_span_at_raw(T, s, i))
+
+/**
+ * @brief Creates a Span from a data buffer pointer and its size.
+ * @param data The pointer to the data buffer.
+ * @param size The size of the data buffer.
+ * @return The Span representing the provided data buffer.
  */
 CBNDEF CBN_Span carbon_span_from_buf(void *data, usz size);
 
@@ -28,3 +41,7 @@ CBNDEF CBN_Span carbon_span_from_buf(void *data, usz size);
  * @return The Span representing the provided List object.
  */
 CBNDEF CBN_Span carbon_span_from_list(const CBN_List *l);
+
+/**
+ */
+CBNDEF CBN_Span carbon_span_subspan(CBN_Span s, usz offset, usz count);

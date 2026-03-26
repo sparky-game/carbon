@@ -7,10 +7,29 @@ struct CBN_List_tt : CBN_List_t {
   using value_type = T;
   using iterator = value_type *;
 
-  static CBN_List_tt New(void) {
-    auto l = carbon_list_create(sizeof(value_type));
-    return *(CBN_List_tt *) &l;
+  CBN_List_tt(void) : CBN_List_t{carbon_list_create(sizeof(value_type))} {}
+
+  CBN_List_tt(const CBN_List_tt &) = delete;
+  CBN_List_tt &operator=(const CBN_List_tt &) = delete;
+
+  CBN_List_tt(CBN_List_tt &&l) : CBN_List_t{l} {
+    carbon_memory_set(&l, 0, sizeof(l));
   }
+
+  CBN_List_tt &operator=(CBN_List_tt &&l) {
+    if (this != &l) {
+      Free();
+      *(CBN_List_t *)this = l;
+      carbon_memory_set(&l, 0, sizeof(l));
+    }
+    return *this;
+  }
+
+  ~CBN_List_tt(void) {
+    Free();
+  }
+
+  static cbn::Opt<CBN_List_tt> FromFile(const char *file);
 
   void Free(void) {
     carbon_list_destroy((CBN_List *) this);
@@ -58,6 +77,10 @@ struct CBN_List_tt : CBN_List_t {
 
   void ShrinkToFit(void) {
     carbon_list_shrink_to_fit((CBN_List *) this);
+  }
+
+  CBN_Span ToSpan(void) const {
+    return CBN_Span(*this);
   }
 
   iterator begin(void) const {

@@ -17,11 +17,16 @@ struct CBN_PatternMatchedFiles : CBN_PatternMatchedFiles_t {
 inline cbn::Opt<cbn::str::Builder> cbn::str::Builder::FromFile(const char *file) {
   cbn::str::Builder sb;
   if (!cbn::fs::ReadFile(&sb, file)) return {};
-  return sb;
+  return std::move(sb);
 }
 
 inline bool cbn::str::Builder::ToFile(const char *file) const {
   return cbn::fs::WriteFile(this, file);
+}
+
+template <typename T>
+inline auto CBN_List_tt<T>::FromFile(const char *file) -> cbn::Opt<CBN_List_tt> {
+  return cbn::str::Builder::FromFile(file);
 }
 
 #endif

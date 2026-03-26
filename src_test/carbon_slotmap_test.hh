@@ -9,7 +9,7 @@ typedef struct {
 } NameComponent;
 
 TEST(push_remove) {
-  auto names = cbn::SlotMap<NameComponent>::make();
+  cbn::SlotMap<NameComponent> names;
   carbon_should_be(sizeof(typeof(names)::value_type), names.stride);
   carbon_should_be(0, names.size);
   carbon_should_be(names.size, names.data.size);
@@ -120,6 +120,5 @@ TEST(push_remove) {
   carbon_should_be_true(name_5_r);
   carbon_should_be_s(name_5.name, name_5_r->name);
 
-  names.Free();
   return true;
 }
