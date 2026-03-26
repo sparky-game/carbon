@@ -47,7 +47,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   *head = new;
 }
 
-u8 carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
+bool carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
   if (!hm || !key || !out_value) {
     CBN_ERROR("`hm`, `key` and `out_value` must be valid pointers");
     return false;

@@ -24,4 +24,4 @@ CBNDEF void carbon_hashmap_destroy(CBN_HashMap *hm);
 
 CBNDEF void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value);
 
-CBNDEF u8 carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value);
+CBNDEF bool carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value);
