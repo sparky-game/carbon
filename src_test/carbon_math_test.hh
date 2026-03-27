@@ -217,6 +217,19 @@ TEST(asin) {
   return true;
 }
 
+TEST(atan) {
+  carbon_should_be_f(-1.107149, cbn::math::Atan(-2));
+  carbon_should_be_f(-0.785398, cbn::math::Atan(-1));
+  carbon_should_be_f(-0.463648, cbn::math::Atan(-0.5));
+  carbon_should_be_f(-0.244979, cbn::math::Atan(-0.25));
+  carbon_should_be_f(0, cbn::math::Atan(0));
+  carbon_should_be_f(0.244979,  cbn::math::Atan(0.25));
+  carbon_should_be_f(0.463648,  cbn::math::Atan(0.5));
+  carbon_should_be_f(0.785398,  cbn::math::Atan(1));
+  carbon_should_be_f(1.107149,  cbn::math::Atan(2));
+  return true;
+}
+
 TEST(vec2_add) {
   cbn::math::Vec2 u {1, 2};
   cbn::math::Vec2 v {3, 4};

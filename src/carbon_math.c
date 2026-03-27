@@ -10,7 +10,10 @@ u32 carbon_math_bswap32(u32 x) {
   __asm__("rev %w0, %w1" : "=r"(res) : "r"(x));
   return res;
 #else
-  return ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8) | ((x & 0x00ff0000) >> 8) | ((x & 0xff000000) >> 24);
+  return ((x & 0x000000ff) << 24)
+    |    ((x & 0x0000ff00) <<  8)
+    |    ((x & 0x00ff0000) >>  8)
+    |    ((x & 0xff000000) >> 24);
 #endif
 }
 
@@ -206,26 +209,37 @@ f32 carbon_math_fmod(f32 x, f32 y) {
   return r;
 }
 
+CBNINL i32 carbon_math__checkint(u32 iy) {
+  // Returns 0 if not int, 1 if odd int, 2 if even int.
+  // The argument is the bit representation of a non-zero finite f32 value.
+  i32 e = iy >> 23 & 0xff;
+  if (e < 0x7f) return 0;
+  if (e > 0x7f + 23) return 2;
+  if (iy & ((1 << (0x7f + 23 - e)) - 1)) return 0;
+  if (iy & (1 << (0x7f + 23 - e))) return 1;
+  return 2;
+}
+
 f32 carbon_math_pow(f32 x, f32 y) {
-#if CARBON_HAS_BUILTIN(__builtin_powf)
-  return __builtin_powf(x, y);
-#else
   if (y == 0) return 1;
+  if (x != x || y != y) return x + y;
   if (x == 0) {
     if (y < 0) CBN_ASSERT(0 && "division by 0 is not defined");
     return 0;
   }
+  if (x < 0) {
+    i32 ycheck = carbon_math__checkint(*(u32 *)&y);
+    if (ycheck == 0) CBN_ASSERT(0 && "negative base with non-int exp is not defined");
+    f32 r = carbon_math_exp(y * carbon_math_log(-x));
+    return ycheck == 1 ? -r : r;
+  }
   return carbon_math_exp(y * carbon_math_log(x));
-#endif
 }
 
 f32 carbon_math_log2(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_log2f)
-  return __builtin_log2f(x);
-#else
   static const f32 dinv = 6.4000000000e+1;
   static const f32 dsq6 = 4.0690105379e-5;
-  __attribute__((aligned(16))) static const f32 q1[] = {
+  alignas(16) static const f32 q1[] = {
     0.0000000000e+0, 1.5504186973e-2, 3.0771657825e-2,
     4.5809537172e-2, 6.0624621809e-2, 7.5223423541e-2,
     8.9612156153e-2, 1.0379679501e-1, 1.1778303236e-1,
@@ -249,7 +263,7 @@ f32 carbon_math_log2(f32 x) {
     6.6139847040e-1, 6.6943067312e-1, 6.7739880085e-1,
     6.8530398607e-1, 6.9314718246e-1
   };
-  __attribute__((aligned(16))) static const f32 q2[] = {
+  alignas(16) static const f32 q2[] = {
     -9.9986231327e-1, -9.6937632561e-1, -9.4016802311e-1,
     -9.1239231825e-1, -8.8566547632e-1, -8.6031460762e-1,
     -8.3573484421e-1, -8.1255424023e-1, -7.8996384144e-1,
@@ -289,14 +303,10 @@ f32 carbon_math_log2(f32 x) {
   b = (b*b*b-b) * q2[hx + 1];
   y += (a + b) * dsq6;
   return ((f32) ipart) + (y * CARBON_LOG2_E);
-#endif
 }
 
 f32 carbon_math_exp2(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_exp2f)
-  return __builtin_exp2f(x);
-#else
-  __attribute__((aligned(16))) static const f32 p[] = {
+  alignas(16) static const f32 p[] = {
     1.535336188319500e-4, 1.339887440266574e-3,
     9.618437357674640e-3, 5.550332471162809e-2,
     2.402264791363012e-1, 6.931472028550421e-1,
@@ -314,31 +324,18 @@ f32 carbon_math_exp2(f32 x) {
   x = x * fpart + p[5];
   x = x * fpart + p[6];
   return epart.f * x;
-#endif
 }
 
 f32 carbon_math_ldexp2(f32 x, i32 n) {
-#if CARBON_HAS_BUILTIN(__builtin_ldexpf)
-  return __builtin_ldexpf(x, n);
-#else
   return x * (carbon_math_exp2(n));
-#endif
 }
 
 f32 carbon_math_log(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_logf)
-  return __builtin_logf(x);
-#else
   return carbon_math_log2(x) / CARBON_LOG2_E;
-#endif
 }
 
 f32 carbon_math_exp(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_expf)
-  return __builtin_expf(x);
-#else
   return carbon_math_exp2(CARBON_LOG2_E * x);
-#endif
 }
 
 f32 carbon_math_ldexp(f32 x, i32 n) {
@@ -346,11 +343,7 @@ f32 carbon_math_ldexp(f32 x, i32 n) {
 }
 
 f32 carbon_math_log10(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_log10f)
-  return __builtin_log10f(x);
-#else
   return carbon_math_log2(x) / CARBON_LOG2_10;
-#endif
 }
 
 f32 carbon_math_exp10(f32 x) {
@@ -362,11 +355,8 @@ f32 carbon_math_ldexp10(f32 x, i32 exp) {
 }
 
 f32 carbon_math_frexp(f32 x, i32 *n) {
-#if CARBON_HAS_BUILTIN(__builtin_frexpf)
-  return __builtin_frexpf(x, n);
-#else
-  union { f64 d; u64 i; } y = {x};
-  i32 ee = y.i >> 52 & 0x7ff;
+  union { f32 f; u32 i; } y = {x};
+  i32 ee = y.i >> 23 & 0xff;
   if (!ee) {
     if (x) {
       x = carbon_math_frexp(x * 0x1p64, n);
@@ -375,12 +365,11 @@ f32 carbon_math_frexp(f32 x, i32 *n) {
     else *n = 0;
     return x;
   }
-  else if (ee == 0x7ff) return x;
-  *n = ee - 0x3fe;
-  y.i &= 0x800fffffffffffffULL;
-  y.i |= 0x3fe0000000000000ULL;
-  return y.d;
-#endif
+  if (ee == 0xff) return x;
+  *n = ee - 0x7e;
+  y.i &= 0x807fffffU;
+  y.i |= 0x3f000000U;
+  return y.f;
 }
 
 f32 carbon_math_sigmoid(f32 x) {
@@ -398,7 +387,7 @@ f32 carbon_math_smoothstep(f32 a, f32 b, f32 x) {
 }
 
 i8 carbon_math_cmp(f32 x, f32 y) {
-  if ((x - CARBON_EPS) < y)      return -1;
+  if      ((x - CARBON_EPS) < y) return -1;
   else if ((x + CARBON_EPS) > y) return  1;
   else return 0;
 }
@@ -417,89 +406,66 @@ i32 carbon_math_egcd(i32 x, i32 y) {
 }
 
 f32 carbon_math_sin(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_sinf)
-  return __builtin_sinf(x);
-#else
   return carbon_math_cos(x - CARBON_PI_2);
-#endif
 }
 
 f32 carbon_math_cos(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_cosf)
-  return __builtin_cosf(x);
-#else
-  if (x < 0) x = -x;
-  if (0 <= carbon_math_cmp(x, CARBON_2PI)) {
-    do { x -= CARBON_2PI; } while (0 <= carbon_math_cmp(x, CARBON_2PI));
-  }
-  if ((0 <= carbon_math_cmp(x, CARBON_PI)) && (-1 == carbon_math_cmp(x, CARBON_2PI))) {
+  x = carbon_math_abs(x);
+  x -= CARBON_2PI * carbon_math_floor(x/CARBON_2PI);
+  if (x >= CARBON_PI) {
     x -= CARBON_PI;
-    return ((-1)*(1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))))));
+    return -(1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182))))))));
   }
   return 1-(x*x/2)*(1-(x*x/12)*(1-(x*x/30)*(1-(x*x/56)*(1-(x*x/90)*(1-(x*x/132)*(1-(x*x/182)))))));
-#endif
 }
 
 f32 carbon_math_tan(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_tanf)
-  return __builtin_tanf(x);
-#else
   f32 c = carbon_math_cos(x);
   if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_INF : -CARBON_INF;
   return carbon_math_sin(x) / c;
-#endif
 }
 
 f32 carbon_math_tanh(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_tanhf)
-  return __builtin_tanhf(x);
-#else
-  f32 ex = carbon_math_exp(x);
-  f32 enx = carbon_math_exp(-x);
-  return (ex - enx) / (ex + enx);
-#endif
+  if (x >  9) return  1;
+  if (x < -9) return -1;
+  f32 e2x = carbon_math_exp(2*x);
+  return (e2x - 1)/(e2x + 1);
 }
 
 f32 carbon_math_asin(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_asinf)
-  return __builtin_asinf(x);
-#else
-  f32 eps = 1.1920928955078125e-07;
-  f32 ys, yc, y = 0;
-  for (;;) {
-    ys = carbon_math_sin(y);
-    yc = carbon_math_cos(y);
-    if (-CARBON_PI_2 > y || y > CARBON_PI_2) y = carbon_math_fmod(y, CARBON_PI);
-    if (ys + eps >= x && ys - eps <= x) break;
-    y = y - (ys - x) / yc;
-  }
-  return y;
-#endif
+  if (x >  1) x =  1;
+  if (x < -1) x = -1;
+  return carbon_math_atan(x / carbon_math_sqrt(1 - x*x));
 }
 
 f32 carbon_math_atan(f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_atanf)
-  return __builtin_atanf(x);
-#else
-  return carbon_math_asin(x / carbon_math_sqrt(x * x + 1));
-#endif
+  bool flip = x < 0;
+  if (flip) x = -x;
+  bool inv = x > 1;
+  if (inv) x = 1/x;
+  bool half = x > CARBON_SQRT2 - 1;
+  if (half) x = (x - 1)/(x + 1);
+  x *= (1 - x*x*(1/3. - x*x*(1/5. - x*x*(1/7. - x*x*(1/9. - x*x*(1/11. - x*x*(1/13.)))))));
+  if (half) x += CARBON_PI_4;
+  if (inv) x = CARBON_PI_2 - x;
+  return flip ? -x : x;
 }
 
 f32 carbon_math_atan2(f32 y, f32 x) {
-#if CARBON_HAS_BUILTIN(__builtin_atan2f)
-  return __builtin_atan2f(y, x);
-#else
-  f32 r, phi, y_abs = carbon_math_abs(y) + CARBON_EPS;
+  if (x == 0) {
+    if (y > 0) return  CARBON_PI_2;
+    if (y < 0) return -CARBON_PI_2;
+    return 0;
+  }
+  f32 r, phi, y_abs = carbon_math_abs(y);
   if (x < 0) {
-    r = (x + y_abs) / (y_abs - x);
+    r = (x + y_abs)/(y_abs - x);
     phi = 0.75 * CARBON_PI;
   }
   else {
-    r = (x - y_abs) / (x + y_abs);
+    r = (x - y_abs)/(x + y_abs);
     phi = CARBON_PI_4;
   }
-  phi += (0.1963 * r * r - 0.9817) * r;
-  if (y < 0) return -phi;
-  else return phi;
-#endif
+  phi += (0.1963*r*r - 0.9817) * r;
+  return y < 0 ? -phi : phi;
 }

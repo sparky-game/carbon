@@ -76,16 +76,6 @@
  */
 #define CARBON_SWAP(x, y) { x ^= y; y ^= x; x ^= y; }
 
-/**
- * @brief Checks if the specified compiler's built-in function is available.
- * @param x The built-in function's name to check.
- */
-#if defined(__has_builtin) && !defined(CARBON_NO_BUILTIN)
-#define CARBON_HAS_BUILTIN(x) __has_builtin(x)
-#else
-#define CARBON_HAS_BUILTIN(...) false
-#endif
-
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
 #define CARBON_STATIC_UNREACHABLE static_assert(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")
