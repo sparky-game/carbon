@@ -35,17 +35,50 @@ CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span
 static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
               "Has to match the expected function type");
 
-#define CARBON_SKAP__ASSET_TYPES                                        \
-  x(CBN_Span, CARBON_SKAP_ASSET_TYPE_BINARY, carbon_skap__destroy_binary) \
-  x(CBN_Image, CARBON_SKAP_ASSET_TYPE_IMAGE, carbon_image_destroy)      \
-  x(CBN_Mesh, CARBON_SKAP_ASSET_TYPE_MESH, carbon_mesh_destroy)
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 
-#define x(t, v, d) t: v,
+#define CARBON_SKAP__HINTS_BINARY(h, c)         \
+  h(c, "binary") h(c, "bin") h(c, "bins")
+
+#define CARBON_SKAP__HINTS_IMAGE(h, c)          \
+  h(c, "image") h(c, "img") h(c, "imgs")
+
+#define CARBON_SKAP__HINTS_MESH(h, c)           \
+  h(c, "mesh")
+
+/*
+  x(t, v, d, s, h)
+  ------------------------
+  t :: TYPE
+  v :: ENUM_VALUE
+  d :: DESTROY_FN
+  s :: STRING
+  h :: HINTS_MACRO
+*/
+#define CARBON_SKAP__ASSET_TYPES                \
+  x(CBN_Span, CARBON_SKAP_ASSET_TYPE_BINARY,    \
+  carbon_skap__destroy_binary,                  \
+  "binaries",                                   \
+  CARBON_SKAP__HINTS_BINARY                     \
+  )                                             \
+  x(CBN_Image, CARBON_SKAP_ASSET_TYPE_IMAGE,    \
+  carbon_image_destroy,                         \
+  "images",                                     \
+  CARBON_SKAP__HINTS_IMAGE                      \
+  )                                             \
+  x(CBN_Mesh, CARBON_SKAP_ASSET_TYPE_MESH,      \
+  carbon_mesh_destroy,                          \
+  "meshes",                                     \
+  CARBON_SKAP__HINTS_MESH                       \
+  )
+
+#define x(t, v, d, s, h) t: v,
 #define carbon_skap__type(t) _Generic((t), CARBON_SKAP__ASSET_TYPES)
 #undef x
 
 static usz carbon_skap__type2size[] = {
-#define x(t, v, d) [v] = sizeof(t),
+#define x(t, v, d, s, h) [v] = sizeof(t),
   CARBON_SKAP__ASSET_TYPES
 #undef x
 };
@@ -53,7 +86,7 @@ static_assert(CARBON_ARRAY_LEN(carbon_skap__type2size) == CARBON_SKAP_ASSET_TYPE
               "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
 
 static CBN_SKAP_AssetDestroyFunc carbon_skap__type2destroy[] = {
-#define x(t, v, d) [v] = (CBN_SKAP_AssetDestroyFunc) d,
+#define x(t, v, d, s, h) [v] = (CBN_SKAP_AssetDestroyFunc) d,
   CARBON_SKAP__ASSET_TYPES
 #undef x
 };
@@ -61,35 +94,32 @@ static_assert(CARBON_ARRAY_LEN(carbon_skap__type2destroy) == CARBON_SKAP_ASSET_T
               "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
 
 static char * const carbon_skap__type2str[] = {
-  [CARBON_SKAP_ASSET_TYPE_IMAGE] = "images",
-  [CARBON_SKAP_ASSET_TYPE_BINARY] = "binaries",
-  [CARBON_SKAP_ASSET_TYPE_MESH] = "meshes",
+#define x(t, v, d, s, h) [v] = s,
+  CARBON_SKAP__ASSET_TYPES
+#undef x
 };
 static_assert(CARBON_ARRAY_LEN(carbon_skap__type2str) == CARBON_SKAP_ASSET_TYPE_COUNT,
-              "@new_asset_type: add its type-str equivalence");
+              "@new_asset_type: add entry to CARBON_SKAP__ASSET_TYPES");
 
-CBNINL CBN_SKAP_AssetType carbon_skap__str2type(const char *s) {
-  static_assert(3 == CARBON_SKAP_ASSET_TYPE_COUNT,
-                "@new_asset_type: add its str-type equivalence");
-  if (!carbon_string_cmp(s, "images"))   return CARBON_SKAP_ASSET_TYPE_IMAGE;
-  if (!carbon_string_cmp(s, "binaries")) return CARBON_SKAP_ASSET_TYPE_BINARY;
-  if (!carbon_string_cmp(s, "meshes"))   return CARBON_SKAP_ASSET_TYPE_MESH;
+CBNINL CBN_SKAP_AssetType carbon_skap__str2type(const char *str) {
+  for (CBN_SKAP_AssetType i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
+    if (!carbon_string_cmp(str, carbon_skap__type2str[i])) return i;
+  }
   CARBON_UNREACHABLE;
   return CARBON_SKAP_ASSET_TYPE_COUNT;
 }
 
-CBNINL char *carbon_skap__str2hint(const char *s) {
-  static_assert(3 == CARBON_SKAP_ASSET_TYPE_COUNT,
-                "@new_asset_type: add its str-hint equivalence");
-  if (!carbon_string_cmp(s, "image") ||
-      !carbon_string_cmp(s, "img")   ||
-      !carbon_string_cmp(s, "imgs")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_IMAGE];
-  if (!carbon_string_cmp(s, "binary") ||
-      !carbon_string_cmp(s, "bin")    ||
-      !carbon_string_cmp(s, "bins")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_BINARY];
-  if (!carbon_string_cmp(s, "mesh")) return carbon_skap__type2str[CARBON_SKAP_ASSET_TYPE_MESH];
+CBNINL char *carbon_skap__str2hint(const char *str) {
+#define x(t, v, d, s, h) h(hh, s)
+#define hh(c, s) if (!carbon_string_cmp(str, s)) return c;
+  CARBON_SKAP__ASSET_TYPES;
+#undef hh
+#undef x
   return 0;
 }
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 
 static CBN_List carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
@@ -151,7 +181,7 @@ CBNINL bool carbon_skap__parse_decl_file(FILE *decl_fd, CBN_List *asset_groups) 
       }
       if (!type_is_valid) {
         const char *hint = carbon_skap__str2hint(ag.type);
-        if (hint) CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you ment `%s`?", line_n, ag.type, hint);
+        if (hint) CBN_ERROR("on line %zu, syntax error; type `%s` not recognized, maybe you meant `%s`?", line_n, ag.type, hint);
         else      CBN_ERROR("on line %zu, syntax error; type `%s` not recognized", line_n, ag.type);
         return false;
       }
