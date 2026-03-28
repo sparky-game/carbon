@@ -28,7 +28,7 @@ CBNDEF_TAKA(cbn::str, List, CBN_StrList);
  * @param name The name to give to the iterator (optional; default = `it`).
  * @param sl The StrList container.
  */
-#define carbon_strlist_foreach__named(name, sl) for (struct { usz i; CBN_StrView sv; } name = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; name.i < (sl).size; ++name.i, name.i < (sl).size ? name.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, name.i)) : name.sv)
+#define carbon_strlist_foreach__named(name, sl) if ((sl).size) for (struct { usz i; CBN_StrView sv; } name = {0, carbon_strview_from_cstr(carbon_strlist_at(sl, 0))}; name.i < (sl).size; ++name.i, name.i < (sl).size ? name.sv = carbon_strview_from_cstr(carbon_strlist_at(sl, name.i)) : name.sv)
 #define carbon_strlist_foreach__default(sl) carbon_strlist_foreach__named(it, sl)
 #define carbon_strlist_foreach__dispatcher(_1, _2, NAME, ...) NAME
 #define carbon_strlist_foreach(...) carbon_strlist_foreach__dispatcher(__VA_ARGS__, carbon_strlist_foreach__named, carbon_strlist_foreach__default)(__VA_ARGS__)

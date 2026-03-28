@@ -31,6 +31,9 @@ typedef struct {
 
 typedef void (*CBN_SKAP_AssetDestroyFunc)(void *);
 
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
 CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
 static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
               "Has to match the expected function type");
@@ -217,7 +220,6 @@ CBNINL bool carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_gro
   CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
   bool status = true;
   carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
-    if (!ag_it.var.assets.size) continue;
     carbon_strlist_foreach(ag_it.var.assets) {
       const char *asset_name = carbon_string_fmt("%s%s", ag_it.var.path, carbon_strview_to_cstr(it.sv));
       if (!carbon_fs_exists(asset_name)) {
@@ -232,11 +234,9 @@ CBNINL bool carbon_skap__check_decl_assets(const char *decl, CBN_List *asset_gro
 
 CBNINL void carbon_skap__destroy_asset_groups(CBN_List *asset_groups) {
   // CBN_DEBUG("asset_groups->size = %$", $(asset_groups->size));
-  if (asset_groups->size) {
-    carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
-      // CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
-      carbon_strlist_destroy(&it.var.assets);
-    }
+  carbon_list_foreach(CBN_SKAP_AssetGroup, *asset_groups) {
+    // CBN_DEBUG("asset_groups[%$].assets.size = %$", $(it.i), $(it.var.assets.size));
+    carbon_strlist_destroy(&it.var.assets);
   }
   carbon_list_destroy(asset_groups);
 }
@@ -313,7 +313,7 @@ CBNINL void carbon_skap__append_idxs__mesh(CBN_SKAP_AssetIdx *idx, usz i, const 
 CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset_groups) {
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_list_foreach(CBN_SKAP_AssetGroup, ag_it, *asset_groups) {
-      if (!ag_it.var.assets.size || carbon_string_cmp(ag_it.var.type, carbon_skap__type2str[i])) continue;
+      if (carbon_string_cmp(ag_it.var.type, carbon_skap__type2str[i])) continue;
       carbon_strlist_foreach(ag_it.var.assets) {
         const char *cwd = carbon_fs_get_curr_directory();
         CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
@@ -346,7 +346,6 @@ CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset
 }
 
 CBNINL void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE].size) return;
   carbon_list_foreach(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE]) {
     CBN_Image *asset = &carbon_list_at_raw(CBN_Image, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
     CBN_SKAP_AssetIdx *idx = &carbon_list_at_raw(CBN_SKAP_AssetIdx, carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_IMAGE], it.i);
@@ -372,7 +371,6 @@ CBNINL void carbon_skap__append_blobs__images(const char *skap, FILE *fd) {
 }
 
 CBNINL void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY].size) return;
   carbon_list_foreach(CBN_Span, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY]) {
     CBN_Span *asset = &carbon_list_at_raw(CBN_Span, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
     CBN_SKAP_AssetIdx *idx = &carbon_list_at_raw(CBN_SKAP_AssetIdx, carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_BINARY], it.i);
@@ -398,7 +396,6 @@ CBNINL void carbon_skap__append_blobs__binaries(const char *skap, FILE *fd) {
 }
 
 CBNINL void carbon_skap__append_blobs__meshes(const char *skap, FILE *fd) {
-  if (!carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH].size) return;
   carbon_list_foreach(CBN_Mesh, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH]) {
     CBN_Mesh *asset = &carbon_list_at_raw(CBN_Mesh, carbon_skap__assets[CARBON_SKAP_ASSET_TYPE_MESH], it.i);
     CBN_SKAP_AssetIdx *idx = &carbon_list_at_raw(CBN_SKAP_AssetIdx, carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_MESH], it.i);
