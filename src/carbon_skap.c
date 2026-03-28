@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_SKAP__HEX_SPEC "%#012x"
+#define CARBON_SKAP__HEX_SPEC "%#012zx"
 #define CARBON_SKAP__DECL_FILE_MAX_LINE_LEN 256
 #define CARBON_SKAP__DECL_FILE_MAX_PATH_LEN 127
 #define CARBON_SKAP__DECL_FILE_MAX_TYPE_LEN 63
@@ -460,7 +460,7 @@ bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
     return false;
   }
   if (out_handle->header.fmt_ver != 1) {
-    CBN_ERROR("file `%s` is SKAP, but it's using a different fmt version (%$) from the expected one (1)", skap, $(out_handle->header.fmt_ver));
+    CBN_ERROR("file `%s` is SKAP, but it's using a different fmt version (%u) from the expected one (1)", skap, out_handle->header.fmt_ver);
     fclose(out_handle->fd);
     return false;
   }
@@ -512,18 +512,18 @@ void carbon_skap_print(const CBN_SKAP *handle) {
     return;
   }
   carbon_println("fd: %p", handle->fd);
-  carbon_println("blob_section_start_pos: " CARBON_SKAP__HEX_SPEC, handle->blob_section_start_pos, handle->blob_section_start_pos);
+  carbon_println("blob_section_start_pos: " CARBON_SKAP__HEX_SPEC, handle->blob_section_start_pos);
   carbon_println("header:");
   carbon_println("  - signature: %.4s", handle->header.signature);
-  carbon_println("  - fmt_ver: %$", $(handle->header.fmt_ver));
-  carbon_println("  - build_ver: %$", $(handle->header.build_ver));
+  carbon_println("  - fmt_ver: %u", handle->header.fmt_ver);
+  carbon_println("  - build_ver: %llu", handle->header.build_ver);
   carbon_println("type_counters:");
-  for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %$: %zu", $(carbon_skap__type2str[i]), carbon_skap_count_of(handle, (CBN_SKAP_AssetType) i));
+  for (CBN_SKAP_AssetType i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
+    carbon_println("  - %s: %zu", carbon_skap__type2str[i], carbon_skap_count_of(handle, i));
   }
   carbon_println("idxs:");
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %$:", $(carbon_skap__type2str[i]));
+    carbon_println("  - %s:", carbon_skap__type2str[i]);
     // TODO: we need to iterate the hashmaps, not the type_counters
     for (usz j = 0; j < handle->type_counters[i]; ++j) {
       carbon_println("      - (...)");

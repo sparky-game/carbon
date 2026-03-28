@@ -9,7 +9,7 @@
 CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
-    CBN_ERROR("OBJ file (`%$`) could not be read", $(file));
+    CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
   CBN_StrView txt = carbon_strview_from_strbuilder(&sb);
@@ -27,7 +27,7 @@ CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
 CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
   CBN_StrBuilder sb = {0};
   if (!carbon_fs_read_entire_file(&sb, file)) {
-    CBN_ERROR("OBJ file (`%$`) could not be read", $(file));
+    CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
   CBN_StrView txt = carbon_strview_from_strbuilder(&sb);
