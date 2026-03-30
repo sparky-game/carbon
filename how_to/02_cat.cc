@@ -11,9 +11,8 @@ int main(int argc, char **argv) {
   }
   while (argc) {
     const char *file = CARBON_SHIFT_ARGS(argc, argv);
-    auto sb = cbn::str::Builder::FromFile(file);
-    if (!sb) return 1;
-    cbn::print("%.*s", sb->size, sb->items);
-    sb->Free();
+    auto data = cbn::List<char>::FromFile(file);
+    if (!data) return 1;
+    cbn::print("%.*s", data->size, data->items);
   }
 }

@@ -7,12 +7,12 @@
 #define CARBON_MESH__SZ_F  (m->metadata.faces_count * CARBON_MESH_FACE_COMPS * 3 * sizeof(usz))
 
 CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
-  CBN_StrBuilder sb = {0};
-  if (!carbon_fs_read_entire_file(&sb, file)) {
+  CBN_List data = carbon_list_create(sizeof(u8));
+  if (!carbon_fs_read_entire_file(&data, file)) {
     CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
-  CBN_StrView txt = carbon_strview_from_strbuilder(&sb);
+  CBN_StrView txt = carbon_span_from_list(&data);
   while (txt.size) {
     CBN_StrView line = carbon_strview_chop(&txt, '\n');
     if (carbon_strview_starts_with(line, carbon_strview_from_cstr("v ")))  ++m->metadata.vertices_count;
@@ -20,17 +20,17 @@ CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
     if (carbon_strview_starts_with(line, carbon_strview_from_cstr("vn "))) ++m->metadata.normals_count;
     if (carbon_strview_starts_with(line, carbon_strview_from_cstr("f ")))  ++m->metadata.faces_count;
   }
-  carbon_strbuilder_free(&sb);
+  carbon_list_destroy(&data);
   return true;
 }
 
 CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
-  CBN_StrBuilder sb = {0};
-  if (!carbon_fs_read_entire_file(&sb, file)) {
+  CBN_List data = carbon_list_create(sizeof(u8));
+  if (!carbon_fs_read_entire_file(&data, file)) {
     CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
-  CBN_StrView txt = carbon_strview_from_strbuilder(&sb);
+  CBN_StrView txt = carbon_span_from_list(&data);
   usz i_v = 0, i_vt = 0, i_vn = 0, i_f = 0;
   while (txt.size) {
     CBN_StrView line = carbon_strview_chop(&txt, '\n');
@@ -74,7 +74,7 @@ CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
       ++i_f;
     }
   }
-  carbon_strbuilder_free(&sb);
+  carbon_list_destroy(&data);
   return true;
 }
 

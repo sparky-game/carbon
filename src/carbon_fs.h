@@ -136,15 +136,19 @@ CBNDEF u32 carbon_fs_get_file_size(const char *file);
 CBNDEF_AKA(cbn::fs, Size, carbon_fs_get_file_size);
 
 /**
- * @brief Reads all the data from the given file into a StrBuilder object.
- * @param sb The StrBuilder object where the read data will be stored.
- * @param file The filename to read the data from.
+ * @brief Reads all the data from the given file into a List object.
+ * @param l The List object where the read data will be stored.
+ * @param file The file to read the data from.
  * @return A boolean value representing the success of the operation.
  */
-CBNDEF bool carbon_fs_read_entire_file(CBN_StrBuilder *sb, const char *file);
+CBNDEF bool carbon_fs_read_entire_file(CBN_List *l, const char *file);
 CBNDEF_AKA(cbn::fs, ReadFile, carbon_fs_read_entire_file);
 
 /**
+ * @brief Writes all the data from the given List object into a file.
+ * @param l The List object to read the data from.
+ * @param file The file to write the data to.
+ * @return A boolean value representing the success of the operation.
  */
-CBNDEF bool carbon_fs_write_entire_file(const CBN_StrBuilder *sb, const char *file);
+CBNDEF bool carbon_fs_write_entire_file(const CBN_List *l, const char *file);
 CBNDEF_AKA(cbn::fs, WriteFile, carbon_fs_write_entire_file);

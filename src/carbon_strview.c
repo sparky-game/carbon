@@ -12,10 +12,6 @@ CBN_StrView carbon_strview_from_cstr(const char *s) {
   return carbon_strview_from_buf(s, carbon_string_len(s));
 }
 
-CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb) {
-  return carbon_strview_from_buf((const char *)sb->items, sb->size);
-}
-
 char *carbon_strview_to_cstr(CBN_StrView sv) {
   static usz i = 0;
   static char xs[CARBON_STRVIEW_TO_CSTR_MAX_BUFFERS][CARBON_STRVIEW_TO_CSTR_MAX_LEN];

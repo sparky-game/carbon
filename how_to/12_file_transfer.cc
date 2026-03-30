@@ -50,15 +50,15 @@ bool client(const char *ip, const u16 port, const char *file) {
 static void handle_client(cbn::net::tcp::Socket s) {
   defer { s.Close(); };
   char file[CARBON_FS_PATH_MAX_LEN] = {};
-  if (auto n = s.Read(file, CARBON_ARRAY_LEN(file)); n > 0) CBN_INFO("<-- %d (file = `%s`)", n, file);
+  if (auto n = s.Read(file, CARBON_ARRAY_LEN(file));
+      n > 0) CBN_INFO("<-- %d (file = `%s`)", n, file);
   else return;
-  auto sb = cbn::str::Builder::FromFile(file);
-  if (!sb) return;
-  defer { sb->Free(); };
-  CBN_INFO("--> %d (size = %zu)", s.Write(&sb->size, sizeof(usz)), sb->size);
-  u32 crc32 = cbn::crypto::crc32::Compute((u8 *) sb->items, sb->size);
+  auto data = cbn::List<u8>::FromFile(file);
+  if (!data) return;
+  CBN_INFO("--> %d (size = %zu)", s.Write(&data->size, sizeof(usz)), data->size);
+  u32 crc32 = cbn::crypto::crc32::Compute(data->items, data->size);
   CBN_INFO("--> %d (crc32 = %#010x)", s.Write(&crc32, sizeof(u32)), crc32);
-  CBN_INFO("--> %d", s.Write(sb->items, sb->size));
+  CBN_INFO("--> %d", s.Write(data->items, data->size));
 }
 
 bool server(const u16 port) {

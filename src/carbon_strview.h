@@ -31,13 +31,6 @@ CBNDEF CBN_StrView carbon_strview_from_buf(const char *data, usz size);
 CBNDEF CBN_StrView carbon_strview_from_cstr(const char *s);
 
 /**
- * @brief Creates a StrView from a StrBuilder object holding some data.
- * @param sb The StrBuilder holding the data.
- * @return The StrView representing the provided StrBuilder object.
- */
-CBNDEF CBN_StrView carbon_strview_from_strbuilder(const CBN_StrBuilder *sb);
-
-/**
  * @brief Returns a non-modifiable standard C char array version of the string.
  * @param sv The StrView holding the data.
  * @return A pointer to a null-terminated char array with same data.
