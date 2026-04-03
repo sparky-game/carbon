@@ -32,15 +32,30 @@ CBNDEF void *carbon_memory_zeroed(usz size);
 CBNDEF_AKA(cbn::mem, Zeroed, carbon_memory_zeroed);
 
 /**
- * @brief Copies a set of bytes from a memory area to another one.
+ * @brief Safely copies a set of bytes from a memory area to another one.
  * @param dst The destination memory area address.
  * @param src The source memory area address.
  * @param n The amount of bytes to copy from `src`.
  * @return The original value of `dst`.
  */
-CBNDEF void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n);
+CBNDEF void *carbon_memory_copy(void *dst, const void *src, usz n);
 CBNDEF_AKA(cbn::mem, Copy, carbon_memory_copy);
 CBNDEF_AKA(cbn::mem, cp, Copy);
+
+/**
+ * @brief Copies a set of bytes from a memory area to another one.
+ *
+ * If `dst` and `src` overlap, behavior is undefined.
+ * Applications in which `dst` and `src` might overlap should use
+ * `carbon_memory_copy` instead.
+ *
+ * @param dst The destination memory area address.
+ * @param src The source memory area address.
+ * @param n The amount of bytes to copy from `src`.
+ * @return The original value of `dst`.
+ */
+CBNDEF void *carbon_memory_copy_raw(void *dst, const void *src, usz n);
+CBNDEF_AKA(cbn::mem, CopyRaw, carbon_memory_copy_raw);
 
 /**
  * @brief Compares two sets of bytes from two different memory areas.

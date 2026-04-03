@@ -19,7 +19,16 @@ void *carbon_memory_realloc(void *p, usz size) {
   return new_p;
 }
 
-void *carbon_memory_copy(void * restrict dst, const void * restrict src, usz n) {
+void *carbon_memory_copy(void *dst, const void *src, usz n) {
+  u8 *d = (u8 *) dst;
+  const u8 *s = (const u8 *) src;
+  if (d == s || !n) return dst;
+  if (d < s) while (n--) *d++ = *s++;
+  else while (n--) d[n] = s[n];
+  return dst;
+}
+
+void *carbon_memory_copy_raw(void *dst, const void *src, usz n) {
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;
   while (n--) *d++ = *s++;

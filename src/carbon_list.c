@@ -80,7 +80,7 @@ void carbon_list_pop_front(CBN_List *l, void *out_value) {
   if (l->size > 1) {
     void *dst = l->items;
     void *src = l->items + l->stride;
-    memmove(dst, src, (l->size - 1)*l->stride);
+    carbon_memory_copy(dst, src, (l->size - 1)*l->stride);
   }
   --l->size;
 }
@@ -114,7 +114,7 @@ void carbon_list_remove(CBN_List *l, usz idx) {
   }
   void *dst = l->items + idx*l->stride;
   void *src = l->items + (idx + 1)*l->stride;
-  memmove(dst, src, (l->size - idx - 1)*l->stride);
+  carbon_memory_copy(dst, src, (l->size - idx - 1)*l->stride);
   --l->size;
 }
 

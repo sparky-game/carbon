@@ -55,7 +55,7 @@ void carbon_string_strip_substr(char *s, const char *sub) {
   usz len = carbon_string_len(sub);
   if (!len) return;
   char *p;
-  while ((p = strstr(s, sub))) memmove(p, p + len, carbon_string_len(p + len) + 1);
+  while ((p = strstr(s, sub))) carbon_memory_copy(p, p + len, carbon_string_len(p + len) + 1);
 }
 
 bool carbon_string_starts_with_substr(const char *s, const char *sub) {
