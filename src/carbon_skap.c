@@ -174,7 +174,7 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
 
 /*
   x(t, v, d, s, h, ai, ab, lb)
-  ------------------------
+  ----------------------------
   t  :: TYPE
   v  :: ENUM_VALUE
   d  :: DESTROY_FN
@@ -185,7 +185,8 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
   lb :: LOOKUP_BLOB_FN
 */
 #define CARBON_SKAP__ASSET_TYPES                \
-  x(CBN_Span, CARBON_SKAP_ASSET_TYPE_BINARY,    \
+  x(CBN_Span,                                   \
+  CARBON_SKAP_ASSET_TYPE_BINARY,                \
   carbon_skap__destroy_binary,                  \
   "binaries",                                   \
   CARBON_SKAP__HINTS_BINARY,                    \
@@ -193,7 +194,8 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
   carbon_skap__append_blob_binary,              \
   carbon_skap__lookup_binary                    \
   )                                             \
-  x(CBN_Image, CARBON_SKAP_ASSET_TYPE_IMAGE,    \
+  x(CBN_Image,                                  \
+  CARBON_SKAP_ASSET_TYPE_IMAGE,                 \
   carbon_image_destroy,                         \
   "images",                                     \
   CARBON_SKAP__HINTS_IMAGE,                     \
@@ -201,7 +203,8 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
   carbon_skap__append_blob_image,               \
   carbon_skap__lookup_image                     \
   )                                             \
-  x(CBN_Mesh, CARBON_SKAP_ASSET_TYPE_MESH,      \
+  x(CBN_Mesh,                                   \
+  CARBON_SKAP_ASSET_TYPE_MESH,                  \
   carbon_mesh_destroy,                          \
   "meshes",                                     \
   CARBON_SKAP__HINTS_MESH,                      \
