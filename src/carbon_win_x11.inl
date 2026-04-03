@@ -302,8 +302,8 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
-                  w,
-                  h,
+                  carbon_win__renderer_w,
+                  carbon_win__renderer_h,
                   GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
                   pixels);
   glClear(GL_COLOR_BUFFER_BIT);
