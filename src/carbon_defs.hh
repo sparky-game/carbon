@@ -124,10 +124,12 @@
  */
 #ifdef __cplusplus
 #define CBNDEF_AKA(ns, aka, var) namespace ns {constexpr auto aka = var;}
+#define CBNDEF_iAKA(ns, ins, aka, var) namespace ns {inline namespace ins {constexpr auto aka = var;}}
 #define CBNDEF_TAKA(ns, aka, type) namespace ns {using aka = type;}
 #define CBNDEF_TTAKA(ns, aka, type) namespace ns {template <typename T> using aka = type ## _tt<T>;}
 #else
 #define CBNDEF_AKA(...)
+#define CBNDEF_iAKA(...)
 #define CBNDEF_TAKA(...)
 #define CBNDEF_TTAKA(...)
 #endif

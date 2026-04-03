@@ -7,6 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 typedef CBN_SlotMap_Key CBN_Mesh_UID;
+CBNDEF_TAKA(cbn::mesh_mgr, UID, CBN_Mesh_UID);
 
 /**
  * @brief Initializes the mesh subsystem.

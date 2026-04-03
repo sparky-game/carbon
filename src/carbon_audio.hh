@@ -7,6 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 typedef CBN_SlotMap_Key CBN_Audio_UID;
+CBNDEF_TAKA(cbn::audio, UID, CBN_Audio_UID);
 
 // Forward declaration
 CBNDEF_T(CBN_SKAP);

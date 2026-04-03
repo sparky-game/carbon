@@ -49,12 +49,9 @@ namespace cbn {
   namespace math {
     constexpr auto ToRadians(const auto phi)   { return CARBON_TO_RADIANS(phi); }
     constexpr auto FromRadians(const auto phi) { return CARBON_FROM_RADIANS(phi); }
-    namespace literals {
-      constexpr auto pi = CARBON_PI;
-      consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
-      consteval f64 operator""_deg(const flong n) { return ToRadians(n); }
-      consteval f64 operator""_pi(const u64 n)   { return n * pi; }
-      consteval f64 operator""_pi(const flong n) { return n * pi; }
+    inline namespace literals {
+             consteval f64 operator""_deg(const u64 n)   { return ToRadians(n); }
+             consteval f64 operator""_deg(const flong n) { return ToRadians(n); }
     }
     template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
@@ -66,26 +63,18 @@ namespace cbn {
   }
 
   namespace time {
-    namespace literals {
-      consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
-      consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
-      consteval f64 operator""_us(const u64 n)    { return n * 1e-6; }
-      consteval f64 operator""_us(const flong n)  { return n * 1e-6; }
-      consteval f64 operator""_ms(const u64 n)    { return n * 1e-3; }
-      consteval f64 operator""_ms(const flong n)  { return n * 1e-3; }
-      consteval f64 operator""_s(const u64 n)     { return n; }
-      consteval f64 operator""_s(const flong n)   { return n; }
-      consteval f64 operator""_min(const u64 n)   { return n * 60; }
-      consteval f64 operator""_min(const flong n) { return n * 60; }
+    inline namespace literals {
+             consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
+             consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
+             consteval f64 operator""_us(const u64 n)    { return n * 1e-6; }
+             consteval f64 operator""_us(const flong n)  { return n * 1e-6; }
+             consteval f64 operator""_ms(const u64 n)    { return n * 1e-3; }
+             consteval f64 operator""_ms(const flong n)  { return n * 1e-3; }
+             consteval f64 operator""_s(const u64 n)     { return n; }
+             consteval f64 operator""_s(const flong n)   { return n; }
+             consteval f64 operator""_min(const u64 n)   { return n * 60; }
+             consteval f64 operator""_min(const flong n) { return n * 60; }
     }
-  }
-
-  namespace audio {
-    using UID = CBN_Audio_UID;
-  }
-
-  namespace mesh_mgr {
-    using UID = CBN_Mesh_UID;
   }
 }
 
