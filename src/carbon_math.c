@@ -140,7 +140,7 @@ f32 carbon_math_max_3(f32 x, f32 y, f32 z) {
 }
 
 f32 carbon_math_clamp(f32 x, f32 min, f32 max) {
-  return x <= min ? min : x >= max ? max : x;
+  return carbon_math_min(carbon_math_max(x, min), max);
 }
 
 f32 carbon_math_snap(f32 x, f32 dx) {
