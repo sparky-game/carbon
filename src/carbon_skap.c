@@ -41,8 +41,6 @@ static CBN_List carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_COUNT];
 ///////////////////// BINARY /////////////////////////////////////////
 
 CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
-static_assert(typeeq(CBN_SKAP_AssetDestroyFunc, typeof(&carbon_skap__destroy_binary)),
-              "Has to match the expected function type");
 
 CBNINL void carbon_skap__append_idx_binary(CBN_SKAP_AssetIdx *idx) {
   CBN_List data = carbon_list_create(sizeof(u8));

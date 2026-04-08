@@ -29,4 +29,4 @@ CBNDEF_TAKA(cbn, Font, CBN_Font);
 
 /**
  */
-CBNDEF CBN_Font carbon_font_load(const char *file, usz size);
+CBNDEF CBN_Font carbon_font_create_from_file(const char *file, usz size);
