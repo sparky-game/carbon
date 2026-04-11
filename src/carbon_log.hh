@@ -25,8 +25,8 @@ namespace cbn::log {
 }
 #endif
 
-#define carbon_print(msg, ...)            carbon_log_print(stdout, msg, ##__VA_ARGS__)
-#define carbon_eprint(msg, ...)           carbon_log_print(stderr, msg, ##__VA_ARGS__)
+#define carbon_print(msg, ...)            carbon_log_print(1, msg, ##__VA_ARGS__)
+#define carbon_eprint(msg, ...)           carbon_log_print(2, msg, ##__VA_ARGS__)
 #define carbon_cprint(color, msg, ...)    carbon_print(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
 #define carbon_ceprint(color, msg, ...)   carbon_eprint(carbon_string_fmt("%s%s%s", color, msg, CARBON_COLOR_RESET), ##__VA_ARGS__)
 
@@ -47,4 +47,10 @@ namespace cbn::log {
 
 // CBNDEF void carbon_log_init_timer(CBN_Log_TimeFormat tf);
 
-CBNDEF void carbon_log_print(FILE *stream, const char *fmt, ...);
+/**
+ */
+CBNDEF void carbon_log_write(i32 fd, CBN_Span msg);
+
+/**
+ */
+CBNDEF void carbon_log_print(i32 fd, const char *s, ...);

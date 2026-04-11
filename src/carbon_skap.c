@@ -443,10 +443,9 @@ CBNINL void carbon_skap__append_idxs(FILE *fd, const char *decl, CBN_List *asset
         const char *cwd = carbon_fs_get_curr_directory();
         CBN_ASSERT(carbon_fs_change_directory(carbon_fs_get_directory(decl)));
         const char *asset_name = carbon_string_fmt("%s%s", ag_it.var.path, carbon_strview_to_cstr(it.sv));
-        CBN_SKAP_AssetIdx idx;
-        carbon_memory_set(&idx, 0, sizeof(idx));
+        CBN_SKAP_AssetIdx idx = {0};
         idx.metadata.type = i;
-        strncpy(idx.name, asset_name, sizeof(idx.name));
+        carbon_string_sfmt(idx.name, sizeof(idx.name), "%s", asset_name);
         carbon_skap__type2aifn[i](&idx);
         carbon_list_push(&carbon_skap__asset_idxs[i], &idx);
         usz idx_loc = ftell(fd);

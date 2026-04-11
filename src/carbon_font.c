@@ -2,7 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "../thirdparty/stb_truetype/stb_truetype.h"
+#include "../thirdparty/stb/stb_truetype.h"
 
 CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   CBN_Font f = {0};

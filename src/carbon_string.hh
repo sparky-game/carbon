@@ -2,7 +2,14 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
-#define VWRAP(fn, vfn)                                \
+#define VSFMT_WRAP(fn, vfn)                                           \
+  CBNFMT(3, 4) inline void fn(char *buf, usz n, const char *s, ...) { \
+  va_list args;                                                       \
+  va_start(args, s);                                                  \
+  vfn(buf, n, s, args);                                               \
+  va_end(args);                                                       \
+  }
+#define VFMT_WRAP(fn, vfn)                            \
   CBNFMT(1, 2) inline char *fn(const char *s, ...) {  \
   va_list args;                                       \
   va_start(args, s);                                  \
@@ -12,17 +19,28 @@
   }
 
 namespace cbn::str {
+  CBNFMT(3, 0) inline void vsFormat(char *buf, usz n, const char *s, va_list args) {
+    carbon_string_vsfmt(buf, n, s, args);
+  }
+  VSFMT_WRAP(sFormat, vsFormat);
+
+  CBNFMT(3, 0) inline void vsfmt(char *buf, usz n, const char *s, va_list args) {
+    vsFormat(buf, n, s, args);
+  }
+  VSFMT_WRAP(sfmt, vsfmt);
+
   CBNFMT(1, 0) inline char *vFormat(const char *s, va_list args) {
     return carbon_string_vfmt(s, args);
   }
-  VWRAP(Format, vFormat);
+  VFMT_WRAP(Format, vFormat);
 
   CBNFMT(1, 0) inline char *vfmt(const char *s, va_list args) {
     return vFormat(s, args);
   }
-  VWRAP(fmt, vfmt);
+  VFMT_WRAP(fmt, vfmt);
 }
 
-#undef VWRAP
+#undef VFMT_WRAP
+#undef VSFMT_WRAP
 
 #endif

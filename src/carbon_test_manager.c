@@ -34,7 +34,7 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
   CARBON_UNUSED(src_file), CARBON_UNUSED(host_argv);
 #else
   const char *bin_file = host_argv[0];
-  if (strstr(bin_file, ".old")) return;
+  if (carbon_string_get_substr(bin_file, ".old")) return;
   carbon_test_manager__test_suite.files = carbon_strlist_create(true);
   carbon_strlist_push(&carbon_test_manager__test_suite.files, src_file);
   for (usz i = 0; i < carbon_test_manager__test_suite.n; ++i) {

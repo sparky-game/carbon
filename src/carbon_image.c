@@ -6,14 +6,14 @@
 #define STBI_FREE    carbon_memory_free
 #define STBI_ASSERT  CBN_ASSERT
 #define STB_IMAGE_IMPLEMENTATION
-#include "../thirdparty/stb_image/stb_image.h"
+#include "../thirdparty/stb/stb_image.h"
 
 #define STBIW_MALLOC  carbon_memory_alloc
 #define STBIW_REALLOC carbon_memory_realloc
 #define STBIW_FREE    carbon_memory_free
 #define STBIW_ASSERT  CBN_ASSERT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../thirdparty/stb_image_write/stb_image_write.h"
+#include "../thirdparty/stb/stb_image_write.h"
 
 CBN_Image carbon_image_from_canvas(const CBN_DrawCanvas *dc) {
   const usz w = carbon_drawcanvas_width(dc), h = carbon_drawcanvas_height(dc);

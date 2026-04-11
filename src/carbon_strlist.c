@@ -23,7 +23,7 @@ CBN_StrList carbon_strlist_from_splitted_cstr(const char *s, const char *delim) 
   usz delim_len = carbon_string_len(delim);
   char *start = s_copy;
   char *found;
-  while ((found = strstr(start, delim))) {
+  while ((found = carbon_string_get_substr(start, delim))) {
     *found = 0;
     carbon_strlist_push(&sl, start);
     start = found + delim_len;

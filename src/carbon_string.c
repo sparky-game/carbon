@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_STRING_FMT_MAX_LEN     1024
-#define CARBON_STRING_FMT_MAX_BUFFERS 64
+#define STB_SPRINTF_IMPLEMENTATION
+#include "../thirdparty/stb/stb_sprintf.h"
+
+#define CARBON_STRING__FMT_MAX_LEN     1024
+#define CARBON_STRING__FMT_MAX_BUFFERS 64
 
 usz carbon_string_len(const char *s) {
   usz n = 0;
@@ -24,22 +27,31 @@ i32 carbon_string_cmp_n(const char *s1, const char *s2, usz size) {
 
 char *carbon_string_dup(const char *s) {
   usz len = carbon_string_len(s) + 1;
-  char *data = (char *) carbon_memory_alloc(len);
-  return (char *) carbon_memory_copy(data, s, len);
+  char *data = carbon_memory_alloc(len);
+  return carbon_memory_copy(data, s, len);
+}
+
+void carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) {
+  i32 bytes = stbsp_vsnprintf(buf, n, s, args);
+  if (bytes >= (i32)n && n >= 4) {
+    char *trunc = buf + n - 4;
+    stbsp_snprintf(trunc, 4, "...");
+  }
+}
+
+void carbon_string_sfmt(char *buf, usz n, const char *s, ...) {
+  va_list args;
+  va_start(args, s);
+  carbon_string_vsfmt(buf, n, s, args);
+  va_end(args);
 }
 
 char *carbon_string_vfmt(const char *s, va_list args) {
   static usz i = 0;
-  static char xs[CARBON_STRING_FMT_MAX_BUFFERS][CARBON_STRING_FMT_MAX_LEN];
-  char *x = xs[i];
-  carbon_memory_set(x, 0, CARBON_STRING_FMT_MAX_LEN);
-  i32 bytes = vsnprintf(x, CARBON_STRING_FMT_MAX_LEN, s, args);
-  if (bytes >= CARBON_STRING_FMT_MAX_LEN) {
-    char *trunc_x = xs[i] + CARBON_STRING_FMT_MAX_LEN - 4;
-    snprintf(trunc_x, 4, "...");
-  }
-  ++i;
-  if (i >= CARBON_STRING_FMT_MAX_BUFFERS) i = 0;
+  static char xs[CARBON_STRING__FMT_MAX_BUFFERS][CARBON_STRING__FMT_MAX_LEN];
+  char *x = xs[i++];
+  if (i >= CARBON_STRING__FMT_MAX_BUFFERS) i = 0;
+  carbon_string_vsfmt(x, CARBON_STRING__FMT_MAX_LEN, s, args);
   return x;
 }
 
@@ -51,11 +63,35 @@ char *carbon_string_fmt(const char *s, ...) {
   return x;
 }
 
+bool carbon_string_has_char(const char *s, char c) {
+  const char *c_ptr = carbon_string_get_char(s, c);
+  if (!c_ptr) return false;
+  return true;
+}
+
+char *carbon_string_get_char(const char *s, char c) {
+  while (*s && *s != c) ++s;
+  if (!c || *s == c) return (char *)s;
+  return 0;
+}
+
+char *carbon_string_get_substr(const char *s, const char *sub) {
+  const char *p = s;
+  usz len = carbon_string_len(sub);
+  if (!len) return (char *)s;
+  for (; (p = carbon_string_get_char(p, *sub)) != 0; ++p) {
+    if (!carbon_string_cmp_n(p, sub, len)) return (char *)p;
+  }
+  return 0;
+}
+
 void carbon_string_strip_substr(char *s, const char *sub) {
   usz len = carbon_string_len(sub);
   if (!len) return;
   char *p;
-  while ((p = strstr(s, sub))) carbon_memory_copy(p, p + len, carbon_string_len(p + len) + 1);
+  while ((p = carbon_string_get_substr(s, sub))) {
+    carbon_memory_copy(p, p + len, carbon_string_len(p + len) + 1);
+  }
 }
 
 bool carbon_string_starts_with_substr(const char *s, const char *sub) {
@@ -85,18 +121,6 @@ i32 carbon_string_to_number(const char *s) {
   if (end == s) CBN_ERROR("unable to convert string to number (no digits found)");
   else if (*end != 0) CBN_ERROR("unable to convert string to number (invalid char `%c`)", *end);
   return ret;
-}
-
-bool carbon_string_has_char(const char *s, char c) {
-  const char *c_ptr = carbon_string_get_char(s, c);
-  if (!c_ptr) return false;
-  return true;
-}
-
-char *carbon_string_get_char(const char *s, char c) {
-  while (*s && *s != c) ++s;
-  if (!c || *s == c) return (char *) s;
-  return 0;
 }
 
 usz carbon_string_lev_dist(const char *s1, const char *s2) {

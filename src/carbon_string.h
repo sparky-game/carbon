@@ -56,10 +56,18 @@ CBNDEF_AKA(cbn::str, Duplicate, carbon_string_dup);
 CBNDEF_AKA(cbn::str, dup, Duplicate);
 
 /**
+ */
+CBNDEF void carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) CBNFMT(3, 0);
+
+/**
+ */
+CBNDEF void carbon_string_sfmt(char *buf, usz n, const char *s, ...) CBNFMT(3, 4);
+
+/**
  * @brief Formats a string using a format specifier and a variadic list of arguments.
  * @param s The format specifier string.
  * @param args The va_list of arguments to substitute into the format string.
- * @return A pointer to the formatted string.
+ * @return A pointer to the formatted string (in static local cyclic memory buffer).
  */
 CBNDEF char *carbon_string_vfmt(const char *s, va_list args) CBNFMT(1, 0);
 
@@ -67,9 +75,29 @@ CBNDEF char *carbon_string_vfmt(const char *s, va_list args) CBNFMT(1, 0);
  * @brief Formats a string using a format specifier and a variadic list of arguments.
  * @param s The format specifier string.
  * @param [...] The variadic arguments to substitute into the format string.
- * @return A pointer to the formatted string.
+ * @return A pointer to the formatted string (in static local cyclic memory buffer).
  */
 CBNDEF char *carbon_string_fmt(const char *s, ...) CBNFMT(1, 2);
+
+/**
+ * @brief Checks whether a C-style string contains a specific character.
+ * @param s The C-style string.
+ * @param c The character.
+ * @return A boolean value representing whether c ∈ s.
+ */
+CBNDEF bool carbon_string_has_char(const char *s, char c);
+
+/**
+ * @brief Finds the first occurrence of a specific character in a C-style string.
+ * @param s The C-style string.
+ * @param c The character.
+ * @return The pointer to the found character in `s`.
+ */
+CBNDEF char *carbon_string_get_char(const char *s, char c);
+
+/**
+ */
+CBNDEF char *carbon_string_get_substr(const char *s, const char *sub);
 
 /**
  */
@@ -108,22 +136,6 @@ CBNDEF_AKA(cbn::str, IsNumber, carbon_string_is_number);
  */
 CBNDEF i32 carbon_string_to_number(const char *s);
 CBNDEF_AKA(cbn::str, ToNumber, carbon_string_to_number);
-
-/**
- * @brief Checks whether a C-style string contains a specific character.
- * @param s The C-style string.
- * @param c The character.
- * @return A boolean value representing whether c ∈ s.
- */
-CBNDEF bool carbon_string_has_char(const char *s, char c);
-
-/**
- * @brief Finds the first occurrence of a specific character in a C-style string.
- * @param s The C-style string.
- * @param c The character.
- * @return The pointer to the found character in `s`.
- */
-CBNDEF char *carbon_string_get_char(const char *s, char c);
 
 /**
  * @brief Gets the Levenshtein distance between two strings.

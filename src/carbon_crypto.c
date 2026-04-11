@@ -266,7 +266,7 @@ void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
 
 void carbon_crypto_sha1_to_hex_cstr(const u8 *hash, char *out_cstr) {
   for (usz i = 0; i < 20; ++i) {
-    snprintf(&out_cstr[i*2], 3, "%02x", hash[i]);
+    carbon_string_sfmt(&out_cstr[i*2], 3, "%02x", hash[i]);
   }
 }
 
@@ -387,7 +387,7 @@ void carbon_crypto_sha256(const u8 *in, const usz in_size, u8 *out) {
 
 void carbon_crypto_sha256_to_hex_cstr(const u8 *hash, char *out_cstr) {
   for (usz i = 0; i < 32; ++i) {
-    snprintf(&out_cstr[i*2], 3, "%02x", hash[i]);
+    carbon_string_sfmt(&out_cstr[i*2], 3, "%02x", hash[i]);
   }
 }
 
@@ -510,7 +510,7 @@ void carbon_crypto_keccak256(const u8 *in, const usz in_size, u8 *out) {
 
 void carbon_crypto_keccak256_to_hex_cstr(const u8 *hash, char *out_cstr) {
   for (usz i = 0; i < 32; ++i) {
-    snprintf(&out_cstr[i*2], 3, "%02x", hash[i]);
+    carbon_string_sfmt(&out_cstr[i*2], 3, "%02x", hash[i]);
   }
 }
 
