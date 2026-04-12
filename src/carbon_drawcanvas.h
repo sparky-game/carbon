@@ -98,6 +98,13 @@ CBNDEF usz carbon_drawcanvas_width(const CBN_DrawCanvas *dc);
 CBNDEF usz carbon_drawcanvas_height(const CBN_DrawCanvas *dc);
 
 /**
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @return ...
+ */
+CBNDEF CBN_Rect carbon_drawcanvas_extent(const CBN_DrawCanvas *dc);
+
+/**
  * @brief Obtains the current set of flags enabled for the DrawCanvas.
  * @param dc The DrawCanvas object.
  * @return The current enabled flag(s).

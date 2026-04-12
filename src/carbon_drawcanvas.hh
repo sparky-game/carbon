@@ -10,125 +10,67 @@ struct CBN_DrawCanvas {
     };
   }
 
-  void OpenWindow(const char *title) const {
-    cbn::win::Open(this, title);
-  }
+  void OpenWindow(const char *title) const { cbn::win::Open(this, title); }
 
-  void UpdateWindow(void) const {
-    cbn::win::Update(this);
-  }
+  void UpdateWindow(void) const { cbn::win::Update(this); }
 
-  cbn::Scope<CBN_Camera> CreateCamera(void) const {
-    return cbn::Camera::New(this);
-  }
+  cbn::Scope<CBN_Camera> CreateCamera(void) const { return cbn::Camera::New(this); }
 
-  u32 *Pixels(void) const {
-    return carbon_drawcanvas_pixels(this);
-  }
+  u32 *Pixels(void) const { return carbon_drawcanvas_pixels(this); }
 
-  usz Width(void) const {
-    return carbon_drawcanvas_width(this);
-  }
+  usz Width(void) const { return carbon_drawcanvas_width(this); }
 
-  usz Height(void) const {
-    return carbon_drawcanvas_height(this);
-  }
+  usz Height(void) const { return carbon_drawcanvas_height(this); }
 
-  u32 Flags(void) const {
-    return carbon_drawcanvas_flags(this);
-  }
+  CBN_Rect Extent(void) const { return carbon_drawcanvas_extent(this); }
 
-  void FlagsEnable(u32 fs) {
-    carbon_drawcanvas_flags_enable(this, fs);
-  }
+  u32 Flags(void) const { return carbon_drawcanvas_flags(this); }
 
-  void FlagsDisable(u32 fs) {
-    carbon_drawcanvas_flags_disable(this, fs);
-  }
+  void FlagsEnable(u32 fs) { carbon_drawcanvas_flags_enable(this, fs); }
 
-  void FlagsToggle(u32 fs) {
-    carbon_drawcanvas_flags_toggle(this, fs);
-  }
+  void FlagsDisable(u32 fs) { carbon_drawcanvas_flags_disable(this, fs); }
 
-  void AddLight(CBN_Light light) {
-    carbon_drawcanvas_add_light(this, light);
-  }
+  void FlagsToggle(u32 fs) { carbon_drawcanvas_flags_toggle(this, fs); }
 
-  void Fill(u32 color) {
-    carbon_drawcanvas_fill(this, color);
-  }
+  void AddLight(CBN_Light light) { carbon_drawcanvas_add_light(this, light); }
 
-  void DrawLine(CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
-    carbon_drawcanvas_line(this, v1, v2, color);
-  }
+  void Fill(u32 color) { carbon_drawcanvas_fill(this, color); }
 
-  void DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) {
-    carbon_drawcanvas_triangle(this, v1, v2, v3, color);
-  }
+  void DrawLine(CBN_Vec2 v1, CBN_Vec2 v2, u32 color) { carbon_drawcanvas_line(this, v1, v2, color); }
 
-  void DrawTriangle3(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 c1, u32 c2, u32 c3) {
-    carbon_drawcanvas_triangle_3(this, v1, v2, v3, c1, c2, c3);
-  }
+  void DrawTriangle(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 color) { carbon_drawcanvas_triangle(this, v1, v2, v3, color); }
 
-  void DrawRect(CBN_Rect r, u32 color) {
-    carbon_drawcanvas_rect(this, r, color);
-  }
+  void DrawTriangle3(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, u32 c1, u32 c2, u32 c3) { carbon_drawcanvas_triangle_3(this, v1, v2, v3, c1, c2, c3); }
 
-  void DrawCircle(CBN_Vec2 center, usz radius, u32 color) {
-    carbon_drawcanvas_circle(this, center, radius, color);
-  }
+  void DrawRect(CBN_Rect r, u32 color) { carbon_drawcanvas_rect(this, r, color); }
 
-  void DrawAnnulus(CBN_Vec2 center, usz radius_out, usz radius_in, u32 color) {
-    carbon_drawcanvas_annulus(this, center, radius_out, radius_in, color);
-  }
+  void DrawCircle(CBN_Vec2 center, usz radius, u32 color) { carbon_drawcanvas_circle(this, center, radius, color); }
 
-  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = cbn::math::Vec2(1)) {
-    carbon_drawcanvas_sprite(this, s, position, scale);
-  }
+  void DrawAnnulus(CBN_Vec2 center, usz radius_out, usz radius_in, u32 color) { carbon_drawcanvas_annulus(this, center, radius_out, radius_in, color); }
 
-  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
-    carbon_drawcanvas_mesh(this, &c, m, t, color);
-  }
+  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = cbn::math::Vec2(1)) { carbon_drawcanvas_sprite(this, s, position, scale); }
 
-  void DrawCube(const CBN_Camera *c, CBN_Transform t, u32 color) {
-    carbon_drawcanvas_cube(this, c, t, color);
-  }
+  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color) { carbon_drawcanvas_mesh(this, &c, m, t, color); }
 
-  void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
-    carbon_drawcanvas_plane_xz(this, &c, center, size, color);
-  }
+  void DrawCube(const CBN_Camera *c, CBN_Transform t, u32 color) { carbon_drawcanvas_cube(this, c, t, color); }
 
-  void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color) {
-    carbon_drawcanvas_text(this, txt, position, size, color);
-  }
+  void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color) { carbon_drawcanvas_plane_xz(this, &c, center, size, color); }
 
-  void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color) {
-    carbon_drawcanvas_text_with_shadow(this, txt, position, size, color);
-  }
+  void DrawTextRaw(const char *txt, CBN_Vec2 position, usz size, u32 color) { carbon_drawcanvas_text(this, txt, position, size, color); }
 
-  void DrawText(const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
-    carbon_drawcanvas_text_with_font(this, f, txt, position, size, color);
-  }
+  void DrawText(const char *txt, CBN_Vec2 position, usz size, u32 color) { carbon_drawcanvas_text_with_shadow(this, txt, position, size, color); }
 
-  static usz TextWidth(const char *txt, usz size) {
-    return carbon_drawcanvas_get_text_width(txt, size);
-  }
+  void DrawText(const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) { carbon_drawcanvas_text_with_font(this, f, txt, position, size, color); }
 
-  static usz TextWidth(const CBN_Font *f, const char *txt, usz size) {
-    return carbon_drawcanvas_get_text_width_with_font(f, txt, size);
-  }
+  static usz TextWidth(const char *txt, usz size) { return carbon_drawcanvas_get_text_width(txt, size); }
 
-  static usz TextHeight(usz size) {
-    return carbon_drawcanvas_get_text_height(size);
-  }
+  static usz TextWidth(const CBN_Font *f, const char *txt, usz size) { return carbon_drawcanvas_get_text_width_with_font(f, txt, size); }
 
-  static usz TextHeight(const CBN_Font *f, usz size) {
-    return carbon_drawcanvas_get_text_height_with_font(f, size);
-  }
+  static usz TextHeight(usz size) { return carbon_drawcanvas_get_text_height(size); }
 
-  u32 &operator()(usz i, usz j) const {
-    return Pixels()[j*Width() + i];
-  }
+  static usz TextHeight(const CBN_Font *f, usz size) { return carbon_drawcanvas_get_text_height_with_font(f, size); }
+
+  u32 &operator()(usz i, usz j) const { return Pixels()[j*Width() + i]; }
 };
 
 #endif

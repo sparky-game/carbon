@@ -50,6 +50,10 @@ usz carbon_drawcanvas_height(const CBN_DrawCanvas *dc) {
   return dc->height;
 }
 
+CBN_Rect carbon_drawcanvas_extent(const CBN_DrawCanvas *dc) {
+  return carbon_math_rect(0, 0, dc->width, dc->height);
+}
+
 u32 carbon_drawcanvas_flags(const CBN_DrawCanvas *dc) {
   return dc->flags;
 }
