@@ -19,6 +19,11 @@ void *carbon_memory_realloc(void *p, usz size) {
   return new_p;
 }
 
+void carbon_memory_free(void *p) {
+  if (!p) return;
+  __builtin_free(p);
+}
+
 void *carbon_memory_copy(void *dst, const void *src, usz n) {
   u8 *d = (u8 *) dst;
   const u8 *s = (const u8 *) src;
@@ -45,9 +50,4 @@ void *carbon_memory_set(void *dst, i32 c, usz n) {
   u8 *d = (u8 *) dst;
   while (n--) *d++ = (u8) c;
   return dst;
-}
-
-void carbon_memory_free(void *p) {
-  if (!p) return;
-  __builtin_free(p);
 }
