@@ -162,6 +162,13 @@ CBNDEF bool carbon_win_get_mouse_button_up(CBN_Win_MouseButton btn);
 CBNDEF_AKA(cbn::win, GetMouseButtonUp, carbon_win_get_mouse_button_up);
 
 /**
+ * @brief Returns true during the frame the user starts pressing down any input.
+ * @return A boolean value representing whether any input was pressed or not.
+ */
+CBNDEF bool carbon_win_get_any_down(void);
+CBNDEF_AKA(cbn::win, GetAnyDown, carbon_win_get_any_down);
+
+/**
  * @brief Returns the actual mouse position within the window.
  * @return A Vec2 representing the position.
  */

@@ -135,3 +135,13 @@ bool carbon_win_get_mouse_button(CBN_Win_MouseButton btn) {
 bool carbon_win_get_mouse_button_up(CBN_Win_MouseButton btn) {
   return !carbon_win__mouse_buttons[btn] && carbon_win__prev_mouse_buttons[btn];
 }
+
+bool carbon_win_get_any_down(void) {
+  for (CBN_Win_KeyCode i = 0; i < CBN_Win_KeyCode_Count; ++i) {
+    if (carbon_win_get_key_down(i)) return true;
+  }
+  for (CBN_Win_MouseButton i = 0; i < CBN_Win_MouseButton_Count; ++i) {
+    if (carbon_win_get_mouse_button_down(i)) return true;
+  }
+  return false;
+}
