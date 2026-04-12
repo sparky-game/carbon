@@ -25,6 +25,13 @@ bool carbon_math_rect_overlaps(CBN_Rect r1, CBN_Rect r2) {
   return (r1.x <= r2.x + r2.w) && (r2.x <= r1.x + r1.w) && (r1.y <= r2.y + r2.h) && (r2.y <= r1.y + r1.h);
 }
 
+bool carbon_math_rect_overlaps_with_circle(CBN_Rect r, CBN_Vec2 center, f32 radius) {
+  f32 left = r.x, right = r.x + r.w, top = r.y, bottom = r.y + r.h;
+  CBN_Vec2 p = carbon_math_vec2_clamp(center, carbon_math_vec2(left, top), carbon_math_vec2(right, bottom));
+  CBN_Vec2 delta = carbon_math_vec2_sub(center, p);
+  return carbon_math_vec2_len_squared(delta) <= radius*radius;
+}
+
 CBN_Rect carbon_math_rect_intersection(CBN_Rect r1, CBN_Rect r2) {
   f32 left   = carbon_math_max(r1.x, r2.x);
   f32 top    = carbon_math_max(r1.y, r2.y);

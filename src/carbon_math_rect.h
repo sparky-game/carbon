@@ -74,6 +74,10 @@ CBNDEF bool carbon_math_rect_contains(CBN_Rect r, CBN_Vec2 p);
 CBNDEF bool carbon_math_rect_overlaps(CBN_Rect r1, CBN_Rect r2);
 
 /**
+ */
+CBNDEF bool carbon_math_rect_overlaps_with_circle(CBN_Rect r, CBN_Vec2 center, f32 radius);
+
+/**
  * @brief Computes the intersection rectangle between the rectangles.
  * @param r1 The first rectangle.
  * @param r2 The second rectangle.
