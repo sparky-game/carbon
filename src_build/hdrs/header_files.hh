@@ -46,7 +46,7 @@ static constexpr std::array c_HeaderFiles {
   "net.h",
   "socket.hh",
   "audio.hh",
-  "sprite_manager.hh",
+  "sprite_manager.h", "sprite_manager.hh",
   "mesh_manager.hh",
   "nn.h",
   "test_manager.h",
