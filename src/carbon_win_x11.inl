@@ -155,6 +155,16 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
   XStoreName(carbon_win__display, carbon_win__window, title);
   carbon_win__wm_delete = XInternAtom(carbon_win__display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(carbon_win__display, carbon_win__window, &carbon_win__wm_delete, 1);
+  {// Lock window aspect ratio
+    XSizeHints *hints = XAllocSizeHints();
+    if (hints) {
+      hints->flags = PAspect;
+      hints->min_aspect.x = hints->max_aspect.x = w;
+      hints->min_aspect.y = hints->max_aspect.y = h;
+      XSetWMNormalHints(carbon_win__display, carbon_win__window, hints);
+      XFree(hints);
+    }
+  }
   XMapWindow(carbon_win__display, carbon_win__window);
   carbon_win__renderer_init(w, h);
 }
