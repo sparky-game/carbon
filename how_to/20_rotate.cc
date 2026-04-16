@@ -4,10 +4,11 @@
 #include <carbon.h>
 
 int main(void) {
+  using namespace cbn::math::literals;
   static constexpr auto size = 250;
   static constexpr auto width = 640, height = 360;
   static constexpr cbn::math::Vec2 center {width/2, height/2};
-  static constexpr f32 delta = size/CARBON_SQRT3;
+  static constexpr f32 delta = size/sqrt3;
   static const cbn::math::Vec2 v1 {center.x, center.y - delta};
   static const cbn::math::Vec2 v2 {center.x - size/2, center.y + delta/2};
   static const cbn::math::Vec2 v3 {center.x + size/2, center.y + delta/2};
