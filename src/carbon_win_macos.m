@@ -177,6 +177,7 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
   }
   [carbon_win__window setTitle:[NSString stringWithUTF8String:title]];
   [carbon_win__window center];
+  [carbon_win__window setContentAspectRatio:NSMakeSize(w, h)];
   carbon_win__create_system_menu(title);
   [carbon_win__window makeKeyAndOrderFront:nil];
   [carbon_win__app activateIgnoringOtherApps:YES];
