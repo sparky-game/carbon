@@ -16,10 +16,11 @@ static bool carbon_win__prev_keys[CBN_Win_KeyCode_Count];
 static bool carbon_win__mouse_buttons[CBN_Win_MouseButton_Count];
 static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 
-#if defined(_WIN32)
-// ...
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 #include "carbon_win_macos.m"
+#elif defined(_WIN32)
+// ...
+#error Not implemented yet
 #elif defined(__linux__) || defined(__FreeBSD__)
 #include "carbon_win_x11.inl"
 #else

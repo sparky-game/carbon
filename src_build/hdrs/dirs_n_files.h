@@ -40,16 +40,13 @@
 #define SHADER_IN_FILE SRC_DIR "/" SHADER_NAME ".metal"
 #define SHADER_OUT_FILE SHADER_NAME ".metallib"
 #define SHADER_INL_FILE SHADER_OUT_FILE ".inl"
+#elif defined(_WIN32)
+// ...
+#error Not implemented yet
 #elif defined(__linux__) || defined(__FreeBSD__)
 #define SHADER_IN_FILE(stage) SRC_DIR "/" SHADER_NAME "." stage ".glsl"
-//#define SHADER_IN_VERT_FILE SRC_DIR "/" SHADER_NAME ".vert.glsl"
-//#define SHADER_IN_FRAG_FILE SRC_DIR "/" SHADER_NAME ".frag.glsl"
 #define SHADER_OUT_FILE(stage) SHADER_NAME "." stage ".spv"
-//#define SHADER_OUT_VERT_FILE SHADER_NAME ".vert.spv"
-//#define SHADER_OUT_FRAG_FILE SHADER_NAME ".frag.spv"
 #define SHADER_INL_FILE(stage) SHADER_OUT_FILE(stage) ".inl"
-//#define SHADER_INL_VERT_FILE SHADER_OUT_VERT_FILE ".inl"
-//#define SHADER_INL_FRAG_FILE SHADER_OUT_FRAG_FILE ".inl"
 #else
-#error Not implemented yet
+#error Target platform is not supported
 #endif
