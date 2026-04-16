@@ -114,7 +114,7 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
   carbon_win__renderer_w = w;
   carbon_win__renderer_h = h;
   {// Device, Queue and Layer
-    CBNView *view = (CBNView *)[carbon_win__window contentView];
+    NSView *view = [carbon_win__window contentView];
     carbon_win__mtl_device = MTLCreateSystemDefaultDevice();
     carbon_win__mtl_queue  = [carbon_win__mtl_device newCommandQueue];
     carbon_win__mtl_layer  = [CAMetalLayer layer];
@@ -163,17 +163,18 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
                          | NSWindowStyleMaskResizable
                                      backing:NSBackingStoreBuffered
                                        defer:NO];
-  CBNView *view = [[CBNView alloc] initWithFrame:NSMakeRect(0, 0, w, h)];
-  NSTrackingArea *tracking = [[NSTrackingArea alloc]
-                               initWithRect:[view bounds]
-                                    options:NSTrackingCursorUpdate
-                               | NSTrackingMouseEnteredAndExited
-                               | NSTrackingActiveInKeyWindow
-                               | NSTrackingInVisibleRect
-                                      owner:view
-                                   userInfo:nil];
-  [view addTrackingArea:tracking];
-  [carbon_win__window setContentView:view];
+  {// View creation
+    CBNView *view = [[CBNView alloc] initWithFrame:NSMakeRect(0, 0, w, h)];
+    NSTrackingArea *tracking = [[NSTrackingArea alloc]
+                                 initWithRect:[view bounds]
+                                      options:NSTrackingMouseEnteredAndExited
+                                 | NSTrackingActiveInKeyWindow
+                                 | NSTrackingInVisibleRect
+                                        owner:view
+                                     userInfo:nil];
+    [view addTrackingArea:tracking];
+    [carbon_win__window setContentView:view];
+  }
   [carbon_win__window setTitle:[NSString stringWithUTF8String:title]];
   [carbon_win__window center];
   carbon_win__create_system_menu(title);
