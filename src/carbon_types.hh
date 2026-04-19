@@ -53,6 +53,8 @@ namespace cbn {
   using Pair = std::pair<T, U>;
   template <typename... Ts>
   using Tuple = std::tuple<Ts...>;
+  template <typename T, usz N>
+  using Array = std::array<T, N>;
   template <typename T>
   using Opt = std::optional<T>;
   template <typename T>
