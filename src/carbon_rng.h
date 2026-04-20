@@ -45,16 +45,44 @@ CBNDEF_AKA(cbn::rng, LCGf, carbon_rng_lcgf);
 CBNDEF f32 carbon_rng_lcgf_range(f32 min, f32 max);
 CBNDEF_AKA(cbn::rng, LCGfr, carbon_rng_lcgf_range);
 
-// ----------------------------------------------------------------------
-// ----------------------------------------------------------------------
+/**
+ * @brief Generates a pseudo-random 64-bit unsigned integer using the Mersenne Twister MT1993764.
+ *
+ * The generator is lazily initialized (upon the first call) using a high-entropy seed derived
+ * from `carbon_time_get`.
+ *
+ * @return A pseudo-random 64-bit unsigned integer X, such that 0 ≤ X ≤ 2^64-1.
+ */
+CBNDEF u64 carbon_rng_mt1993764(void);
+CBNDEF_AKA(cbn::rng, MT1993764, carbon_rng_mt1993764);
 
-CBNDEF void carbon_rng_mt19937_64_srand(u64 seed);
+/**
+ * @brief Generates a pseudo-random 64-bit unsigned integer using the MT1993764 within a specified range.
+ * @see carbon_rng_mt1993764
+ * @param min The inclusive lower bound of the desired range.
+ * @param max The inclusive upper bound of the desired range.
+ * @return A pseudo-random 64-bit unsigned integer X, such that min ≤ X ≤ max.
+ */
+CBNDEF u64 carbon_rng_mt1993764_range(u64 min, u64 max);
+CBNDEF_AKA(cbn::rng, MT1993764r, carbon_rng_mt1993764_range);
 
-CBNDEF u64 carbon_rng_mt19937_64_rand(void);
-CBNDEF_AKA(cbn::rng, MT19937, carbon_rng_mt19937_64_rand);
+/**
+ * @brief Generates a pseudo-random 64-bit floating-point using the MT1993764.
+ * @see carbon_rng_mt1993764
+ * @return A pseudo-random 64-bit floating-point X, such that 0 ≤ X < 1.
+ */
+CBNDEF f64 carbon_rng_mt1993764f(void);
+CBNDEF_AKA(cbn::rng, MT1993764f, carbon_rng_mt1993764f);
 
-// ----------------------------------------------------------------------
-// ----------------------------------------------------------------------
+/**
+ * @brief Generates a pseudo-random 64-bit floating-point using the MT1993764 within a specified range.
+ * @see carbon_rng_mt1993764f
+ * @param min The inclusive lower bound of the desired range.
+ * @param max The exclusive upper bound of the desired range.
+ * @return A pseudo-random 64-bit floating-point X, such that min ≤ X < max.
+ */
+CBNDEF f64 carbon_rng_mt1993764f_range(f64 min, f64 max);
+CBNDEF_AKA(cbn::rng, MT1993764fr, carbon_rng_mt1993764f_range);
 
 /**
  * @brief Generates a psueudo-random boolean following a Bernoulli distribution.

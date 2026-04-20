@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CARBON_RNG__MT1993764_NN 312
+#define CARBON_RNG__MT1993764_MM 156
+#define CARBON_RNG__MT1993764_UM 0xFFFFFFFF80000000ULL
+#define CARBON_RNG__MT1993764_LM 0x7FFFFFFFULL
+
+static u64 carbon_rng__mt1993764_state_vec[CARBON_RNG__MT1993764_NN];
+static u64 carbon_rng__mt1993764_state_idx = CARBON_RNG__MT1993764_NN + 1;
+
 CBNINL u32 carbon_rng__seed(void) {
   f64 t = carbon_time_get();
   union { f64 f; u64 i; } u = {t};
@@ -35,44 +43,28 @@ f32 carbon_rng_lcgf_range(f32 min, f32 max) {
   return carbon_rng_lcgf() * (max - min) + min;
 }
 
-// ----------------------------------------------------------------------
-// ----------------------------------------------------------------------
-
-#define CARBON_RNG__MT19937_64_RAND_NN 312
-#define CARBON_RNG__MT19937_64_RAND_MM 156
-#define CARBON_RNG__MT19937_64_RAND_UM 0xFFFFFFFF80000000ULL
-#define CARBON_RNG__MT19937_64_RAND_LM 0x7FFFFFFFULL
-
-static u64 carbon_rng__mt19937_64_rand_state_vec[CARBON_RNG__MT19937_64_RAND_NN];
-static u64 carbon_rng__mt19937_64_rand_state_idx = CARBON_RNG__MT19937_64_RAND_NN + 1;
-
-void carbon_rng_mt19937_64_srand(u64 seed) {
-  u64 *sv = carbon_rng__mt19937_64_rand_state_vec;
-  u64 *si = &carbon_rng__mt19937_64_rand_state_idx;
-  sv[0] = seed;
-  for (*si = 1; *si < CARBON_RNG__MT19937_64_RAND_NN; ++(*si)) {
-    sv[*si] = (6364136223846793005ULL * (sv[*si - 1] ^ (sv[*si - 1] >> 62)) + *si);
-  }
-}
-
-u64 carbon_rng_mt19937_64_rand(void) {
-  // NOTE: default seed was `5489ULL` and was changed to `carbon_time_get()` in ms
+u64 carbon_rng_mt1993764(void) {
   static u64 mag[] = {0ULL, 0xB5026F5AA96619E9ULL};
   i32 i; u64 x;
-  u64 *sv = carbon_rng__mt19937_64_rand_state_vec;
-  u64 *si = &carbon_rng__mt19937_64_rand_state_idx;
-  if (*si >= CARBON_RNG__MT19937_64_RAND_NN) {
-    if (*si == CARBON_RNG__MT19937_64_RAND_NN + 1) carbon_rng_mt19937_64_srand((u64)(carbon_time_get() * 1e6));
-    for (i = 0; i < CARBON_RNG__MT19937_64_RAND_NN - CARBON_RNG__MT19937_64_RAND_MM; ++i) {
-      x = (sv[i] & CARBON_RNG__MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_RNG__MT19937_64_RAND_LM);
-      sv[i] = sv[i + CARBON_RNG__MT19937_64_RAND_MM] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+  u64 *sv = carbon_rng__mt1993764_state_vec;
+  u64 *si = &carbon_rng__mt1993764_state_idx;
+  if (*si >= CARBON_RNG__MT1993764_NN) {
+    if (*si == CARBON_RNG__MT1993764_NN + 1) {
+      sv[0] = (u64)carbon_rng__seed();
+      for (*si = 1; *si < CARBON_RNG__MT1993764_NN; ++(*si)) {
+        sv[*si] = 6364136223846793005ULL * (sv[*si - 1] ^ (sv[*si - 1] >> 62)) + *si;
+      }
     }
-    for (; i < CARBON_RNG__MT19937_64_RAND_NN - 1; ++i) {
-      x = (sv[i] & CARBON_RNG__MT19937_64_RAND_UM) | (sv[i + 1] & CARBON_RNG__MT19937_64_RAND_LM);
-      sv[i] = sv[i + (CARBON_RNG__MT19937_64_RAND_MM - CARBON_RNG__MT19937_64_RAND_NN)] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+    for (i = 0; i < CARBON_RNG__MT1993764_NN - CARBON_RNG__MT1993764_MM; ++i) {
+      x = (sv[i] & CARBON_RNG__MT1993764_UM) | (sv[i + 1] & CARBON_RNG__MT1993764_LM);
+      sv[i] = sv[i + CARBON_RNG__MT1993764_MM] ^ (x >> 1) ^ mag[(i32)(x & 1ULL)];
     }
-    x = (sv[CARBON_RNG__MT19937_64_RAND_NN - 1] & CARBON_RNG__MT19937_64_RAND_UM) | (sv[0] & CARBON_RNG__MT19937_64_RAND_LM);
-    sv[CARBON_RNG__MT19937_64_RAND_NN - 1] = sv[CARBON_RNG__MT19937_64_RAND_MM - 1] ^ (x >> 1) ^ mag[(i32) (x & 1ULL)];
+    for (; i < CARBON_RNG__MT1993764_NN - 1; ++i) {
+      x = (sv[i] & CARBON_RNG__MT1993764_UM) | (sv[i + 1] & CARBON_RNG__MT1993764_LM);
+      sv[i] = sv[i + (CARBON_RNG__MT1993764_MM - CARBON_RNG__MT1993764_NN)] ^ (x >> 1) ^ mag[(i32)(x & 1ULL)];
+    }
+    x = (sv[CARBON_RNG__MT1993764_NN - 1] & CARBON_RNG__MT1993764_UM) | (sv[0] & CARBON_RNG__MT1993764_LM);
+    sv[CARBON_RNG__MT1993764_NN - 1] = sv[CARBON_RNG__MT1993764_MM - 1] ^ (x >> 1) ^ mag[(i32)(x & 1ULL)];
     *si = 0;
   }
   x = sv[(*si)++];
@@ -83,8 +75,20 @@ u64 carbon_rng_mt19937_64_rand(void) {
   return x;
 }
 
-// ----------------------------------------------------------------------
-// ----------------------------------------------------------------------
+u64 carbon_rng_mt1993764_range(u64 min, u64 max) {
+  if (min == max) return min;
+  u64 range_sz = max - min + 1;
+  u64 rand = carbon_rng_mt1993764();
+  return min + (rand % range_sz);
+}
+
+f64 carbon_rng_mt1993764f(void) {
+  return (f64)(carbon_rng_mt1993764() >> 11) * 0x1p-53;
+}
+
+f64 carbon_rng_mt1993764f_range(f64 min, f64 max) {
+  return carbon_rng_mt1993764f() * (max - min) + min;
+}
 
 bool carbon_rng_bernoulli_dist(f32(*gen)(void), f32 p) {
   return gen() < p;
