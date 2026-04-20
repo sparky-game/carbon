@@ -28,8 +28,6 @@ struct CBN_List_tt : CBN_List_t {
 
   ~CBN_List_tt(void) { Free(); }
 
-  void Free(void) { carbon_list_destroy((CBN_List *)this); }
-
   value_type Front(void) const {
     value_type x;
     carbon_list_front((CBN_List *)this, &x);
@@ -77,6 +75,9 @@ struct CBN_List_tt : CBN_List_t {
   iterator end(void) const { return (iterator)items + size; }
 
   value_type &operator[](usz idx) { return carbon_list_at(value_type, *this, idx); }
+
+private:
+  void Free(void) { carbon_list_destroy((CBN_List *)this); }
 };
 
 #endif
