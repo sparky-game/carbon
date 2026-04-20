@@ -278,11 +278,24 @@ namespace cbn::meta {
   constexpr auto IsVoid_v = IsVoid<T>::value;
 
   /**
+   * @brief Perfectly forwards a value, preserving its value category.
+   *
+   * Used in templates to pass arguments along without collapsing lvalue/rvalue
+   * semantics (i.e. as part of perfect forwarding).
    */
   template <typename T>
   constexpr T &&Forward(RemoveRef_t<T> &t) noexcept { return static_cast<T &&>(t); }
   template <typename T>
   constexpr T &&Forward(RemoveRef_t<T> &&t) noexcept = delete;
+
+  /**
+   * @brief Unconditionally casts a value to an rvalue reference.
+   *
+   * Signals that the caller is relinquishing ownership and the value may be
+   * moved from. Does not itself move anything.
+   */
+  template <typename T>
+  constexpr RemoveRef_t<T> &&Move(T &&t) noexcept { return static_cast<RemoveRef_t<T> &&>(t); }
 
   /**
    */
