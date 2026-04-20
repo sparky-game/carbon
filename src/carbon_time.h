@@ -6,11 +6,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-typedef struct {
-  u64 timestamp;
-  u64 random;
-} CBN_SnowflakeComponents;
-
 /**
  * @brief Returns a timestamp in seconds obtained from a monotonic clock.
  *
@@ -28,9 +23,9 @@ CBNDEF_AKA(cbn::time, now, Get);
  *
  * The aforementioned format (`YYYY-mm-ddTHH:MM:SSZ`) consists of:
  * (YYYY = year; mm = month; dd = day; HH = hour; MM = minute; SS = second).
- * (T = date and hour separator; Z = UTC timezone specifier, i.e. +00:00).
+ * (T = date and hour separator; Z = timezone offset, i.e. +00:00).
  *
- * @return The formatted timestamp as a C-string (static circular storage).
+ * @return The formatted timestamp as a C-string (in static local cyclic memory buffer).
  */
 CBNDEF char *carbon_time_get_iso8601(void);
 
@@ -44,8 +39,21 @@ CBNDEF char *carbon_time_get_iso8601(void);
  */
 CBNDEF u64 carbon_time_get_yyyymmddhhmmss(void);
 
+/**
+ * @brief ...
+ * @param ms ...
+ */
 CBNDEF void carbon_time_sleep(u64 ms);
 
-CBNDEF u64 carbon_time_snowflake_get(void);
+/**
+ * @brief ...
+ * @return The new 64-bit snowflake ID.
+ */
+CBNDEF u64 carbon_time_snowflake(void);
 
-CBNDEF CBN_SnowflakeComponents carbon_time_snowflake_parse(u64 snowflake);
+/**
+ * @brief Extracts the timestamp (ms) from a snowflake ID.
+ * @param snowflake The 64-bit snowflake ID to parse.
+ * @return The timestamp (ms).
+ */
+CBNDEF u64 carbon_time_snowflake_ts(u64 snowflake);
