@@ -139,6 +139,7 @@ CBNINL u32 carbon_drawcanvas__flat_shading(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_
   u32 k = carbon_color_scale(color, n_a);
   for (usz i = 0; i < dc->lights_count; ++i) {
     const CBN_Light *l = &dc->lights[i];
+    if (!l->active) continue;
     CBN_Vec3 L = carbon_math_vec3_1(0);
     f32 att = 1;
     switch (l->type) {

@@ -45,6 +45,7 @@ CBNDEF_TAKA(cbn, LightType, CBN_LightType);
  */
 typedef struct {
   CBN_LightType type;
+  bool active;
   u32 color;
   f32 intensity;
   union {
@@ -63,7 +64,7 @@ CBNDEF_TAKA(cbn, Light, CBN_Light);
 CBNDEF_T(CBN_Sprite);
 
 /**
- * @brief Creates a new DrawCanvas object.
+ * @brief Creates a new canvas.
  * @param width The width to set the canvas to.
  * @param height The height to set the canvas to.
  * @return The newly created DrawCanvas object.
@@ -71,8 +72,8 @@ CBNDEF_T(CBN_Sprite);
 CBNDEF CBN_DrawCanvas *carbon_drawcanvas_create(usz width, usz height);
 
 /**
- * @brief Destroys a DrawCanvas object.
- * @param dc The DrawCanvas to destroy.
+ * @brief Destroys an existing canvas.
+ * @param dc The DrawCanvas object.
  */
 CBNDEF void carbon_drawcanvas_destroy(CBN_DrawCanvas *dc);
 
@@ -105,42 +106,80 @@ CBNDEF usz carbon_drawcanvas_height(const CBN_DrawCanvas *dc);
 CBNDEF CBN_Rect carbon_drawcanvas_extent(const CBN_DrawCanvas *dc);
 
 /**
- * @brief Obtains the current set of flags enabled for the DrawCanvas.
+ * @brief Obtains the current set of flags enabled for the canvas.
  * @param dc The DrawCanvas object.
  * @return The current enabled flag(s).
  */
 CBNDEF u32 carbon_drawcanvas_flags(const CBN_DrawCanvas *dc);
 
 /**
- * @brief Enables a particular set of flags for the DrawCanvas.
+ * @brief Enables a particular set of flags for the canvas.
  * @param dc The DrawCanvas object.
  * @param flags The flag(s) to enable.
  */
 CBNDEF void carbon_drawcanvas_flags_enable(CBN_DrawCanvas *dc, u32 flags);
 
 /**
- * @brief Disables a particular set of flags for the DrawCanvas.
+ * @brief Disables a particular set of flags for the canvas.
  * @param dc The DrawCanvas object.
  * @param flags The flag(s) to disable.
  */
 CBNDEF void carbon_drawcanvas_flags_disable(CBN_DrawCanvas *dc, u32 flags);
 
 /**
- * @brief Toggles (ON/OFF) a particular set of flags for the DrawCanvas.
+ * @brief Toggles (ON/OFF) a particular set of flags for the canvas.
  * @param dc The DrawCanvas object.
  * @param flags The flag(s) to toggle.
  */
 CBNDEF void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags);
 
 /**
- * @brief ...
+ * @brief Adds a light to the canvas.
  * @param dc The DrawCanvas object.
- * @param light The light definition to add.
+ * @param l The light definition to add.
+ * @return The index of the newly added light, or -1 if the canvas is full.
  */
-CBNDEF void carbon_drawcanvas_add_light(CBN_DrawCanvas *dc, CBN_Light light);
+CBNDEF isz carbon_drawcanvas_light_add(CBN_DrawCanvas *dc, CBN_Light l);
 
 /**
- * @brief Fills the DrawCanvas with the specified color.
+ * @brief Enables a specific light in the canvas.
+ * @param dc The DrawCanvas object.
+ * @param idx The index of the light to enable.
+ */
+CBNDEF void carbon_drawcanvas_light_enable(CBN_DrawCanvas *dc, isz idx);
+
+/**
+ * @brief Disables a specific light in the canvas.
+ * @param dc The DrawCanvas object.
+ * @param idx The index of the light to disable.
+ */
+CBNDEF void carbon_drawcanvas_light_disable(CBN_DrawCanvas *dc, isz idx);
+
+/**
+ * @brief Toggles (ON/OFF) a specific light in the canvas.
+ * @param dc The DrawCanvas object.
+ * @param idx The index of the light to toggle.
+ */
+CBNDEF void carbon_drawcanvas_light_toggle(CBN_DrawCanvas *dc, isz idx);
+
+/**
+ * @brief Sets the intensity of a specific light in the canvas.
+ * @param dc The DrawCanvas object.
+ * @param idx The index of the light to update.
+ * @param intensity The new intensity value to set.
+ */
+CBNDEF void carbon_drawcanvas_light_set_intensity(CBN_DrawCanvas *dc, isz idx, f32 intensity);
+
+/**
+ * @brief Sets the color of a specific light in the canvas.
+ * @param dc The DrawCanvas object.
+ * @param idx The index of the light to update.
+ * @param color The new color to set.
+ */
+CBNDEF void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color);
+
+/**
+ * @brief Fills the canvas with the specified color.
  * @param dc The DrawCanvas object.
  * @param color The color to fill the canvas with.
  */

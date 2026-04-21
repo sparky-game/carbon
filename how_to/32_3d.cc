@@ -134,7 +134,7 @@ int main(void) {
   auto canvas = cbn::DrawCanvas::New(1280, 720);
   auto cam = canvas->CreateCamera();
   cam->SetType(cbn::Camera::Type::Orthographic);
-  canvas->AddLight(cbn::Light{
+  canvas->LightAdd({
       .type = cbn::LightType::Directional,
       .color = 0xffffffff,
       .intensity = 1,

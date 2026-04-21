@@ -32,7 +32,17 @@ struct CBN_DrawCanvas {
 
   void FlagsToggle(u32 fs) { carbon_drawcanvas_flags_toggle(this, fs); }
 
-  void AddLight(CBN_Light light) { carbon_drawcanvas_add_light(this, light); }
+  isz LightAdd(CBN_Light l) { return carbon_drawcanvas_light_add(this, l); }
+
+  void LightEnable(isz idx) { carbon_drawcanvas_light_enable(this, idx); }
+
+  void LightDisable(isz idx) { carbon_drawcanvas_light_disable(this, idx); }
+
+  void LightToggle(isz idx) { carbon_drawcanvas_light_toggle(this, idx); }
+
+  void LightSetIntensity(isz idx, f32 intensity) { carbon_drawcanvas_light_set_intensity(this, idx, intensity); }
+
+  void LightSetColor(isz idx, u32 color) { carbon_drawcanvas_light_set_color(this, idx, color); }
 
   void Fill(u32 color) { carbon_drawcanvas_fill(this, color); }
 
@@ -52,7 +62,7 @@ struct CBN_DrawCanvas {
 
   void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color) { carbon_drawcanvas_mesh(this, &c, m, t, color); }
 
-  void DrawCube(const CBN_Camera *c, CBN_Transform t, u32 color) { carbon_drawcanvas_cube(this, c, t, color); }
+  void DrawCube(const CBN_Camera &c, CBN_Transform t, u32 color) { carbon_drawcanvas_cube(this, &c, t, color); }
 
   void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color) { carbon_drawcanvas_plane_xz(this, &c, center, size, color); }
 

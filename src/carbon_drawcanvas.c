@@ -73,10 +73,36 @@ void carbon_drawcanvas_flags_toggle(CBN_DrawCanvas *dc, u32 flags) {
   dc->flags ^= flags;
 }
 
-void carbon_drawcanvas_add_light(CBN_DrawCanvas *dc, CBN_Light light) {
-  if (!dc) return;
-  if (dc->lights_count >= CARBON_DRAWCANVAS__MAX_LIGHTS) return;
-  dc->lights[dc->lights_count++] = light;
+isz carbon_drawcanvas_light_add(CBN_DrawCanvas *dc, CBN_Light l) {
+  if (!dc || dc->lights_count >= CARBON_DRAWCANVAS__MAX_LIGHTS) return -1;
+  l.active = true;
+  dc->lights[dc->lights_count++] = l;
+  return dc->lights_count;
+}
+
+void carbon_drawcanvas_light_enable(CBN_DrawCanvas *dc, isz idx) {
+  if (!dc || 0 > idx || (usz)idx >= dc->lights_count) return;
+  dc->lights[idx].active = true;
+}
+
+void carbon_drawcanvas_light_disable(CBN_DrawCanvas *dc, isz idx) {
+  if (!dc || 0 > idx || (usz)idx >= dc->lights_count) return;
+  dc->lights[idx].active = false;
+}
+
+void carbon_drawcanvas_light_toggle(CBN_DrawCanvas *dc, isz idx) {
+  if (!dc || 0 > idx || (usz)idx >= dc->lights_count) return;
+  dc->lights[idx].active ^= true;
+}
+
+void carbon_drawcanvas_light_set_intensity(CBN_DrawCanvas *dc, isz idx, f32 intensity) {
+  if (!dc || 0 > idx || (usz)idx >= dc->lights_count) return;
+  dc->lights[idx].intensity = intensity;
+}
+
+void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color) {
+  if (!dc || 0 > idx || (usz)idx >= dc->lights_count) return;
+  dc->lights[idx].color = color;
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
