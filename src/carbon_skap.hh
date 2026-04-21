@@ -26,9 +26,7 @@ concept CBN_SKAP_ValidAssetType = requires {
 };
 
 struct CBN_SKAP : CBN_SKAP_t {
-  static bool Create(const char *decl, const char *skap) {
-    return carbon_skap_create(decl, skap);
-  }
+  static bool Create(const char *decl, const char *skap) { return carbon_skap_create(decl, skap); }
 
   static cbn::Opt<CBN_SKAP> Open(const char *skap) {
     CBN_SKAP handle;
@@ -36,13 +34,9 @@ struct CBN_SKAP : CBN_SKAP_t {
     return handle;
   }
 
-  void Free(void) {
-    carbon_skap_close(this);
-  }
+  void Free(void) { carbon_skap_close(this); }
 
-  void Print(void) const {
-    carbon_skap_print(this);
-  }
+  void Print(void) const { carbon_skap_print(this); }
 
   template <typename T>
   cbn::Opt<T> Lookup(const char *asset_name) const {
@@ -51,14 +45,10 @@ struct CBN_SKAP : CBN_SKAP_t {
     return asset;
   }
 
-  usz Count(void) const {
-    return carbon_skap_count(this);
-  }
+  usz Count(void) const { return carbon_skap_count(this); }
 
   template <typename T>
-  usz CountOf(void) const {
-    return carbon_skap_count_of(this, GetAssetType<T>());
-  }
+  usz CountOf(void) const { return carbon_skap_count_of(this, GetAssetType<T>()); }
 
   cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const {
     CBN_Sprite_UID uid;
@@ -86,9 +76,7 @@ struct CBN_SKAP : CBN_SKAP_t {
   
 private:
   template <CBN_SKAP_ValidAssetType T>
-  static consteval CBN_SKAP_AssetType GetAssetType(void) {
-    return CBN_SKAP_AssetTrait<T>::value;
-  }
+  static consteval CBN_SKAP_AssetType GetAssetType(void) { return CBN_SKAP_AssetTrait<T>::value; }
 };
 
 #endif

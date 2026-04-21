@@ -24,7 +24,7 @@ bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid)
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  CBN_Mesh *mesh = (CBN_Mesh *) carbon_memory_alloc(sizeof(CBN_Mesh));
+  CBN_Mesh *mesh = carbon_memory_alloc(sizeof(CBN_Mesh));
   if (!carbon_mesh_create_from_file(mesh, file)) {
     carbon_memory_free(mesh);
     return false;
