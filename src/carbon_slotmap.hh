@@ -41,7 +41,7 @@ struct CBN_SlotMap_tt : CBN_SlotMap_t {
 
   Key Push(const value_type &value) { return carbon_slotmap_push((CBN_SlotMap *) this, (void *) &value); }
 
-  u8 Remove(const Key k) { return carbon_slotmap_remove((CBN_SlotMap *) this, k); }
+  bool Remove(const Key k) { return carbon_slotmap_remove((CBN_SlotMap *) this, k); }
 
   iterator begin(void) const { return ((data_type *) &data)->begin(); }
 

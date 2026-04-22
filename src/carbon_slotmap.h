@@ -60,7 +60,7 @@ CBNDEF CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value);
  * @param key The key of the element to be removed.
  * @return A boolean value indicating whether it removed the element successfully or not.
  */
-CBNDEF u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
+CBNDEF bool carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
 
 /**
  * @brief Requests the retrieval or acquisition of an element from the SlotMap.
@@ -69,7 +69,7 @@ CBNDEF u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key);
  * @param out_value The value of the retrieved element (output argument pointer).
  * @return A boolean value indicating whether it retrieved the element successfully or not.
  */
-CBNDEF u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value);
+CBNDEF bool carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value);
 
 /**
  * @brief Returns the string representation of the key using default formatting.

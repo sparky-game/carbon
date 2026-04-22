@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-CBNINL u8 carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+CBNINL bool carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
   if (carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).gen != key.gen) return false;
   return true;
 }
@@ -65,13 +65,13 @@ CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value) {
   return key;
 }
 
-u8 carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+bool carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
   if (!carbon_slotmap__is_valid_key(sm, key)) return false;
   carbon_slotmap__free(sm, key);
   return true;
 }
 
-u8 carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value) {
+bool carbon_slotmap_lookup(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value) {
   if (!carbon_slotmap__is_valid_key(sm, key)) return false;
   u64 idx = carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).id;
   carbon_memory_copy(out_value, (void *) ((u64) sm->data.items + (idx * sm->stride)), sm->stride);

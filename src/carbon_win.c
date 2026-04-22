@@ -61,7 +61,7 @@ void carbon_win_set_icon(CBN_Image img) {
 
 f64 carbon_win_get_deltatime(void) {
   static f64 last_frame_time;
-  static u8 is_first_time = true;
+  static bool is_first_time = true;
   if (is_first_time) {
     last_frame_time = carbon_time_get();
     is_first_time = false;
