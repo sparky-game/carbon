@@ -44,6 +44,14 @@ void carbon_win_set_max_fps(u32 fps) {
   CBN_INFO("Window max FPS set to %u", carbon_win__max_fps);
 }
 
+usz carbon_win_width(void) {
+  return (usz)carbon_win__get_window_size().x;
+}
+
+usz carbon_win_height(void) {
+  return (usz)carbon_win__get_window_size().y;
+}
+
 void carbon_win_set_icon(CBN_Image img) {
   if (!img.data) {
     CBN_ERROR("`img` is not valid");

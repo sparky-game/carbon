@@ -54,6 +54,20 @@ CBNDEF void carbon_win_set_max_fps(u32 fps);
 CBNDEF_AKA(cbn::win, SetMaxFPS, carbon_win_set_max_fps);
 
 /**
+ * @brief ...
+ * @return ...
+ */
+CBNDEF usz carbon_win_width(void);
+CBNDEF_AKA(cbn::win, Width, carbon_win_width);
+
+/**
+ * @brief ...
+ * @return ...
+ */
+CBNDEF usz carbon_win_height(void);
+CBNDEF_AKA(cbn::win, Height, carbon_win_height);
+
+/**
  * @brief Set the window icon to a specific image object.
  *
  * The windowing module holds the ownership of the image object passed through.

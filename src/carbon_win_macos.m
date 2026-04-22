@@ -44,11 +44,16 @@ static id<MTLRenderPipelineState> carbon_win__mtl_pipeline;
 static id<MTLTexture> carbon_win__mtl_texture;
 static id<MTLBuffer> carbon_win__mtl_buffer;
 
+CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
+  NSSize s = [carbon_win__window contentView].frame.size;
+  return carbon_math_vec2(s.width, s.height);
+}
+
 CBN_Vec2 carbon_win_get_mouse_position(void) {
   NSPoint m = [carbon_win__window mouseLocationOutsideOfEventStream];
-  NSSize s = [carbon_win__window contentView].frame.size;
-  m.y = s.height - m.y;  // +y must go downwards... Apple, what's wrong with y'all?
-  f32 sf_w = (f32)carbon_win__renderer_w/s.width, sf_h = (f32)carbon_win__renderer_h/s.height;  
+  CBN_Vec2 s = carbon_win__get_window_size();
+  m.y = s.y - m.y;  // +y must go downwards... Apple, what's wrong with y'all?
+  f32 sf_w = (f32)carbon_win__renderer_w/s.x, sf_h = (f32)carbon_win__renderer_h/s.y;
   usz x = carbon_math_clamp(m.x * sf_w, 0, carbon_win__renderer_w - 1);
   usz y = carbon_math_clamp(m.y * sf_h, 0, carbon_win__renderer_h - 1);
   return carbon_math_vec2(x, y);

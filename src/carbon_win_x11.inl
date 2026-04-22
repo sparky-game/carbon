@@ -51,6 +51,12 @@ CBNINL void carbon_win__renderer_gl_load_funcs(void) {
 }
 //////////////////////////////////////
 
+CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
+  XWindowAttributes attrs;
+  XGetWindowAttributes(carbon_win__display, carbon_win__window, &attrs);
+  return carbon_math_vec2(attrs.width, attrs.height);
+}
+
 CBN_Vec2 carbon_win_get_mouse_position(void) {
   // ...
   return carbon_math_vec2(0, 0);
