@@ -39,6 +39,13 @@ CBNDEF void carbon_memory_free(void *p);
 CBNDEF_AKA(cbn::mem, Free, carbon_memory_free);
 
 /**
+ * @brief Returns the total amount of bytes currently allocated by the global allocator.
+ * @return The number of live allocated bytes.
+ */
+CBNDEF usz carbon_memory_usage(void);
+CBNDEF_AKA(cbn::mem, Usage, carbon_memory_usage);
+
+/**
  * @brief Safely copies a set of bytes from a memory area to another one.
  * @param dst The destination memory area address.
  * @param src The source memory area address.

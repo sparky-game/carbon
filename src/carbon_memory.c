@@ -1,27 +1,45 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CARBON_MEMORY__HDR_SZ (sizeof(usz))
+
+static usz carbon_memory__usage;
+
 void *carbon_memory_alloc(usz size) {
-  void *p = __builtin_malloc(size);
+  u8 *p = __builtin_malloc(size + CARBON_MEMORY__HDR_SZ);
   CBN_ASSERT(p && "failed to allocate memory");
-  return p;
+  *(usz *)p = size;
+  carbon_memory__usage += size;
+  return p + CARBON_MEMORY__HDR_SZ;
 }
 
 void *carbon_memory_zeroed(usz size) {
-  void *p = __builtin_calloc(1, size);
-  CBN_ASSERT(p && "failed to allocate memory");
+  void *p = carbon_memory_alloc(size);
+  carbon_memory_set(p, 0, size);
   return p;
 }
 
 void *carbon_memory_realloc(void *p, usz size) {
-  void *new_p = __builtin_realloc(p, size);
+  if (!p) return carbon_memory_alloc(size);
+  u8 *raw_p = (u8 *)p - CARBON_MEMORY__HDR_SZ;
+  usz old_sz = *(usz *)raw_p;
+  u8 *new_p = __builtin_realloc(raw_p, size + CARBON_MEMORY__HDR_SZ);
   CBN_ASSERT(new_p && "failed to reallocate memory");
-  return new_p;
+  *(usz *)new_p = size;
+  carbon_memory__usage -= old_sz;
+  carbon_memory__usage += size;
+  return new_p + CARBON_MEMORY__HDR_SZ;
 }
 
 void carbon_memory_free(void *p) {
   if (!p) return;
-  __builtin_free(p);
+  u8 *raw_p = (u8 *)p - CARBON_MEMORY__HDR_SZ;
+  carbon_memory__usage -= *(usz *)raw_p;
+  __builtin_free(raw_p);
+}
+
+usz carbon_memory_usage(void) {
+  return carbon_memory__usage;
 }
 
 void *carbon_memory_copy(void *dst, const void *src, usz n) {
