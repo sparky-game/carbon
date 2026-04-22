@@ -58,8 +58,20 @@ CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
 }
 
 CBN_Vec2 carbon_win_get_mouse_position(void) {
-  // ...
-  return carbon_math_vec2(0, 0);
+  Window root, child;
+  i32 root_x, root_y, child_x, child_y;
+  u32 mask;
+  XQueryPointer(carbon_win__display,
+                carbon_win__window,
+                &root, &child,
+                &root_x, &root_y,
+                &child_x, &child_y,
+                &mask);
+  CBN_Vec2 s = carbon_win__get_window_size();
+  f32 sf_w = (f32)carbon_win__renderer_w/s.x, sf_h = (f32)carbon_win__renderer_h/s.y;
+  usz x = carbon_math_clamp(child_x * sf_w, 0, carbon_win__renderer_w - 1);
+  usz y = carbon_math_clamp(child_y * sf_h, 0, carbon_win__renderer_h - 1);
+  return carbon_math_vec2(x, y);
 }
 
 void carbon_win_set_mouse_visibility(bool visible) {
