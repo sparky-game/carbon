@@ -43,6 +43,7 @@ static CAMetalLayer *carbon_win__mtl_layer;
 static id<MTLRenderPipelineState> carbon_win__mtl_pipeline;
 static id<MTLTexture> carbon_win__mtl_texture;
 static id<MTLBuffer> carbon_win__mtl_buffer;
+static dispatch_semaphore_t carbon_win__mtl_semaphore;
 
 CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
   NSSize s = [carbon_win__window contentView].frame.size;
@@ -156,6 +157,7 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
   [vert_fn release];
   [frag_fn release];
   carbon_win__renderer_upload_texture();
+  carbon_win__mtl_semaphore = dispatch_semaphore_create(3);
 }
 
 CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
@@ -192,6 +194,7 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
 }
 
 CBNINL void carbon_win__renderer_shutdown(void) {
+  dispatch_release(carbon_win__mtl_semaphore);
   [carbon_win__mtl_buffer   release];
   [carbon_win__mtl_texture  release];
   [carbon_win__mtl_pipeline release];
@@ -285,67 +288,75 @@ CBNINL CBN_Win_KeyCode carbon_win__map_key_code(u16 key) {
 }
 
 CBNINL bool carbon_win__poll_event(void) {
-  NSEvent *e = [carbon_win__app nextEventMatchingMask:NSEventMaskAny
-                                            untilDate:[NSDate distantPast]
-                                               inMode:NSDefaultRunLoopMode
-                                              dequeue:YES];
-  if (!e) return false;
-  switch ([e type]) {
-  case NSEventTypeKeyUp:
-  case NSEventTypeKeyDown: {
-    u16 s = [e keyCode];
-    CBN_Win_KeyCode k = carbon_win__map_key_code(s);
-    if (k != CBN_Win_KeyCode_Count) {
-      carbon_win__keys[k] = [e type] == NSEventTypeKeyDown;
+  @autoreleasepool {
+    NSEvent *e = [carbon_win__app nextEventMatchingMask:NSEventMaskAny
+                                              untilDate:[NSDate distantPast]
+                                                 inMode:NSDefaultRunLoopMode
+                                                dequeue:YES];
+    if (!e) return false;
+    switch ([e type]) {
+    case NSEventTypeKeyUp:
+    case NSEventTypeKeyDown: {
+      u16 s = [e keyCode];
+      CBN_Win_KeyCode k = carbon_win__map_key_code(s);
+      if (k != CBN_Win_KeyCode_Count) {
+        carbon_win__keys[k] = [e type] == NSEventTypeKeyDown;
+      }
+    } break;
+    case NSEventTypeFlagsChanged: {
+      NSEventModifierFlags f = [e modifierFlags];
+      carbon_win__keys[CBN_Win_KeyCode_LeftCtrl]  = !!(f & NSEventModifierFlagControl);
+      carbon_win__keys[CBN_Win_KeyCode_LeftShift] = !!(f & NSEventModifierFlagShift);
+      carbon_win__keys[CBN_Win_KeyCode_LeftAlt]   = !!(f & NSEventModifierFlagOption);
+      carbon_win__keys[CBN_Win_KeyCode_LeftMeta]  = !!(f & NSEventModifierFlagCommand);
+      carbon_win__keys[CBN_Win_KeyCode_CapsLock]  = !!(f & NSEventModifierFlagCapsLock);
+    } break;
+    case NSEventTypeLeftMouseUp:
+    case NSEventTypeLeftMouseDown:
+      carbon_win__mouse_buttons[CBN_Win_MouseButton_Left] = [e type] == NSEventTypeLeftMouseDown;
+      break;
+    case NSEventTypeRightMouseUp:
+    case NSEventTypeRightMouseDown:
+      carbon_win__mouse_buttons[CBN_Win_MouseButton_Right] = [e type] == NSEventTypeRightMouseDown;
+      break;
+    case NSEventTypeOtherMouseUp:
+    case NSEventTypeOtherMouseDown:
+      if ([e buttonNumber] == 2) {
+        carbon_win__mouse_buttons[CBN_Win_MouseButton_Middle] = [e type] == NSEventTypeOtherMouseDown;
+      }
+      break;
+    default: break;
     }
-  } break;
-  case NSEventTypeFlagsChanged: {
-    NSEventModifierFlags f = [e modifierFlags];
-    carbon_win__keys[CBN_Win_KeyCode_LeftCtrl]  = !!(f & NSEventModifierFlagControl);
-    carbon_win__keys[CBN_Win_KeyCode_LeftShift] = !!(f & NSEventModifierFlagShift);
-    carbon_win__keys[CBN_Win_KeyCode_LeftAlt]   = !!(f & NSEventModifierFlagOption);
-    carbon_win__keys[CBN_Win_KeyCode_LeftMeta]  = !!(f & NSEventModifierFlagCommand);
-    carbon_win__keys[CBN_Win_KeyCode_CapsLock]  = !!(f & NSEventModifierFlagCapsLock);
-  } break;
-  case NSEventTypeLeftMouseUp:
-  case NSEventTypeLeftMouseDown:
-    carbon_win__mouse_buttons[CBN_Win_MouseButton_Left] = [e type] == NSEventTypeLeftMouseDown;
-    break;
-  case NSEventTypeRightMouseUp:
-  case NSEventTypeRightMouseDown:
-    carbon_win__mouse_buttons[CBN_Win_MouseButton_Right] = [e type] == NSEventTypeRightMouseDown;
-    break;
-  case NSEventTypeOtherMouseUp:
-  case NSEventTypeOtherMouseDown:
-    if ([e buttonNumber] == 2) {
-      carbon_win__mouse_buttons[CBN_Win_MouseButton_Middle] = [e type] == NSEventTypeOtherMouseDown;
-    }
-    break;
-  default: break;
+    [carbon_win__app sendEvent:e];
+    return true;
   }
-  [carbon_win__app sendEvent:e];
-  return true;
 }
 
 CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
-  if (w != carbon_win__renderer_w || h != carbon_win__renderer_h) {
-    carbon_win__renderer_w = w;
-    carbon_win__renderer_h = h;
-    carbon_win__renderer_upload_texture();
+  @autoreleasepool {
+    if (w != carbon_win__renderer_w || h != carbon_win__renderer_h) {
+      carbon_win__renderer_w = w;
+      carbon_win__renderer_h = h;
+      carbon_win__renderer_upload_texture();
+    }
+    carbon_memory_copy(carbon_win__mtl_buffer.contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
+    id<CAMetalDrawable> drawable = [carbon_win__mtl_layer nextDrawable];
+    if (!drawable) return;
+    MTLRenderPassDescriptor *pass = [MTLRenderPassDescriptor renderPassDescriptor];
+    pass.colorAttachments[0].texture     = drawable.texture;
+    pass.colorAttachments[0].loadAction  = MTLLoadActionClear;
+    pass.colorAttachments[0].storeAction = MTLStoreActionStore;
+    dispatch_semaphore_wait(carbon_win__mtl_semaphore, DISPATCH_TIME_FOREVER);
+    id<MTLCommandBuffer> cmd = [carbon_win__mtl_queue commandBuffer];
+    [cmd addCompletedHandler:^(id<MTLCommandBuffer> _){
+        dispatch_semaphore_signal(carbon_win__mtl_semaphore);
+      }];
+    id<MTLRenderCommandEncoder> enc = [cmd renderCommandEncoderWithDescriptor:pass];
+    [enc setRenderPipelineState:carbon_win__mtl_pipeline];
+    [enc setFragmentTexture:carbon_win__mtl_texture atIndex:0];
+    [enc drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+    [enc endEncoding];
+    [cmd presentDrawable:drawable];
+    [cmd commit];
   }
-  carbon_memory_copy(carbon_win__mtl_buffer.contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
-  id<CAMetalDrawable> drawable = [carbon_win__mtl_layer nextDrawable];
-  if (!drawable) return;
-  MTLRenderPassDescriptor *pass = [MTLRenderPassDescriptor renderPassDescriptor];
-  pass.colorAttachments[0].texture     = drawable.texture;
-  pass.colorAttachments[0].loadAction  = MTLLoadActionClear;
-  pass.colorAttachments[0].storeAction = MTLStoreActionStore;
-  id<MTLCommandBuffer> cmd = [carbon_win__mtl_queue commandBuffer];
-  id<MTLRenderCommandEncoder> enc = [cmd renderCommandEncoderWithDescriptor:pass];
-  [enc setRenderPipelineState:carbon_win__mtl_pipeline];
-  [enc setFragmentTexture:carbon_win__mtl_texture atIndex:0];
-  [enc drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
-  [enc endEncoding];
-  [cmd presentDrawable:drawable];
-  [cmd commit];
 }
