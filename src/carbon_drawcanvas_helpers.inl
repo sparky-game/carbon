@@ -69,7 +69,9 @@ CBNINL bool carbon_drawcanvas__rect_normalize(const CBN_DrawCanvas *dc, const CB
 }
 
 CBNINL void carbon_drawcanvas__local_to_clip_space(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, Vertex3D *out_vs) {
-  const CBN_Mat4 M = carbon_math_mat4_model(t.position, carbon_math_quat_from_euler(t.rotation), carbon_math_vec3_scale(t.scale, 0.5));
+  const CBN_Mat4 M = carbon_math_mat4_model(t.position,
+                                            carbon_math_quat_from_euler(t.rotation),
+                                            carbon_math_vec3_scale(t.scale, 0.5));
   const CBN_Mat4 V = carbon_camera_get_view(c);
   const CBN_Mat4 P = carbon_camera_get_proj(c);
   const CBN_Mat4 MVP = carbon_math_mat4_mult(P, carbon_math_mat4_mult(V, M));
