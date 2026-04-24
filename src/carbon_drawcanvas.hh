@@ -14,7 +14,7 @@ struct CBN_DrawCanvas {
 
   void UpdateWindow(void) const { cbn::win::Update(this); }
 
-  cbn::Scope<CBN_Camera> CreateCamera(void) const { return cbn::Camera::New(this); }
+  cbn::Scope<CBN_Camera> CreateCamera(void) const { return cbn::Camera::New(*this); }
 
   u32 *Pixels(void) const { return carbon_drawcanvas_pixels(this); }
 

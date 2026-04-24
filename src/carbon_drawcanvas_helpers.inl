@@ -123,7 +123,6 @@ CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vert
 }
 
 CBNINL bool carbon_drawcanvas__clip_to_screen_space(const CBN_DrawCanvas *dc, const CBN_Vec4 v, CBN_Vec3 *out_v) {
-  // if (v.w < CARBON_EPS) return false;
   CBN_Vec3 ndc;
   if (!carbon_math_vec4_project_3d(v, &ndc)) return false;
   ndc.x = (ndc.x + 1)/2 * dc->width;

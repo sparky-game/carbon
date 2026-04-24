@@ -3,9 +3,9 @@
 struct CBN_Camera {
   using Type = CBN_Camera_Type;
   
-  static cbn::Scope<CBN_Camera> New(const CBN_DrawCanvas *dc) {
+  static cbn::Scope<CBN_Camera> New(const CBN_DrawCanvas &dc) {
     return {
-      carbon_camera_create(dc),
+      carbon_camera_create(&dc),
       [](CBN_Camera *c){ carbon_camera_destroy(c); }
     };
   }
