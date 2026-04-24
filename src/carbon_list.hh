@@ -28,6 +28,8 @@ struct CBN_List_tt : CBN_List_t {
 
   ~CBN_List_tt(void) { Free(); }
 
+  void Clear(void) { carbon_list_clear((CBN_List *)this); }
+
   value_type Front(void) const {
     value_type x;
     carbon_list_front((CBN_List *)this, &x);
@@ -62,6 +64,9 @@ struct CBN_List_tt : CBN_List_t {
     return x;
   }
 
+  void Assign(usz count, const value_type &value) { carbon_list_assign((CBN_List *)this, count, (void *)&value); }
+  void Assign(CBN_Span_tt<value_type> range) { carbon_list_assign_range((CBN_List *)this, *(CBN_Span *)&range); }
+
   isz Find(const value_type &value) const { return carbon_list_find((CBN_List *)this, (void *)&value); }
 
   void Remove(usz idx) { carbon_list_remove((CBN_List *)this, idx); }
@@ -74,7 +79,7 @@ struct CBN_List_tt : CBN_List_t {
 
   iterator end(void) const { return (iterator)items + size; }
 
-  value_type &operator[](usz idx) { return carbon_list_at(value_type, *this, idx); }
+  value_type &operator[](usz idx) const { return carbon_list_at(value_type, *this, idx); }
 
 private:
   void Free(void) { carbon_list_destroy((CBN_List *)this); }

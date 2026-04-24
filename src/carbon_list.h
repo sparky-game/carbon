@@ -71,6 +71,12 @@ CBNDEF CBN_List carbon_list_create(usz stride);
 CBNDEF void carbon_list_destroy(CBN_List *l);
 
 /**
+ * @brief Erases all elements from the list, leaving capacity unchanged.
+ * @param l The list container.
+ */
+CBNDEF void carbon_list_clear(CBN_List *l);
+
+/**
  * @brief Obtains the first element of the list.
  * @param l The list container.
  * @param out_value The value of the first element (output argument pointer).
@@ -111,6 +117,21 @@ CBNDEF void carbon_list_pop_front(CBN_List *l, void *out_value);
  * @param out_value The value of the element popped out (output argument pointer).
  */
 CBNDEF void carbon_list_pop_back(CBN_List *l, void *out_value);
+
+/**
+ * @brief Replaces the contents with `count` copies of the value.
+ * @param l The list container.
+ * @param count The number of copies to replace with.
+ * @param value The value to replace with.
+ */
+CBNDEF void carbon_list_assign(CBN_List *l, usz count, void *value);
+
+/**
+ * @brief Replaces the contents with copies of those in the specified range.
+ * @param l The list container.
+ * @param range The Span representing the contiguous block of values to replace with.
+ */
+CBNDEF void carbon_list_assign_range(CBN_List *l, CBN_Span range);
 
 /**
  * @brief Obtains the index of the provided element, or -1 if not present.

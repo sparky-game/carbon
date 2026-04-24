@@ -22,6 +22,14 @@ void carbon_list_destroy(CBN_List *l) {
   carbon_memory_set(l, 0, sizeof(*l));
 }
 
+void carbon_list_clear(CBN_List *l) {
+  if (!l) {
+    CBN_ERROR("`l` must be a valid pointer");
+    return;
+  }
+  l->size = 0;
+}
+
 void carbon_list_front(CBN_List *l, void *out_value) {
   if (!l || !out_value) {
     CBN_ERROR("`l` and `out_value` must be valid pointers");
@@ -89,6 +97,26 @@ void carbon_list_pop_back(CBN_List *l, void *out_value) {
   carbon_list_back(l, out_value);
   if (!l || !l->size || !out_value) return;
   --l->size;
+}
+
+void carbon_list_assign(CBN_List *l, usz count, void *value) {
+  if (!l || !value) {
+    CBN_ERROR("`l` and `value` must be valid pointers");
+    return;
+  }
+  carbon_list_clear(l);
+  for (usz i = 0; i < count; ++i) {
+    carbon_list_push(l, value);
+  }
+}
+
+void carbon_list_assign_range(CBN_List *l, CBN_Span range) {
+  if (!l || !range.data) {
+    CBN_ERROR("`l` and `range.data` must be valid pointers");
+    return;
+  }
+  carbon_list_clear(l);
+  carbon_list_push_range(l, range);
 }
 
 isz carbon_list_find(const CBN_List *l, const void *value) {
