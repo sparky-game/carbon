@@ -103,7 +103,7 @@ void carbon_mesh_destroy(CBN_Mesh *m) {
   carbon_memory_free(m->faces);
 }
 
-u32 carbon_mesh_compute_crc32(CBN_Mesh *m) {
+u32 carbon_mesh_compute_crc32(const CBN_Mesh *m) {
   if (!m) {
     CBN_WARN("`m` is not a valid pointer, skipping computation");
     return 0;

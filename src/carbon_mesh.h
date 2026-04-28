@@ -30,8 +30,14 @@ CBNDEF_T(CBN_Mesh) {
 };
 CBNDEF_TAKA(cbn, Mesh, CBN_Mesh);
 
+/**
+ */
 CBNDEF bool carbon_mesh_create_from_file(CBN_Mesh *m, const char *file);
 
+/**
+ */
 CBNDEF void carbon_mesh_destroy(CBN_Mesh *m);
 
-CBNDEF u32 carbon_mesh_compute_crc32(CBN_Mesh *m);
+/**
+ */
+CBNDEF u32 carbon_mesh_compute_crc32(const CBN_Mesh *m);

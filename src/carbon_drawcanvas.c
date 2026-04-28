@@ -312,10 +312,10 @@ void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec
   vs[3].world = carbon_math_vec3(center.x - size.x, center.y, center.z + size.y);
   const CBN_Mat4 V = carbon_camera_get_view(c);
   const CBN_Mat4 P = carbon_camera_get_proj(c);
-  const CBN_Mat4 MVP = carbon_math_mat4_mult(P, V);
+  const CBN_Mat4 VP = carbon_math_mat4_mult(P, V);
   for (usz i = 0; i < CARBON_ARRAY_LEN(vs); ++i) {
     CBN_Vec4 v = carbon_math_vec4_3(vs[i].world, 1);
-    vs[i].clip = carbon_math_mat4_mult_vec4(MVP, v);
+    vs[i].clip = carbon_math_mat4_mult_vec4(VP, v);
   }
   {// First triangle
     Vertex3D pvs[4];

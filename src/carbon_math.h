@@ -56,9 +56,10 @@ CBNDEF_iAKA(cbn::math, literals, inv_sqrt3, CARBON_1_SQRT3);
 CBNDEF_iAKA(cbn::math, literals, log2e, CARBON_LOG2_E);
 #define CARBON_LOG2_10 3.32192809488736234789
 
+#define CARBON_NAN (0./0.)
+#define CARBON_INF (1./0.)
 #define CARBON_EPS    1e-6
 #define CARBON_EPS_SQ 1e-12
-#define CARBON_INF    1e40
 
 /**
  * @brief Returns an integer {-1, 0, 1} that indicates the sign of a number.
