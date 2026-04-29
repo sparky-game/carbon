@@ -16,6 +16,13 @@ static bool carbon_win__prev_keys[CBN_Win_KeyCode_Count];
 static bool carbon_win__mouse_buttons[CBN_Win_MouseButton_Count];
 static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 
+// Internal platform API
+CBNINL void carbon_win__create_window(usz w, usz h, const char *title);
+CBNINL void carbon_win__destroy_window(void);
+CBNINL CBN_Vec2 carbon_win__get_window_size(void);
+CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h);
+CBNINL bool carbon_win__poll_event(void);
+
 #if defined(__APPLE__)
 #include "carbon_win_macos.m"
 #elif defined(_WIN32)

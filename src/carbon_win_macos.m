@@ -8,6 +8,8 @@
 #import <AppKit/AppKit.h>
 #import <QuartzCore/CAMetalLayer.h>
 
+#define CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT 3
+
 @interface CBNView : NSView
 @end
 
@@ -157,7 +159,7 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
   [vert_fn release];
   [frag_fn release];
   carbon_win__renderer_upload_texture();
-  carbon_win__mtl_semaphore = dispatch_semaphore_create(3);
+  carbon_win__mtl_semaphore = dispatch_semaphore_create(CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT);
 }
 
 CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
@@ -194,6 +196,12 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
 }
 
 CBNINL void carbon_win__renderer_shutdown(void) {
+  for (usz i = 0; i < CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT; ++i) {
+    dispatch_semaphore_wait(carbon_win__mtl_semaphore, DISPATCH_TIME_FOREVER);
+  }
+  for (usz i = 0; i < CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT; ++i) {
+    dispatch_semaphore_signal(carbon_win__mtl_semaphore);
+  }
   dispatch_release(carbon_win__mtl_semaphore);
   [carbon_win__mtl_buffer   release];
   [carbon_win__mtl_texture  release];
