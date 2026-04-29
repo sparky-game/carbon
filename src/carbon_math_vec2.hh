@@ -14,8 +14,7 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   constexpr CBN_Vec2 operator+(f32 s) const { return CBN_Vec2(x + s, y + s); }
   friend constexpr CBN_Vec2 operator+(f32 s, const CBN_Vec2 &v) { return v + s; }
-
-  CBN_Vec2 &operator+=(f32 s) { return *this = *this + s; }
+  constexpr CBN_Vec2 &operator+=(f32 s) { return *this = *this + s; }
 
   CBN_Vec2 operator-(void) const { return *this * -1; }
 
