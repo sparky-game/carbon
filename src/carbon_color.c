@@ -87,6 +87,12 @@ u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t) {
   return CBN_COLOR__U32_4(r, g, b, a);
 }
 
+u32 carbon_color_bilerp(u32 c1, u32 c2, u32 c3, u32 c4, CBN_Vec2 t) {
+  u32 c12 = carbon_color_lerp(c1, c2, t.x);
+  u32 c34 = carbon_color_lerp(c3, c4, t.x);
+  return carbon_color_lerp(c12, c34, t.y);
+}
+
 u32 carbon_color_complementary(u32 color) {
   CBN_Vec3 hsv = carbon_color_to_hsv(color);
   hsv.x = carbon_math_fmod(hsv.x + 180, 360);

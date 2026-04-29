@@ -82,6 +82,18 @@ CBNDEF u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t);
 CBNDEF_AKA(cbn::color, Lerp3, carbon_color_lerp_3);
 
 /**
+ * @brief Performs bilinear interpolation across c1, c2, c3 and c4 by 2D factor t.
+ * @param c1 The first color.
+ * @param c2 The second color.
+ * @param c3 The third color.
+ * @param c4 The fourth color.
+ * @param t The 2D interpolation factor in [0..1].
+ * @return The interpolated color between c1, c2, c3 and c4.
+ */
+CBNDEF u32 carbon_color_bilerp(u32 c1, u32 c2, u32 c3, u32 c4, CBN_Vec2 t);
+CBNDEF_AKA(cbn::color, BiLerp, carbon_color_bilerp);
+
+/**
  * @brief Computes the complementary color of the one provided (32-bit RGBA).
  * @param color The color.
  * @return The complementary 32-bit RGBA color.
