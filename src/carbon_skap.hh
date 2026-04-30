@@ -38,7 +38,7 @@ struct CBN_SKAP : CBN_SKAP_t {
 
   void Print(void) const { carbon_skap_print(this); }
 
-  template <typename T>
+  template <CBN_SKAP_ValidAssetType T>
   cbn::Opt<T> Lookup(const char *asset_name) const {
     T asset;
     if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
@@ -47,7 +47,7 @@ struct CBN_SKAP : CBN_SKAP_t {
 
   usz Count(void) const { return carbon_skap_count(this); }
 
-  template <typename T>
+  template <CBN_SKAP_ValidAssetType T>
   usz CountOf(void) const { return carbon_skap_count_of(this, GetAssetType<T>()); }
 
   cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const {
