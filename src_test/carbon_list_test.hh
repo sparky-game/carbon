@@ -47,6 +47,16 @@ TEST(find) {
   return true;
 }
 
+TEST(find_if) {
+  cbn::List<i32> l;
+  l.Push(1);
+  l.Push(2);  // <-- l[1]
+  l.Push(3);
+  auto idx = l.FindIf([](auto i){ return i % 2 == 0; });
+  carbon_should_be(1, idx);
+  return true;
+}
+
 TEST(remove) {
   cbn::List<i32> l;
   typeof(l)::value_type i = 1, j = 7, k = 3;

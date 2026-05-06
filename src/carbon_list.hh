@@ -69,6 +69,14 @@ struct CBN_List_tt : CBN_List_t {
 
   isz Find(const value_type &value) const { return carbon_list_find((CBN_List *)this, (void *)&value); }
 
+  template <typename Predicate>
+  isz FindIf(Predicate pred) const {
+    for (usz i = 0; i < size; ++i) {
+      if (pred((*this)[i])) return i;
+    }
+    return -1;
+  }
+
   void Remove(usz idx) { carbon_list_remove((CBN_List *)this, idx); }
 
   void ShrinkToFit(void) { carbon_list_shrink_to_fit((CBN_List *)this); }
