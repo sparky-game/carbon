@@ -75,6 +75,19 @@ struct CBN_List_tt : CBN_List_t {
 
   CBN_Span_tt<value_type> ToSpan(void) const { return CBN_Span_tt(*this); }
 
+  template <typename Compare>
+  void Sort(cbn::sort::Func sort, Compare) {
+    auto f_cmp = [](const void *ap, const void *bp) {
+      Compare cmp;
+      const auto &a = *static_cast<const value_type *>(ap);
+      const auto &b = *static_cast<const value_type *>(bp);
+      if (cmp(a, b)) return -1;
+      if (cmp(b, a)) return 1;
+      return 0;
+    };
+    sort(items, size, sizeof(value_type), f_cmp);
+  }
+
   iterator begin(void) const { return (iterator)items; }
 
   iterator end(void) const { return (iterator)items + size; }

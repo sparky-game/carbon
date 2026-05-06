@@ -82,3 +82,28 @@ TEST(push_strings) {
   carbon_should_be(45, l.size);
   return true;
 }
+
+TEST(sort) {
+  cbn::List<i32> l;
+  l.Push(420);   // l[0]
+  l.Push(1337);  // l[1]
+  l.Push(69);    // l[2]
+  l.Push(-7);    // l[3]
+  l.Push(1);     // l[4]
+  l.Push(33);    // l[5]
+  l.Sort(cbn::sort::Insertion, [](i32 a, i32 b){ return a > b; });
+  carbon_should_be(1337, l[0]);  // l[1] -> l[0]
+  carbon_should_be(420, l[1]);   // l[0] -> l[1]
+  carbon_should_be(69, l[2]);    // l[2] -> l[2]
+  carbon_should_be(33, l[3]);    // l[5] -> l[3]
+  carbon_should_be(1, l[4]);     // l[4] -> l[4]
+  carbon_should_be(-7, l[5]);    // l[3] -> l[5]
+  l.Sort(cbn::sort::Insertion, [](i32 a, i32 b){ return a < b; });
+  carbon_should_be(-7, l[0]);    // l[5] -> l[0]
+  carbon_should_be(1, l[1]);     // l[4] -> l[1]
+  carbon_should_be(33, l[2]);    // l[3] -> l[2]
+  carbon_should_be(69, l[3]);    // l[2] -> l[3]
+  carbon_should_be(420, l[4]);   // l[1] -> l[4]
+  carbon_should_be(1337, l[5]);  // l[0] -> l[5]
+  return true;
+}
