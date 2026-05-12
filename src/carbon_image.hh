@@ -1,19 +1,16 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
 struct CBN_Image : CBN_Image_t {
-  static CBN_Image FromFile(const char *file) {
-    return carbon_image_read_from_file(file);
-  }
+  using Format = CBN_Image_Format;
 
-  static CBN_Image FromCanvas(const CBN_DrawCanvas &dc) {
-    return carbon_image_from_canvas(&dc);
-  }
-  
-  void Free(void) {
-    carbon_image_destroy(this);
-  }
+  explicit CBN_Image(const char *file) : CBN_Image_t{carbon_image_read_from_file(file)} {}
+  explicit CBN_Image(const CBN_DrawCanvas &dc) : CBN_Image_t{carbon_image_from_canvas(&dc)} {}
 
-  bool Save(CBN_Image_Format fmt, const char *file) const {
+  ~CBN_Image(void) { carbon_image_destroy(this); }
+
+  bool Save(Format fmt, const char *file) const {
     return carbon_image_write_to_file(this, fmt, file);
   }
 };
