@@ -13,8 +13,8 @@ CBNINL CBN_Vec4 carbon_math_mat4_mult_vec4__simd(CBN_Mat4 m, CBN_Vec4 v) {
                              v.z, v.z, v.z, v.z,
                              v.y, v.y, v.y, v.y,
                              v.x, v.x, v.x, v.x);
-  f32x8 m01 = _mm256_mul_ps(r01, v_bs);
-  f32x8 m23 = _mm256_mul_ps(r23, v_bs);
+  f32x8 m01 = _mm256_mul_ps(r01, v_bc);
+  f32x8 m23 = _mm256_mul_ps(r23, v_bc);
   f32x4 s01 = _mm_hadd_ps(_mm256_castps256_ps128(m01), _mm256_extractf128_ps(m01, 1));
   f32x4 s23 = _mm_hadd_ps(_mm256_castps256_ps128(m23), _mm256_extractf128_ps(m23, 1));
   f32x4 res = _mm_hadd_ps(s01, s23);
@@ -90,7 +90,7 @@ CBNINL CBN_Vec4 carbon_math_mat4_mult_vec4__simd(CBN_Mat4 m, CBN_Vec4 v) {
   vst1q_f32(r.c, res);
   return r;
 #else
-#error "No SIMD support for `mat4_mult_vec4` operation"
+#error No SIMD support for `mat4_mult_vec4` operation
 #endif
 }
 
