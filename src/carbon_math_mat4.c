@@ -114,9 +114,9 @@ CBN_Mat4 carbon_math_mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top,
   m.m[0][0] =  2/(right - left);
   m.m[1][1] =  2/(top - bottom);
   m.m[2][2] = -2/(far - near);
-  m.m[3][0] = -(right + left)/(right - left);
-  m.m[3][1] = -(top + bottom)/(top - bottom);
-  m.m[3][2] = -(far + near)/(far - near);
+  m.m[0][3] = -(right + left)/(right - left);
+  m.m[1][3] = -(top + bottom)/(top - bottom);
+  m.m[2][3] = -(far + near)/(far - near);
   m.m[3][3] = 1;
   return m;
 }
