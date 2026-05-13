@@ -5,28 +5,28 @@
 struct CBN_Vec3 : CBN_Vec3_t {
   constexpr CBN_Vec3(f32 _x, f32 _y, f32 _z) : CBN_Vec3_t{.c = {_x, _y, _z}} {}
   constexpr CBN_Vec3(f32 _x = 0) : CBN_Vec3(_x, _x, _x) {}
-  constexpr CBN_Vec3(const CBN_Vec2 &v, f32 _z = 0) : CBN_Vec3(v.x, v.y, _z) {}
+  constexpr CBN_Vec3(CBN_Vec2 v, f32 _z = 0) : CBN_Vec3(v.x, v.y, _z) {}
 
-  CBN_Vec3 operator+(const CBN_Vec3 &v) const { return carbon_math_vec3_add(*this, v); }
+  CBN_Vec3 operator+(CBN_Vec3 v) const { return carbon_math_vec3_add(*this, v); }
 
-  CBN_Vec3 &operator+=(const CBN_Vec3 &v) { return *this = *this + v; }
+  CBN_Vec3 &operator+=(CBN_Vec3 v) { return *this = *this + v; }
 
   constexpr CBN_Vec3 operator+(f32 s) const { return CBN_Vec3(x + s, y + s, z + s); }
-  friend constexpr CBN_Vec3 operator+(f32 s, const CBN_Vec3 &v) { return v + s; }
+  friend constexpr CBN_Vec3 operator+(f32 s, CBN_Vec3 v) { return v + s; }
 
   CBN_Vec3 &operator+=(f32 s) { return *this = *this + s; }
 
-  CBN_Vec3 operator-(const CBN_Vec3 &v) const { return carbon_math_vec3_sub(*this, v); }
+  CBN_Vec3 operator-(CBN_Vec3 v) const { return carbon_math_vec3_sub(*this, v); }
 
-  f32 operator*(const CBN_Vec3 &v) const { return carbon_math_vec3_dot(*this, v); }
+  f32 operator*(CBN_Vec3 v) const { return carbon_math_vec3_dot(*this, v); }
 
   CBN_Vec3 operator/(f32 s) const { return carbon_math_vec3_scale(*this, 1/s); }
 
-  CBN_Vec3 Cross(const CBN_Vec3 &v) const { return carbon_math_vec3_cross(*this, v); }
+  CBN_Vec3 Cross(CBN_Vec3 v) const { return carbon_math_vec3_cross(*this, v); }
 
-  CBN_Vec3 Lerp(const CBN_Vec3 &v, f32 t) const { return carbon_math_vec3_lerp(*this, v, t); }
+  CBN_Vec3 Lerp(CBN_Vec3 v, f32 t) const { return carbon_math_vec3_lerp(*this, v, t); }
 
-  CBN_Vec3 Max(const CBN_Vec3 &v) const { return carbon_math_vec3_max(*this, v); }
+  CBN_Vec3 Max(CBN_Vec3 v) const { return carbon_math_vec3_max(*this, v); }
 
   CBN_Vec3 Normalize(void) const { return carbon_math_vec3_norm(*this); }
 

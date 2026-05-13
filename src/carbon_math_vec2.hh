@@ -8,38 +8,38 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   static CBN_Vec2 FromPolar(f32 r, f32 phi) { return carbon_math_vec2_p(r, phi); }
 
-  CBN_Vec2 operator+(const CBN_Vec2 &v) const { return carbon_math_vec2_add(*this, v); }
+  CBN_Vec2 operator+(CBN_Vec2 v) const { return carbon_math_vec2_add(*this, v); }
 
-  CBN_Vec2 &operator+=(const CBN_Vec2 &v) { return *this = *this + v; }
+  CBN_Vec2 &operator+=(CBN_Vec2 v) { return *this = *this + v; }
 
   constexpr CBN_Vec2 operator+(f32 s) const { return CBN_Vec2(x + s, y + s); }
-  friend constexpr CBN_Vec2 operator+(f32 s, const CBN_Vec2 &v) { return v + s; }
+  friend constexpr CBN_Vec2 operator+(f32 s, CBN_Vec2 v) { return v + s; }
   constexpr CBN_Vec2 &operator+=(f32 s) { return *this = *this + s; }
 
   CBN_Vec2 operator-(void) const { return *this * -1; }
 
-  CBN_Vec2 operator-(const CBN_Vec2 &v) const { return carbon_math_vec2_sub(*this, v); }
+  CBN_Vec2 operator-(CBN_Vec2 v) const { return carbon_math_vec2_sub(*this, v); }
 
   CBN_Vec2 operator-(f32 s) const { return CBN_Vec2(x - s, y - s); }
-  friend CBN_Vec2 operator-(f32 s, const CBN_Vec2 &v) { return -v + s; }
+  friend CBN_Vec2 operator-(f32 s, CBN_Vec2 v) { return -v + s; }
 
-  CBN_Vec2 &operator-=(const CBN_Vec2 &v) { return *this = *this - v; }
+  CBN_Vec2 &operator-=(CBN_Vec2 v) { return *this = *this - v; }
 
-  CBN_Vec2 operator*(const CBN_Vec2 &v) const { return carbon_math_vec2_mult(*this, v); }
+  CBN_Vec2 operator*(CBN_Vec2 v) const { return carbon_math_vec2_mult(*this, v); }
 
   CBN_Vec2 operator*(f32 s) const { return carbon_math_vec2_scale(*this, s); }
-  friend CBN_Vec2 operator*(f32 s, const CBN_Vec2 &v) { return v * s; }
+  friend CBN_Vec2 operator*(f32 s, CBN_Vec2 v) { return v * s; }
 
   CBN_Vec2 &operator*=(f32 s) { return *this = *this * s; }
 
-  CBN_Vec2 operator/(const CBN_Vec2 &v) const;
+  CBN_Vec2 operator/(CBN_Vec2 v) const;
 
   CBN_Vec2 operator/(f32 s) const { return carbon_math_vec2_scale(*this, 1/s); }
 
   CBN_Vec2 &operator/=(f32 s) { return *this = *this / s; }
 
-  f32 Dot(const CBN_Vec2 &v) const { return carbon_math_vec2_dot(*this, v); }
-  static f32 Dot(const CBN_Vec2 &u, const CBN_Vec2 &v) { return u.Dot(v); }
+  f32 Dot(CBN_Vec2 v) const { return carbon_math_vec2_dot(*this, v); }
+  static f32 Dot(CBN_Vec2 u, CBN_Vec2 v) { return u.Dot(v); }
 
   f32 LengthSquared(void) const { return carbon_math_vec2_len_squared(*this); }
 
@@ -47,7 +47,7 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   CBN_Vec2 Normalize(void) const { return carbon_math_vec2_norm(*this); }
 
-  void Clamp(const CBN_Vec2 &min, const CBN_Vec2 &max) { *this = carbon_math_vec2_clamp(*this, min, max); }
+  void Clamp(CBN_Vec2 min, CBN_Vec2 max) { *this = carbon_math_vec2_clamp(*this, min, max); }
 
   CBN_Vec2 Floor(void) const { return carbon_math_vec2_floor(*this); }
 
@@ -63,11 +63,11 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   CBN_Vec2 Tanh(void) const { return carbon_math_vec2_tanh(*this); }
 
-  CBN_Vec2 Lerp(const CBN_Vec2 &v, f32 t) const { return carbon_math_vec2_lerp(*this, v, t); }
+  CBN_Vec2 Lerp(CBN_Vec2 v, f32 t) const { return carbon_math_vec2_lerp(*this, v, t); }
 
   CBN_Vec2 Rotate(f32 angle) const { return carbon_math_vec2_rotate(*this, angle); }
 
-  CBN_Vec2 RotatePivot(f32 angle, const CBN_Vec2 &pivot) const { return carbon_math_vec2_rotate_around_pivot(*this, angle, pivot); }
+  CBN_Vec2 RotatePivot(f32 angle, CBN_Vec2 pivot) const { return carbon_math_vec2_rotate_around_pivot(*this, angle, pivot); }
 
   cbn::Pair<bool, CBN_Vec3> Barycentric(CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3) const;
 
