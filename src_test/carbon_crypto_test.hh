@@ -28,7 +28,7 @@ TEST(crc32) {
   return true;
 }
 
-TEST(sha1_ShortMsg_0) {
+TEST(sha1_ShortMsgKAT_0) {
   // Using official known-answer test (KAT) results as of FIPS 180-4:
   // <https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip>.
   // Specifically, this test uses `Len = 0` from `SHA1ShortMsg.rsp`.
@@ -36,7 +36,7 @@ TEST(sha1_ShortMsg_0) {
   return true;
 }
 
-TEST(sha1_ShortMsg_8_304) {
+TEST(sha1_ShortMsgKAT_8_304) {
   // Using official known-answer test (KAT) results as of FIPS 180-4:
   // <https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip>.
   // Specifically, this test uses `Len = {8..304}` from `SHA1ShortMsg.rsp`.
@@ -154,7 +154,7 @@ TEST(sha256_ShortMsgKAT_0) {
   return true;
 }
 
-TEST(sha256_ShortMsg_8_304) {
+TEST(sha256_ShortMsgKAT_8_304) {
   // Using official known-answer test (KAT) results as of FIPS 180-4:
   // <https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip>.
   // Specifically, this test uses `Len = {8..304}` from `SHA256ShortMsg.rsp`.
