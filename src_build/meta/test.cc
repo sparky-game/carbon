@@ -6,11 +6,12 @@
 
 using namespace cbn::math::literals;
 
-#include <carbon_list_test.hh>
-#include <carbon_math_test.hh>
 #include <carbon_metaprogramming_test.hh>
-#include <carbon_slotmap_test.hh>
+#include <carbon_math_test.hh>
+#include <carbon_crypto_test.hh>
 #include <carbon_string_test.hh>
+#include <carbon_list_test.hh>
+#include <carbon_slotmap_test.hh>
 
 int main(void) {
   return CARBON_RUN_ALL();

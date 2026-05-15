@@ -1,40 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#include <carbon.h>
-
-#define TEST(name) CARBON_TEST(carbon_crypto, name)
+#undef TEST
+#define TEST(x) CARBON_TEST(carbon_crypto, x)
 
 TEST(base64) {
-  const char *msg = "Hello";
-  const usz msg_size = carbon_string_len(msg);
+  const auto msg = "Hello";
+  const auto msg_size = cbn::str::len(msg);
   usz b64_msg_size = 0;
-  char *b64_msg = carbon_crypto_base64_encode((const u8 *) msg, msg_size, &b64_msg_size);
+  auto b64_msg = cbn::crypto::b64::Encode((const u8 *) msg, msg_size, &b64_msg_size);
+  defer { cbn::mem::Free(b64_msg); };
   carbon_should_be_s("SGVsbG8=", b64_msg);
   carbon_should_be(8, b64_msg_size);
   usz recv_msg_size = 0;
-  u8 *recv_msg = carbon_crypto_base64_decode((const u8 *) b64_msg, &recv_msg_size);
+  auto recv_msg = cbn::crypto::b64::Decode((const u8 *) b64_msg, &recv_msg_size);
+  defer { cbn::mem::Free(recv_msg); };
   carbon_should_be_s(msg, recv_msg);
   carbon_should_be(msg_size, recv_msg_size);
-  carbon_memory_free(b64_msg);
-  carbon_memory_free(recv_msg);
-  return CARBON_OK;
+  return true;
 }
 
 TEST(crc32) {
-  const char *msg = "Hello";
-  const usz msg_size = carbon_string_len(msg);
-  u32 crc32_msg = carbon_crypto_crc32((const u8 *) msg, msg_size);
+  const auto msg = "Hello";
+  const auto msg_size = cbn::str::len(msg);
+  auto crc32_msg = cbn::crypto::crc32::Compute((const u8 *) msg, msg_size);
   carbon_should_be(0xf7d18982, crc32_msg);
-  return CARBON_OK;
+  return true;
 }
 
 TEST(sha1_ShortMsg_0) {
   // Using official known-answer test (KAT) results as of FIPS 180-4:
   // <https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip>.
   // Specifically, this test uses `Len = 0` from `SHA1ShortMsg.rsp`.
-  carbon_should_be_s("da39a3ee5e6b4b0d3255bfef95601890afd80709", carbon_crypto_sha1_as_hex_cstr(0, 0));
-  return CARBON_OK;
+  carbon_should_be_s("da39a3ee5e6b4b0d3255bfef95601890afd80709", cbn::crypto::sha1::AsHexString(0, 0));
+  return true;
 }
 
 TEST(sha1_ShortMsg_8_304) {
@@ -43,8 +42,8 @@ TEST(sha1_ShortMsg_8_304) {
   // Specifically, this test uses `Len = {8..304}` from `SHA1ShortMsg.rsp`.
 #define KAT(hash, ...)                                                  \
   {                                                                     \
-    const u8 msg[] = {__VA_ARGS__};                                     \
-    carbon_should_be_s(hash, carbon_crypto_sha1_as_hex_cstr(msg, CARBON_ARRAY_LEN(msg))); \
+  const u8 msg[] = {__VA_ARGS__};                                       \
+  carbon_should_be_s(hash, cbn::crypto::sha1::AsHexString(msg, CARBON_ARRAY_LEN(msg))); \
   }
 
   KAT("c1dfd96eea8cc2b62785275bca38ac261256e278",
@@ -144,15 +143,15 @@ TEST(sha1_ShortMsg_8_304) {
       0x37, 0x7e, 0xf8, 0x8b, 0xfb, 0xa6, 0x62, 0xe5, 0x68, 0x2b, 0xab, 0xc1, 0xec, 0x96, 0xc6, 0x99, 0x2b, 0xc9, 0xa0);
 
 #undef KAT
-  return CARBON_OK;
+  return true;
 }
 
 TEST(sha256_ShortMsgKAT_0) {
   // Using official known-answer test (KAT) results as of FIPS 180-4:
   // <https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip>.
   // Specifically, this test uses `Len = 0` from `SHA256ShortMsg.rsp`.
-  carbon_should_be_s("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", carbon_crypto_sha256_as_hex_cstr(0, 0));
-  return CARBON_OK;
+  carbon_should_be_s("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", cbn::crypto::sha256::AsHexString(0, 0));
+  return true;
 }
 
 TEST(sha256_ShortMsg_8_304) {
@@ -161,8 +160,8 @@ TEST(sha256_ShortMsg_8_304) {
   // Specifically, this test uses `Len = {8..304}` from `SHA256ShortMsg.rsp`.
 #define KAT(hash, ...)                                                  \
   {                                                                     \
-    const u8 msg[] = {__VA_ARGS__};                                     \
-    carbon_should_be_s(hash, carbon_crypto_sha256_as_hex_cstr(msg, CARBON_ARRAY_LEN(msg))); \
+  const u8 msg[] = {__VA_ARGS__};                                       \
+  carbon_should_be_s(hash, cbn::crypto::sha256::AsHexString(msg, CARBON_ARRAY_LEN(msg))); \
   }
 
   KAT("28969cdfa74a12c82f3bad960b0b000aca2ac329deea5c2328ebc6f2ba9802c1",
@@ -262,15 +261,15 @@ TEST(sha256_ShortMsg_8_304) {
       0x67, 0x99, 0x60, 0xe7, 0xf0, 0x6a, 0xeb, 0x8c, 0x70, 0xdf, 0xef, 0x95, 0x4f, 0x8e, 0x39, 0xef, 0xdb, 0x62, 0x9b);
 
 #undef KAT
-  return CARBON_OK;
+  return true;
 }
 
 TEST(keccak256_ShortMsgKAT_0) {
   // Using official known-answer and Monte Carlo test results as of round 3
   // of the SHA-3 competition: <https://keccak.team/obsolete/KeccakKAT-3.zip>.
   // Specifically, this test uses `Len = 0` from `ShortMsgKAT_256.txt`.
-  carbon_should_be_s("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", carbon_crypto_keccak256_as_hex_cstr(0, 0));
-  return CARBON_OK;
+  carbon_should_be_s("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", cbn::crypto::keccak256::AsHexString(0, 0));
+  return true;
 }
 
 TEST(keccak256_ShortMsgKAT_8_456) {
@@ -279,8 +278,8 @@ TEST(keccak256_ShortMsgKAT_8_456) {
   // Specifically, this test uses `Len = {8..456}` from `ShortMsgKAT_256.txt`.
 #define KAT(hash, ...)                                                  \
   {                                                                     \
-    const u8 msg[] = {__VA_ARGS__};                                     \
-    carbon_should_be_s(hash, carbon_crypto_keccak256_as_hex_cstr(msg, CARBON_ARRAY_LEN(msg))); \
+  const u8 msg[] = {__VA_ARGS__};                                       \
+  carbon_should_be_s(hash, cbn::crypto::keccak256::AsHexString(msg, CARBON_ARRAY_LEN(msg))); \
   }
 
   KAT("eead6dbfc7340a56caedc044696a168870549a6a7f6f56961e84a54bd9970b8a",
@@ -456,7 +455,5 @@ TEST(keccak256_ShortMsgKAT_8_456) {
       0xb8, 0x5a, 0x6a, 0x3c, 0xeb, 0xda, 0x8d, 0xb4, 0xe5, 0x54, 0x9c, 0x3e, 0xe5, 0x1b, 0xb6, 0xfc, 0xb6, 0xac, 0x1e);
 
 #undef KAT
-  return CARBON_OK;
+  return true;
 }
-
-#undef TEST
