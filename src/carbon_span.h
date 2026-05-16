@@ -7,7 +7,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 /**
- * @brief Represents ...
+ * @brief Represents a contiguous sequence of elements. (?)
  */
 CBNDEF_TT(CBN_Span) {
   u8 *data;
