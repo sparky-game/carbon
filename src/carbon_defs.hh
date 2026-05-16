@@ -40,19 +40,34 @@
 
 #ifdef __cplusplus
 #define typeof(x) decltype(x)
+#define typeeq(T, U) cbn::meta::Same_v<T, U>
 #else
 #define typeof(x) __typeof__(x)
+#define typeeq(T, U) __builtin_types_compatible_p(T, U)
 #endif
 
 #ifndef __cplusplus
 #if defined(__GNUC__) || defined(__clang__)
+#define alignof(x) __alignof__(x)
 #define alignas(x) __attribute__((aligned(x)))
 #elif defined(_WIN32) && defined(_MSC_VER)
+#define alignof(x) __alignof(x)
 #define alignas(x) __declspec(align(x))
 #else
+#define alignof(x) _Alignof(x)
 #define alignas(x) _Alignas(x)
 #endif
 #endif
+
+/**
+ * @brief Swaps the values of a pair of variables between each other.
+ * @param x The first variable.
+ * @param y The second variable.
+ */
+#define CARBON_SWAP(x, y) { x ^= y; y ^= x; x ^= y; }
+
+#define CARBON_IS_ALIGNED(x, a) (0 == ((uptr)(x) & ((uptr)(a) - 1)))
+#define CARBON_IS_ALIGNED_64(x) CARBON_IS_ALIGNED(x, 8)
 
 #define CARBON_QUOTE(x) CARBON_QUOTE__2_ELECTRIC_BOOGALOO(x)
 #define CARBON_QUOTE__2_ELECTRIC_BOOGALOO(x) #x
@@ -65,23 +80,10 @@
 #define CARBON_ARRAY_SHIFT(xs, xs_sz) (CBN_ASSERT((xs_sz) > 0 && "Array is empty"), --(xs_sz), *(xs)++)
 #define CARBON_SHIFT_ARGS(argc, argv) CARBON_ARRAY_SHIFT(argv, argc)
 
-/**
- * @brief Swaps the values of a pair of variables between each other.
- * @param x The first variable.
- * @param y The second variable.
- */
-#define CARBON_SWAP(x, y) { x ^= y; y ^= x; x ^= y; }
-
 #define CARBON_UNREACHABLE CBN_ASSERT(false && "unreachable")
 #define CARBON_STATIC_UNREACHABLE static_assert(false, "unreachable")
 #define CARBON_NOTIMPLEMENTED CBN_ASSERT(false && "not yet implemented")
 #define CARBON_STATIC_NOTIMPLEMENTED static_assert(false, "not yet implemented")
-
-#ifdef __cplusplus
-#define typeeq(T, U) cbn::meta::Same_v<T, U>
-#else
-#define typeeq(T, U) __builtin_types_compatible_p(T, U)
-#endif
 
 #if defined(__GNUC__) || defined(__clang__)
 #define CBNINL __attribute__((always_inline)) static inline
