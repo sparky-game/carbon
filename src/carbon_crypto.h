@@ -146,3 +146,21 @@ CBNDEF_AKA(cbn::crypto::keccak256, ToHexString, carbon_crypto_keccak256_to_hex_c
  */
 CBNDEF char *carbon_crypto_keccak256_as_hex_cstr(const u8 *in, const usz in_size);
 CBNDEF_AKA(cbn::crypto::keccak256, AsHexString, carbon_crypto_keccak256_as_hex_cstr);
+
+/**
+ * @brief Encrypts or decrypts binary data using the ChaCha20 stream cipher.
+ *
+ * Since it's a symmetric stream cipher, encryption and decryption are the same
+ * operation: the keystream is XOR'd with the input to produce the output.
+ * Also, the output ciphertext is always the same length as the input plaintext;
+ * thus, the output buffer (`out`) must be at least `in.size` bytes long.
+ * It is safe to pass the same pointer for both `in` and `out` to perform an
+ * in-place operation.
+ *
+ * @param key The 32-byte (256-bit) secret key.
+ * @param iv The 8-byte (64-bit) IV/nonce.
+ * @param in The input binary data.
+ * @param out The output buffer.
+ */
+CBNDEF void carbon_crypto_chacha20(const u8 *key, const u8 *iv, CBN_Span in, u8 *out);
+CBNDEF_AKA(cbn::crypto, ChaCha20, carbon_crypto_chacha20);

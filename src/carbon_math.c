@@ -1,6 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+u32 carbon_math_ch32(u32 x, u32 y, u32 z) {
+  return z ^ (x & (y ^ z));
+}
+
+u32 carbon_math_maj32(u32 x, u32 y, u32 z) {
+  return (x & y) | (z & (x | y));
+}
+
+u32 carbon_math_rotl32(u32 x, u32 y) {
+  return (x << (y & 31)) | (x >> ((32 - (y & 31)) & 31));
+}
+
+u32 carbon_math_rotr32(u32 x, u32 y) {
+  return (x >> (y & 31)) | (x << ((32 - (y & 31)) & 31));
+}
+
+u64 carbon_math_rotl64(u64 x, u32 y) {
+  return (x << (y & 63)) | (x >> ((64 - (y & 63)) & 63));
+}
+
+u64 carbon_math_rotr64(u64 x, u32 y) {
+  return (x >> (y & 63)) | (x << ((64 - (y & 63)) & 63));
+}
+
 u32 carbon_math_bswap32(u32 x) {
 #if defined(CARBON_CPU_ARCH_AMD64)
   __asm__("bswapl %0" : "=r"(x) : "0"(x));

@@ -1,21 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS      4
-#define CARBON_CRYPTO_SHA256_MAX_HEX_CSTRS    4
-#define CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS 4
+#define CBN_CRYPTO__MAX_HEX_CSTRS 4
 
-#define CARBON_CRYPTO_SHA1__ROTATE_LEFT(x, y)         (((x) << (y)) | ((x) >> (32 - (y))))
-#define CARBON_CRYPTO_SHA256__ROTLEFT(a, b)           (((a) << (b)) | ((a) >> (32 - (b))))
-#define CARBON_CRYPTO_SHA256__ROTRIGHT(a, b)          (((a) >> (b)) | ((a) << (32 - (b))))
-#define CARBON_CRYPTO_SHA256__CH(x, y, z)             (((x) & (y)) ^ (~(x) & (z)))
-#define CARBON_CRYPTO_SHA256__MAJ(x, y, z)            (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
-#define CARBON_CRYPTO_SHA256__EP0(x)                  (CARBON_CRYPTO_SHA256__ROTRIGHT(x, 2) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 13) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 22))
-#define CARBON_CRYPTO_SHA256__EP1(x)                  (CARBON_CRYPTO_SHA256__ROTRIGHT(x, 6) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 11) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 25))
-#define CARBON_CRYPTO_SHA256__SIG0(x)                 (CARBON_CRYPTO_SHA256__ROTRIGHT(x, 7) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 18) ^ ((x) >> 3))
-#define CARBON_CRYPTO_SHA256__SIG1(x)                 (CARBON_CRYPTO_SHA256__ROTRIGHT(x, 17) ^ CARBON_CRYPTO_SHA256__ROTRIGHT(x, 19) ^ ((x) >> 10))
-#define CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(p)     (0 == ((uptr) (p) & 7))
-#define CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(x, y) ((x) << (y) ^ ((x) >> (64 - (y))))
+#define CARBON_CRYPTO_SHA256__EP0(x)  (carbon_math_rotr32(x,  2) ^ carbon_math_rotr32(x, 13) ^ carbon_math_rotr32(x, 22))
+#define CARBON_CRYPTO_SHA256__EP1(x)  (carbon_math_rotr32(x,  6) ^ carbon_math_rotr32(x, 11) ^ carbon_math_rotr32(x, 25))
+#define CARBON_CRYPTO_SHA256__SIG0(x) (carbon_math_rotr32(x,  7) ^ carbon_math_rotr32(x, 18) ^ ((x) >>  3))
+#define CARBON_CRYPTO_SHA256__SIG1(x) (carbon_math_rotr32(x, 17) ^ carbon_math_rotr32(x, 19) ^ ((x) >> 10))
+
+#define CBN_CRYPTO__CHACHA_QR(a, b, c, d)       \
+  a += b; d = carbon_math_rotl32(d ^ a, 16);    \
+  c += d; b = carbon_math_rotl32(b ^ c, 12);    \
+  a += b; d = carbon_math_rotl32(d ^ a,  8);    \
+  c += d; b = carbon_math_rotl32(b ^ c,  7);
 
 typedef struct {
   u8 data[64];
@@ -221,7 +218,7 @@ void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
       w[i] = ((u32) d[0] << 24) | ((u32) d[1] << 16) | ((u32) d[2] << 8) | ((u32) d[3] << 0);
     }
     for (usz i = 16; i < 80; ++i) {
-      w[i] = CARBON_CRYPTO_SHA1__ROTATE_LEFT(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
+      w[i] = carbon_math_rotl32(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
     }
     u32 a = h[0], b = h[1], c = h[2], d = h[3], e = h[4];
     for (usz i = 0; i < 80; ++i) {
@@ -242,10 +239,10 @@ void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
         f = b ^ c ^ d;
         k = 0xca62c1d6;
       }
-      u32 tmp = CARBON_CRYPTO_SHA1__ROTATE_LEFT(a, 5) + f + e + k + w[i];
+      u32 tmp = carbon_math_rotl32(a, 5) + f + e + k + w[i];
       e = d;
       d = c;
-      c = CARBON_CRYPTO_SHA1__ROTATE_LEFT(b, 30);
+      c = carbon_math_rotl32(b, 30);
       b = a;
       a = tmp;
     }
@@ -272,13 +269,13 @@ void carbon_crypto_sha1_to_hex_cstr(const u8 *hash, char *out_cstr) {
 
 char *carbon_crypto_sha1_as_hex_cstr(const u8 *in, const usz in_size) {
   static usz i = 0;
-  static char xs[CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS][20*2 + 1];
+  static char xs[CBN_CRYPTO__MAX_HEX_CSTRS][20*2 + 1];
   char *x = xs[i];
   u8 hash[20] = {0};
   carbon_crypto_sha1(in, in_size, hash);
   carbon_crypto_sha1_to_hex_cstr(hash, x);
   ++i;
-  if (i >= CARBON_CRYPTO_SHA1_MAX_HEX_CSTRS) i = 0;
+  if (i >= CBN_CRYPTO__MAX_HEX_CSTRS) i = 0;
   return x;
 }
 
@@ -299,8 +296,8 @@ CBNINL void carbon_crypto_sha256__transform(CBN_SHA256_CTX *ctx, const u8 *data)
   g = ctx->state[6];
   h = ctx->state[7];
   for (i = 0; i < 64; ++i) {
-    t1 = h + CARBON_CRYPTO_SHA256__EP1(e) + CARBON_CRYPTO_SHA256__CH(e, f, g) + carbon_crypto_sha256__k[i] + m[i];
-    t2 = CARBON_CRYPTO_SHA256__EP0(a) + CARBON_CRYPTO_SHA256__MAJ(a, b, c);
+    t1 = h + CARBON_CRYPTO_SHA256__EP1(e) + carbon_math_ch32(e, f, g) + carbon_crypto_sha256__k[i] + m[i];
+    t2 = CARBON_CRYPTO_SHA256__EP0(a) + carbon_math_maj32(a, b, c);
     h = g;
     g = f;
     f = e;
@@ -393,13 +390,13 @@ void carbon_crypto_sha256_to_hex_cstr(const u8 *hash, char *out_cstr) {
 
 char *carbon_crypto_sha256_as_hex_cstr(const u8 *in, const usz in_size) {
   static usz i = 0;
-  static char xs[CARBON_CRYPTO_SHA256_MAX_HEX_CSTRS][32*2 + 1];
+  static char xs[CBN_CRYPTO__MAX_HEX_CSTRS][32*2 + 1];
   char *x = xs[i];
   u8 hash[32] = {0};
   carbon_crypto_sha256(in, in_size, hash);
   carbon_crypto_sha256_to_hex_cstr(hash, x);
   ++i;
-  if (i >= CARBON_CRYPTO_SHA256_MAX_HEX_CSTRS) i = 0;
+  if (i >= CBN_CRYPTO__MAX_HEX_CSTRS) i = 0;
   return x;
 }
 
@@ -423,7 +420,7 @@ CBNINL void carbon_crypto_keccak256__phase_theta(u64 *A) {
     for (u8 j = 5; j < 25; j += 5) C[i] ^= A[i + j];
   }
   for (u8 i = 0; i < 5; ++i) {
-    D[i] = CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(C[(i + 1) % 5], 1) ^ C[(i + 4) % 5];
+    D[i] = carbon_math_rotl64(C[(i + 1) % 5], 1) ^ C[(i + 4) % 5];
   }
   for (u8 i = 0; i < 5; ++i) {
     for (u8 j = 0; j < 25; j += 5) {
@@ -455,7 +452,7 @@ CBNINL void carbon_crypto_keccak256__permutation(u64 *hash) {
   for (u8 r = 0; r < 24; ++r) {
     carbon_crypto_keccak256__phase_theta(hash);
     for (u8 i = 1; i < 25; ++i) {
-      hash[i] = CARBON_CRYPTO_KECCAK256__ROTATE_LEFT_64(hash[i], carbon_crypto_keccak256__k[48 + i - 1]);
+      hash[i] = carbon_math_rotl64(hash[i], carbon_crypto_keccak256__k[48 + i - 1]);
     }
     carbon_crypto_keccak256__phase_pi(hash);
     carbon_crypto_keccak256__phase_chi(hash);
@@ -481,7 +478,7 @@ CBNINL void carbon_crypto_keccak256__update(CBN_Keccak256_CTX *ctx, const u8 *ms
   }
   while (msg_size >= 136) {
     u64 *aligned_msg_blk;
-    if (CARBON_CRYPTO_KECCAK256__IS_ALIGNED_64(msg)) aligned_msg_blk = (u64 *) msg;
+    if (CARBON_IS_ALIGNED_64(msg)) aligned_msg_blk = (u64 *) msg;
     else {
       carbon_memory_copy(ctx->msg, msg, 136);
       aligned_msg_blk = ctx->msg;
@@ -516,12 +513,49 @@ void carbon_crypto_keccak256_to_hex_cstr(const u8 *hash, char *out_cstr) {
 
 char *carbon_crypto_keccak256_as_hex_cstr(const u8 *in, const usz in_size) {
   static usz i = 0;
-  static char xs[CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS][32*2 + 1];
+  static char xs[CBN_CRYPTO__MAX_HEX_CSTRS][32*2 + 1];
   char *x = xs[i];
   u8 hash[32] = {0};
   carbon_crypto_keccak256(in, in_size, hash);
   carbon_crypto_keccak256_to_hex_cstr(hash, x);
   ++i;
-  if (i >= CARBON_CRYPTO_KECCAK256_MAX_HEX_CSTRS) i = 0;
+  if (i >= CBN_CRYPTO__MAX_HEX_CSTRS) i = 0;
   return x;
+}
+
+CBNINL void carbon_crypto_chacha20__block(u8 *out, const u32 *in) {
+  u32 x[16];
+  for (usz i = 0; i < 16; ++i) x[i] = in[i];
+  for (usz i = 20; i > 0; i -= 2) {
+    CBN_CRYPTO__CHACHA_QR(x[0], x[4], x[ 8], x[12]);
+    CBN_CRYPTO__CHACHA_QR(x[1], x[5], x[ 9], x[13]);
+    CBN_CRYPTO__CHACHA_QR(x[2], x[6], x[10], x[14]);
+    CBN_CRYPTO__CHACHA_QR(x[3], x[7], x[11], x[15]);
+    CBN_CRYPTO__CHACHA_QR(x[0], x[5], x[10], x[15]);
+    CBN_CRYPTO__CHACHA_QR(x[1], x[6], x[11], x[12]);
+    CBN_CRYPTO__CHACHA_QR(x[2], x[7], x[ 8], x[13]);
+    CBN_CRYPTO__CHACHA_QR(x[3], x[4], x[ 9], x[14]);
+  }
+  for (usz i = 0; i < 16; ++i) x[i] += in[i];
+  carbon_memory_copy(out, x, 16*sizeof(u32));
+}
+
+void carbon_crypto_chacha20(const u8 *key, const u8 *iv, CBN_Span in, u8 *out) {
+  if (!in.size) return;
+  static const char sigma[] = "expand 32-byte k";
+  u32 state[16] = {0};
+  carbon_memory_copy(state +  0, sigma, 4*sizeof(u32));
+  carbon_memory_copy(state +  4, key, 8*sizeof(u32));
+  carbon_memory_copy(state + 14, iv, 2*sizeof(u32));
+  u8 block[64];
+  while (in.size) {
+    carbon_crypto_chacha20__block(block, state);
+    ++state[12];
+    if (!state[12]) ++state[13];
+    usz n = carbon_math_min(in.size, 64);  // `in.size < 64 ? in.size : 64`
+    for (usz i = 0; i < n; ++i) out[i] = in.data[i] ^ block[i];
+    in.data += n;
+    in.size -= n;
+    out     += n;
+  }
 }

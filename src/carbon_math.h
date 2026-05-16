@@ -80,6 +80,56 @@ CBNDEF_iAKA(cbn::math, literals, log2e, CARBON_LOG2_E);
 #define CARBON_FROM_RADIANS(phi) ((phi) * 180/CARBON_PI)
 
 /**
+ * @brief Computes the bitwise 'Choice' function over 32-bit words.
+ * @param x The selector word.
+ * @param y The word chosen when the bit in `x` is 1.
+ * @param z The word chosen when the bit in `x` is 0.
+ * @return The resulting 32-bit word.
+ */
+CBNDEF u32 carbon_math_ch32(u32 x, u32 y, u32 z);
+
+/**
+ * @brief Computes the bitwise 'Majority' function over 32-bit words.
+ * @param x The first input word.
+ * @param y The second input word.
+ * @param z The third input word.
+ * @return The resulting 32-bit word.
+ */
+CBNDEF u32 carbon_math_maj32(u32 x, u32 y, u32 z);
+
+/**
+ * @brief Rotates a 32-bit word left by `y` bit positions.
+ * @param x The 32-bit word to rotate.
+ * @param y The number of bit positions to rotate left.
+ * @return The rotated 32-bit word.
+ */
+CBNDEF u32 carbon_math_rotl32(u32 x, u32 y);
+
+/**
+ * @brief Rotates a 32-bit word right by `y` bit positions.
+ * @param x The 32-bit word to rotate.
+ * @param y The number of bit positions to rotate right.
+ * @return The rotated 32-bit word.
+ */
+CBNDEF u32 carbon_math_rotr32(u32 x, u32 y);
+
+/**
+ * @brief Rotates a 64-bit word left by `y` bit positions.
+ * @param x The 64-bit word to rotate.
+ * @param y The number of bit positions to rotate left.
+ * @return The rotated 64-bit word.
+ */
+CBNDEF u64 carbon_math_rotl64(u64 x, u32 y);
+
+/**
+ * @brief Rotates a 64-bit word right by `y` bit positions.
+ * @param x The 64-bit word to rotate.
+ * @param y The number of bit positions to rotate right.
+ * @return The rotated 64-bit word.
+ */
+CBNDEF u64 carbon_math_rotr64(u64 x, u32 y);
+
+/**
  * @brief Reverses the order of the bytes in the provided 32-bit unsigned integer (e.g. 0xAABBCCDD -> 0xDDCCBBAA).
  * @param x The 32-bit unsigned integer.
  * @return The byte-reversed 32-bit unsigned integer.
