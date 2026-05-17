@@ -255,47 +255,57 @@
  * @brief SIMD instructions identification.
  */
 #ifdef CARBON_SIMD_INTRINSICS
-// AVX
-#if defined(__FMA__) && defined(__AVX2__)
-#define CARBON_SIMD_HAS_FMA_AVX2
-#include <immintrin.h>
-#elif defined(__FMA__) && defined(__AVX__)
-#define CARBON_SIMD_HAS_FMA_AVX
-#include <immintrin.h>
-#elif defined(__AVX2__)
-#define CARBON_SIMD_HAS_AVX2
-#include <immintrin.h>
-#elif defined(__AVX__)
-#define CARBON_SIMD_HAS_AVX
-#include <immintrin.h>
-#endif
 // SSE
-#if defined(__SSE4_2__)
-#define CARBON_SIMD_HAS_SSE42
-#include <nmmintrin.h>
-#elif defined(__SSE4_1__)
-#define CARBON_SIMD_HAS_SSE41
-#include <smmintrin.h>
-#elif defined(__SSSE3__)
-#define CARBON_SIMD_HAS_SSSE3
-#include <tmmintrin.h>
-#elif defined(__SSE3__)
-#define CARBON_SIMD_HAS_SSE3
-#include <pmmintrin.h>
-#elif defined(__SSE2__) || defined(CARBON_CPU_ARCH_AMD64)
+#if defined(CARBON_CPU_ARCH_AMD64)
+#include <immintrin.h>
 #define CARBON_SIMD_HAS_SSE2
-#include <emmintrin.h>
-#elif defined(__SSE__)
-#define CARBON_SIMD_HAS_SSE
-#include <xmmintrin.h>
+#ifdef __SSE3__
+#define CARBON_SIMD_HAS_SSE3
+#endif
+#ifdef __SSSE3__
+#define CARBON_SIMD_HAS_SSSE3
+#define CARBON_SIMD_HAS_SSE3
+#endif
+#ifdef __SSE4_1__
+#define CARBON_SIMD_HAS_SSE41
+#define CARBON_SIMD_HAS_SSSE3
+#define CARBON_SIMD_HAS_SSE3
+#endif
+#ifdef __SSE4_2__
+#define CARBON_SIMD_HAS_SSE42
+#define CARBON_SIMD_HAS_SSE41
+#define CARBON_SIMD_HAS_SSSE3
+#define CARBON_SIMD_HAS_SSE3
+#endif
+// AVX
+#ifdef __AVX__
+#define CARBON_SIMD_HAS_AVX
+#define CARBON_SIMD_HAS_SSE42
+#define CARBON_SIMD_HAS_SSE41
+#define CARBON_SIMD_HAS_SSSE3
+#define CARBON_SIMD_HAS_SSE3
+#ifdef __FMA__
+#define CARBON_SIMD_HAS_FMA_AVX
+#endif
+#endif
+#ifdef __AVX2__
+#define CARBON_SIMD_HAS_AVX2
+#define CARBON_SIMD_HAS_AVX
+#define CARBON_SIMD_HAS_SSE42
+#define CARBON_SIMD_HAS_SSE41
+#define CARBON_SIMD_HAS_SSSE3
+#define CARBON_SIMD_HAS_SSE3
+#ifdef __FMA__
+#define CARBON_SIMD_HAS_FMA_AVX2
+#define CARBON_SIMD_HAS_FMA_AVX
+#endif
 #endif
 // NEON
-#if defined(__ARM_NEON) || defined(CARBON_CPU_ARCH_AARCH64)
-#if defined(__ARM_FEATURE_FMA)
-#define CARBON_SIMD_HAS_NEON_FMA
-#else
-#define CARBON_SIMD_HAS_NEON
-#endif
+#elif defined(CARBON_CPU_ARCH_AARCH64)
 #include <arm_neon.h>
+#define CARBON_SIMD_HAS_NEON
+#ifdef __ARM_FEATURE_FMA
+#define CARBON_SIMD_HAS_NEON_FMA
 #endif
 #endif
+#endif  // CARBON_SIMD_INTRINSICS

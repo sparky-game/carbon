@@ -69,7 +69,7 @@ CBNINL CBN_Vec4 carbon_math_mat4_mult_vec4__simd(CBN_Mat4 m, CBN_Vec4 v) {
   sums = _mm_add_ss(sums, shuf);
   f32 d3 = _mm_cvtss_f32(sums);
   return carbon_math_vec4(d0, d1, d2, d3);
-#elif defined(CARBON_SIMD_HAS_NEON) || defined(CARBON_SIMD_HAS_NEON_FMA)
+#elif defined(CARBON_SIMD_HAS_NEON)
   f32x4 vec = vld1q_f32(v.c);
   f32x4 r0 = vld1q_f32(m.m[0]);
   f32x4 r1 = vld1q_f32(m.m[1]);
