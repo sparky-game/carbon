@@ -140,9 +140,11 @@ void carbon_list_remove(CBN_List *l, usz idx) {
     CBN_ERROR("idx out of bounds (size: %zu, idx: %zu)", l->size, idx);
     return;
   }
-  void *dst = l->items + idx*l->stride;
-  void *src = l->items + (idx + 1)*l->stride;
-  carbon_memory_copy(dst, src, (l->size - idx - 1)*l->stride);
+  if (idx < l->size - 1) {
+    void *dst = l->items + idx*l->stride;
+    void *src = l->items + (idx + 1)*l->stride;
+    carbon_memory_copy(dst, src, (l->size - idx - 1)*l->stride);
+  }
   --l->size;
 }
 

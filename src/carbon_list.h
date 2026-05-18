@@ -143,6 +143,10 @@ CBNDEF isz carbon_list_find(const CBN_List *l, const void *value);
 
 /**
  * @brief Removes the element specified by the provided index from the list.
+ *
+ * It preserves the order of elements in the list by shifting the remaining ones
+ * after `idx` one position to the left (O(n)).
+ *
  * @param l The list container.
  * @param idx The index of the element to remove.
  */
