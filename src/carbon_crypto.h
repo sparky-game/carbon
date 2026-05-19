@@ -34,7 +34,7 @@ CBNDEF u8 *carbon_crypto_base64_decode(const u8 *in, usz *out_size);
 CBNDEF_AKA(cbn::crypto::b64, Decode, carbon_crypto_base64_decode);
 
 /**
- * @brief Computes the CRC32 checksum of the given binary data.
+ * @brief Computes the CRC32 (IEEE 802.3) checksum of the given binary data.
  * @param in The input binary data.
  * @param in_size The size of the input binary data in bytes.
  * @return The 32-bit CRC32 checksum of the input binary data.
@@ -160,7 +160,7 @@ CBNDEF_AKA(cbn::crypto::keccak256, AsHexString, carbon_crypto_keccak256_as_hex_c
  * @param key The 32-byte (256-bit) secret key.
  * @param iv The 8-byte (64-bit) IV/nonce.
  * @param in The input binary data.
- * @param out The output buffer.
+ * @param out The output buffer (output argument pointer).
  */
 CBNDEF void carbon_crypto_chacha20(const u8 *key, const u8 *iv, CBN_Span in, u8 *out);
 CBNDEF_AKA(cbn::crypto, ChaCha20, carbon_crypto_chacha20);
