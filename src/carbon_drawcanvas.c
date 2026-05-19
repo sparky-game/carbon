@@ -163,6 +163,18 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas *dc, CBN_Rect r, u32 color) {
   }
 }
 
+void carbon_drawcanvas_rect_outline(CBN_DrawCanvas *dc, CBN_Rect r, usz thick, u32 color) {
+  if (!thick) return;
+  if (2*thick >= r.w || 2*thick >= r.h) {
+    carbon_drawcanvas_rect(dc, r, color);
+    return;
+  }
+  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y, r.w, thick), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y + r.h - thick, r.w, thick), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y + thick, thick, r.h - 2*thick), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x + r.w - thick, r.y + thick, thick, r.h - 2*thick), color);
+}
+
 void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u32 color) {
   i32 x1, x2, y1, y2;
   CBN_Rect xywh = carbon_math_rect_sq(center.x - radius, center.y - radius, 2*radius);
@@ -379,7 +391,7 @@ void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, con
         }
       }
     }
-    position.x += sf*cdata.xadvance;
+    position.x += sf * cdata.xadvance;
   }
 }
 

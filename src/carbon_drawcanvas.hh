@@ -54,6 +54,8 @@ struct CBN_DrawCanvas {
 
   void DrawRect(CBN_Rect r, u32 color) { carbon_drawcanvas_rect(this, r, color); }
 
+  void DrawRectOutline(CBN_Rect r, usz thick, u32 color) { carbon_drawcanvas_rect_outline(this, r, thick, color); }
+
   void DrawCircle(CBN_Vec2 center, usz radius, u32 color) { carbon_drawcanvas_circle(this, center, radius, color); }
 
   void DrawAnnulus(CBN_Vec2 center, usz radius_out, usz radius_in, u32 color) { carbon_drawcanvas_annulus(this, center, radius_out, radius_in, color); }

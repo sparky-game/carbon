@@ -225,6 +225,14 @@ CBNDEF void carbon_drawcanvas_triangle_3(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Ve
 CBNDEF void carbon_drawcanvas_rect(CBN_DrawCanvas *dc, CBN_Rect r, u32 color);
 
 /**
+ * @brief Draws a rectangle's outline to the canvas with a specific color.
+ * @param dc The DrawCanvas object.
+ * @param r The rectangle to draw its outline with.
+ * @param color The color to draw the rectangle's outline with.
+ */
+CBNDEF void carbon_drawcanvas_rect_outline(CBN_DrawCanvas *dc, CBN_Rect r, usz thick, u32 color);
+
+/**
  * @brief Draws a circle to the canvas with a specific color.
  * @param dc The DrawCanvas object.
  * @param center The position of the center of the circle.
