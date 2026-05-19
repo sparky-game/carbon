@@ -317,6 +317,27 @@ namespace cbn::meta {
 
   /**
    */
+  template <typename T>
+  struct IsEnum : Constant<bool, __is_enum(T)> {};
+  template <typename T>
+  constexpr auto IsEnum_v = IsEnum<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct UnderlyingType : TID<__underlying_type(T)> {};
+  template <typename T>
+  using UnderlyingType_t = UnderlyingType<T>::type;
+
+  /**
+   */
+  template <typename T>
+  struct IsScopedEnum : Constant<bool, IsEnum_v<T> and !IsConvertible_v<T, UnderlyingType_t<T>>> {};
+  template <typename T>
+  constexpr auto IsScopedEnum_v = IsEnum<T>::value;
+
+  /**
+   */
   template <usz N, typename... Ts>
   requires (sizeof...(Ts) > 0)
   struct Pick;
