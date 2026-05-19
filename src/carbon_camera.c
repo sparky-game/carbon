@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CARBON_CAMERA__PITCH_MAX 89
+
 struct CBN_Camera {
   CBN_Camera_Type type;
   CBN_Vec3 position;
@@ -84,6 +86,14 @@ CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c) {
   return c->rotation;
 }
 
+CBNINL void carbon_camera__update_rotation(CBN_Camera *c) {
+  const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(carbon_math_vec3(0, 1, 0), c->yaw);
+  const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(carbon_math_vec3(1, 0, 0), q_yaw);
+  const CBN_Quat q_pitch = carbon_math_quat_from_axis_angle(v_pitch, c->pitch);
+  c->rotation = carbon_math_quat_mult(q_pitch, q_yaw);
+  carbon_camera__update_view(c);
+}
+
 CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c) {
   if (!c) return carbon_math_mat4_id();
   return c->view;
@@ -132,14 +142,6 @@ void carbon_camera_move_down(CBN_Camera *c, f32 amount) {
   carbon_camera__translate(c, carbon_math_vec3(0, -1, 0), amount);
 }
 
-CBNINL void carbon_camera__update_rotation(CBN_Camera *c) {
-  const CBN_Quat q_yaw = carbon_math_quat_from_axis_angle(carbon_math_vec3(0, 1, 0), c->yaw);
-  const CBN_Vec3 v_pitch = carbon_math_vec3_rotate(carbon_math_vec3(1, 0, 0), q_yaw);
-  const CBN_Quat q_pitch = carbon_math_quat_from_axis_angle(v_pitch, c->pitch);
-  c->rotation = carbon_math_quat_mult(q_pitch, q_yaw);
-  carbon_camera__update_view(c);
-}
-
 void carbon_camera_yaw(CBN_Camera *c, f32 amount) {
   if (!c || !amount) return;
   c->yaw += amount;
@@ -147,9 +149,8 @@ void carbon_camera_yaw(CBN_Camera *c, f32 amount) {
 }
 
 void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
-  static const f32 max_pitch = 89;
   if (!c || !amount) return;
-  c->pitch = carbon_math_clamp(c->pitch + amount, -max_pitch, max_pitch);
+  c->pitch = carbon_math_clamp(c->pitch + amount, -CARBON_CAMERA__PITCH_MAX, CARBON_CAMERA__PITCH_MAX);
   carbon_camera__update_rotation(c);
 }
 
