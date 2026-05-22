@@ -245,6 +245,7 @@ CBNDEF f32 carbon_math_rsqrt(f32 x);
  * @return The remainder r of x/y, such that 0 ≤ r < |y|.
  */
 CBNDEF i32 carbon_math_imod(i32 x, i32 y);
+CBNDEF_AKA(cbn::math, Imod, carbon_math_imod);
 
 /**
  * @brief Performs a true modulo operation for floating-point numbers.
@@ -253,6 +254,7 @@ CBNDEF i32 carbon_math_imod(i32 x, i32 y);
  * @return The remainder r of x/y, such that 0 ≤ r < |y|.
  */
 CBNDEF f32 carbon_math_fmod(f32 x, f32 y);
+CBNDEF_AKA(cbn::math, Fmod, carbon_math_fmod);
 
 /**
  * @brief Returns a specified number raised to the specified power.

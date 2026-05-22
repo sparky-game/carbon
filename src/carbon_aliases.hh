@@ -56,9 +56,9 @@ namespace cbn {
     template <meta::Numeric T, meta::Numeric U>
     auto Mod(const T x, const U y) {
       if constexpr (meta::Float<T> or meta::Float<U>) {
-        return static_cast<f32>(carbon_math_fmod(x, y));
+        return static_cast<f32>(Fmod(x, y));
       }
-      else return static_cast<i32>(carbon_math_imod(x, y));
+      else return static_cast<i32>(Imod(x, y));
     }
   }
 
