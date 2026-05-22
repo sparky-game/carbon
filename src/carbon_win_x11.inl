@@ -75,7 +75,21 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
 }
 
 void carbon_win_set_mouse_visibility(bool visible) {
-  // ...
+  carbon_win__cursor_visible = visible;
+  if (visible) {
+    XUndefineCursor(carbon_win__display, carbon_win__window);
+    return;
+  }
+  static Cursor invisible;
+  if (invisible) {
+    XDefineCursor(carbon_win__display, carbon_win__window, invisible);
+    return;
+  }
+  char data[] = {0};
+  Pixmap blank = XCreateBitmapFromData(carbon_win__display, carbon_win__window, data, 1, 1);
+  XColor dummy = {0};
+  invisible = XCreatePixmapCursor(carbon_win__display, blank, blank, &dummy, &dummy, 0, 0);
+  XFreePixmap(carbon_win__display, blank);
 }
 
 void carbon_win_set_border_visibility(bool visible) {
