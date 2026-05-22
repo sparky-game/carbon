@@ -20,5 +20,10 @@ CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   CBN_ASSERT(n > 0);
   carbon_list_destroy(&data);
   f.metadata.size = size;
+  f.metadata.yoff = f.metadata.cdata['A' - CARBON_FONT_ASCII_START].yoff;
+  for (char c = 'B'; c <= 'Z'; ++c) {
+    usz i = c - CARBON_FONT_ASCII_START;
+    f.metadata.yoff = carbon_math_min(f.metadata.yoff, f.metadata.cdata[i].yoff);
+  }
   return f;
 }

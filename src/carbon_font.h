@@ -18,6 +18,7 @@ typedef struct {
 
 typedef struct {
   usz size;
+  f32 yoff;
   CBN_Font_Chardata cdata[CARBON_FONT_ASCII_COUNT];
 } CBN_Font_Metadata;
 
