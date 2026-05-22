@@ -138,8 +138,8 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
     glBindVertexArray(carbon_win__gl_vao);
     glGenTextures(1, &carbon_win__gl_tex);
     glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
                  carbon_win__renderer_w,
                  carbon_win__renderer_h,

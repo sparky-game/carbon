@@ -17,6 +17,6 @@ vertex V2f vert(uint id [[vertex_id]]) {
 }
 
 fragment float4 frag(V2f in [[stage_in]], texture2d<float> tex [[texture(0)]]) {
-  constexpr sampler s(min_filter::nearest, mag_filter::nearest);
+  constexpr sampler s(min_filter::linear, mag_filter::linear);
   return tex.sample(s, in.uv);
 }
