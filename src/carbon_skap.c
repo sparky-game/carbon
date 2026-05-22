@@ -12,6 +12,7 @@ typedef struct {
     usz as_bin;
     CBN_Image_Metadata as_img;
     CBN_Mesh_Metadata as_mesh;
+    CBN_Font_Metadata as_font;
   };
 } CBN_SKAP_AssetMetadata;
 
@@ -39,6 +40,9 @@ static CBN_List carbon_skap__asset_idxs[CARBON_SKAP_ASSET_TYPE_COUNT];
 static CBN_List carbon_skap__asset_idx_locs[CARBON_SKAP_ASSET_TYPE_COUNT];
 
 ///////////////////// BINARY /////////////////////////////////////////
+
+#define CARBON_SKAP__HINTS_BINARY(h, c)         \
+  h(c, "binary") h(c, "bin") h(c, "bins")
 
 CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span *) p)->data); }
 
@@ -75,6 +79,9 @@ CBNINL bool carbon_skap__lookup_binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx
 
 ///////////////////// IMAGE //////////////////////////////////////////
 
+#define CARBON_SKAP__HINTS_IMAGE(h, c)          \
+  h(c, "image") h(c, "img") h(c, "imgs")
+
 CBNINL void carbon_skap__append_idx_image(CBN_SKAP_AssetIdx *idx) {
   CBN_Image asset = carbon_image_read_from_file(idx->name);
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &asset);
@@ -106,9 +113,12 @@ CBNINL bool carbon_skap__lookup_image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx 
 
 ///////////////////// MESH ///////////////////////////////////////////
 
+#define CARBON_SKAP__HINTS_MESH(h, c)           \
+  h(c, "mesh")
+
 CBNINL void carbon_skap__append_idx_mesh(CBN_SKAP_AssetIdx *idx) {
   CBN_Mesh asset = {0};
-  carbon_mesh_create_from_file(&asset, idx->name);
+  CBN_ASSERT(carbon_mesh_create_from_file(&asset, idx->name));
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &asset);
   idx->metadata.as_mesh = asset.metadata;
 }
@@ -159,16 +169,42 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
   return true;
 }
 
+/////////////////////// FONT /////////////////////////////////////////
+
+#define CARBON_SKAP__FONT_SIZE 64
+
+#define CARBON_SKAP__HINTS_FONT(h, c)           \
+  h(c, "font") h(c, "ttf")
+
+CBNINL void carbon_skap__destroy_font(void *p) { CARBON_UNUSED(p); }
+
+CBNINL void carbon_skap__append_idx_font(CBN_SKAP_AssetIdx *idx) {
+  CBN_Font asset = carbon_font_create_from_file(idx->name, CARBON_SKAP__FONT_SIZE);
+  carbon_list_push(&carbon_skap__assets[idx->metadata.type], &asset);
+  idx->metadata.as_font = asset.metadata;
+}
+
+CBNINL void carbon_skap__append_blob_font(void *p, CBN_SKAP_AssetIdx *idx, FILE *fd) {
+  CBN_Font *asset = p;
+  idx->blob_size = sizeof(asset->data);
+  idx->checksum = carbon_crypto_crc32(asset->data, idx->blob_size);
+  fwrite(asset->data, idx->blob_size, 1, fd);
+}
+
+CBNINL bool carbon_skap__lookup_font(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *idx, void *p) {
+  CBN_Font *out_blob = p;
+  fseek(handle->fd, idx->blob_offset, SEEK_SET);
+  fread(out_blob->data, idx->blob_size, 1, handle->fd);
+  fseek(handle->fd, handle->blob_section_start_pos, SEEK_SET);
+  if (idx->checksum != carbon_crypto_crc32(out_blob->data, idx->blob_size)) {
+    CBN_ERROR("`idx.checksum` doesn't match the retrieved asset data's CRC32 checksum");
+    return false;
+  }
+  out_blob->metadata = idx->metadata.as_font;
+  return true;
+}
+
 //////////////////////////////////////////////////////////////////////
-
-#define CARBON_SKAP__HINTS_BINARY(h, c)         \
-  h(c, "binary") h(c, "bin") h(c, "bins")
-
-#define CARBON_SKAP__HINTS_IMAGE(h, c)          \
-  h(c, "image") h(c, "img") h(c, "imgs")
-
-#define CARBON_SKAP__HINTS_MESH(h, c)           \
-  h(c, "mesh")
 
 /*
   x(t, v, d, s, h, ai, ab, lb)
@@ -209,6 +245,15 @@ CBNINL bool carbon_skap__lookup_mesh(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *
   carbon_skap__append_idx_mesh,                 \
   carbon_skap__append_blob_mesh,                \
   carbon_skap__lookup_mesh                      \
+  )                                             \
+  x(CBN_Font,                                   \
+  CARBON_SKAP_ASSET_TYPE_FONT,                  \
+  carbon_skap__destroy_font,                    \
+  "fonts",                                      \
+  CARBON_SKAP__HINTS_FONT,                      \
+  carbon_skap__append_idx_font,                 \
+  carbon_skap__append_blob_font,                \
+  carbon_skap__lookup_font                      \
   )
 
 #define x(t, v, d, s, h, ai, ab, lb) t: v,

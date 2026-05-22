@@ -20,6 +20,11 @@ struct CBN_SKAP_AssetTrait<CBN_Mesh>
   : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_MESH>
 {};
 
+template <>
+struct CBN_SKAP_AssetTrait<CBN_Font>
+  : cbn::meta::Constant<CBN_SKAP_AssetType, CARBON_SKAP_ASSET_TYPE_FONT>
+{};
+
 template <typename T>
 concept CBN_SKAP_ValidAssetType = requires {
   {CBN_SKAP_AssetTrait<T>::value} -> cbn::meta::ConvertibleTo<CBN_SKAP_AssetType>;
