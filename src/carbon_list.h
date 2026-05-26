@@ -77,6 +77,25 @@ CBNDEF void carbon_list_destroy(CBN_List *l);
 CBNDEF void carbon_list_clear(CBN_List *l);
 
 /**
+ * @brief Increases the capacity of the list to a value that's ≥ `min`.
+ *
+ * If `min` > current capacity, new storage is allocated, otherwise
+ * the function does nothing. The capacity is grown using a determined
+ * multiplicative factor, that's why the final reserved capacity can be
+ * bigger than the desired one.
+ *
+ * @param l The list container.
+ * @param min The new minimum desired capacity, in number of elements.
+ */
+CBNDEF void carbon_list_reserve(CBN_List *l, usz min);
+
+/**
+ * @brief Performs a non-binding request to remove the unused capacity, by reducing capacity to size.
+ * @param l The list container.
+ */
+CBNDEF void carbon_list_shrink_to_fit(CBN_List *l);
+
+/**
  * @brief Obtains the first element of the list.
  * @param l The list container.
  * @param out_value The value of the first element (output argument pointer).
@@ -151,9 +170,3 @@ CBNDEF isz carbon_list_find(const CBN_List *l, const void *value);
  * @param idx The index of the element to remove.
  */
 CBNDEF void carbon_list_remove(CBN_List *l, usz idx);
-
-/**
- * @brief Performs a non-binding request to remove the unused capacity, by reducing capacity to size.
- * @param l The list container.
- */
-CBNDEF void carbon_list_shrink_to_fit(CBN_List *l);

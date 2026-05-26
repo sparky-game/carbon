@@ -338,6 +338,20 @@ namespace cbn::meta {
 
   /**
    */
+  template <typename T>
+  struct IsTriviallyCopyable : Constant<bool, __is_trivially_copyable(T)> {};
+  template <typename T>
+  constexpr auto IsTriviallyCopyable_v = IsTriviallyCopyable<T>::value;
+
+  /**
+   */
+  template <typename T>
+  struct IsTriviallyDestructible : Constant<bool, __is_trivially_destructible(T)> {};
+  template <typename T>
+  constexpr auto IsTriviallyDestructible_v = IsTriviallyDestructible<T>::value;
+
+  /**
+   */
   template <usz N, typename... Ts>
   requires (sizeof...(Ts) > 0)
   struct Pick;
