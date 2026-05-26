@@ -49,7 +49,15 @@ bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap
   return true;
 }
 
-CBN_Sprite *carbon_sprite_manager_lookup(const CBN_Sprite_UID uid) {
+void carbon_sprite_manager_unload(CBN_Sprite_UID uid) {
+  CBN_Sprite *sprite = carbon_sprite_manager_lookup(uid);
+  if (!sprite) return;
+  carbon_sprite_destroy(sprite);
+  carbon_memory_free(sprite);
+  carbon_slotmap_remove(&carbon_sprite__library, uid);
+}
+
+CBN_Sprite *carbon_sprite_manager_lookup(CBN_Sprite_UID uid) {
   CBN_Sprite *sprite = 0;
   carbon_slotmap_lookup(&carbon_sprite__library, uid, &sprite);
   return sprite;
