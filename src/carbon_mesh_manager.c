@@ -33,13 +33,13 @@ bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid)
   return true;
 }
 
-bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Mesh_UID *out_uid) {
+bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Mesh_UID *out_uid) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
   CBN_Mesh *mesh = (CBN_Mesh *) carbon_memory_alloc(sizeof(CBN_Mesh));
-  if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_MESH, name, mesh)) {
+  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_MESH, name, mesh)) {
     carbon_memory_free(mesh);
     return false;
   }

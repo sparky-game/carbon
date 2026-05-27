@@ -53,7 +53,7 @@ f32 carbon_audio_get_volume(void) {
   return ma_engine_get_volume(&carbon_audio__engine);
 }
 
-void carbon_audio_set_volume(const f32 volume) {
+void carbon_audio_set_volume(f32 volume) {
   ma_engine_set_volume(&carbon_audio__engine, volume);
 }
 
@@ -76,18 +76,18 @@ bool carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_FLAGS);
 }
 
-bool carbon_audio_load_stream_from_file(const char *file, CBN_Audio_UID *out_uid) {
+bool carbon_audio_load_from_file_streaming(const char *file, CBN_Audio_UID *out_uid) {
   return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 
-CBNINL bool carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
+bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Audio_UID *out_uid) {
   if (!out_uid) {
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
   // Lookup binary from SKAP
   CBN_Span bin;
-  if (!carbon_skap_lookup(skap_handle, CARBON_SKAP_ASSET_TYPE_BINARY, name, &bin)) return false;
+  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_BINARY, name, &bin)) return false;
   // Create decoder
   ma_decoder *decoder = (ma_decoder *) carbon_memory_alloc(sizeof(ma_decoder));
   if (MA_SUCCESS != ma_decoder_init_memory(bin.data, bin.size, 0, decoder)) {
@@ -98,7 +98,7 @@ CBNINL bool carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *sk
   }
   // Create sound
   ma_sound *sound = (ma_sound *) carbon_memory_alloc(sizeof(ma_sound));
-  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, decoder, flags, 0, sound)) {
+  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, decoder, CARBON_AUDIO__SOUND_FLAGS, 0, sound)) {
     CBN_ERROR("Failed to load sound from audio buffer");
     carbon_memory_free(sound);
     carbon_memory_free(decoder);
@@ -112,40 +112,38 @@ CBNINL bool carbon_audio__load_from_skap_ex(const char *name, const CBN_SKAP *sk
   return true;
 }
 
-bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_FLAGS);
-}
-
-bool carbon_audio_load_stream_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_skap_ex(name, skap_handle, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
-}
-
-void carbon_audio_play(const CBN_Audio_UID uid) {
+void carbon_audio_play(CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
   ma_sound_seek_to_pcm_frame(sound, 0);
   ma_sound_start(sound);
 }
 
-void carbon_audio_stop(const CBN_Audio_UID uid) {
+void carbon_audio_stop(CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
   ma_sound_stop(sound);
 }
 
-f32 carbon_audio_get_pitch(const CBN_Audio_UID uid) {
+bool carbon_audio_is_playing(CBN_Audio_UID uid) {
+  ma_sound *sound = 0;
+  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return false;
+  return ma_sound_is_playing(sound);
+}
+
+f32 carbon_audio_get_pitch(CBN_Audio_UID uid) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return 0;
   return ma_sound_get_pitch(sound);
 }
 
-void carbon_audio_set_pitch(const CBN_Audio_UID uid, const f32 pitch) {
+void carbon_audio_set_pitch(CBN_Audio_UID uid, f32 pitch) {
   ma_sound *sound = 0;
   if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
   ma_sound_set_pitch(sound, pitch);
 }
 
-void carbon_audio_shift_pitch(const CBN_Audio_UID uid) {
+void carbon_audio_shift_pitch(CBN_Audio_UID uid) {
   static const i8 semitones[] = {-4, -2, 0, 2, 4, 7, 9};
   i8 semitone = semitones[carbon_rng_lcg_range(0, CARBON_ARRAY_LEN(semitones) - 1)];
   f32 pitch = carbon_math_pow(2, (f32) semitone/12);

@@ -31,6 +31,7 @@ CBNDEF_AKA(cbn::sprite_mgr, Shutdown, carbon_sprite_manager_shutdown);
  * @return A boolean value indicating whether it loaded successfully or not.
  */
 CBNDEF bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid);
+CBNDEF_AKA(cbn::sprite_mgr, LoadFromFile, carbon_sprite_manager_load_from_file);
 
 /**
  * @brief Loads a sprite from a SKAP asset package and registers it into the subsystem.
@@ -39,7 +40,8 @@ CBNDEF bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UI
  * @param out_uid The loaded sprite's UID (output argument pointer).
  * @return A boolean value indicating whether it loaded successfully or not.
  */
-CBNDEF bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Sprite_UID *out_uid);
+CBNDEF bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Sprite_UID *out_uid);
+CBNDEF_AKA(cbn::sprite_mgr, LoadFromSKAP, carbon_sprite_manager_load_from_skap);
 
 /**
  * @brief Unloads and frees a sprite from the subsystem by its UID.

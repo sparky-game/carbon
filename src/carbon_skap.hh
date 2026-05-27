@@ -57,25 +57,19 @@ struct CBN_SKAP : CBN_SKAP_t {
 
   cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const {
     CBN_Sprite_UID uid;
-    if (!carbon_sprite_manager_load_from_skap(name, this, &uid)) return {};
+    if (!cbn::sprite_mgr::LoadFromSKAP(name, this, &uid)) return {};
     return uid;
   }
 
   cbn::Opt<CBN_Mesh_UID> LoadMesh(const char *name) const {
     CBN_Mesh_UID uid;
-    if (!carbon_mesh_manager_load_from_skap(name, this, &uid)) return {};
+    if (!cbn::mesh_mgr::LoadFromSKAP(name, this, &uid)) return {};
     return uid;
   }
 
   cbn::Opt<CBN_Audio_UID> LoadAudio(const char *name) const {
     CBN_Audio_UID uid;
-    if (!carbon_audio_load_from_skap(name, this, &uid)) return {};
-    return uid;
-  }
-
-  cbn::Opt<CBN_Audio_UID> LoadAudioStream(const char *name) const {
-    CBN_Audio_UID uid;
-    if (!carbon_audio_load_stream_from_skap(name, this, &uid)) return {};
+    if (!cbn::audio::LoadFromSKAP(name, this, &uid)) return {};
     return uid;
   }
   

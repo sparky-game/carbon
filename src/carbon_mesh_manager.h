@@ -28,6 +28,7 @@ CBNDEF_AKA(cbn::mesh_mgr, Shutdown, carbon_mesh_manager_shutdown);
  * @return ...
  */
 CBNDEF bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid);
+CBNDEF_AKA(cbn::mesh_mgr, LoadFromFile, carbon_mesh_manager_load_from_file);
 
 /**
  * @param name ...
@@ -35,15 +36,8 @@ CBNDEF bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *o
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap_handle, CBN_Mesh_UID *out_uid);
-
-#ifdef __cplusplus
-cbn::Opt<CBN_Mesh_UID> carbon_mesh_manager_load(const char *file) {
-  CBN_Mesh_UID uid;
-  if (!carbon_mesh_manager_load_from_file(file, &uid)) return {};
-  return uid;
-}
-#endif
+CBNDEF bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Mesh_UID *out_uid);
+CBNDEF_AKA(cbn::mesh_mgr, LoadFromSKAP, carbon_mesh_manager_load_from_skap);
 
 /**
  * @brief ...
