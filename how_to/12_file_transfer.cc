@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
       CBN_ERROR("PORT (`%s`) needs to be a number", port);
       return 1;
     }
-    if (!client(ip, cbn::str::ToNumber(port), file)) return 1;
+    if (!client(ip, cbn::str::ToInt(port), file)) return 1;
     return 0;
   }
   if (!cbn::str::cmp(cmd, "serve")) {
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
       CBN_ERROR("PORT (`%s`) needs to be a number", port);
       return 1;
     }
-    if (!server(cbn::str::ToNumber(port))) return 1;
+    if (!server(cbn::str::ToInt(port))) return 1;
     return 0;
   }
   CBN_ERROR("usage: %s [get|serve]", self);

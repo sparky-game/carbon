@@ -115,11 +115,19 @@ bool carbon_string_is_number(const char *s) {
   return true;
 }
 
-i32 carbon_string_to_number(const char *s) {
+i32 carbon_string_to_int(const char *s) {
   char *end;
   i32 ret = strtol(s, &end, 10);
-  if (end == s) CBN_ERROR("unable to convert string to number (no digits found)");
-  else if (*end != 0) CBN_ERROR("unable to convert string to number (invalid char `%c`)", *end);
+  if (end == s) CBN_ERROR("unable to convert string to int (no digits found)");
+  else if (*end != 0) CBN_ERROR("unable to convert string to int (invalid char `%c`)", *end);
+  return ret;
+}
+
+f32 carbon_string_to_float(const char *s) {
+  char *end;
+  f32 ret = strtof(s, &end);
+  if (end == s) CBN_ERROR("unable to convert string to float (no digits found)");
+  else if (*end != 0) CBN_ERROR("unable to convert string to float (invalid char `%c`)", *end);
   return ret;
 }
 

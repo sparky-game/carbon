@@ -134,8 +134,16 @@ CBNDEF_AKA(cbn::str, IsNumber, carbon_string_is_number);
  * @param s The C-style string.
  * @return The equivalent 32-bit integer (0 if unable to convert).
  */
-CBNDEF i32 carbon_string_to_number(const char *s);
-CBNDEF_AKA(cbn::str, ToNumber, carbon_string_to_number);
+CBNDEF i32 carbon_string_to_int(const char *s);
+CBNDEF_AKA(cbn::str, ToInt, carbon_string_to_int);
+
+/**
+ * @brief Converts the specified C-style string to an equivalent 32-bit floating-point number.
+ * @param s The C-style string.
+ * @return The equivalent 32-bit floating-point number (0 if unable to convert).
+ */
+CBNDEF f32 carbon_string_to_float(const char *s);
+CBNDEF_AKA(cbn::str, ToFloat, carbon_string_to_float);
 
 /**
  * @brief Gets the Levenshtein distance between two strings.
