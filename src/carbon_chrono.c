@@ -21,6 +21,6 @@ void carbon_chrono_restart(CBN_Chrono *c) {
   *c = carbon_chrono_start();
 }
 
-u8 carbon_chrono_is_running(const CBN_Chrono *c) {
-  return c->initial != 0 ? true : false;
+bool carbon_chrono_is_running(const CBN_Chrono *c) {
+  return c->initial != 0;
 }
