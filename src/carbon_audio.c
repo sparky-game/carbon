@@ -13,11 +13,14 @@ CARBON_COMPILER_DIAG_IGNORE("-Wshadow");
 #include "../thirdparty/miniaudio/miniaudio.h"
 CARBON_COMPILER_DIAG_END;
 
-static ma_engine carbon_audio__engine;
-static CBN_SlotMap carbon_audio__sounds;
+typedef struct {
+  ma_sound *sound;
+  ma_decoder *decoder;
+  CBN_Span binary;
+} CBN_Audio_Entry;
 
-static CBN_List carbon_audio__decoders;
-static CBN_List carbon_audio__binaries;
+static ma_engine carbon_audio__engine;
+static CBN_SlotMap carbon_audio__library;
 
 #define CARBON_AUDIO__SOUND_FLAGS (MA_SOUND_FLAG_ASYNC)
 #define CARBON_AUDIO__SOUND_STREAM_FLAGS (MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING | MA_SOUND_FLAG_NO_PITCH)
@@ -25,26 +28,23 @@ static CBN_List carbon_audio__binaries;
 void carbon_audio_init(void) {
   ma_result res = ma_engine_init(0, &carbon_audio__engine);
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
-  carbon_audio__sounds = carbon_slotmap_create(sizeof(ma_sound *));
-  carbon_audio__decoders = carbon_list_create(sizeof(ma_decoder *));
-  carbon_audio__binaries = carbon_list_create(sizeof(CBN_Span));
+  carbon_audio__library = carbon_slotmap_create(sizeof(CBN_Audio_Entry));
   CBN_INFO("Initialized audio subsystem successfully");
 }
 
 void carbon_audio_shutdown(void) {
-  carbon_slotmap_foreach(ma_sound *, carbon_audio__sounds) {
-    ma_sound_uninit(it.var);
-    carbon_memory_free(it.var);
+  carbon_slotmap_foreach(CBN_Audio_Entry, carbon_audio__library) {
+    ma_sound_uninit(it.var.sound);
+    carbon_memory_free(it.var.sound);
+    if (it.var.decoder) {
+      ma_decoder_uninit(it.var.decoder);
+      carbon_memory_free(it.var.decoder);
+    }
+    if (it.var.binary.data) {
+      carbon_memory_free(it.var.binary.data);
+    }
   }
-  carbon_list_foreach(ma_decoder *, carbon_audio__decoders) {
-    ma_decoder_uninit(it.var);
-  }
-  carbon_list_foreach(CBN_Span, carbon_audio__binaries) {
-    carbon_memory_free(it.var.data);
-  }
-  carbon_list_destroy(&carbon_audio__decoders);
-  carbon_list_destroy(&carbon_audio__binaries);
-  carbon_slotmap_destroy(&carbon_audio__sounds);
+  carbon_slotmap_destroy(&carbon_audio__library);
   ma_engine_uninit(&carbon_audio__engine);
   CBN_INFO("Shutdowned audio subsystem successfully");
 }
@@ -62,13 +62,14 @@ CBNINL bool carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  ma_sound *sound = (ma_sound *) carbon_memory_alloc(sizeof(ma_sound));
-  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, sound)) {
+  CBN_Audio_Entry entry = {0};
+  entry.sound = carbon_memory_alloc(sizeof(ma_sound));
+  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, entry.sound)) {
     CBN_ERROR("Failed to load sound from file (`%s`)", file);
-    carbon_memory_free(sound);
+    carbon_memory_free(entry.sound);
     return false;
   }
-  *out_uid = carbon_slotmap_push(&carbon_audio__sounds, &sound);
+  *out_uid = carbon_slotmap_push(&carbon_audio__library, &entry);
   return true;
 }
 
@@ -85,62 +86,71 @@ bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Aud
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  // Lookup binary from SKAP
-  CBN_Span bin;
-  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_BINARY, name, &bin)) return false;
-  // Create decoder
-  ma_decoder *decoder = (ma_decoder *) carbon_memory_alloc(sizeof(ma_decoder));
-  if (MA_SUCCESS != ma_decoder_init_memory(bin.data, bin.size, 0, decoder)) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_BINARY, name, &entry.binary)) return false;
+  entry.decoder = carbon_memory_alloc(sizeof(ma_decoder));
+  if (MA_SUCCESS != ma_decoder_init_memory(entry.binary.data, entry.binary.size, 0, entry.decoder)) {
     CBN_ERROR("Failed to create decoder");
-    carbon_memory_free(decoder);
-    carbon_memory_free(bin.data);
+    carbon_memory_free(entry.decoder);
+    carbon_memory_free(entry.binary.data);
     return false;
   }
-  // Create sound
-  ma_sound *sound = (ma_sound *) carbon_memory_alloc(sizeof(ma_sound));
-  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, decoder, CARBON_AUDIO__SOUND_FLAGS, 0, sound)) {
+  entry.sound = carbon_memory_alloc(sizeof(ma_sound));
+  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, entry.decoder, CARBON_AUDIO__SOUND_FLAGS, 0, entry.sound)) {
     CBN_ERROR("Failed to load sound from audio buffer");
-    carbon_memory_free(sound);
-    carbon_memory_free(decoder);
-    carbon_memory_free(bin.data);
+    carbon_memory_free(entry.sound);
+    carbon_memory_free(entry.decoder);
+    carbon_memory_free(entry.binary.data);
     return false;
   }
-  // Store decoder, binary and sound
-  carbon_list_push(&carbon_audio__decoders, &decoder);
-  carbon_list_push(&carbon_audio__binaries, &bin);
-  *out_uid = carbon_slotmap_push(&carbon_audio__sounds, &sound);
+  *out_uid = carbon_slotmap_push(&carbon_audio__library, &entry);
   return true;
 }
 
+void carbon_audio_unload(CBN_Audio_UID uid) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_uninit(entry.sound);
+  carbon_memory_free(entry.sound);
+  if (entry.decoder) {
+    ma_decoder_uninit(entry.decoder);
+    carbon_memory_free(entry.decoder);
+  }
+  if (entry.binary.data) {
+    carbon_memory_free(entry.binary.data);
+  }
+  carbon_slotmap_remove(&carbon_audio__library, uid);
+}
+
 void carbon_audio_play(CBN_Audio_UID uid) {
-  ma_sound *sound = 0;
-  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
-  ma_sound_seek_to_pcm_frame(sound, 0);
-  ma_sound_start(sound);
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_seek_to_pcm_frame(entry.sound, 0);
+  ma_sound_start(entry.sound);
 }
 
 void carbon_audio_stop(CBN_Audio_UID uid) {
-  ma_sound *sound = 0;
-  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
-  ma_sound_stop(sound);
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_stop(entry.sound);
 }
 
 bool carbon_audio_is_playing(CBN_Audio_UID uid) {
-  ma_sound *sound = 0;
-  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return false;
-  return ma_sound_is_playing(sound);
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return false;
+  return ma_sound_is_playing(entry.sound);
 }
 
 f32 carbon_audio_get_pitch(CBN_Audio_UID uid) {
-  ma_sound *sound = 0;
-  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return 0;
-  return ma_sound_get_pitch(sound);
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return 0;
+  return ma_sound_get_pitch(entry.sound);
 }
 
 void carbon_audio_set_pitch(CBN_Audio_UID uid, f32 pitch) {
-  ma_sound *sound = 0;
-  if (!carbon_slotmap_lookup(&carbon_audio__sounds, uid, &sound)) return;
-  ma_sound_set_pitch(sound, pitch);
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_set_pitch(entry.sound, pitch);
 }
 
 void carbon_audio_shift_pitch(CBN_Audio_UID uid) {

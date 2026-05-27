@@ -70,6 +70,13 @@ CBNDEF_AKA(cbn::audio, LoadFromSKAP, carbon_audio_load_from_skap);
  * @brief ...
  * @param uid ...
  */
+CBNDEF void carbon_audio_unload(CBN_Audio_UID uid);
+CBNDEF_AKA(cbn::audio, Unload, carbon_audio_unload);
+
+/**
+ * @brief ...
+ * @param uid ...
+ */
 CBNDEF void carbon_audio_play(CBN_Audio_UID uid);
 CBNDEF_AKA(cbn::audio, Play, carbon_audio_play);
 
@@ -81,6 +88,9 @@ CBNDEF void carbon_audio_stop(CBN_Audio_UID uid);
 CBNDEF_AKA(cbn::audio, Stop, carbon_audio_stop);
 
 /**
+ * @brief ...
+ * @param uid ...
+ * @return ...
  */
 CBNDEF bool carbon_audio_is_playing(CBN_Audio_UID uid);
 CBNDEF_AKA(cbn::audio, IsPlaying, carbon_audio_is_playing);
