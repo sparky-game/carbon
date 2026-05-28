@@ -15,8 +15,10 @@ struct CBN_Camera {
   void SetType(Type t) { carbon_camera_set_type(this, t); }
 
   CBN_Vec3 GetPosition(void) const { return carbon_camera_get_position(this); }
+  void SetPosition(CBN_Vec3 p) { carbon_camera_set_position(this, p); }
 
   CBN_Quat GetRotation(void) const { return carbon_camera_get_rotation(this); }
+  void SetRotation(CBN_Quat r) { carbon_camera_set_rotation(this, r); }
 
   CBN_Mat4 GetView(void) const { return carbon_camera_get_view(this); }
 

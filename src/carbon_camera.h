@@ -58,11 +58,25 @@ CBNDEF void carbon_camera_set_type(CBN_Camera *c, CBN_Camera_Type t);
 CBNDEF CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c);
 
 /**
+ * @brief ...
+ * @param c The Camera object.
+ * @param p ...
+ */
+CBNDEF void carbon_camera_set_position(CBN_Camera *c, CBN_Vec3 p);
+
+/**
  * @brief Obtains the current rotation of the Camera as quaternion.
  * @param c The Camera object.
  * @return The Camera rotation quaternion.
  */
 CBNDEF CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c);
+
+/**
+ * @brief ...
+ * @param c The Camera object.
+ * @param p ...
+ */
+CBNDEF void carbon_camera_set_rotation(CBN_Camera *c, CBN_Quat r);
 
 /**
  * @brief Obtains the current view 4x4 matrix of the Camera.

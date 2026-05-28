@@ -81,6 +81,12 @@ CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c) {
   return c->position;
 }
 
+void carbon_camera_set_position(CBN_Camera *c, CBN_Vec3 p) {
+  if (!c) return;
+  c->position = p;
+  carbon_camera__update_view(c);
+}
+
 CBN_Quat carbon_camera_get_rotation(const CBN_Camera *c) {
   if (!c) return carbon_math_quat_id();
   return c->rotation;
@@ -92,6 +98,15 @@ CBNINL void carbon_camera__update_rotation(CBN_Camera *c) {
   const CBN_Quat q_pitch = carbon_math_quat_from_axis_angle(v_pitch, c->pitch);
   c->rotation = carbon_math_quat_mult(q_pitch, q_yaw);
   carbon_camera__update_view(c);
+}
+
+void carbon_camera_set_rotation(CBN_Camera *c, CBN_Quat r) {
+  if (!c) return;
+  CBN_Vec3 fwd = carbon_math_vec3_rotate(carbon_math_vec3(0, 0, -1), r);
+  c->yaw = CARBON_FROM_RADIANS(carbon_math_atan2(fwd.x, -fwd.z));
+  c->pitch = carbon_math_clamp(CARBON_FROM_RADIANS(carbon_math_asin(fwd.y)),
+                               -CARBON_CAMERA__PITCH_MAX, CARBON_CAMERA__PITCH_MAX);
+  carbon_camera__update_rotation(c);
 }
 
 CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c) {
