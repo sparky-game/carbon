@@ -135,6 +135,12 @@ void carbon_audio_stop(CBN_Audio_UID uid) {
   ma_sound_stop(entry.sound);
 }
 
+void carbon_audio_resume(CBN_Audio_UID uid) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_start(entry.sound);
+}
+
 bool carbon_audio_is_playing(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
   if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return false;
