@@ -119,6 +119,53 @@ CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c) {
   return c->proj;
 }
 
+CBNINL CBN_Vec3 carbon_camera__ndc_to_world_space(CBN_Mat4 VP_inv, CBN_Vec3 ndc) {
+  CBN_Vec4 clip = carbon_math_vec4_3(ndc, 1);
+  CBN_Vec4 world = carbon_math_mat4_mult_vec4(VP_inv, clip);
+  CBN_Vec3 v;
+  if (!carbon_math_vec4_project_3d(world, &v)) return carbon_math_vec3_1(0);
+  return v;
+}
+
+CBN_Ray carbon_camera_screen_to_world(const CBN_Camera *c, const CBN_DrawCanvas *dc, CBN_Vec2 p) {
+  CBN_Ray ray = {0};
+  if (!c || !dc) return ray;
+  p.x = (2*p.x / carbon_drawcanvas_width(dc)) - 1;
+  p.y = 1 - (2*p.y / carbon_drawcanvas_height(dc));
+  const CBN_Mat4 VP_inv = carbon_math_mat4_inv(carbon_math_mat4_mult(c->proj, c->view));
+  switch (c->type) {
+  case CBN_Camera_Type_Perspective: {
+    CBN_Vec3 near = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, -1));
+    CBN_Vec3 far = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, 1));
+    ray.origin = near;
+    ray.direction = carbon_math_vec3_norm(carbon_math_vec3_sub(far, near));
+  } break;
+  case CBN_Camera_Type_Orthographic: {
+    ray.origin = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, -1));
+    ray.direction = carbon_math_vec3_norm(carbon_math_vec3_rotate(carbon_math_vec3(0, 0, -1), c->rotation));
+  } break;
+  case CBN_Camera_Type_Count:
+  default: CARBON_UNREACHABLE;
+  }
+  return ray;
+}
+
+CBNINL CBN_Vec3 carbon_camera__world_space_to_ndc(CBN_Mat4 VP, CBN_Vec3 w) {
+  CBN_Vec4 world = carbon_math_vec4_3(w, 1);
+  CBN_Vec4 clip = carbon_math_mat4_mult_vec4(VP, world);
+  CBN_Vec3 ndc;
+  if (!carbon_math_vec4_project_3d(clip, &ndc)) return carbon_math_vec3_1(0);
+  return ndc;
+}
+
+CBN_Vec2 carbon_camera_world_to_screen(const CBN_Camera *c, const CBN_DrawCanvas *dc, CBN_Vec3 p) {
+  if (!c || !dc) return carbon_math_vec2_1(0);
+  const CBN_Mat4 VP = carbon_math_mat4_mult(c->proj, c->view);
+  const CBN_Vec3 ndc = carbon_camera__world_space_to_ndc(VP, p);
+  return carbon_math_vec2((ndc.x + 1) * carbon_drawcanvas_width(dc)/2,
+                          (1 - ndc.y) * carbon_drawcanvas_height(dc)/2);
+}
+
 CBNINL void carbon_camera__translate(CBN_Camera *c, CBN_Vec3 v, f32 amount) {
   if (!c || !amount) return;
   v = carbon_math_vec3_scale(carbon_math_vec3_norm(v), amount);

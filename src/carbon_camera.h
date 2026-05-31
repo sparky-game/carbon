@@ -93,6 +93,24 @@ CBNDEF CBN_Mat4 carbon_camera_get_view(const CBN_Camera *c);
 CBNDEF CBN_Mat4 carbon_camera_get_proj(const CBN_Camera *c);
 
 /**
+ * @brief Projects a 2D screen-space point into a 3D world-space ray.
+ * @param c The Camera object.
+ * @param dc The DrawCanvas to get the needed info from.
+ * @param p The 2D screen-space point to unproject.
+ * @return The resulting 3D world-space ray with origin and direction.
+ */
+CBNDEF CBN_Ray carbon_camera_screen_to_world(const CBN_Camera *c, const CBN_DrawCanvas *dc, CBN_Vec2 p);
+
+/**
+ * @brief Projects a 3D world-space point onto 2D screen-space.
+ * @param c The Camera object.
+ * @param dc The DrawCanvas to get the needed info from.
+ * @param p The 3D world-space point to project.
+ * @return The projected 2D screen-space position.
+ */
+CBNDEF CBN_Vec2 carbon_camera_world_to_screen(const CBN_Camera *c, const CBN_DrawCanvas *dc, CBN_Vec3 p);
+
+/**
  * @brief Moves the Camera forward (-Z) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.

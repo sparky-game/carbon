@@ -24,6 +24,9 @@ struct CBN_Camera {
 
   CBN_Mat4 GetProj(void) const { return carbon_camera_get_proj(this); }
 
+  CBN_Ray ScreenToWorld(const CBN_DrawCanvas &dc, CBN_Vec2 p) const { return carbon_camera_screen_to_world(this, &dc, p); }
+  CBN_Vec2 WorldToScreen(const CBN_DrawCanvas &dc, CBN_Vec3 p) const { return carbon_camera_world_to_screen(this, &dc, p); }
+
   void MoveForward(f32 amount) { carbon_camera_move_forward(this, amount); }
 
   void MoveBackward(f32 amount) { carbon_camera_move_backward(this, amount); }
