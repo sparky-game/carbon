@@ -17,6 +17,7 @@ static constexpr std::array c_HeaderFiles {
   "math_vec4.h", "math_vec4.hh",
   "math_quat.h", "math_quat.hh",
   "math_rect.h", "math_rect.hh",
+  "math_ray.h", "math_ray.hh",
   "math_mat4.h", "math_mat4.hh",
   "math_mat.h",
   "sort.h",
