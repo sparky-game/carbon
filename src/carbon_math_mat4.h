@@ -62,6 +62,13 @@ CBNDEF CBN_Vec4 carbon_math_mat4_mult_vec4(CBN_Mat4 m, CBN_Vec4 v);
 CBNDEF CBN_Mat4 carbon_math_mat4_from_quat(CBN_Quat q);
 
 /**
+ * @brief Returns the inverse of the provided 4x4 matrix.
+ * @param m The 4x4 matrix.
+ * @return The inverted 4x4 matrix.
+ */
+CBNDEF CBN_Mat4 carbon_math_mat4_inv(CBN_Mat4 m);
+
+/**
  * @brief Creates a 4x4 translation matrix from the given 3D position vector.
  * @param position The 3D vector.
  * @return The 4x4 matrix.

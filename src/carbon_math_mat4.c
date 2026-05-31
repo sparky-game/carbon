@@ -69,6 +69,48 @@ CBN_Mat4 carbon_math_mat4_from_quat(CBN_Quat q) {
   return m;
 }
 
+CBN_Mat4 carbon_math_mat4_inv(CBN_Mat4 m) {
+  f32 t[6];
+  t[0] = m.m[2][2]*m.m[3][3] - m.m[2][3]*m.m[3][2];
+  t[1] = m.m[2][1]*m.m[3][3] - m.m[2][3]*m.m[3][1];
+  t[2] = m.m[2][1]*m.m[3][2] - m.m[2][2]*m.m[3][1];
+  t[3] = m.m[2][0]*m.m[3][3] - m.m[2][3]*m.m[3][0];
+  t[4] = m.m[2][0]*m.m[3][2] - m.m[2][2]*m.m[3][0];
+  t[5] = m.m[2][0]*m.m[3][1] - m.m[2][1]*m.m[3][0];
+  CBN_Mat4 adj;
+  adj.m[0][0] =  m.m[1][1]*t[0] - m.m[1][2]*t[1] + m.m[1][3]*t[2];
+  adj.m[1][0] = -m.m[1][0]*t[0] + m.m[1][2]*t[3] - m.m[1][3]*t[4];
+  adj.m[2][0] =  m.m[1][0]*t[1] - m.m[1][1]*t[3] + m.m[1][3]*t[5];
+  adj.m[3][0] = -m.m[1][0]*t[2] + m.m[1][1]*t[4] - m.m[1][2]*t[5];
+  adj.m[0][1] = -m.m[0][1]*t[0] + m.m[0][2]*t[1] - m.m[0][3]*t[2];
+  adj.m[1][1] =  m.m[0][0]*t[0] - m.m[0][2]*t[3] + m.m[0][3]*t[4];
+  adj.m[2][1] = -m.m[0][0]*t[1] + m.m[0][1]*t[3] - m.m[0][3]*t[5];
+  adj.m[3][1] =  m.m[0][0]*t[2] - m.m[0][1]*t[4] + m.m[0][2]*t[5];
+  t[0] = m.m[0][2]*m.m[1][3] - m.m[0][3]*m.m[1][2];
+  t[1] = m.m[0][1]*m.m[1][3] - m.m[0][3]*m.m[1][1];
+  t[2] = m.m[0][1]*m.m[1][2] - m.m[0][2]*m.m[1][1];
+  t[3] = m.m[0][0]*m.m[1][3] - m.m[0][3]*m.m[1][0];
+  t[4] = m.m[0][0]*m.m[1][2] - m.m[0][2]*m.m[1][0];
+  t[5] = m.m[0][0]*m.m[1][1] - m.m[0][1]*m.m[1][0];
+  adj.m[0][2] =  m.m[3][1]*t[0] - m.m[3][2]*t[1] + m.m[3][3]*t[2];
+  adj.m[1][2] = -m.m[3][0]*t[0] + m.m[3][2]*t[3] - m.m[3][3]*t[4];
+  adj.m[2][2] =  m.m[3][0]*t[1] - m.m[3][1]*t[3] + m.m[3][3]*t[5];
+  adj.m[3][2] = -m.m[3][0]*t[2] + m.m[3][1]*t[4] - m.m[3][2]*t[5];
+  adj.m[0][3] = -m.m[2][1]*t[0] + m.m[2][2]*t[1] - m.m[2][3]*t[2];
+  adj.m[1][3] =  m.m[2][0]*t[0] - m.m[2][2]*t[3] + m.m[2][3]*t[4];
+  adj.m[2][3] = -m.m[2][0]*t[1] + m.m[2][1]*t[3] - m.m[2][3]*t[5];
+  adj.m[3][3] =  m.m[2][0]*t[2] - m.m[2][1]*t[4] + m.m[2][2]*t[5];
+  f32 det = m.m[0][0]*adj.m[0][0] + m.m[0][1]*adj.m[1][0] + m.m[0][2]*adj.m[2][0] + m.m[0][3]*adj.m[3][0];
+	if (carbon_math_abs(det) < CARBON_EPS) return carbon_math_mat4_id();
+  CBN_Mat4 inv;
+  for (usz i = 0; i < 4; ++i) {
+    for (usz j = 0; j < 4; ++j) {
+      inv.m[i][j] = adj.m[i][j] / det;
+    }
+  }
+  return inv;
+}
+
 CBN_Mat4 carbon_math_mat4_translation(CBN_Vec3 position) {
   CBN_Mat4 m = carbon_math_mat4_id();
   m.m[0][3] = position.x;
