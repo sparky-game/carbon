@@ -73,10 +73,7 @@ void build_and_embed_shader(void) {
   RunCmd("xcrun --sdk macosx metal " SHADER_IN_FILE " -o " SHADER_OUT_FILE " -target air64-apple-macos11.0");
   printf("  GEN     " SHADER_INL_FILE "\n");
   RunCmd("xxd -i " SHADER_OUT_FILE " > " SHADER_INL_FILE);
-#elif defined(_WIN32)
-  // ...
-#error Not implemented yet
-#elif defined(__linux__) || defined(__FreeBSD__)
+#elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
   printf("  SPIR-V  " SHADER_OUT_FILE("vert") "\n");
   RunCmd("glslangValidator --quiet -G " SHADER_IN_FILE("vert") " -o " SHADER_OUT_FILE("vert"));
   printf("  SPIR-V  " SHADER_OUT_FILE("frag") "\n");
@@ -94,10 +91,7 @@ void compile_and_link_lib(void) {
   printf("  CC      " OBJ_FILE "\n");
 #if defined(__APPLE__)
   RunCmd(CC_CMD " -x objective-c -include " SHADER_INL_FILE " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
-#elif defined(_WIN32)
-  // ...
-#error Not implemented yet
-#elif defined(__linux__) || defined(__FreeBSD__)
+#elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
   RunCmd(CC_CMD " -include " SHADER_INL_FILE("vert") " -include " SHADER_INL_FILE("frag") " -fPIC -c " SRC_FILE " -o " OBJ_FILE);
 #else
 #error Target platform is not supported
@@ -115,10 +109,7 @@ void compile_and_link_lib(void) {
   assert(fs::remove(SHADER_OUT_FILE));
   printf("  RM      " SHADER_INL_FILE "\n");
   assert(fs::remove(SHADER_INL_FILE));
-#elif defined(_WIN32)
-  // ...
-#error Not implemented yet
-#elif defined(__linux__) || defined(__FreeBSD__)
+#elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
   printf("  RM      " SHADER_OUT_FILE("vert") "\n");
   assert(fs::remove(SHADER_OUT_FILE("vert")));
   printf("  RM      " SHADER_OUT_FILE("frag") "\n");

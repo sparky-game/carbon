@@ -40,10 +40,7 @@
 #define SHADER_IN_FILE SRC_DIR "/" SHADER_NAME ".metal"
 #define SHADER_OUT_FILE SHADER_NAME ".metallib"
 #define SHADER_INL_FILE SHADER_OUT_FILE ".inl"
-#elif defined(_WIN32)
-// ...
-#error Not implemented yet
-#elif defined(__linux__) || defined(__FreeBSD__)
+#elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
 #define SHADER_IN_FILE(stage) SRC_DIR "/" SHADER_NAME "." stage ".glsl"
 #define SHADER_OUT_FILE(stage) SHADER_NAME "." stage ".spv"
 #define SHADER_INL_FILE(stage) SHADER_OUT_FILE(stage) ".inl"
