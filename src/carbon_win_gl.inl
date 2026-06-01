@@ -54,8 +54,8 @@ CBNINL void carbon_win__gl_init(usz w, usz h) {
   carbon_win__renderer_h = h;
   carbon_win__gl_load_funcs();
   GLuint vert = glCreateShader(GL_VERTEX_SHADER); {
-    const GLchar *src = (const GLchar *)carbon_win_shader_vert;
-    const GLint len = (GLint)carbon_win_shader_vert_len;
+    const GLchar *src = (const GLchar *)__src_carbon_win_shader_vert_glsl;
+    const GLint len = (GLint)__src_carbon_win_shader_vert_glsl_len;
     glShaderSource(vert, 1, &src, &len);
     glCompileShader(vert);
     GLint ok;
@@ -68,8 +68,8 @@ CBNINL void carbon_win__gl_init(usz w, usz h) {
     }
   }
   GLuint frag = glCreateShader(GL_FRAGMENT_SHADER); {
-    const GLchar *src = (const GLchar *)carbon_win_shader_frag;
-    const GLint len = (GLint)carbon_win_shader_frag_len;
+    const GLchar *src = (const GLchar *)__src_carbon_win_shader_frag_glsl;
+    const GLint len = (GLint)__src_carbon_win_shader_frag_glsl_len;
     glShaderSource(frag, 1, &src, &len);
     glCompileShader(frag);
     GLint ok;
