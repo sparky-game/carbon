@@ -8,13 +8,16 @@ inline void RunCmd(const char *cmd) {
   assert(0 == std::system(cmd));
 }
 
-inline void RunMetaprogram(const char *exe) {
-  printf("  EXEC    %s\n", exe);
-  RunCmd(std::format(CXX_CMD " {0}.cc " LIB_FILE " " LDFLAGS " -o {0}", exe).c_str());
-  RunCmd(exe);
+inline void RunMetaprogram(fs::path &&exe) {
+  const auto s_exe = exe.make_preferred().string();
+  printf("  EXEC    %s\n", s_exe.c_str());
+  RunCmd(std::format(CXX_CMD " {0}.cc " LIB_FILE " " LDFLAGS " -o {0}", s_exe).c_str());
+  RunCmd(s_exe.c_str());
 #ifdef _WIN32
-  assert(fs::remove(std::format("{}.exe", exe).c_str()));
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(100ms);
+  assert(fs::remove(std::format("{}.exe", s_exe).c_str()));
 #else
-  assert(fs::remove(exe));
+  assert(fs::remove(s_exe));
 #endif
 }
