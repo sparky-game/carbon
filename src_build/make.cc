@@ -5,6 +5,8 @@
 #include <cassert>
 #include <cstring>
 #include <format>
+#include <chrono>
+#include <thread>
 #include <fstream>
 #include <filesystem>
 namespace fs = std::filesystem;
