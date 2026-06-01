@@ -11,45 +11,15 @@ static Display *carbon_win__display;
 static Window carbon_win__window;
 static Atom carbon_win__wm_delete;
 static GLXContext carbon_win__glx_ctx;
-
 static i32 carbon_win__glx_attrs[] = {
   GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None
 };
 
-static GLuint carbon_win__gl_tex;
-static GLuint carbon_win__gl_vao;
+#include "carbon_win_gl.inl"
 
-static usz carbon_win__renderer_w, carbon_win__renderer_h;
-
-//////////// GL functions ////////////
-#define CARBON_WIN__GL_PROCS                                            \
-  x(GLuint, glCreateShader, GLenum)                                     \
-  x(void, glShaderBinary, GLsizei, const GLuint *, GLenum, const void *, GLsizei) \
-  x(void, glSpecializeShader, GLuint, const GLchar *, GLuint, const GLuint *, const GLuint *) \
-  x(GLuint, glCreateProgram, void)                                      \
-  x(void, glAttachShader, GLuint, GLuint)                               \
-  x(void, glLinkProgram, GLuint)                                        \
-  x(void, glUseProgram, GLuint)                                         \
-  x(void, glGenVertexArrays, GLsizei, GLuint *)                         \
-  x(void, glBindVertexArray, GLuint)                                    \
-  x(void, glGetShaderiv, GLuint, GLenum, GLint *)                       \
-  x(void, glGetProgramiv, GLuint, GLenum, GLint *)                      \
-  x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)
-
-#define x(ret, name, ...)                       \
-  typedef ret (*name ## _t)(__VA_ARGS__);       \
-  static name ## _t name;
-CARBON_WIN__GL_PROCS;
-#undef x
-
-CBNINL void carbon_win__renderer_gl_load_funcs(void) {
-#define x(ret, name, ...)                                         \
-  name = (name ## _t) glXGetProcAddress((const GLubyte *) #name); \
-  CBN_ASSERT(name && #name " failed to load");
-  CARBON_WIN__GL_PROCS;
-#undef x
+CBNINL void *carbon_win__gl_func_loader(const char *name) {
+  return glXGetProcAddress((const GLubyte *)name);
 }
-//////////////////////////////////////
 
 CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
   XWindowAttributes attrs;
@@ -101,64 +71,14 @@ void carbon_win_set_fullscreen(bool yn) {
 }
 
 CBNINL void carbon_win__renderer_init(usz w, usz h) {
-  carbon_win__renderer_w = w;
-  carbon_win__renderer_h = h;
-  {// GLX context
-    i32 scr = DefaultScreen(carbon_win__display);
-    XVisualInfo *vi = glXChooseVisual(carbon_win__display, scr, carbon_win__glx_attrs);
-    CBN_ASSERT(vi && "glXChooseVisual failed");
-    carbon_win__glx_ctx = glXCreateContext(carbon_win__display, vi, 0, GL_TRUE);
-    CBN_ASSERT(carbon_win__glx_ctx && "glXCreateContext failed");
-    glXMakeCurrent(carbon_win__display, carbon_win__window, carbon_win__glx_ctx);
-    XFree(vi);
-  }
-  carbon_win__renderer_gl_load_funcs();
-  {// GLSL shader
-    GLuint vert = glCreateShader(GL_VERTEX_SHADER); {
-      glShaderBinary(1, &vert,
-                     GL_SHADER_BINARY_FORMAT_SPIR_V,
-                     carbon_win_shader_vert_spv,
-                     carbon_win_shader_vert_spv_len);
-      glSpecializeShader(vert, "main", 0, 0, 0);
-      GLint ok;
-      glGetShaderiv(vert, GL_COMPILE_STATUS, &ok);
-      CBN_ASSERT(ok && "vert specialization failed");
-    }
-    GLuint frag = glCreateShader(GL_FRAGMENT_SHADER); {
-      glShaderBinary(1, &frag,
-                     GL_SHADER_BINARY_FORMAT_SPIR_V,
-                     carbon_win_shader_frag_spv,
-                     carbon_win_shader_frag_spv_len);
-      glSpecializeShader(frag, "main", 0, 0, 0);
-      GLint ok;
-      glGetShaderiv(frag, GL_COMPILE_STATUS, &ok);
-      CBN_ASSERT(ok && "frag specialization failed");
-    }
-    GLuint prog = glCreateProgram(); {
-      glAttachShader(prog, vert);
-      glAttachShader(prog, frag);
-      glLinkProgram(prog);
-      GLint ok;
-      glGetProgramiv(prog, GL_LINK_STATUS, &ok);
-      if (!ok) {
-        char log[512];
-        glGetProgramInfoLog(prog, 512, 0, log);
-        CBN_ERROR("prog link error: %s", log);
-        CARBON_UNREACHABLE;
-      }
-    }
-    glUseProgram(prog);
-    glGenVertexArrays(1, &carbon_win__gl_vao);
-    glBindVertexArray(carbon_win__gl_vao);
-    glGenTextures(1, &carbon_win__gl_tex);
-    glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-                 carbon_win__renderer_w,
-                 carbon_win__renderer_h,
-                 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
-  }
+  i32 scr = DefaultScreen(carbon_win__display);
+  XVisualInfo *vi = glXChooseVisual(carbon_win__display, scr, carbon_win__glx_attrs);
+  CBN_ASSERT(vi && "glXChooseVisual failed");
+  carbon_win__glx_ctx = glXCreateContext(carbon_win__display, vi, 0, GL_TRUE);
+  CBN_ASSERT(carbon_win__glx_ctx && "glXCreateContext failed");
+  glXMakeCurrent(carbon_win__display, carbon_win__window, carbon_win__glx_ctx);
+  XFree(vi);
+  carbon_win__gl_init(w, h);
 }
 
 CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
@@ -332,25 +252,7 @@ CBNINL bool carbon_win__poll_event(void) {
 }
 
 CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
-  if (w != carbon_win__renderer_w || h != carbon_win__renderer_h) {
-    carbon_win__renderer_w = w;
-    carbon_win__renderer_h = h;
-    glViewport(0, 0, carbon_win__renderer_w, carbon_win__renderer_h);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-                 carbon_win__renderer_w,
-                 carbon_win__renderer_h,
-                 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
-  }
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
-                  carbon_win__renderer_w,
-                  carbon_win__renderer_h,
-                  GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
-                  pixels);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glBindVertexArray(carbon_win__gl_vao);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  carbon_win__gl_render(pixels, w, h);
   glXSwapBuffers(carbon_win__display, carbon_win__window);
 }
 

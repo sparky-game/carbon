@@ -1,6 +1,6 @@
-#version 450
+#version 330 core
 
-layout(location = 0) out vec2 uv;
+out vec2 uv;
 
 void main() {
   vec2 pos[] = vec2[3](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));

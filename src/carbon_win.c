@@ -2,6 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
 static bool carbon_win__should_close;
+static usz carbon_win__renderer_w, carbon_win__renderer_h;
 
 static CBN_Image carbon_win__icon;
 static bool carbon_win__cursor_visible = true;
@@ -26,8 +27,7 @@ CBNINL bool carbon_win__poll_event(void);
 #if defined(__APPLE__)
 #include "carbon_win_macos.m"
 #elif defined(_WIN32)
-// ...
-#error Not implemented yet
+#include "carbon_win_win32.inl"
 #elif defined(__linux__) || defined(__FreeBSD__)
 #include "carbon_win_x11.inl"
 #else

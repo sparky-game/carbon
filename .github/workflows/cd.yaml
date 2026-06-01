@@ -28,8 +28,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y \
             libx11-dev      \
             libxrandr-dev   \
-            mesa-common-dev \
-            glslang-tools
+            mesa-common-dev
       - name: package
         run: CXX=clang++ ./src_build/make.sh
       - name: release

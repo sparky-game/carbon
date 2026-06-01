@@ -37,8 +37,6 @@ static NSApplication *carbon_win__app;
 static NSWindow *carbon_win__window;
 static CBNDelegate *carbon_win__delegate;
 
-static usz carbon_win__renderer_w, carbon_win__renderer_h;
-
 static id<MTLDevice> carbon_win__mtl_device;
 static id<MTLCommandQueue> carbon_win__mtl_queue;
 static CAMetalLayer *carbon_win__mtl_layer;
