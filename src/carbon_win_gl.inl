@@ -8,7 +8,6 @@
 #define GL_FRAGMENT_SHADER             0x8B30
 #define GL_COMPILE_STATUS              0x8B81
 #define GL_LINK_STATUS                 0x8B82
-#define GL_SHADER_BINARY_FORMAT_SPIR_V 0x9551
 #define GL_UNSIGNED_INT_8_8_8_8        0x8035
 #define GL_TEXTURE0                    0x84C0
 #endif
@@ -20,8 +19,8 @@ static GLuint carbon_win__gl_vao;
 
 #define CARBON_WIN__GL_PROCS                                            \
   x(GLuint, glCreateShader, GLenum)                                     \
-  x(void, glShaderBinary, GLsizei, const GLuint *, GLenum, const void *, GLsizei) \
-  x(void, glSpecializeShader, GLuint, const GLchar *, GLuint, const GLuint *, const GLuint *) \
+  x(void, glShaderSource, GLuint, GLsizei, const GLchar **, const GLint *) \
+  x(void, glCompileShader, GLuint)                                      \
   x(GLuint, glCreateProgram, void)                                      \
   x(void, glAttachShader, GLuint, GLuint)                               \
   x(void, glLinkProgram, GLuint)                                        \
@@ -30,6 +29,7 @@ static GLuint carbon_win__gl_vao;
   x(void, glBindVertexArray, GLuint)                                    \
   x(void, glGetShaderiv, GLuint, GLenum, GLint *)                       \
   x(void, glGetProgramiv, GLuint, GLenum, GLint *)                      \
+  x(void, glGetShaderInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)     \
   x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)    \
   x(void, glActiveTexture, GLenum)
 
@@ -54,24 +54,32 @@ CBNINL void carbon_win__gl_init(usz w, usz h) {
   carbon_win__renderer_h = h;
   carbon_win__gl_load_funcs();
   GLuint vert = glCreateShader(GL_VERTEX_SHADER); {
-    glShaderBinary(1, &vert,
-                   GL_SHADER_BINARY_FORMAT_SPIR_V,
-                   carbon_win_shader_vert_spv,
-                   carbon_win_shader_vert_spv_len);
-    glSpecializeShader(vert, "main", 0, 0, 0);
+    const GLchar *src = (const GLchar *)carbon_win_shader_vert;
+    const GLint len = (GLint)carbon_win_shader_vert_len;
+    glShaderSource(vert, 1, &src, &len);
+    glCompileShader(vert);
     GLint ok;
     glGetShaderiv(vert, GL_COMPILE_STATUS, &ok);
-    CBN_ASSERT(ok && "vert specialization failed");
+    if (!ok) {
+      char log[512];
+      glGetShaderInfoLog(vert, 512, 0, log);
+      CBN_ERROR("vert compile error: %s", log);
+      CARBON_UNREACHABLE;
+    }
   }
   GLuint frag = glCreateShader(GL_FRAGMENT_SHADER); {
-    glShaderBinary(1, &frag,
-                   GL_SHADER_BINARY_FORMAT_SPIR_V,
-                   carbon_win_shader_frag_spv,
-                   carbon_win_shader_frag_spv_len);
-    glSpecializeShader(frag, "main", 0, 0, 0);
+    const GLchar *src = (const GLchar *)carbon_win_shader_frag;
+    const GLint len = (GLint)carbon_win_shader_frag_len;
+    glShaderSource(frag, 1, &src, &len);
+    glCompileShader(frag);
     GLint ok;
     glGetShaderiv(frag, GL_COMPILE_STATUS, &ok);
-    CBN_ASSERT(ok && "frag specialization failed");
+    if (!ok) {
+      char log[512];
+      glGetShaderInfoLog(frag, 512, 0, log);
+      CBN_ERROR("frag compile error: %s", log);
+      CARBON_UNREACHABLE;
+    }
   }
   GLuint prog = glCreateProgram(); {
     glAttachShader(prog, vert);

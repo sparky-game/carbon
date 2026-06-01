@@ -7,12 +7,10 @@
 #include <GL/gl.h>
 
 #ifndef WGL_CONTEXT_MAJOR_VERSION_ARB
-#define WGL_CONTEXT_MAJOR_VERSION_ARB          0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB          0x2092
-#define WGL_CONTEXT_PROFILE_MASK_ARB           0x9126
-#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB       0x00000001
-#define WGL_CONTEXT_FLAGS_ARB                  0x2094
-#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB 0x00000001
+#define WGL_CONTEXT_MAJOR_VERSION_ARB    0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB    0x2092
+#define WGL_CONTEXT_PROFILE_MASK_ARB     0x9126
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
 #endif
 
 typedef HGLRC(WINAPI *wglCreateContextAttribsARB_t)(HDC, HGLRC, const int*);
@@ -58,10 +56,9 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
   wglCreateContextAttribsARB_t wglCreateContextAttribsARB = (wglCreateContextAttribsARB_t)wglGetProcAddress("wglCreateContextAttribsARB");
   CBN_ASSERT(wglCreateContextAttribsARB && "WGL_ARB_create_context extension not supported");
   int attrs[] = {
-    WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-    WGL_CONTEXT_MINOR_VERSION_ARB, 6,
+    WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+    WGL_CONTEXT_MINOR_VERSION_ARB, 3,
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-    WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
     0
   };
   carbon_win__hglrc = wglCreateContextAttribsARB(carbon_win__hdc, 0, attrs);

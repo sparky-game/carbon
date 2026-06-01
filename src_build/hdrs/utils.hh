@@ -15,7 +15,7 @@ inline void RunMetaprogram(fs::path &&exe) {
   RunCmd(s_exe.c_str());
 #ifdef _WIN32
   using namespace std::chrono_literals;
-  std::this_thread::sleep_for(100ms);
+  std::this_thread::sleep_for(500ms);
   assert(fs::remove(std::format("{}.exe", s_exe).c_str()));
 #else
   assert(fs::remove(s_exe));

@@ -69,21 +69,17 @@ void src_amalgamation(void) {
   }
 }
 
-void build_and_embed_shader(void) {
+void embed_shader(void) {
 #if defined(__APPLE__)
   printf("  METAL   " SHADER_OUT_FILE "\n");
   RunCmd("xcrun --sdk macosx metal " SHADER_IN_FILE " -o " SHADER_OUT_FILE " -target air64-apple-macos11.0");
   printf("  GEN     " SHADER_INL_FILE "\n");
   RunCmd("xxd -i " SHADER_OUT_FILE " > " SHADER_INL_FILE);
 #elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
-  printf("  SPIR-V  " SHADER_OUT_FILE("vert") "\n");
-  RunCmd("glslangValidator --quiet -G " SHADER_IN_FILE("vert") " -o " SHADER_OUT_FILE("vert"));
-  printf("  SPIR-V  " SHADER_OUT_FILE("frag") "\n");
-  RunCmd("glslangValidator --quiet -G " SHADER_IN_FILE("frag") " -o " SHADER_OUT_FILE("frag"));
   printf("  GEN     " SHADER_INL_FILE("vert") "\n");
-  RunCmd("xxd -i " SHADER_OUT_FILE("vert") " > " SHADER_INL_FILE("vert"));
+  RunCmd("xxd -i " SHADER_FILE("vert") " > " SHADER_INL_FILE("vert"));
   printf("  GEN     " SHADER_INL_FILE("frag") "\n");
-  RunCmd("xxd -i " SHADER_OUT_FILE("frag") " > " SHADER_INL_FILE("frag"));
+  RunCmd("xxd -i " SHADER_FILE("frag") " > " SHADER_INL_FILE("frag"));
 #else
 #error Target platform is not supported
 #endif
@@ -112,10 +108,6 @@ void compile_and_link_lib(void) {
   printf("  RM      " SHADER_INL_FILE "\n");
   assert(fs::remove(SHADER_INL_FILE));
 #elif defined(_WIN32) || defined(__linux__) || defined(__FreeBSD__)
-  printf("  RM      " SHADER_OUT_FILE("vert") "\n");
-  assert(fs::remove(SHADER_OUT_FILE("vert")));
-  printf("  RM      " SHADER_OUT_FILE("frag") "\n");
-  assert(fs::remove(SHADER_OUT_FILE("frag")));
   printf("  RM      " SHADER_INL_FILE("vert") "\n");
   assert(fs::remove(SHADER_INL_FILE("vert")));
   printf("  RM      " SHADER_INL_FILE("frag") "\n");
@@ -144,7 +136,7 @@ void build(void) {
   license_amalgamation();
   hdr_amalgamation();
   src_amalgamation();
-  build_and_embed_shader();
+  embed_shader();
   compile_and_link_lib();
   RunMetaprogram(TEST_EXE);
   build_tutorials();
