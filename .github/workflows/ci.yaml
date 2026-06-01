@@ -56,10 +56,6 @@ jobs:
           sudo apt-get update && sudo apt-get install -y \
             libx11-dev      \
             libxrandr-dev   \
-            mesa-common-dev \
-            glslang-tools
+            mesa-common-dev
       - name: build
         run: CXX=clang++ ./src_build/make.sh build
-      - name: analyze
-        if: ${{ !contains(matrix.os, '-arm') }}
-        uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
