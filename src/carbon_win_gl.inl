@@ -30,13 +30,15 @@ static GLuint carbon_win__gl_vao;
   x(void, glGetShaderiv, GLuint, GLenum, GLint *)                       \
   x(void, glGetProgramiv, GLuint, GLenum, GLint *)                      \
   x(void, glGetShaderInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)     \
-  x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)    \
-  x(void, glActiveTexture, GLenum)
+  x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)
 
 #define x(ret, name, ...)                       \
   typedef ret (*name ## _t)(__VA_ARGS__);       \
   static name ## _t name;
 CARBON_WIN__GL_PROCS;
+#ifdef _WIN32
+x(void, glActiveTexture, GLenum);
+#endif
 #undef x
 
 CBNINL void *carbon_win__gl_func_loader(const char *name);
@@ -46,6 +48,9 @@ CBNINL void carbon_win__gl_load_funcs(void) {
   name = (name ## _t) carbon_win__gl_func_loader(#name);  \
   CBN_ASSERT(name && #name " failed to load");
   CARBON_WIN__GL_PROCS;
+#ifdef _WIN32
+  x(void, glActiveTexture, GLenum);
+#endif
 #undef x
 }
 
