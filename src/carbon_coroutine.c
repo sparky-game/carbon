@@ -222,7 +222,7 @@ __attribute__((constructor)) CBNINL void carbon_coroutine__init(void) {
   carbon_coroutine__ctxs   = carbon_list_create(sizeof(CBN_Coroutine_CTX));
   carbon_coroutine__asleep = carbon_list_create(sizeof(usz));
 #ifdef _WIN32
-  CBN_WARN("Polling not implemented for Windows");
+#warning Polling not implemented for Windows
   carbon_coroutine__polls  = carbon_list_create(sizeof(char));
 #else
   carbon_coroutine__polls  = carbon_list_create(sizeof(struct pollfd));
