@@ -178,21 +178,21 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   u32 total_time_micro = (u32) (timer.elapsed * 1e6);
   u8 status = EXIT_SUCCESS;
   if (failed) {
-    if (!((i32) timer.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+    if (!((i32) timer.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %u us" CARBON_COLOR_RESET " ===========",
                                                 failed,
                                                 passed,
                                                 total_time_micro);
-    else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
+    else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2f s" CARBON_COLOR_RESET " ===========",
                          failed,
                          passed,
                          timer.elapsed);
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) timer.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %uμs" CARBON_COLOR_RESET " ===========",
+    if (!((i32) timer.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %u us" CARBON_COLOR_RESET " ===========",
                                                passed,
                                                total_time_micro);
-    else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2fs" CARBON_COLOR_RESET " ===========",
+    else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2f s" CARBON_COLOR_RESET " ===========",
                         passed,
                         timer.elapsed);
   }
