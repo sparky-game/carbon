@@ -35,6 +35,16 @@ CBNDEF_iAKA(cbn::math, literals, inv_pi, CARBON_1_PI);
 #define CARBON_1_2PI 0.15915494309189533576
 
 /**
+ * @brief The mathematical constant ϕ (<https://en.wikipedia.org/wiki/Golden_ratio>).
+ */
+#define CARBON_PHI 1.61803398874989484820
+CBNDEF_iAKA(cbn::math, literals, phi, CARBON_PHI);
+#define CARBON_1_PHI 0.61803398874989484820
+CBNDEF_iAKA(cbn::math, literals, inv_phi, CARBON_1_PHI);
+#define CARBON_PHI_2  0.80901699437494742410
+#define CARBON_1_2PHI 0.30901699437494742410
+
+/**
  * @brief The algebraic number √2 (<https://en.wikipedia.org/wiki/Square_root_of_2>).
  */
 #define CARBON_SQRT2 1.41421356237309504880
@@ -51,6 +61,14 @@ CBNDEF_iAKA(cbn::math, literals, sqrt3, CARBON_SQRT3);
 CBNDEF_iAKA(cbn::math, literals, sqrt3_2, CARBON_SQRT3_2);
 #define CARBON_1_SQRT3 0.57735026918962576451
 CBNDEF_iAKA(cbn::math, literals, inv_sqrt3, CARBON_1_SQRT3);
+
+/**
+ * @brief The algebraic number √5 (<https://en.wikipedia.org/wiki/Square_root_of_5>).
+ */
+#define CARBON_SQRT5 2.23606797749978969640
+CBNDEF_iAKA(cbn::math, literals, sqrt5, CARBON_SQRT5);
+#define CARBON_1_SQRT5 0.44721359549995793928
+CBNDEF_iAKA(cbn::math, literals, inv_sqrt5, CARBON_1_SQRT5);
 
 #define CARBON_LOG2_E 1.44269504088896340740
 CBNDEF_iAKA(cbn::math, literals, log2e, CARBON_LOG2_E);
@@ -441,6 +459,14 @@ CBNDEF_AKA(cbn::math, Tanh, carbon_math_tanh);
  */
 CBNDEF f32 carbon_math_asin(f32 x);
 CBNDEF_AKA(cbn::math, Asin, carbon_math_asin);
+
+/**
+ * @brief Returns the angle whose cosine is the specified number.
+ * @param x The number representing a cosine, such that -1 ≤ x ≤ 1.
+ * @return An angle θ, in radians, such that 0 ≤ θ ≤ π.
+ */
+CBNDEF f32 carbon_math_acos(f32 x);
+CBNDEF_AKA(cbn::math, Acos, carbon_math_acos);
 
 /**
  * @brief Returns the angle whose tangent is the specified number.

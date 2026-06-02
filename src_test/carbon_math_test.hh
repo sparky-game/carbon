@@ -217,6 +217,19 @@ TEST(asin) {
   return true;
 }
 
+TEST(acos) {
+  carbon_should_be_f(2.690565, cbn::math::Acos(-0.90));
+  carbon_should_be_f(2.418858, cbn::math::Acos(-0.75));
+  carbon_should_be_f(CARBON_2PI_3, cbn::math::Acos(-0.5));
+  carbon_should_be_f(1.823476, cbn::math::Acos(-0.25));
+  carbon_should_be_f(CARBON_PI_2, cbn::math::Acos(0));
+  carbon_should_be_f(1.318116, cbn::math::Acos(0.25));
+  carbon_should_be_f(CARBON_PI_3, cbn::math::Acos(0.5));
+  carbon_should_be_f(0.722734, cbn::math::Acos(0.75));
+  carbon_should_be_f(0.451026, cbn::math::Acos(0.90));
+  return true;
+}
+
 TEST(atan) {
   carbon_should_be_f(-1.107149, cbn::math::Atan(-2));
   carbon_should_be_f(-0.785398, cbn::math::Atan(-1));

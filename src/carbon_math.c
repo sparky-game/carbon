@@ -462,6 +462,10 @@ f32 carbon_math_asin(f32 x) {
   return carbon_math_atan(x / carbon_math_sqrt(1 - x*x));
 }
 
+f32 carbon_math_acos(f32 x) {
+  return CARBON_PI_2 - carbon_math_asin(x);
+}
+
 f32 carbon_math_atan(f32 x) {
   bool flip = x < 0;
   if (flip) x = -x;
