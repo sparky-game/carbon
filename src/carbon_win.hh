@@ -184,10 +184,17 @@ CBNDEF_AKA(cbn::win, GetAnyDown, carbon_win_get_any_down);
 
 /**
  * @brief Returns the actual mouse position within the window.
- * @return A Vec2 representing the position.
+ * @return A 2D vector representing the position.
  */
 CBNDEF CBN_Vec2 carbon_win_get_mouse_position(void);
 CBNDEF_AKA(cbn::win, GetMousePosition, carbon_win_get_mouse_position);
+
+/**
+ * @brief Returns the mouse displacement between the current and previous frame.
+ * @return A 2D vector representing the delta.
+ */
+CBNDEF CBN_Vec2 carbon_win_get_mouse_delta(void);
+CBNDEF_AKA(cbn::win, GetMouseDelta, carbon_win_get_mouse_delta);
 
 /**
  * @brief Sets the visibility state of the mouse cursor, between shown or hidden.
