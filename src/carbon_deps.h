@@ -55,5 +55,4 @@
 #include <optional>
 #include <functional>
 #else  // C-only
-#include <stdatomic.h>
 #endif
