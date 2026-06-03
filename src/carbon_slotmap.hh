@@ -12,8 +12,8 @@ struct CBN_SlotMap_Key : CBN_SlotMap_Key_t {
 
 template <typename T>
 struct CBN_SlotMap_tt : CBN_SlotMap_t {
-  using Key = CBN_SlotMap_Key;
   using value_type = T;
+  using Key = CBN_SlotMap_Key;
   using iterator = value_type *;
   using indices_type = cbn::List<Key>;
   using data_type = cbn::List<value_type>;
