@@ -76,6 +76,13 @@ void carbon_camera_set_type(CBN_Camera *c, const CBN_Camera_Type t) {
   carbon_camera__update_proj(c);
 }
 
+void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount) {
+  static const f32 max_zoom = 0.1;
+  if (!c) return;
+  c->ortho_size = carbon_math_max(c->ortho_size + amount, max_zoom);
+  if (c->type == CBN_Camera_Type_Orthographic) carbon_camera__update_proj(c);
+}
+
 CBN_Vec3 carbon_camera_get_position(const CBN_Camera *c) {
   if (!c) return carbon_math_vec3_1(0);
   return c->position;
@@ -204,6 +211,12 @@ void carbon_camera_move_down(CBN_Camera *c, f32 amount) {
   carbon_camera__translate(c, carbon_math_vec3(0, -1, 0), amount);
 }
 
+void carbon_camera_zoom(CBN_Camera *c, f32 amount) {
+  if (!c || !amount) return;
+  CBN_Vec3 fwd = carbon_math_vec3_rotate(carbon_math_vec3(0, 0, -1), c->rotation);
+  carbon_camera__translate(c, fwd, amount);
+}
+
 void carbon_camera_yaw(CBN_Camera *c, f32 amount) {
   if (!c || !amount) return;
   c->yaw += amount;
@@ -214,11 +227,4 @@ void carbon_camera_pitch(CBN_Camera *c, f32 amount) {
   if (!c || !amount) return;
   c->pitch = carbon_math_clamp(c->pitch + amount, -CARBON_CAMERA__PITCH_MAX, CARBON_CAMERA__PITCH_MAX);
   carbon_camera__update_rotation(c);
-}
-
-void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount) {
-  static const f32 max_zoom = 0.1;
-  if (!c) return;
-  c->ortho_size = carbon_math_max(c->ortho_size + amount, max_zoom);
-  if (c->type == CBN_Camera_Type_Orthographic) carbon_camera__update_proj(c);
 }

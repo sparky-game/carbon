@@ -51,6 +51,13 @@ CBNDEF void carbon_camera_reset(CBN_Camera *c, const CBN_DrawCanvas *dc);
 CBNDEF void carbon_camera_set_type(CBN_Camera *c, CBN_Camera_Type t);
 
 /**
+ * @brief ...
+ * @param c The Camera object.
+ * @param amount ...
+ */
+CBNDEF void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount);
+
+/**
  * @brief Obtains the current position of the Camera as 3D vector.
  * @param c The Camera object.
  * @return The Camera position 3D vector.
@@ -153,6 +160,13 @@ CBNDEF void carbon_camera_move_up(CBN_Camera *c, f32 amount);
 CBNDEF void carbon_camera_move_down(CBN_Camera *c, f32 amount);
 
 /**
+ * @brief ...
+ * @param c The Camera object.
+ * @param p ...
+ */
+CBNDEF void carbon_camera_zoom(CBN_Camera *c, f32 amount);
+
+/**
  * @brief Adjusts the Camera's yaw (Y-axis) by the given amount.
  * @param c The Camera object.
  * @param amount The amount to move.
@@ -165,10 +179,3 @@ CBNDEF void carbon_camera_yaw(CBN_Camera *c, f32 amount);
  * @param amount The amount to move.
  */
 CBNDEF void carbon_camera_pitch(CBN_Camera *c, f32 amount);
-
-/**
- * @brief ...
- * @param c The Camera object.
- * @param amount ...
- */
-CBNDEF void carbon_camera_ortho_zoom(CBN_Camera *c, f32 amount);
