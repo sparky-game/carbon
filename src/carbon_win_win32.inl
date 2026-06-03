@@ -136,6 +136,9 @@ LRESULT CALLBACK carbon_win__wndproc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
   case WM_MBUTTONUP:
     carbon_win__mouse_buttons[CBN_Win_MouseButton_Middle] = false;
     return 0;
+  case WM_MOUSEWHEEL:
+    carbon_win__mouse_scroll += (f32)GET_WHEEL_DELTA_WPARAM(wp)/WHEEL_DELTA;
+    return 0;
   }
   return DefWindowProcA(hwnd, msg, wp, lp);
 }

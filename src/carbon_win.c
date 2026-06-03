@@ -7,6 +7,7 @@ static usz carbon_win__renderer_w, carbon_win__renderer_h;
 static CBN_Image carbon_win__icon;
 static bool carbon_win__cursor_visible = true;
 static CBN_Vec2 carbon_win__mouse_delta;
+static f32 carbon_win__mouse_scroll;
 
 static u32 carbon_win__max_fps;
 static u32 carbon_win__curr_fps;
@@ -128,6 +129,7 @@ bool carbon_win_shouldclose(void) {
   for (CBN_Win_MouseButton i = 0; i < CBN_Win_MouseButton_Count; ++i) {
     carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
   }
+  carbon_win__mouse_scroll = 0;
   while (carbon_win__poll_event());
   carbon_win__update_mouse_delta();
   return carbon_win__should_close;
@@ -173,4 +175,8 @@ bool carbon_win_get_any_down(void) {
 
 CBN_Vec2 carbon_win_get_mouse_delta(void) {
   return carbon_win__mouse_delta;
+}
+
+f32 carbon_win_get_mouse_scroll(void) {
+  return carbon_win__mouse_scroll;
 }

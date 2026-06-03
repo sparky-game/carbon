@@ -331,6 +331,10 @@ CBNINL bool carbon_win__poll_event(void) {
         carbon_win__mouse_buttons[CBN_Win_MouseButton_Middle] = [e type] == NSEventTypeOtherMouseDown;
       }
       break;
+    case NSEventTypeScrollWheel:
+      if ([e hasPreciseScrollingDeltas]) carbon_win__mouse_scroll += (f32)[e scrollingDeltaY] * 0.1;
+      else carbon_win__mouse_scroll += (f32)[e scrollingDeltaY];
+      break;
     default: break;
     }
     [carbon_win__app sendEvent:e];

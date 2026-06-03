@@ -197,6 +197,13 @@ CBNDEF CBN_Vec2 carbon_win_get_mouse_delta(void);
 CBNDEF_AKA(cbn::win, GetMouseDelta, carbon_win_get_mouse_delta);
 
 /**
+ * @brief Returns ...
+ * @return ...
+ */
+CBNDEF f32 carbon_win_get_mouse_scroll(void);
+CBNDEF_AKA(cbn::win, GetMouseScroll, carbon_win_get_mouse_scroll);
+
+/**
  * @brief Sets the visibility state of the mouse cursor, between shown or hidden.
  * @param visible A boolean value representing whether the mouse cursor must be visible or not.
  */

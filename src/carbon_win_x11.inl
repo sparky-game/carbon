@@ -243,6 +243,12 @@ CBNINL bool carbon_win__poll_event(void) {
     case Button3:
       carbon_win__mouse_buttons[CBN_Win_MouseButton_Right] = pressed;
       break;
+    case Button4:
+      if (pressed) carbon_win__mouse_scroll += 1;
+      break;
+    case Button5:
+      if (pressed) carbon_win__mouse_scroll -= 1;
+      break;
     default: break;
     }
   } break;
