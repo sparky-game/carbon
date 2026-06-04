@@ -4,7 +4,6 @@
 #include <carbon.h>
 
 namespace res {
-  static cbn::mesh_mgr::UID s_Mesh_Cube;
   static cbn::Opt<cbn::SKAP> s_AssetPack;
   static cbn::mesh_mgr::UID s_Mesh_Teapot;
 
@@ -26,7 +25,6 @@ namespace res {
     CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
     LoadPack("assets.skap", s_AssetPack);
     cbn::mesh_mgr::Init();
-    LoadMesh("./3d_models/cube.obj", s_Mesh_Cube);
     LoadMesh("./3d_models/teapot.obj", s_Mesh_Teapot);
     CBN_INFO("Initialized resource manager successfully");
   }
@@ -113,19 +111,18 @@ void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
   dc.DrawPlaneXZ(c, cbn::math::Vec3(-3, -2, -3), cbn::math::Vec2(/*6*/ 25), 0xff0000ff);
   mesh_render(dc, c, dt);
   {
-    static const auto * const mp = cbn::mesh_mgr::Lookup(res::s_Mesh_Cube);
     static constexpr cbn::Transform t1 {
       .position = cbn::math::Vec3(-2, -1.5, -2),
       .rotation = cbn::math::Vec3(),
       .scale    = cbn::math::Vec3(1)
     };
-    dc.DrawMesh(c, mp, t1, Color_FG);
+    dc.DrawMesh(c, &dc.Cube, t1, Color_FG);
     static constexpr cbn::Transform t2 {
       .position = cbn::math::Vec3(-3, -1.5, -3),
       .rotation = cbn::math::Vec3(),
       .scale    = cbn::math::Vec3(1)
     };
-    dc.DrawMesh(c, mp, t2, Color_FG);
+    dc.DrawMesh(c, &dc.Cube, t2, Color_FG);
   }
   hud_render(dc, c);
 }
@@ -133,7 +130,7 @@ void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
 int main(void) {
   auto canvas = cbn::DrawCanvas::New(1280, 720);
   auto cam = canvas->CreateCamera();
-  cam->SetType(cbn::Camera::Type::Orthographic);
+  // cam->SetType(cbn::Camera::Type::Orthographic);
   canvas->LightAdd({
       .type = cbn::LightType::Directional,
       .color = 0xffffffff,
