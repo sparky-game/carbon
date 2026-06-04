@@ -6,19 +6,27 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-typedef struct Node {
+/**
+ * @brief Represents ...
+ */
+CBNDEF_T(CBN_HashMap_Node) {
   const char *key;
-  struct Node *next;
+  CBN_HashMap_Node *next;
   u8 value[];
-} CBN_HashMap_Node;
+};
 
-typedef struct {
+/**
+ * @brief Represents ...
+ */
+CBNDEF_TT(CBN_HashMap) {
   CBN_HashMap_Node **buckets;
   usz capacity;
   usz stride;
-} CBN_HashMap;
+  usz size;
+};
+CBNDEF_TTAKA(cbn, HashMap, CBN_HashMap);
 
-CBNDEF CBN_HashMap carbon_hashmap_create(usz capacity, usz stride);
+CBNDEF CBN_HashMap carbon_hashmap_create(usz stride);
 
 CBNDEF void carbon_hashmap_destroy(CBN_HashMap *hm);
 

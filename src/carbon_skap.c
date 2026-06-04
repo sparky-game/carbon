@@ -581,7 +581,7 @@ bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   }
   // Read idxs
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    out_handle->idxs[i] = carbon_hashmap_create(out_handle->type_counters[i], sizeof(CBN_SKAP_AssetIdx));
+    out_handle->idxs[i] = carbon_hashmap_create(sizeof(CBN_SKAP_AssetIdx));
     for (usz j = 0; j < out_handle->type_counters[i]; ++j) {
       CBN_SKAP_AssetIdx idx;
       fread(&idx, sizeof(idx), 1, out_handle->fd);
@@ -617,10 +617,7 @@ void carbon_skap_close(CBN_SKAP *handle) {
 }
 
 void carbon_skap_print(const CBN_SKAP *handle) {
-  if (!handle) {
-    CBN_WARN("`handle` is not a valid pointer, skipping printing");
-    return;
-  }
+  if (!handle) return;
   carbon_println("fd: %p", handle->fd);
   carbon_println("blob_section_start_pos: " CARBON_SKAP__HEX_SPEC, handle->blob_section_start_pos);
   carbon_println("header:");
@@ -630,14 +627,6 @@ void carbon_skap_print(const CBN_SKAP *handle) {
   carbon_println("type_counters:");
   for (CBN_SKAP_AssetType i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_println("  - %s: %zu", carbon_skap__type2str[i], carbon_skap_count_of(handle, i));
-  }
-  carbon_println("idxs:");
-  for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %s:", carbon_skap__type2str[i]);
-    // TODO: we need to iterate the hashmaps, not the type_counters
-    for (usz j = 0; j < handle->type_counters[i]; ++j) {
-      carbon_println("      - (...)");
-    }
   }
 }
 

@@ -4,13 +4,6 @@
 #define CARBON_LIST__RESIZE_FACTOR 1.5
 #define CARBON_LIST__FIRST_ALLOC_CAPACITY 2
 
-CBNINL usz carbon_list__next_capacity(usz curr, usz min) {
-  if (!min) return 0;
-  usz new = curr ?: CARBON_LIST__FIRST_ALLOC_CAPACITY;
-  while (new < min) new *= CARBON_LIST__RESIZE_FACTOR;
-  return new;
-}
-
 CBN_List carbon_list_create(usz stride) {
   return (CBN_List) {
     .items = 0,
@@ -29,6 +22,13 @@ void carbon_list_destroy(CBN_List *l) {
 void carbon_list_clear(CBN_List *l) {
   if (!l) return;
   l->size = 0;
+}
+
+CBNINL usz carbon_list__next_capacity(usz curr, usz min) {
+  if (!min) return 0;
+  usz new = curr ?: CARBON_LIST__FIRST_ALLOC_CAPACITY;
+  while (new < min) new *= CARBON_LIST__RESIZE_FACTOR;
+  return new;
 }
 
 void carbon_list_reserve(CBN_List *l, usz min) {

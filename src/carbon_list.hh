@@ -20,7 +20,7 @@ struct CBN_List_tt : CBN_List_t {
   CBN_List_tt &operator=(CBN_List_tt &&l) {
     if (this != &l) {
       Free();
-      *this = l;
+      *(CBN_List_t *)this = l;
       carbon_memory_set(&l, 0, sizeof(l));
     }
     return *this;

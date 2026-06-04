@@ -11,6 +11,7 @@ using namespace cbn::math::literals;
 #include <carbon_crypto_test.hh>
 #include <carbon_string_test.hh>
 #include <carbon_list_test.hh>
+#include <carbon_hashmap_test.hh>
 #include <carbon_slotmap_test.hh>
 
 int main(void) {
