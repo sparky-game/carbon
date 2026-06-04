@@ -64,7 +64,12 @@ struct CBN_DrawCanvas {
 
   void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color) { carbon_drawcanvas_mesh(this, &c, m, t, color); }
 
-  void DrawCube(const CBN_Camera &c, CBN_Transform t, u32 color) { carbon_drawcanvas_cube(this, &c, t, color); }
+  static inline const auto &Tetrahedron {carbon_drawcanvas_tetrahedron};
+  static inline const auto &Cube {carbon_drawcanvas_cube};
+  static inline const auto &Octahedron {carbon_drawcanvas_octahedron};
+  static inline const auto &PentaTrapezohedron {carbon_drawcanvas_pentatrapezohedron};
+  static inline const auto &Dodecahedron {carbon_drawcanvas_dodecahedron};
+  static inline const auto &Icosahedron {carbon_drawcanvas_icosahedron};
 
   void DrawPlaneXZ(const CBN_Camera &c, CBN_Vec3 center, CBN_Vec2 size, u32 color) { carbon_drawcanvas_plane_xz(this, &c, center, size, color); }
 

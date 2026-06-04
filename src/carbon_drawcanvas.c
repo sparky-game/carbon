@@ -264,8 +264,47 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
   }
 }
 
-void carbon_drawcanvas_cube(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Transform t, u32 color) {
-  static const CBN_Vec3 vs[] = {
+const CBN_Mesh carbon_drawcanvas_tetrahedron = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 4,
+    .texcoords_count = 4*3,  // 3 corners per face (triangle)
+    .normals_count   = 4,
+    .faces_count     = 4     // 4 triangular faces
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{ 1,  1,  1}}},  // [0]
+    {{{-1, -1,  1}}},  // [1]
+    {{{-1,  1, -1}}},  // [2]
+    {{{ 1, -1, -1}}}   // [3]
+  },
+  .texcoords = (CBN_Vec2[]){
+    {{{1/2.,    0}}}, {{{1/4., 1/4.}}}, {{{3/4., 1/4.}}},  // [0..2]  top
+    {{{1/4., 1/4.}}}, {{{   0, 1/2.}}}, {{{1/2., 1/2.}}},  // [3..5]  left
+    {{{3/4., 1/4.}}}, {{{1/2., 1/2.}}}, {{{   1, 1/2.}}},  // [6..8]  right
+    {{{1/2., 1/2.}}}, {{{1/4., 3/4.}}}, {{{3/4., 3/4.}}}   // [9..11] bottom
+  },
+  .normals = (CBN_Vec3[]){
+    {{{ CARBON_1_SQRT3, -CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [0] top
+    {{{-CARBON_1_SQRT3,  CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [1] left
+    {{{ CARBON_1_SQRT3,  CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [2] right
+    {{{-CARBON_1_SQRT3, -CARBON_1_SQRT3, -CARBON_1_SQRT3}}}   // [3] bottom
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{0, 1, 3}, {0,  1,  2}, {0, 0, 0}},  // top
+    {{0, 2, 1}, {3,  4,  5}, {1, 1, 1}},  // left
+    {{0, 3, 2}, {6,  7,  8}, {2, 2, 2}},  // right
+    {{1, 2, 3}, {9, 10, 11}, {3, 3, 3}}   // bottom
+  }
+};
+
+const CBN_Mesh carbon_drawcanvas_cube = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 8,
+    .texcoords_count = 6*4,  // 4 corners per face (square)
+    .normals_count   = 6,
+    .faces_count     = 6*2   // 2 triangles per face
+  },
+  .vertices = (CBN_Vec3[]){
     {{{-1, -1,  1}}},  // [0] front bottom-left
     {{{ 1, -1,  1}}},  // [1] front bottom-right
     {{{ 1,  1,  1}}},  // [2] front top-right
@@ -274,45 +313,341 @@ void carbon_drawcanvas_cube(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Transfo
     {{{ 1, -1, -1}}},  // [5] back bottom-right
     {{{ 1,  1, -1}}},  // [6] back top-right
     {{{-1,  1, -1}}}   // [7] back top-left
-  };
-  static const CBN_Vec2 ts[] = {
-    {{{1/4.f, 1/3.f}}}, {{{2/4.f, 1/3.f}}}, {{{2/4.f, 2/3.f}}}, {{{1/4.f, 2/3.f}}},  // [0..3]   front
-    {{{2/4.f, 1/3.f}}}, {{{3/4.f, 1/3.f}}}, {{{3/4.f, 2/3.f}}}, {{{2/4.f, 2/3.f}}},  // [4..7]   right
-    {{{3/4.f, 1/3.f}}}, {{{4/4.f, 1/3.f}}}, {{{4/4.f, 2/3.f}}}, {{{3/4.f, 2/3.f}}},  // [8..11]  back
-    {{{    0, 1/3.f}}}, {{{1/4.f, 1/3.f}}}, {{{1/4.f, 2/3.f}}}, {{{    0, 2/3.f}}},  // [12..15] left
-    {{{1/4.f, 2/3.f}}}, {{{2/4.f, 2/3.f}}}, {{{2/4.f, 3/3.f}}}, {{{1/4.f, 3/3.f}}},  // [16..19] top
-    {{{1/4.f,     0}}}, {{{2/4.f,     0}}}, {{{2/4.f, 1/3.f}}}, {{{1/4.f, 1/3.f}}}   // [20..23] bottom
-  };
-  static const CBN_Vec3 ns[] = {
+  },
+  .texcoords = (CBN_Vec2[]){
+    {{{1/4., 1/3.}}}, {{{2/4., 1/3.}}}, {{{2/4., 2/3.}}}, {{{1/4., 2/3.}}},  // [0..3]   front
+    {{{2/4., 1/3.}}}, {{{3/4., 1/3.}}}, {{{3/4., 2/3.}}}, {{{2/4., 2/3.}}},  // [4..7]   right
+    {{{3/4., 1/3.}}}, {{{4/4., 1/3.}}}, {{{4/4., 2/3.}}}, {{{3/4., 2/3.}}},  // [8..11]  back
+    {{{   0, 1/3.}}}, {{{1/4., 1/3.}}}, {{{1/4., 2/3.}}}, {{{   0, 2/3.}}},  // [12..15] left
+    {{{1/4., 2/3.}}}, {{{2/4., 2/3.}}}, {{{2/4., 3/3.}}}, {{{1/4., 3/3.}}},  // [16..19] top
+    {{{1/4.,    0}}}, {{{2/4.,    0}}}, {{{2/4., 1/3.}}}, {{{1/4., 1/3.}}}   // [20..23] bottom
+  },
+  .normals = (CBN_Vec3[]){
     {{{ 0,  0,  1}}},  // [0] front
     {{{ 1,  0,  0}}},  // [1] right
     {{{ 0,  0, -1}}},  // [2] back
     {{{-1,  0,  0}}},  // [3] left
     {{{ 0,  1,  0}}},  // [4] top
     {{{ 0, -1,  0}}}   // [5] bottom
-  };
-  static const usz fs[][CARBON_MESH_FACE_COMPS][3] = {// {{v[3]}, {vt[3]}, {vn[3]}}
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
     {{0, 1, 2}, { 0,  1,  2}, {0, 0, 0}}, {{0, 2, 3}, { 0,  2,  3}, {0, 0, 0}},  // front
     {{1, 5, 6}, { 4,  5,  6}, {1, 1, 1}}, {{1, 6, 2}, { 4,  6,  7}, {1, 1, 1}},  // right
     {{5, 4, 7}, { 8,  9, 10}, {2, 2, 2}}, {{5, 7, 6}, { 8, 10, 11}, {2, 2, 2}},  // back
     {{4, 0, 3}, {12, 13, 14}, {3, 3, 3}}, {{4, 3, 7}, {12, 14, 15}, {3, 3, 3}},  // left
     {{3, 2, 6}, {16, 17, 18}, {4, 4, 4}}, {{3, 6, 7}, {16, 18, 19}, {4, 4, 4}},  // top
     {{4, 5, 1}, {20, 21, 22}, {5, 5, 5}}, {{4, 1, 0}, {20, 22, 23}, {5, 5, 5}}   // bottom
-  };
-  static const CBN_Mesh m = {
-    .vertices  = (void *)vs,
-    .texcoords = (void *)ts,
-    .normals   = (void *)ns,
-    .faces     = (void *)fs,
-    .metadata  = (CBN_Mesh_Metadata){
-      .vertices_count  = 8,
-      .texcoords_count = 6*4,  // 6 faces, 4 corners per face
-      .normals_count   = 6,    // 6 faces
-      .faces_count     = 6*2   // 6 faces, 2 triangles per face
-    }
-  };
-  carbon_drawcanvas_mesh(dc, c, &m, t, color);
-}
+  }
+};
+
+const CBN_Mesh carbon_drawcanvas_octahedron = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 6,
+    .texcoords_count = 8*3,  // 3 corners per face (triangle)
+    .normals_count   = 8,
+    .faces_count     = 8     // 8 triangular faces
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{ 0,  1,  0}}},  // [0] top
+    {{{ 0, -1,  0}}},  // [1] bottom
+    {{{ 1,  0,  0}}},  // [2] right
+    {{{-1,  0,  0}}},  // [3] left
+    {{{ 0,  0,  1}}},  // [4] front
+    {{{ 0,  0, -1}}}   // [5] back
+  },
+  .texcoords = (CBN_Vec2[]){
+    {{{1/8., 0}}}, {{{   0, 1/4.}}}, {{{1/4., 1/4.}}},  // [0..2]   top-front-right
+    {{{3/8., 0}}}, {{{1/4., 1/4.}}}, {{{1/2., 1/4.}}},  // [3..5]   top-right-back
+    {{{5/8., 0}}}, {{{1/2., 1/4.}}}, {{{3/4., 1/4.}}},  // [6..8]   top-back-left
+    {{{7/8., 0}}}, {{{3/4., 1/4.}}}, {{{   1, 1/4.}}},  // [9..11]  top-left-front
+    {{{1/8., 1}}}, {{{   0, 3/4.}}}, {{{1/4., 3/4.}}},  // [12..14] bottom-right-front
+    {{{3/8., 1}}}, {{{1/4., 3/4.}}}, {{{1/2., 3/4.}}},  // [15..17] bottom-back-right
+    {{{5/8., 1}}}, {{{1/2., 3/4.}}}, {{{3/4., 3/4.}}},  // [18..20] bottom-left-back
+    {{{7/8., 1}}}, {{{3/4., 3/4.}}}, {{{   1, 3/4.}}}   // [21..23] bottom-front-left
+  },
+  .normals = (CBN_Vec3[]){
+    {{{ CARBON_1_SQRT3,  CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [0]
+    {{{ CARBON_1_SQRT3,  CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [1]
+    {{{-CARBON_1_SQRT3,  CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [2]
+    {{{-CARBON_1_SQRT3,  CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [3]
+    {{{ CARBON_1_SQRT3, -CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [4]
+    {{{ CARBON_1_SQRT3, -CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [5]
+    {{{-CARBON_1_SQRT3, -CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [6]
+    {{{-CARBON_1_SQRT3, -CARBON_1_SQRT3,  CARBON_1_SQRT3}}}   // [7]
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{0, 4, 2}, { 0,  1,  2}, {0, 0, 0}},  // top-front-right
+    {{0, 2, 5}, { 3,  4,  5}, {1, 1, 1}},  // top-right-back
+    {{0, 5, 3}, { 6,  7,  8}, {2, 2, 2}},  // top-back-left
+    {{0, 3, 4}, { 9, 10, 11}, {3, 3, 3}},  // top-left-front
+    {{1, 2, 4}, {12, 13, 14}, {4, 4, 4}},  // bottom-right-front
+    {{1, 5, 2}, {15, 16, 17}, {5, 5, 5}},  // bottom-back-right
+    {{1, 3, 5}, {18, 19, 20}, {6, 6, 6}},  // bottom-left-back
+    {{1, 4, 3}, {21, 22, 23}, {7, 7, 7}}   // bottom-front-left
+  }
+};
+
+#define PHI_C1  0.52573111211913360602  // `1/√(ϕ + 2)`
+#define PHI_C2  0.85065080835203993218  // `ϕ/√(ϕ + 2)`
+#define PHI_C3  0.27639320225002103035  // `1/(ϕ + 2)`
+#define PHI_C4  0.72360679774997896964  // `(ϕ + 2)/5`
+#define PHI_C5  1.10557280900008412143  // `4/(ϕ + 2)`
+#define PHI_C6  0.89442719099991587856  // `2ϕ/(ϕ + 2)`
+#define PHI_C7  0.34164078649987381784  // `2/(3ϕ + 1)`
+#define PHI_C8  0.64983939246581265231  // `2/(ϕ√(ϕ + 2))`
+#define PHI_C9  1.05146222423826721205  // `2/√(ϕ + 2)`
+#define PHI_C10 0.95105651629515357211  // `√(ϕ + 2)/2`
+#define PHI_C11 0.58778525229247312916  // `√(3 - ϕ)/2`
+#define PHI_C12 0.35682208977308993194  // `1/(ϕ√3)`
+#define PHI_C13 0.93417235896271569645  // `ϕ/√3`
+
+#define D10_Z_SCALE 0.55
+#define D10_H_OFF (0.21114561800016824287 * D10_Z_SCALE)  // `2 - 4/√5`
+#define D10_C1 0.8272
+#define D10_C2 0.67267
+
+#define UVS_FACE(cx, cy, sx, sy)                \
+  {{{(cx), (cy) + (sy)}}},                      \
+  {{{(cx) + (sx), (cy)}}},                      \
+  {{{(cx), (cy) - (sy)}}},                      \
+  {{{(cx) - (sx), (cy)}}}
+
+const CBN_Mesh carbon_drawcanvas_pentatrapezohedron = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 12,
+    .texcoords_count = 10*4,  // 4 corners per face (quadrilateral)
+    .normals_count   = 10,
+    .faces_count     = 10*2   // 2 triangles per face
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{      0,       0,  2 * D10_Z_SCALE}}},  // [0]  top pole
+    {{{      0,       0, -2 * D10_Z_SCALE}}},  // [1]  bottom pole
+    {{{ PHI_C5,       0,        D10_H_OFF}}},  // [2]  belt 01/10
+    {{{ PHI_C6,  PHI_C8,       -D10_H_OFF}}},  // [3]  belt 02/10
+    {{{ PHI_C7,  PHI_C9,        D10_H_OFF}}},  // [4]  belt 03/10
+    {{{-PHI_C7,  PHI_C9,       -D10_H_OFF}}},  // [5]  belt 04/10
+    {{{-PHI_C6,  PHI_C8,        D10_H_OFF}}},  // [6]  belt 05/10
+    {{{-PHI_C5,       0,       -D10_H_OFF}}},  // [7]  belt 06/10
+    {{{-PHI_C6, -PHI_C8,        D10_H_OFF}}},  // [8]  belt 07/10
+    {{{-PHI_C7, -PHI_C9,       -D10_H_OFF}}},  // [9]  belt 08/10
+    {{{ PHI_C7, -PHI_C9,        D10_H_OFF}}},  // [10] belt 09/10
+    {{{ PHI_C6, -PHI_C8,       -D10_H_OFF}}}   // [11] belt 10/10
+  },
+  .texcoords = (CBN_Vec2[]){
+    UVS_FACE(1/10., 0.78, 0.075, 0.14),
+    UVS_FACE(3/10., 0.78, 0.075, 0.14),
+    UVS_FACE( 1/2., 0.78, 0.075, 0.14),
+    UVS_FACE(7/10., 0.78, 0.075, 0.14),
+    UVS_FACE(9/10., 0.78, 0.075, 0.14),
+    UVS_FACE(1/10., 0.22, 0.075, 0.14),
+    UVS_FACE(3/10., 0.22, 0.075, 0.14),
+    UVS_FACE( 1/2., 0.22, 0.075, 0.14),
+    UVS_FACE(7/10., 0.22, 0.075, 0.14),
+    UVS_FACE(9/10., 0.22, 0.075, 0.14)
+  },
+  .normals = (CBN_Vec3[]){
+    {{{ PHI_C4 * D10_C1,  PHI_C1 * D10_C1,  D10_C2}}},  // [0]
+    {{{-PHI_C3 * D10_C1,  PHI_C2 * D10_C1,  D10_C2}}},  // [1]
+    {{{-PHI_C6 * D10_C1,                0,  D10_C2}}},  // [2]
+    {{{-PHI_C3 * D10_C1, -PHI_C2 * D10_C1,  D10_C2}}},  // [3]
+    {{{ PHI_C4 * D10_C1, -PHI_C1 * D10_C1,  D10_C2}}},  // [4]
+    {{{-PHI_C4 * D10_C1, -PHI_C1 * D10_C1, -D10_C2}}},  // [5]
+    {{{ PHI_C3 * D10_C1, -PHI_C2 * D10_C1, -D10_C2}}},  // [6]
+    {{{ PHI_C6 * D10_C1,                0, -D10_C2}}},  // [7]
+    {{{ PHI_C3 * D10_C1,  PHI_C2 * D10_C1, -D10_C2}}},  // [8]
+    {{{-PHI_C4 * D10_C1,  PHI_C1 * D10_C1, -D10_C2}}}   // [9]
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{0,  2,  3}, { 0,  1,  2}, {0, 0, 0}}, {{0,  3,  4}, { 0,  2,  3}, {0, 0, 0}},
+    {{0,  4,  5}, { 4,  5,  6}, {1, 1, 1}}, {{0,  5,  6}, { 4,  6,  7}, {1, 1, 1}},
+    {{0,  6,  7}, { 8,  9, 10}, {2, 2, 2}}, {{0,  7,  8}, { 8, 10, 11}, {2, 2, 2}},
+    {{0,  8,  9}, {12, 13, 14}, {3, 3, 3}}, {{0,  9, 10}, {12, 14, 15}, {3, 3, 3}},
+    {{0, 10, 11}, {16, 17, 18}, {4, 4, 4}}, {{0, 11,  2}, {16, 18, 19}, {4, 4, 4}},
+    {{1,  8,  7}, {20, 22, 21}, {5, 5, 5}}, {{1,  9,  8}, {20, 23, 22}, {5, 5, 5}},
+    {{1, 10,  9}, {24, 26, 25}, {6, 6, 6}}, {{1, 11, 10}, {24, 27, 26}, {6, 6, 6}},
+    {{1,  2, 11}, {28, 30, 29}, {7, 7, 7}}, {{1,  3,  2}, {28, 31, 30}, {7, 7, 7}},
+    {{1,  4,  3}, {32, 34, 33}, {8, 8, 8}}, {{1,  5,  4}, {32, 35, 34}, {8, 8, 8}},
+    {{1,  6,  5}, {36, 38, 37}, {9, 9, 9}}, {{1,  7,  6}, {36, 39, 38}, {9, 9, 9}}
+  }
+};
+
+#undef UVS_FACE
+#define UVS_FACE(cx, cy, sx, sy)                            \
+  {{{(cx), (cy) + (sy)}}},                                  \
+  {{{(cx) - PHI_C10 * (sx), (cy) + CARBON_1_2PHI * (sy)}}}, \
+  {{{(cx) - PHI_C11 * (sx), (cy) - CARBON_PHI_2 * (sy)}}},  \
+  {{{(cx) + PHI_C11 * (sx), (cy) - CARBON_PHI_2 * (sy)}}},  \
+  {{{(cx) + PHI_C10 * (sx), (cy) + CARBON_1_2PHI * (sy)}}}
+
+const CBN_Mesh carbon_drawcanvas_dodecahedron = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 20,
+    .texcoords_count = 12*5,  // 5 corners per face (pentagon)
+    .normals_count   = 12,
+    .faces_count     = 12*3   // 3 triangles per face
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{           -1,            -1,          -1}}},  // [0]
+    {{{           -1,            -1,           1}}},  // [1]
+    {{{           -1,             1,          -1}}},  // [2]
+    {{{           -1,             1,           1}}},  // [3]
+    {{{            1,            -1,          -1}}},  // [4]
+    {{{            1,            -1,           1}}},  // [5]
+    {{{            1,             1,          -1}}},  // [6]
+    {{{            1,             1,           1}}},  // [7]
+    {{{            0, -CARBON_1_PHI,  CARBON_PHI}}},  // [8]
+    {{{            0, -CARBON_1_PHI, -CARBON_PHI}}},  // [9]
+    {{{            0,  CARBON_1_PHI,  CARBON_PHI}}},  // [10]
+    {{{            0,  CARBON_1_PHI, -CARBON_PHI}}},  // [11]
+    {{{-CARBON_1_PHI,  CARBON_PHI,             0}}},  // [12]
+    {{{ CARBON_1_PHI,  CARBON_PHI,             0}}},  // [13]
+    {{{-CARBON_1_PHI, -CARBON_PHI,             0}}},  // [14]
+    {{{ CARBON_1_PHI, -CARBON_PHI,             0}}},  // [15]
+    {{{  -CARBON_PHI,           0, -CARBON_1_PHI}}},  // [16]
+    {{{  -CARBON_PHI,           0,  CARBON_1_PHI}}},  // [17]
+    {{{   CARBON_PHI,           0, -CARBON_1_PHI}}},  // [18]
+    {{{   CARBON_PHI,           0,  CARBON_1_PHI}}}   // [19]
+  },
+  .texcoords = (CBN_Vec2[]){
+    UVS_FACE(1/8., 5/6., 0.095, 0.115),
+    UVS_FACE(3/8., 5/6., 0.095, 0.115),
+    UVS_FACE(5/8., 5/6., 0.095, 0.115),
+    UVS_FACE(7/8., 5/6., 0.095, 0.115),
+    UVS_FACE(1/8., 1/2., 0.095, 0.115),
+    UVS_FACE(3/8., 1/2., 0.095, 0.115),
+    UVS_FACE(5/8., 1/2., 0.095, 0.115),
+    UVS_FACE(7/8., 1/2., 0.095, 0.115),
+    UVS_FACE(1/8., 1/6., 0.095, 0.115),
+    UVS_FACE(3/8., 1/6., 0.095, 0.115),
+    UVS_FACE(5/8., 1/6., 0.095, 0.115),
+    UVS_FACE(7/8., 1/6., 0.095, 0.115)
+  },
+  .normals = (CBN_Vec3[]){
+    {{{      0, -PHI_C2,  PHI_C1}}},  // [0]
+    {{{      0, -PHI_C2, -PHI_C1}}},  // [1]
+    {{{-PHI_C2, -PHI_C1,       0}}},  // [2]
+    {{{-PHI_C1,       0, -PHI_C2}}},  // [3]
+    {{{ PHI_C1,       0, -PHI_C2}}},  // [4]
+    {{{ PHI_C2, -PHI_C1,       0}}},  // [5]
+    {{{      0,  PHI_C2, -PHI_C1}}},  // [6]
+    {{{-PHI_C2,  PHI_C1,       0}}},  // [7]
+    {{{ PHI_C2,  PHI_C1,       0}}},  // [8]
+    {{{-PHI_C1,       0,  PHI_C2}}},  // [9]
+    {{{ PHI_C1,       0,  PHI_C2}}},  // [10]
+    {{{      0,  PHI_C2,  PHI_C1}}}   // [11]
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{15,  5,  8}, { 0,  1,  2}, { 0,  0,  0}}, {{15,  8,  1}, { 0,  2,  3}, { 0,  0,  0}}, {{15,  1, 14}, { 0,  3,  4}, { 0,  0,  0}},
+    {{ 4, 15, 14}, { 5,  6,  7}, { 1,  1,  1}}, {{ 4, 14,  0}, { 5,  7,  8}, { 1,  1,  1}}, {{ 4,  0,  9}, { 5,  8,  9}, { 1,  1,  1}},
+    {{ 0, 14,  1}, {10, 11, 12}, { 2,  2,  2}}, {{ 0,  1, 17}, {10, 12, 13}, { 2,  2,  2}}, {{ 0, 17, 16}, {10, 13, 14}, { 2,  2,  2}},
+    {{11,  9,  0}, {15, 16, 17}, { 3,  3,  3}}, {{11,  0, 16}, {15, 17, 18}, { 3,  3,  3}}, {{11, 16,  2}, {15, 18, 19}, { 3,  3,  3}},
+    {{ 6, 18,  4}, {20, 21, 22}, { 4,  4,  4}}, {{ 6,  4,  9}, {20, 22, 23}, { 4,  4,  4}}, {{ 6,  9, 11}, {20, 23, 24}, { 4,  4,  4}},
+    {{18, 19,  5}, {25, 26, 27}, { 5,  5,  5}}, {{18,  5, 15}, {25, 27, 28}, { 5,  5,  5}}, {{18, 15,  4}, {25, 28, 29}, { 5,  5,  5}},
+    {{13,  6, 11}, {30, 31, 32}, { 6,  6,  6}}, {{13, 11,  2}, {30, 32, 33}, { 6,  6,  6}}, {{13,  2, 12}, {30, 33, 34}, { 6,  6,  6}},
+    {{ 3, 12,  2}, {35, 36, 37}, { 7,  7,  7}}, {{ 3,  2, 16}, {35, 37, 38}, { 7,  7,  7}}, {{ 3, 16, 17}, {35, 38, 39}, { 7,  7,  7}},
+    {{19, 18,  6}, {40, 41, 42}, { 8,  8,  8}}, {{19,  6, 13}, {40, 42, 43}, { 8,  8,  8}}, {{19, 13,  7}, {40, 43, 44}, { 8,  8,  8}},
+    {{ 8, 10,  3}, {45, 46, 47}, { 9,  9,  9}}, {{ 8,  3, 17}, {45, 47, 48}, { 9,  9,  9}}, {{ 8, 17,  1}, {45, 48, 49}, { 9,  9,  9}},
+    {{ 5, 19,  7}, {50, 51, 52}, {10, 10, 10}}, {{ 5,  7, 10}, {50, 52, 53}, {10, 10, 10}}, {{ 5, 10,  8}, {50, 53, 54}, {10, 10, 10}},
+    {{10,  7, 13}, {55, 56, 57}, {11, 11, 11}}, {{10, 13, 12}, {55, 57, 58}, {11, 11, 11}}, {{10, 12,  3}, {55, 58, 59}, {11, 11, 11}}
+  }
+};
+
+#undef UVS_FACE
+#define UVS_FACE(cx, cy, sx, sy)                \
+  {{{(cx), (cy) - (sy)}}},                      \
+  {{{(cx) - (sx), (cy) + (sy)}}},               \
+  {{{(cx) + (sx), (cy) + (sy)}}}
+
+const CBN_Mesh carbon_drawcanvas_icosahedron = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 12,
+    .texcoords_count = 20*3,  // 3 corners per face (triangle)
+    .normals_count   = 20,
+    .faces_count     = 20   // 20 triangular faces
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{          0,           1,  CARBON_PHI}}},  // [0]
+    {{{          0,          -1,  CARBON_PHI}}},  // [1]
+    {{{          0,           1, -CARBON_PHI}}},  // [2]
+    {{{          0,          -1, -CARBON_PHI}}},  // [3]
+    {{{          1,  CARBON_PHI,           0}}},  // [4]
+    {{{         -1,  CARBON_PHI,           0}}},  // [5]
+    {{{          1, -CARBON_PHI,           0}}},  // [6]
+    {{{         -1, -CARBON_PHI,           0}}},  // [7]
+    {{{ CARBON_PHI,           0,           1}}},  // [8]
+    {{{-CARBON_PHI,           0,           1}}},  // [9]
+    {{{ CARBON_PHI,           0,          -1}}},  // [10]
+    {{{-CARBON_PHI,           0,          -1}}}   // [11]
+  },
+  .texcoords = (CBN_Vec2[]){
+    UVS_FACE(1/10., 1/8., 0.08, 0.1),  // [0]
+    UVS_FACE(3/10., 1/8., 0.08, 0.1),  // [1]
+    UVS_FACE(5/10., 1/8., 0.08, 0.1),  // [2]
+    UVS_FACE(7/10., 1/8., 0.08, 0.1),  // [3]
+    UVS_FACE(9/10., 1/8., 0.08, 0.1),  // [4]
+    UVS_FACE(1/10., 3/8., 0.08, 0.1),  // [5]
+    UVS_FACE(3/10., 3/8., 0.08, 0.1),  // [6]
+    UVS_FACE(5/10., 3/8., 0.08, 0.1),  // [7]
+    UVS_FACE(7/10., 3/8., 0.08, 0.1),  // [8]
+    UVS_FACE(9/10., 3/8., 0.08, 0.1),  // [9]
+    UVS_FACE(1/10., 5/8., 0.08, 0.1),  // [10]
+    UVS_FACE(3/10., 5/8., 0.08, 0.1),  // [11]
+    UVS_FACE(5/10., 5/8., 0.08, 0.1),  // [12]
+    UVS_FACE(7/10., 5/8., 0.08, 0.1),  // [13]
+    UVS_FACE(9/10., 5/8., 0.08, 0.1),  // [14]
+    UVS_FACE(1/10., 7/8., 0.08, 0.1),  // [15]
+    UVS_FACE(3/10., 7/8., 0.08, 0.1),  // [16]
+    UVS_FACE(5/10., 7/8., 0.08, 0.1),  // [17]
+    UVS_FACE(7/10., 7/8., 0.08, 0.1),  // [18]
+    UVS_FACE(9/10., 7/8., 0.08, 0.1)   // [19]
+  },
+  .normals = (CBN_Vec3[]){
+    {{{ CARBON_1_SQRT3,  CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [0]
+    {{{              0,         PHI_C13,         PHI_C12}}},  // [1]
+    {{{-CARBON_1_SQRT3,  CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [2]
+    {{{       -PHI_C12,               0,         PHI_C13}}},  // [3]
+    {{{        PHI_C12,               0,         PHI_C13}}},  // [4]
+    {{{ CARBON_1_SQRT3, -CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [5]
+    {{{              0,        -PHI_C13,         PHI_C12}}},  // [6]
+    {{{-CARBON_1_SQRT3, -CARBON_1_SQRT3,  CARBON_1_SQRT3}}},  // [7]
+    {{{              0,         PHI_C13,        -PHI_C12}}},  // [8]
+    {{{        PHI_C13,         PHI_C12,               0}}},  // [9]
+    {{{ CARBON_1_SQRT3,  CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [10]
+    {{{       -PHI_C13,         PHI_C12,               0}}},  // [11]
+    {{{-CARBON_1_SQRT3,  CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [12]
+    {{{        PHI_C13,        -PHI_C12,               0}}},  // [13]
+    {{{       -PHI_C13,        -PHI_C12,               0}}},  // [14]
+    {{{-CARBON_1_SQRT3, -CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [15]
+    {{{              0,        -PHI_C13,        -PHI_C12}}},  // [16]
+    {{{ CARBON_1_SQRT3, -CARBON_1_SQRT3, -CARBON_1_SQRT3}}},  // [17]
+    {{{        PHI_C12,               0,        -PHI_C13}}},  // [18]
+    {{{       -PHI_C12,               0,        -PHI_C13}}}   // [19]
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{ 0,  8,  4}, { 0,  1,  2}, { 0,  0,  0}},  // T1
+    {{ 0,  4,  5}, { 3,  4,  5}, { 1,  1,  1}},  // T2
+    {{ 0,  5,  9}, { 6,  7,  8}, { 2,  2,  2}},  // T3
+    {{ 0,  9,  1}, { 9, 10, 11}, { 3,  3,  3}},  // T4
+    {{ 0,  1,  8}, {12, 13, 14}, { 4,  4,  4}},  // T5
+    {{ 1,  6,  8}, {15, 16, 17}, { 5,  5,  5}},  // M1
+    {{ 1,  7,  6}, {18, 19, 20}, { 6,  6,  6}},  // M2
+    {{ 1,  9,  7}, {21, 22, 23}, { 7,  7,  7}},  // M3
+    {{ 4,  2,  5}, {24, 25, 26}, { 8,  8,  8}},  // M4
+    {{ 4,  8, 10}, {27, 28, 29}, { 9,  9,  9}},  // M5
+    {{ 4, 10,  2}, {30, 31, 32}, {10, 10, 10}},  // M6
+    {{ 5, 11,  9}, {33, 34, 35}, {11, 11, 11}},  // M7
+    {{ 5,  2, 11}, {36, 37, 38}, {12, 12, 12}},  // M8
+    {{ 8,  6, 10}, {39, 40, 41}, {13, 13, 13}},  // M9
+    {{ 9, 11,  7}, {42, 43, 44}, {14, 14, 14}},  // M10
+    {{ 3,  7, 11}, {45, 46, 47}, {15, 15, 15}},  // B1
+    {{ 3,  6,  7}, {48, 49, 50}, {16, 16, 16}},  // B2
+    {{ 3, 10,  6}, {51, 52, 53}, {17, 17, 17}},  // B3
+    {{ 3,  2, 10}, {54, 55, 56}, {18, 18, 18}},  // B4
+    {{ 3, 11,  2}, {57, 58, 59}, {19, 19, 19}}   // B5
+  }
+};
+
+#undef UVS_FACE
 
 void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
   if (!c) return;

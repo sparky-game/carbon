@@ -270,13 +270,34 @@ CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CB
 CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color);
 
 /**
- * @brief Draws a 3D cube to the canvas.
- * @param dc The DrawCanvas object.
- * @param c The 3D camera used to look into the world.
- * @param t The 3D transform to draw the cube with.
- * @param color The color to draw the cube's faces with.
+ * @brief A 3D tetrahedron (d4) mesh.
  */
-CBNDEF void carbon_drawcanvas_cube(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Transform t, u32 color);
+CBNDEF CBN_Mesh const carbon_drawcanvas_tetrahedron;
+
+/**
+ * @brief A 3D cube (d6) mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_cube;
+
+/**
+ * @brief A 3D octahedron (d8) mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_octahedron;
+
+/**
+ * @brief A 3D pentagonal trapezohedron (d10) mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_pentatrapezohedron;
+
+/**
+ * @brief A 3D dodecahedron (d12) mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_dodecahedron;
+
+/**
+ * @brief A 3D icosahedron (d20) mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_icosahedron;
 
 /**
  * @brief Draws a 3D XZ-axis-aligned plane to the canvas.
