@@ -37,21 +37,22 @@ struct CBN_SlotMap_tt : CBN_SlotMap_t {
 
   ~CBN_SlotMap_tt(void) { Free(); }
 
-  void Free(void) { carbon_slotmap_destroy((CBN_SlotMap *) this); }
+  Key Push(const value_type &value) { return carbon_slotmap_push((CBN_SlotMap *)this, (void *)&value); }
 
-  Key Push(const value_type &value) { return carbon_slotmap_push((CBN_SlotMap *) this, (void *) &value); }
+  bool Remove(Key k) { return carbon_slotmap_remove((CBN_SlotMap *)this, k); }
 
-  bool Remove(const Key k) { return carbon_slotmap_remove((CBN_SlotMap *) this, k); }
+  iterator begin(void) const { return ((data_type *)&data)->begin(); }
 
-  iterator begin(void) const { return ((data_type *) &data)->begin(); }
+  iterator end(void) const { return ((data_type *)&data)->end(); }
 
-  iterator end(void) const { return ((data_type *) &data)->end(); }
-
-  cbn::Opt<value_type> operator[](const Key k) {
+  cbn::Opt<value_type> operator[](Key k) {
     value_type x;
-    if (!carbon_slotmap_lookup((CBN_SlotMap *) this, k, &x)) return {};
+    if (!carbon_slotmap_lookup((CBN_SlotMap *)this, k, &x)) return {};
     return x;
   }
+
+private:
+  void Free(void) { carbon_slotmap_destroy((CBN_SlotMap *)this); }
 };
 
 #endif
