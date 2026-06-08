@@ -53,11 +53,11 @@ CBNDEF u32 carbon_crypto_crc32_combine(u32 c1, u32 c2, usz n2);
 CBNDEF_AKA(cbn::crypto::crc32, Combine, carbon_crypto_crc32_combine);
 
 /**
- * @brief Computes the DJB2 non-cryptographic hash of the given null-terminated string.
+ * @brief Computes the DJB2 non-cryptographic hash of the given binary data.
  * @param in The input string.
  * @return The 64-bit non-cryptographic hash of the input string.
  */
-CBNDEF u64 carbon_crypto_djb2(const char *in);
+CBNDEF u64 carbon_crypto_djb2(CBN_Span in);
 CBNDEF_AKA(cbn::crypto, DJB2, carbon_crypto_djb2);
 
 /**

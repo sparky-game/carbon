@@ -190,10 +190,11 @@ u32 carbon_crypto_crc32_combine(u32 c1, u32 c2, usz n2) {
   return c;
 }
 
-u64 carbon_crypto_djb2(const char *in) {
+u64 carbon_crypto_djb2(CBN_Span in) {
   u64 hash = 5381;
-  i32 c = 0;
-  while ((c = *in++)) hash = ((hash << 5) + hash) + c;
+  for (usz i = 0; i < in.size; ++i) {
+    hash = ((hash << 5) + hash) + in.data[i];
+  }
   return hash;
 }
 

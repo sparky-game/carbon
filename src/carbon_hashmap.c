@@ -41,7 +41,7 @@ CBNINL void carbon_hashmap__resize(CBN_HashMap *hm, usz new_cap) {
     CBN_HashMap_Node *curr = hm->buckets[i];
     while (curr) {
       CBN_HashMap_Node *next = curr->next;
-      usz idx = carbon_crypto_djb2(curr->key) % new_cap;
+      usz idx = carbon_crypto_djb2(carbon_strview_from_cstr(curr->key)) % new_cap;
       curr->next = buckets[idx];
       buckets[idx] = curr;
       curr = next;
@@ -55,7 +55,7 @@ CBNINL void carbon_hashmap__resize(CBN_HashMap *hm, usz new_cap) {
 void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   if (!hm || !key || !value) return;
   if (!hm->buckets) carbon_hashmap__init(hm);
-  CBN_HashMap_Node **head = &hm->buckets[carbon_crypto_djb2(key) % hm->capacity];
+  CBN_HashMap_Node **head = &hm->buckets[carbon_crypto_djb2(carbon_strview_from_cstr(key)) % hm->capacity];
   for (CBN_HashMap_Node *curr = *head; curr; curr = curr->next) {
     if (carbon_string_cmp(curr->key, key)) continue;
     carbon_memory_copy(curr->value, value, hm->stride);
@@ -63,7 +63,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
   }
   if (4*(hm->size + 1) > 3*hm->capacity) {
     carbon_hashmap__resize(hm, hm->capacity * CARBON_HASHMAP__RESIZE_FACTOR);
-    head = &hm->buckets[carbon_crypto_djb2(key) % hm->capacity];
+    head = &hm->buckets[carbon_crypto_djb2(carbon_strview_from_cstr(key)) % hm->capacity];
   }
   CBN_HashMap_Node *new = carbon_memory_alloc(sizeof(CBN_HashMap_Node) + hm->stride);
   new->key = carbon_string_dup(key);
@@ -75,7 +75,7 @@ void carbon_hashmap_set(CBN_HashMap *hm, const char *key, void *value) {
 
 bool carbon_hashmap_get(const CBN_HashMap *hm, const char *key, void *out_value) {
   if (!hm || !key || !out_value) return false;
-  for (CBN_HashMap_Node *curr = hm->buckets[carbon_crypto_djb2(key) % hm->capacity]; curr; curr = curr->next) {
+  for (CBN_HashMap_Node *curr = hm->buckets[carbon_crypto_djb2(carbon_strview_from_cstr(key)) % hm->capacity]; curr; curr = curr->next) {
     if (carbon_string_cmp(curr->key, key)) continue;
     carbon_memory_copy(out_value, curr->value, hm->stride);
     return true;
