@@ -57,7 +57,7 @@ CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value) {
   u64 alloc_id = carbon_slotmap__alloc(sm);
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, alloc_id);
   if (slot->id >= sm->data.size) carbon_list_push(&sm->data, value);
-  else  carbon_memory_copy((void *) ((u64) sm->data.items + (slot->id * sm->stride)), value, sm->stride);
+  else carbon_memory_copy((void *) ((u64) sm->data.items + (slot->id * sm->stride)), value, sm->stride);
   if (slot->id >= sm->erase.size) carbon_list_push(&sm->erase, &alloc_id);
   else carbon_list_at_raw(u64, sm->erase, slot->id) = alloc_id;
   CBN_SlotMap_Key key = *slot;
