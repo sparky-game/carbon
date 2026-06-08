@@ -47,3 +47,18 @@ CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   }
   return f;
 }
+
+f32 carbon_font_get_text_width(const CBN_Font *f, const char *txt, usz size) {
+  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  f32 width = 0;
+  for (; *txt; ++txt) {
+    usz idx = *txt - CARBON_FONT_ASCII_START;
+    width += sf * f->metadata.cdata[idx].xadvance;
+  }
+  return width;
+}
+
+f32 carbon_font_get_text_height(const CBN_Font *f, usz size) {
+  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  return sf * (f->metadata.yoff_down - f->metadata.yoff_up);
+}

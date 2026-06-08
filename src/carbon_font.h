@@ -31,3 +31,20 @@ CBNDEF_TAKA(cbn, Font, CBN_Font);
 /**
  */
 CBNDEF CBN_Font carbon_font_create_from_file(const char *file, usz size);
+
+/**
+ * @brief Measures text width with a specific font.
+ * @param f The font to use.
+ * @param txt The text to measure.
+ * @param size The font size to use.
+ * @return The width of the given text using the specified font size.
+ */
+CBNDEF f32 carbon_font_get_text_width(const CBN_Font *f, const char *txt, usz size);
+
+/**
+ * @brief Measures text height with a specific font.
+ * @param f The font to use.
+ * @param size The font size to use.
+ * @return The height of the text using the specified font size.
+ */
+CBNDEF f32 carbon_font_get_text_height(const CBN_Font *f, usz size);

@@ -345,7 +345,7 @@ CBNDEF f32 carbon_drawcanvas_get_text_width(const char *txt, usz size);
 CBNDEF f32 carbon_drawcanvas_get_text_height(usz size);
 
 /**
- * @brief Draws text to the canvas with a specific color and a specific font.
+ * @brief Draws text to the canvas with a specific color and font.
  * @param dc The DrawCanvas object.
  * @param f The font to use.
  * @param txt The text to draw.

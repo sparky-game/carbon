@@ -78,10 +78,12 @@ struct CBN_DrawCanvas {
   void DrawText(const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) { carbon_drawcanvas_text_with_font(this, f, txt, position, size, color); }
 
   static f32 TextWidth(const char *txt, usz size) { return carbon_drawcanvas_get_text_width(txt, size); }
-  static f32 TextWidth(const CBN_Font *f, const char *txt, usz size) { return carbon_drawcanvas_get_text_width_with_font(f, txt, size); }
+  [[deprecated("DrawCanvas::TextWidth(f, txt, size) == f.TextWidth(txt, size)")]]
+  static f32 TextWidth(const CBN_Font *f, const char *txt, usz size) { return f->TextWidth(txt, size); }
 
   static f32 TextHeight(usz size) { return carbon_drawcanvas_get_text_height(size); }
-  static f32 TextHeight(const CBN_Font *f, usz size) { return carbon_drawcanvas_get_text_height_with_font(f, size); }
+  [[deprecated("DrawCanvas::TextHeight(f, size) == f.TextHeight(size)")]]
+  static f32 TextHeight(const CBN_Font *f, usz size) { return f->TextHeight(size); }
 
   u32 &operator()(usz i, usz j) const { return Pixels()[j*Width() + i]; }
 };
