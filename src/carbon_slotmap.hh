@@ -12,8 +12,8 @@ struct CBN_SlotMap_Key : CBN_SlotMap_Key_t {
 
 template <typename T>
 struct CBN_SlotMap_tt : CBN_SlotMap_t {
-  using value_type = T;
   using Key = CBN_SlotMap_Key;
+  using value_type = T;
   using iterator = value_type *;
   using indices_type = cbn::List<Key>;
   using data_type = cbn::List<value_type>;
@@ -37,19 +37,19 @@ struct CBN_SlotMap_tt : CBN_SlotMap_t {
 
   ~CBN_SlotMap_tt(void) { Free(); }
 
-  Key Push(const value_type &value) { return carbon_slotmap_push((CBN_SlotMap *)this, (void *)&value); }
+  Key Set(const value_type &v) { return carbon_slotmap_set((CBN_SlotMap *)this, (void *)&v); }
+
+  cbn::Opt<value_type> Get(Key k) const {
+    value_type v;
+    if (!carbon_slotmap_get((CBN_SlotMap *)this, k, (void *)&v)) return {};
+    return v;
+  }
+  cbn::Opt<value_type> operator[](Key k) const { return Get(k); }
 
   bool Remove(Key k) { return carbon_slotmap_remove((CBN_SlotMap *)this, k); }
 
   iterator begin(void) const { return ((data_type *)&data)->begin(); }
-
   iterator end(void) const { return ((data_type *)&data)->end(); }
-
-  cbn::Opt<value_type> operator[](Key k) {
-    value_type x;
-    if (!carbon_slotmap_lookup((CBN_SlotMap *)this, k, &x)) return {};
-    return x;
-  }
 
 private:
   void Free(void) { carbon_slotmap_destroy((CBN_SlotMap *)this); }

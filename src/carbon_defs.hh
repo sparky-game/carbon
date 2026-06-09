@@ -125,11 +125,13 @@
 #define CBNDEF_iAKA(ns, ins, aka, var) namespace ns {inline namespace ins {constexpr auto aka = var;}}
 #define CBNDEF_TAKA(ns, aka, type) namespace ns {using aka = type;}
 #define CBNDEF_TTAKA(ns, aka, type) namespace ns {template <typename T> using aka = type ## _tt<T>;}
+#define CBNDEF_TT2AKA(ns, aka, type) namespace ns {template <typename T, typename U> using aka = type ## _tt<T, U>;}
 #else
 #define CBNDEF_AKA(...)
 #define CBNDEF_iAKA(...)
 #define CBNDEF_TAKA(...)
 #define CBNDEF_TTAKA(...)
+#define CBNDEF_TT2AKA(...)
 #endif
 
 /**
@@ -145,13 +147,15 @@
 /**
  */
 #ifdef __cplusplus
+#define CBNDEF_TEQ(name, other) typedef other name ## _t; struct name
 #define CBNDEF_T(name) struct name; struct name ## _t
 #define CBNDEF_TT(name) template <typename T> struct name ## _tt; typedef name ## _tt<u8> name; struct name ## _t
-#define CBNDEF_TEQ(name, other) typedef other name ## _t; struct name
+#define CBNDEF_TT2(name) template <typename T, typename U> struct name ## _tt; typedef name ## _tt<u8, u8> name; struct name ## _t
 #else
+#define CBNDEF_TEQ(name, other) typedef other name ## _t; typedef name ## _t name
 #define CBNDEF_T(name) typedef struct name ## _t name; struct name ## _t
 #define CBNDEF_TT(name) CBNDEF_T(name)
-#define CBNDEF_TEQ(name, other) typedef other name ## _t; typedef name ## _t name
+#define CBNDEF_TT2(name) CBNDEF_TT(name)
 #endif
 
 /**

@@ -142,11 +142,10 @@ struct CBN_List_tt : CBN_List_t {
     sort(items, size, sizeof(value_type), f_cmp);
   }
 
-  iterator begin(void) const { return (iterator)items; }
-
-  iterator end(void) const { return (iterator)items + size; }
-
   value_type &operator[](usz idx) const { return carbon_list_at(value_type, *this, idx); }
+
+  iterator begin(void) const { return (iterator)items; }
+  iterator end(void) const { return (iterator)items + size; }
 
 private:
   void Free(void) {

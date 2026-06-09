@@ -69,7 +69,7 @@ CBNINL bool carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out
     carbon_memory_free(entry.sound);
     return false;
   }
-  *out_uid = carbon_slotmap_push(&carbon_audio__library, &entry);
+  *out_uid = carbon_slotmap_set(&carbon_audio__library, &entry);
   return true;
 }
 
@@ -103,13 +103,13 @@ bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Aud
     carbon_memory_free(entry.binary.data);
     return false;
   }
-  *out_uid = carbon_slotmap_push(&carbon_audio__library, &entry);
+  *out_uid = carbon_slotmap_set(&carbon_audio__library, &entry);
   return true;
 }
 
 void carbon_audio_unload(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_uninit(entry.sound);
   carbon_memory_free(entry.sound);
   if (entry.decoder) {
@@ -124,38 +124,38 @@ void carbon_audio_unload(CBN_Audio_UID uid) {
 
 void carbon_audio_play(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_seek_to_pcm_frame(entry.sound, 0);
   ma_sound_start(entry.sound);
 }
 
 void carbon_audio_stop(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_stop(entry.sound);
 }
 
 void carbon_audio_resume(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_start(entry.sound);
 }
 
 bool carbon_audio_is_playing(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return false;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return false;
   return ma_sound_is_playing(entry.sound);
 }
 
 f32 carbon_audio_get_pitch(CBN_Audio_UID uid) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return 0;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return 0;
   return ma_sound_get_pitch(entry.sound);
 }
 
 void carbon_audio_set_pitch(CBN_Audio_UID uid, f32 pitch) {
   CBN_Audio_Entry entry = {0};
-  if (!carbon_slotmap_lookup(&carbon_audio__library, uid, &entry)) return;
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_set_pitch(entry.sound, pitch);
 }
 

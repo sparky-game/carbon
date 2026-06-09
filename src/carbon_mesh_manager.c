@@ -29,7 +29,7 @@ bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid)
     carbon_memory_free(mesh);
     return false;
   }
-  *out_uid = carbon_slotmap_push(&carbon_mesh__library, &mesh);
+  *out_uid = carbon_slotmap_set(&carbon_mesh__library, &mesh);
   return true;
 }
 
@@ -43,12 +43,12 @@ bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, 
     carbon_memory_free(mesh);
     return false;
   }
-  *out_uid = carbon_slotmap_push(&carbon_mesh__library, &mesh);
+  *out_uid = carbon_slotmap_set(&carbon_mesh__library, &mesh);
   return true;
 }
 
 CBN_Mesh *carbon_mesh_manager_lookup(const CBN_Mesh_UID uid) {
   CBN_Mesh *mesh = 0;
-  carbon_slotmap_lookup(&carbon_mesh__library, uid, &mesh);
+  carbon_slotmap_get(&carbon_mesh__library, uid, &mesh);
   return mesh;
 }

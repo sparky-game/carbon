@@ -15,6 +15,13 @@ CBNDEF_T(CBN_SlotMap_Key) {
 };
 
 /**
+ * @brief Returns the string representation of the key using default formatting.
+ * @param key The key to be serialized.
+ * @return The serialized key as `(id, gen)`.
+ */
+CBNDEF char *carbon_slotmap_key_to_cstr(CBN_SlotMap_Key key);
+
+/**
  * @brief Represents a container with persistent unique keys, O(1) time operations and low overhead.
  *
  * Great for storing collections of objects that need stable, safe references but have
@@ -52,15 +59,7 @@ CBNDEF void carbon_slotmap_destroy(CBN_SlotMap *sm);
  * @param value The value to insert.
  * @return The generated unique key for the inserted value.
  */
-CBNDEF CBN_SlotMap_Key carbon_slotmap_push(CBN_SlotMap *sm, void *value);
-
-/**
- * @brief Removes an element using its key from the SlotMap.
- * @param sm The SlotMap container.
- * @param key The key of the element to be removed.
- * @return A boolean value indicating whether it removed the element successfully or not.
- */
-CBNDEF bool carbon_slotmap_remove(CBN_SlotMap *sm, CBN_SlotMap_Key key);
+CBNDEF CBN_SlotMap_Key carbon_slotmap_set(CBN_SlotMap *sm, void *value);
 
 /**
  * @brief Requests the retrieval or acquisition of an element from the SlotMap.
@@ -69,11 +68,12 @@ CBNDEF bool carbon_slotmap_remove(CBN_SlotMap *sm, CBN_SlotMap_Key key);
  * @param out_value The value of the retrieved element (output argument pointer).
  * @return A boolean value indicating whether it retrieved the element successfully or not.
  */
-CBNDEF bool carbon_slotmap_lookup(const CBN_SlotMap *sm, CBN_SlotMap_Key key, void *out_value);
+CBNDEF bool carbon_slotmap_get(const CBN_SlotMap *sm, CBN_SlotMap_Key key, void *out_value);
 
 /**
- * @brief Returns the string representation of the key using default formatting.
- * @param key The key to be serialized.
- * @return The serialized key as `(id, gen)`.
+ * @brief Removes an element using its key from the SlotMap.
+ * @param sm The SlotMap container.
+ * @param key The key of the element to be removed.
+ * @return A boolean value indicating whether it removed the element successfully or not.
  */
-CBNDEF char *carbon_slotmap_key_to_cstr(CBN_SlotMap_Key key);
+CBNDEF bool carbon_slotmap_remove(CBN_SlotMap *sm, CBN_SlotMap_Key key);

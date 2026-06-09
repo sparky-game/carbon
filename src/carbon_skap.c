@@ -581,16 +581,16 @@ bool carbon_skap_open(const char *skap, CBN_SKAP *out_handle) {
   }
   // Read idxs
   for (usz i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    out_handle->idxs[i] = carbon_hashmap_create(sizeof(CBN_SKAP_AssetIdx));
+    out_handle->idxs[i] = carbon_hashmap_create(CARBON_SKAP__DECL_FILE_MAX_LINE_LEN,
+                                                sizeof(CBN_SKAP_AssetIdx),
+                                                carbon_hashmap_hash_mem,
+                                                carbon_hashmap_eq_mem);
     for (usz j = 0; j < out_handle->type_counters[i]; ++j) {
       CBN_SKAP_AssetIdx idx;
       fread(&idx, sizeof(idx), 1, out_handle->fd);
       // CBN_DEBUG("----------------------------------------");
       // CBN_DEBUG("idx.name = `%s`", idx.name);
       // CBN_DEBUG("idx.metadata.type = `%s`", carbon_skap__type2str[idx.metadata.type]);
-      // CBN_DEBUG("idx.metadata.as_img.width = %zu", idx.metadata.as_img.width);
-      // CBN_DEBUG("idx.metadata.as_img.height = %zu", idx.metadata.as_img.height);
-      // CBN_DEBUG("idx.metadata.as_img.channels = %zu", idx.metadata.as_img.channels);
       // CBN_DEBUG("idx.blob_offset = " CARBON_SKAP__HEX_SPEC, idx.blob_offset);
       // CBN_DEBUG("idx.blob_size = " CARBON_SKAP__HEX_SPEC, idx.blob_size);
       // CBN_DEBUG("idx.checksum = %#010x", idx.checksum);
@@ -643,20 +643,22 @@ bool carbon_skap_lookup(const CBN_SKAP *handle, const CBN_SKAP_AssetType asset_t
     CBN_ERROR("No assets of the asset_type (`%s`) requested", carbon_skap__type2str[asset_type]);
     return false;
   }
-  CBN_SKAP_AssetIdx idx;
-  if (!carbon_hashmap_get(&handle->idxs[asset_type], asset_name, &idx)) {
-    CBN_ERROR("No asset with asset_name (`%s`) requested", asset_name);
+  char key[CARBON_SKAP__DECL_FILE_MAX_LINE_LEN] = {0};
+  carbon_string_sfmt(key, sizeof(key), "%s", asset_name);
+  CBN_SKAP_AssetIdx *idx = carbon_hashmap_get(&handle->idxs[asset_type], key);
+  if (!idx) {
+    CBN_ERROR("No assets with the asset_name (`%s`) requested", asset_name);
     return false;
   }
-  if (carbon_string_cmp(idx.name, asset_name)) {
-    CBN_ERROR("idx.name (`%s`) doesn't match the asset_name (`%s`) requested", idx.name, asset_name);
+  if (carbon_string_cmp(idx->name, asset_name)) {
+    CBN_ERROR("idx.name (`%s`) doesn't match the asset_name (`%s`) requested", idx->name, asset_name);
     return false;
   }
-  if (idx.metadata.type != asset_type) {
+  if (idx->metadata.type != asset_type) {
     CBN_ERROR("`idx.metadata.type` doesn't match the `asset_type` requested");
     return false;
   }
-  bool ok = carbon_skap__type2lbfn[asset_type](handle, &idx, out_blob);
+  bool ok = carbon_skap__type2lbfn[asset_type](handle, idx, out_blob);
   if (ok) CBN_INFO("asset `%s` retrieved successfully", asset_name);
   return ok;
 }

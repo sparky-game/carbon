@@ -8,31 +8,31 @@ typedef struct {
   char name[8];
 } NameComponent;
 
-TEST(push_remove) {
+TEST(set_remove) {
   cbn::SlotMap<NameComponent> names;
   carbon_should_be(sizeof(typeof(names)::value_type), names.stride);
   carbon_should_be(0, names.size);
   carbon_should_be(names.size, names.data.size);
 
-  // Push #1
+  // Set #1
   typeof(names)::value_type name_1 = {"Wasym"};
-  auto key_1 = names.Push(name_1);
+  auto key_1 = names.Set(name_1);
   carbon_should_be(1, names.size);
   carbon_should_be(names.size, names.data.size);
   carbon_should_be(0, key_1.id);
   carbon_should_be(0, key_1.gen);
 
-  // Push #2
+  // Set #2
   typeof(names)::value_type name_2 = {"Alonso"};
-  auto key_2 = names.Push(name_2);
+  auto key_2 = names.Set(name_2);
   carbon_should_be(2, names.size);
   carbon_should_be(names.size, names.data.size);
   carbon_should_be(1, key_2.id);
   carbon_should_be(1, key_2.gen);
 
-  // Push #3
+  // Set #3
   typeof(names)::value_type name_3 = {"Miguel"};
-  auto key_3 = names.Push(name_3);
+  auto key_3 = names.Set(name_3);
   carbon_should_be(3, names.size);
   carbon_should_be(names.size, names.data.size);
   carbon_should_be(2, key_3.id);
@@ -77,9 +77,9 @@ TEST(push_remove) {
   carbon_should_be(0, (*(typeof(names)::indices_type *) &names.indices)[2].id);
   carbon_should_be(2, (*(typeof(names)::indices_type *) &names.indices)[2].gen);
 
-  // Push #4
+  // Set #4
   typeof(names)::value_type name_4 = {"Javier"};
-  auto key_4 = names.Push(name_4);
+  auto key_4 = names.Set(name_4);
   carbon_should_be(2, names.size);
   carbon_should_be(names.size, names.data.size);
   carbon_should_be(1, key_4.id);
@@ -89,9 +89,9 @@ TEST(push_remove) {
   carbon_should_be(2, (*(typeof(names)::erase_type *) &names.erase)[0]);
   carbon_should_be(1, (*(typeof(names)::erase_type *) &names.erase)[1]);
 
-  // Push #5
+  // Set #5
   typeof(names)::value_type name_5 = {"Alfred"};
-  auto key_5 = names.Push(name_5);
+  auto key_5 = names.Set(name_5);
   carbon_should_be(3, names.size);
   carbon_should_be(names.size, names.data.size);
   carbon_should_be(0, key_5.id);

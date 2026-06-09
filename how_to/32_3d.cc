@@ -7,11 +7,6 @@ namespace res {
   static cbn::Opt<cbn::SKAP> s_AssetPack;
   static cbn::mesh_mgr::UID s_Mesh_Teapot;
 
-  static inline void LoadPack(const char *path, auto &var) {
-    if (auto i = cbn::SKAP::Open(path)) var = cbn::meta::Move(i);
-    else CARBON_UNREACHABLE;
-  }
-
   static inline void LoadAsset(auto load, const char *path, auto &uid) {
     if (auto i = ((*s_AssetPack).*load)(path)) uid = *i;
     else CARBON_UNREACHABLE;
@@ -23,7 +18,8 @@ namespace res {
 
   static void Init(void) {
     CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
-    LoadPack("assets.skap", s_AssetPack);
+    if (auto i = cbn::SKAP::Open("assets.skap")) s_AssetPack = cbn::meta::Move(i);
+    else CARBON_UNREACHABLE;
     cbn::mesh_mgr::Init();
     LoadMesh("./3d_models/teapot.obj", s_Mesh_Teapot);
     CBN_INFO("Initialized resource manager successfully");
