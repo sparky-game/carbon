@@ -199,19 +199,19 @@ u64 carbon_crypto_djb2(CBN_Span in) {
 }
 
 u64 carbon_crypto_fnv1(CBN_Span in) {
-  u64 hash = 14695981039346656037;
+  u64 hash = 14695981039346656037u;
   for (usz i = 0; i < in.size; ++i) {
-    hash *= 1099511628211;
+    hash *= 1099511628211u;
     hash ^= in.data[i];
   }
   return hash;
 }
 
 u64 carbon_crypto_fnv1a(CBN_Span in) {
-  u64 hash = 14695981039346656037;
+  u64 hash = 14695981039346656037u;
   for (usz i = 0; i < in.size; ++i) {
     hash ^= in.data[i];
-    hash *= 1099511628211;
+    hash *= 1099511628211u;
   }
   return hash;
 }
@@ -571,7 +571,7 @@ void carbon_crypto_chacha20(const u8 *key, const u8 *iv, CBN_Span in, u8 *out) {
     carbon_crypto_chacha20__block(block, state);
     ++state[12];
     if (!state[12]) ++state[13];
-    usz n = carbon_math_min(in.size, 64);  // `in.size < 64 ? in.size : 64`
+    usz n = carbon_math_min(in.size, 64);
     for (usz i = 0; i < n; ++i) out[i] = in.data[i] ^ block[i];
     in.data += n;
     in.size -= n;
