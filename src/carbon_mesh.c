@@ -118,3 +118,23 @@ u32 carbon_mesh_compute_crc32(const CBN_Mesh *m) {
   c = carbon_crypto_crc32_combine(c, c_f, CARBON_MESH__SZ_F);
   return c;
 }
+
+CBN_Box carbon_mesh_get_bounds(const CBN_Mesh *m) {
+  CBN_Box b = {0};
+  if (!m || !m->metadata.vertices_count) {
+    CBN_WARN("`m` is not a valid pointer, skipping computation");
+    return b;
+  }
+  CBN_Vec3 min = m->vertices[0], max = m->vertices[0];
+  for (usz i = 0; i < m->metadata.vertices_count; ++i) {
+    min.x = carbon_math_min(min.x, m->vertices[i].x);
+    min.y = carbon_math_min(min.y, m->vertices[i].y);
+    min.z = carbon_math_min(min.z, m->vertices[i].z);
+    max.x = carbon_math_max(max.x, m->vertices[i].x);
+    max.y = carbon_math_max(max.y, m->vertices[i].y);
+    max.z = carbon_math_max(max.z, m->vertices[i].z);
+  }
+  b.xyz = min;
+  b.whd = carbon_math_vec3_sub(max, min);
+  return b;
+}

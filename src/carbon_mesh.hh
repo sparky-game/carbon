@@ -12,6 +12,8 @@ struct CBN_Mesh : CBN_Mesh_t {
   void Free(void) { carbon_mesh_destroy(this); }
 
   u32 CRC32(void) const { return carbon_mesh_compute_crc32(this); }
+
+  CBN_Box GetBounds(void) const { return carbon_mesh_get_bounds(this); }
 };
 
 #endif

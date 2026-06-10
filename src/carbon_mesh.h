@@ -41,3 +41,7 @@ CBNDEF void carbon_mesh_destroy(CBN_Mesh *m);
 /**
  */
 CBNDEF u32 carbon_mesh_compute_crc32(const CBN_Mesh *m);
+
+/**
+ */
+CBNDEF CBN_Box carbon_mesh_get_bounds(const CBN_Mesh *m);
