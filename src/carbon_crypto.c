@@ -198,6 +198,24 @@ u64 carbon_crypto_djb2(CBN_Span in) {
   return hash;
 }
 
+u64 carbon_crypto_fnv1(CBN_Span in) {
+  u64 hash = 14695981039346656037;
+  for (usz i = 0; i < in.size; ++i) {
+    hash *= 1099511628211;
+    hash ^= in.data[i];
+  }
+  return hash;
+}
+
+u64 carbon_crypto_fnv1a(CBN_Span in) {
+  u64 hash = 14695981039346656037;
+  for (usz i = 0; i < in.size; ++i) {
+    hash ^= in.data[i];
+    hash *= 1099511628211;
+  }
+  return hash;
+}
+
 void carbon_crypto_sha1(const u8 *in, const usz in_size, u8 *out) {
   if (!out) {
     CBN_WARN("`out` is not a valid pointer, skipping computation");

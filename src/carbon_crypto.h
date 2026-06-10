@@ -54,11 +54,34 @@ CBNDEF_AKA(cbn::crypto::crc32, Combine, carbon_crypto_crc32_combine);
 
 /**
  * @brief Computes the DJB2 non-cryptographic hash of the given binary data.
- * @param in The input string.
- * @return The 64-bit non-cryptographic hash of the input string.
+ * @param in The input binary data.
+ * @return The resulting 64-bit hash.
  */
 CBNDEF u64 carbon_crypto_djb2(CBN_Span in);
 CBNDEF_AKA(cbn::crypto, DJB2, carbon_crypto_djb2);
+
+/**
+ * @brief Computes the Fowler-Noll-Vo 64-bit FNV-1 non-cryptographic hash of the given binary data.
+ *
+ * It's recommended that you use the FNV-1a variant of the algorithm where possible.
+ *
+ * @param in The input binary data.
+ * @return The resulting 64-bit hash.
+ */
+CBNDEF u64 carbon_crypto_fnv1(CBN_Span in);
+CBNDEF_AKA(cbn::crypto, FNV1, carbon_crypto_fnv1);
+
+/**
+ * @brief Computes the Fowler-Noll-Vo 64-bit FNV-1a non-cryptographic hash of the given binary data.
+ *
+ * This is the recommended variant of the FNV algorithm, as the XOR-then-multiply order yields
+ * better avalanche characteristics than the original one.
+ *
+ * @param in The input binary data.
+ * @return The resulting 64-bit hash.
+ */
+CBNDEF u64 carbon_crypto_fnv1a(CBN_Span in);
+CBNDEF_AKA(cbn::crypto, FNV1a, carbon_crypto_fnv1a);
 
 /**
  * @brief Computes the SHA-1 hash of the given binary data.
