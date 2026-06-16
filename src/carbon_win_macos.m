@@ -14,6 +14,10 @@
 @end
 
 @implementation CBNView
+- (BOOL)acceptsFirstResponder { return YES; }
+- (void)keyDown:(NSEvent *)e {}
+- (void)keyUp:(NSEvent *)e {}
+
 - (void)mouseEntered:(NSEvent *)e {
   if (!carbon_win__cursor_visible) [NSCursor hide];
 }
