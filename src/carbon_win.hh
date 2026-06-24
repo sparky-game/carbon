@@ -68,18 +68,6 @@ CBNDEF usz carbon_win_height(void);
 CBNDEF_AKA(cbn::win, Height, carbon_win_height);
 
 /**
- * @brief Set the window icon to a specific image object.
- *
- * The windowing module holds the ownership of the image object passed through.
- * This means you mustn't worry about managing its memory, it's the window's
- * responsability when it closes.
- *
- * @param img The image object of the icon.
- */
-CBNDEF void carbon_win_set_icon(CBN_Image img);
-CBNDEF_AKA(cbn::win, SetIcon, carbon_win_set_icon);
-
-/**
  * @brief ...
  * @return ...
  */

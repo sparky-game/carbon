@@ -4,7 +4,6 @@
 static bool carbon_win__should_close;
 static usz carbon_win__renderer_w, carbon_win__renderer_h;
 
-static CBN_Image carbon_win__icon;
 static bool carbon_win__cursor_visible = true;
 static CBN_Vec2 carbon_win__mouse_delta;
 static f32 carbon_win__mouse_scroll;
@@ -44,7 +43,6 @@ void carbon_win_open(const CBN_DrawCanvas *dc, const char *title) {
 
 void carbon_win_close(void) {
   carbon_win__destroy_window();
-  carbon_image_destroy(&carbon_win__icon);
   CBN_INFO("Window closed successfully");
 }
 
@@ -59,21 +57,6 @@ usz carbon_win_width(void) {
 
 usz carbon_win_height(void) {
   return (usz)carbon_win__get_window_size().y;
-}
-
-void carbon_win_set_icon(CBN_Image img) {
-  if (!img.data) {
-    CBN_ERROR("`img` is not valid");
-    return;
-  }
-  carbon_win__icon = img;
-  /* RGFW_bool status = RGFW_window_setIcon(carbon_win__handle, */
-  /*                                        carbon_win__icon.data, */
-  /*                                        RGFW_AREA(carbon_win__icon.metadata.width, */
-  /*                                                  carbon_win__icon.metadata.height), */
-  /*                                        carbon_win__icon.metadata.channels); */
-  /* if (!status) CBN_ERROR("Unable to set the window icon"); */
-  /* else CBN_INFO("Set window icon correctly"); */
 }
 
 f64 carbon_win_get_deltatime(void) {
