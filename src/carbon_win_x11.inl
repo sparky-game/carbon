@@ -67,7 +67,40 @@ void carbon_win_set_border_visibility(bool visible) {
 }
 
 void carbon_win_set_fullscreen(bool yn) {
-  // ...
+  Atom wm_state    = XInternAtom(carbon_win__display, "_NET_WM_STATE", false);
+  Atom wm_state_fs = XInternAtom(carbon_win__display, "_NET_WM_STATE_FULLSCREEN", false);
+  if (yn) {
+    Atom wm_fs_monitors = XInternAtom(carbon_win__display, "_NET_WM_FULLSCREEN_MONITORS", false);
+    XEvent e = {
+      .type = ClientMessage,
+      .xclient.window = carbon_win__window,
+      .xclient.message_type = wm_fs_monitors,
+      .xclient.format = 32,
+      .xclient.data.l[0] = 0,
+      .xclient.data.l[1] = 0,
+      .xclient.data.l[2] = 0,
+      .xclient.data.l[3] = 0,
+      .xclient.data.l[4] = 1
+    };
+    XSendEvent(carbon_win__display,
+               DefaultRootWindow(carbon_win__display),
+               false,
+               SubstructureNotifyMask | SubstructureRedirectMask,
+               &e);
+  }
+  XEvent e = {
+    .type                 = ClientMessage,
+    .xclient.window       = carbon_win__window,
+    .xclient.message_type = wm_state,
+    .xclient.format       = 32,
+    .xclient.data.l[0]    = yn ? 1 : 0,
+    .xclient.data.l[1]    = wm_state_fs
+  };
+  XSendEvent(carbon_win__display,
+             DefaultRootWindow(carbon_win__display),
+             false,
+             SubstructureNotifyMask | SubstructureRedirectMask,
+             &e);
 }
 
 CBNINL void carbon_win__renderer_init(usz w, usz h) {

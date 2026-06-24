@@ -74,7 +74,17 @@ void carbon_win_set_border_visibility(bool visible) {
 }
 
 void carbon_win_set_fullscreen(bool yn) {
-  if (yn != !!(carbon_win__window.styleMask & NSWindowStyleMaskFullScreen)) {
+  bool is_fullscreen = !!(carbon_win__window.styleMask & NSWindowStyleMaskFullScreen);
+  if (yn != is_fullscreen) {
+    if (yn) {
+      NSScreen *main = [NSScreen screens].firstObject;
+      if (main) {
+        NSRect frame = [carbon_win__window frame];
+        frame.origin = main.frame.origin;
+        [carbon_win__window setFrame:frame display:YES];
+      }
+      carbon_win__window.collectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    }
     [carbon_win__window toggleFullScreen:nil];
   }
 }
