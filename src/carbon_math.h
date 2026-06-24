@@ -83,7 +83,7 @@ CBNDEF_iAKA(cbn::math, literals, log2e, CARBON_LOG2_E);
  * @brief Returns an integer {-1, 0, 1} that indicates the sign of a number.
  * @param x The number.
  */
-#define CARBON_SIGN(x) (!x ? 0 : x < 0 ? -1 : 1)
+#define CARBON_SIGN(x) ((x) > 0 ? 1 : (x) < 0 ? -1 : 0)
 
 /**
  * @brief Converts degrees to radians.
