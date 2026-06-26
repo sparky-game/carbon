@@ -9,8 +9,8 @@
 typedef struct {
   CBN_SKAP_AssetType type;
   union {
-    usz as_bin;
     CBN_Image_Metadata as_img;
+    struct { usz size; } as_bin;
     CBN_Mesh_Metadata as_mesh;
     CBN_Font_Metadata as_font;
   };
@@ -51,12 +51,12 @@ CBNINL void carbon_skap__append_idx_binary(CBN_SKAP_AssetIdx *idx) {
   CBN_ASSERT(carbon_fs_read_entire_file(&data, idx->name));
   CBN_Span view = carbon_span_from_list(&data);
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &view);
-  idx->metadata.as_bin = view.size;
+  idx->metadata.as_bin.size = view.size;
 }
 
 CBNINL void carbon_skap__append_blob_binary(void *p, CBN_SKAP_AssetIdx *idx, FILE *fd) {
   CBN_Span *asset = p;
-  idx->blob_size = idx->metadata.as_bin;
+  idx->blob_size = idx->metadata.as_bin.size;
   idx->checksum = carbon_crypto_crc32(asset->data, idx->blob_size);
   fwrite(asset->data, idx->blob_size, 1, fd);
 }
@@ -73,7 +73,7 @@ CBNINL bool carbon_skap__lookup_binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx
     return false;
   }
   out_blob->data = p_data;
-  out_blob->size = idx->metadata.as_bin;
+  out_blob->size = idx->metadata.as_bin.size;
   return true;
 }
 
