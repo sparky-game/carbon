@@ -618,13 +618,10 @@ void carbon_skap_close(CBN_SKAP *handle) {
 
 void carbon_skap_print(const CBN_SKAP *handle) {
   if (!handle) return;
-  carbon_println("fd: %p", handle->fd);
-  carbon_println("blob_section_start_pos: " CARBON_SKAP__HEX_SPEC, handle->blob_section_start_pos);
-  carbon_println("header:");
-  carbon_println("  - signature: %.4s", handle->header.signature);
-  carbon_println("  - fmt_ver: %u", handle->header.fmt_ver);
-  carbon_println("  - build_ver: %llu", handle->header.build_ver);
-  carbon_println("type_counters:");
+  carbon_println("SKAP v%u (build %llu) with %zu assets:",
+                 handle->header.fmt_ver,
+                 handle->header.build_ver,
+                 carbon_skap_count(handle));
   for (CBN_SKAP_AssetType i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
     carbon_println("  - %s: %zu", carbon_skap__type2str[i], carbon_skap_count_of(handle, i));
   }
