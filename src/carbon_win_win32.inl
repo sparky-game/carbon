@@ -42,6 +42,36 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
   return carbon_math_vec2(x, y);
 }
 
+void carbon_win_set_border_visibility(bool visible) {
+  // ...
+}
+
+void carbon_win_set_fullscreen(bool yn) {
+  static DWORD saved_style;
+  static WINDOWPLACEMENT saved_placement = { sizeof(WINDOWPLACEMENT) };
+  DWORD style = GetWindowLong(carbon_win__hwnd, GWL_STYLE);
+  if (yn == !(style & WS_OVERLAPPEDWINDOW)) return;
+  if (yn) {
+    MONITORINFO mi = { sizeof(MONITORINFO) };
+    GetWindowPlacement(carbon_win__hwnd, &saved_placement);
+    GetMonitorInfo(MonitorFromWindow(carbon_win__hwnd, MONITOR_DEFAULTTOPRIMARY), &mi);
+    saved_style = style;
+    SetWindowLong(carbon_win__hwnd, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
+    SetWindowPos(carbon_win__hwnd, HWND_TOP,
+                 mi.rcMonitor.left,  mi.rcMonitor.top,
+                 mi.rcMonitor.right  - mi.rcMonitor.left,
+                 mi.rcMonitor.bottom - mi.rcMonitor.top,
+                 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+  }
+  else {
+    SetWindowLong(carbon_win__hwnd, GWL_STYLE, saved_style);
+    SetWindowPlacement(carbon_win__hwnd, &saved_placement);
+    SetWindowPos(carbon_win__hwnd, 0, 0, 0, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+                 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+  }
+}
+
 CBNINL void carbon_win__renderer_init(usz w, usz h) {
   PIXELFORMATDESCRIPTOR pfd = {
     sizeof(PIXELFORMATDESCRIPTOR), 1,
