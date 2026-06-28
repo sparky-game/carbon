@@ -115,53 +115,12 @@ CBNDEF CBN_Vec2 carbon_math_vec2_norm(CBN_Vec2 v);
 CBNDEF CBN_Vec2 carbon_math_vec2_clamp(CBN_Vec2 v, CBN_Vec2 min, CBN_Vec2 max);
 
 /**
- * @brief Applies floor(x) function to the 2D vector (element-wise).
+ * @brief Maps a function to the 2D vector (element-wise).
  * @param v The 2D vector.
+ * @param f The function to map.
  * @return The resultant 2D vector.
  */
-CBNDEF CBN_Vec2 carbon_math_vec2_floor(CBN_Vec2 v);
-
-/**
- * @brief Applies abs(x) function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_abs(CBN_Vec2 v);
-
-/**
- * @brief Applies e^x function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_exp(CBN_Vec2 v);
-
-/**
- * @brief Applies sin(x) function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_sin(CBN_Vec2 v);
-
-/**
- * @brief Applies cos(x) function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_cos(CBN_Vec2 v);
-
-/**
- * @brief Applies tan(x) function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_tan(CBN_Vec2 v);
-
-/**
- * @brief Applies tanh(x) function to the 2D vector (element-wise).
- * @param v The 2D vector.
- * @return The resultant 2D vector.
- */
-CBNDEF CBN_Vec2 carbon_math_vec2_tanh(CBN_Vec2 v);
+CBNDEF CBN_Vec2 carbon_math_vec2_map(CBN_Vec2 v, f32 (*f)(f32));
 
 /**
  * @brief Performs a linear interpolation between two 2D vectors based on the given weighting.

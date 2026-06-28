@@ -7,10 +7,10 @@ namespace shader {
   using vec2 = cbn::math::Vec2;
   using vec4 = cbn::math::Vec4;
   static constexpr auto abs  = cbn::math::Abs;
-  static constexpr auto exp  = [](const auto &v){ return v.Exp(); };
-  static constexpr auto sin  = [](const auto &v){ return v.Sin(); };
-  static constexpr auto cos  = [](const auto &v){ return v.Cos(); };
-  static constexpr auto tanh = [](const auto &v){ return v.Tanh(); };
+  static constexpr auto exp  = [](const auto &v){ return v.Map(cbn::math::Exp);   };
+  static constexpr auto sin  = [](const auto &v){ return v.Map(cbn::math::Sin);   };
+  static constexpr auto cos  = [](const auto &v){ return v.Map(cbn::math::Cos);   };
+  static constexpr auto tanh = [](const auto &v){ return v.Map(cbn::math::Tanh);  };
   static constexpr auto dot  = [](const auto &u, const auto &v){ return u.Dot(v); };
   // Original GLSL shader code (<https://xcancel.com/XorDev/status/1894494786368745715>):
   /*

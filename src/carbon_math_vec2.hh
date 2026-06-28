@@ -49,19 +49,7 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   void Clamp(CBN_Vec2 min, CBN_Vec2 max) { *this = carbon_math_vec2_clamp(*this, min, max); }
 
-  CBN_Vec2 Floor(void) const { return carbon_math_vec2_floor(*this); }
-
-  CBN_Vec2 Abs(void) const { return carbon_math_vec2_abs(*this); }
-
-  CBN_Vec2 Exp(void) const { return carbon_math_vec2_exp(*this); }
-
-  CBN_Vec2 Sin(void) const { return carbon_math_vec2_sin(*this); }
-
-  CBN_Vec2 Cos(void) const { return carbon_math_vec2_cos(*this); }
-
-  CBN_Vec2 Tan(void) const { return carbon_math_vec2_tan(*this); }
-
-  CBN_Vec2 Tanh(void) const { return carbon_math_vec2_tanh(*this); }
+  CBN_Vec2 Map(auto &&f) const { return carbon_math_vec2_map(*this, f); }
 
   CBN_Vec2 Lerp(CBN_Vec2 v, f32 t) const { return carbon_math_vec2_lerp(*this, v, t); }
 

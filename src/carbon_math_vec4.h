@@ -105,46 +105,12 @@ CBNDEF CBN_Vec4 carbon_math_vec4_scale(CBN_Vec4 v, f32 s);
 CBNDEF CBN_Vec4 carbon_math_vec4_clamp(CBN_Vec4 v, CBN_Vec4 min, CBN_Vec4 max);
 
 /**
- * @brief Applies abs(x) function to the 4D vector (element-wise).
+ * @brief Maps a function to the 4D vector (element-wise).
  * @param v The 4D vector.
+ * @param f The function to map.
  * @return The resultant 4D vector.
  */
-CBNDEF CBN_Vec4 carbon_math_vec4_abs(CBN_Vec4 v);
-
-/**
- * @brief Applies e^x function to the 4D vector (element-wise).
- * @param v The 4D vector.
- * @return The resultant 4D vector.
- */
-CBNDEF CBN_Vec4 carbon_math_vec4_exp(CBN_Vec4 v);
-
-/**
- * @brief Applies sin(x) function to the 4D vector (element-wise).
- * @param v The 4D vector.
- * @return The resultant 4D vector.
- */
-CBNDEF CBN_Vec4 carbon_math_vec4_sin(CBN_Vec4 v);
-
-/**
- * @brief Applies cos(x) function to the 4D vector (element-wise).
- * @param v The 4D vector.
- * @return The resultant 4D vector.
- */
-CBNDEF CBN_Vec4 carbon_math_vec4_cos(CBN_Vec4 v);
-
-/**
- * @brief Applies tan(x) function to the 4D vector (element-wise).
- * @param v The 4D vector.
- * @return The resultant 4D vector.
- */
-CBNDEF CBN_Vec4 carbon_math_vec4_tan(CBN_Vec4 v);
-
-/**
- * @brief Applies tanh(x) function to the 4D vector (element-wise).
- * @param v The 4D vector.
- * @return The resultant 4D vector.
- */
-CBNDEF CBN_Vec4 carbon_math_vec4_tanh(CBN_Vec4 v);
+CBNDEF CBN_Vec4 carbon_math_vec4_map(CBN_Vec4 v, f32 (*f)(f32));
 
 /**
  * @brief Returns the string representation of the 4D vector using default formatting.

@@ -37,10 +37,6 @@ CBN_Vec4 carbon_math_vec4_scale(CBN_Vec4 v, f32 s) {
   return carbon_math_vec4(v.x * s, v.y * s, v.z * s, v.w * s);
 }
 
-CBNINL CBN_Vec4 carbon_math_vec4__apply_func(CBN_Vec4 v, f32 (*f)(f32)) {
-  return carbon_math_vec4(f(v.x), f(v.y), f(v.z), f(v.w));
-}
-
 CBN_Vec4 carbon_math_vec4_clamp(CBN_Vec4 v, CBN_Vec4 min, CBN_Vec4 max) {
   return carbon_math_vec4(carbon_math_clamp(v.x, min.x, max.x),
                           carbon_math_clamp(v.y, min.y, max.y),
@@ -48,28 +44,8 @@ CBN_Vec4 carbon_math_vec4_clamp(CBN_Vec4 v, CBN_Vec4 min, CBN_Vec4 max) {
                           carbon_math_clamp(v.w, min.w, max.w));
 }
 
-CBN_Vec4 carbon_math_vec4_abs(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_abs);
-}
-
-CBN_Vec4 carbon_math_vec4_exp(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_exp);
-}
-
-CBN_Vec4 carbon_math_vec4_sin(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_sin);
-}
-
-CBN_Vec4 carbon_math_vec4_cos(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_cos);
-}
-
-CBN_Vec4 carbon_math_vec4_tan(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_tan);
-}
-
-CBN_Vec4 carbon_math_vec4_tanh(CBN_Vec4 v) {
-  return carbon_math_vec4__apply_func(v, carbon_math_tanh);
+CBN_Vec4 carbon_math_vec4_map(CBN_Vec4 v, f32 (*f)(f32)) {
+  return carbon_math_vec4(f(v.x), f(v.y), f(v.z), f(v.w));
 }
 
 char *carbon_math_vec4_to_cstr(CBN_Vec4 v) {

@@ -32,17 +32,7 @@ struct alignas(16) CBN_Vec4 : CBN_Vec4_t {
 
   void Clamp(CBN_Vec4 min, CBN_Vec4 max) { *this = carbon_math_vec4_clamp(*this, min, max); }
 
-  CBN_Vec4 Abs(void) const { return carbon_math_vec4_abs(*this); }
-
-  CBN_Vec4 Exp(void) const { return carbon_math_vec4_exp(*this); }
-
-  CBN_Vec4 Sin(void) const { return carbon_math_vec4_sin(*this); }
-
-  CBN_Vec4 Cos(void) const { return carbon_math_vec4_cos(*this); }
-
-  CBN_Vec4 Tan(void) const { return carbon_math_vec4_tan(*this); }
-
-  CBN_Vec4 Tanh(void) const { return carbon_math_vec4_tanh(*this); }
+  CBN_Vec4 Map(auto &&f) const { return carbon_math_vec4_map(*this, f); }
 
   CBN_Vec4 Lerp(CBN_Vec4 v, f32 t) const { return carbon_math_vec4_lerp(*this, v, t); }
 
