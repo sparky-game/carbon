@@ -21,11 +21,9 @@ TEST(set_get) {
   i32 i = 7;
   hm.Set("seven", i);
   carbon_should_be(1, hm.size);
-  i32 x = 0, xx = 0;
-  x = hm.Get("seven");
+  i32 x = 0;
+  x = hm["seven"];
   carbon_should_be(i, x);
-  xx = hm["seven"];
-  carbon_should_be(i, xx);
   carbon_should_be(1, hm.size);
   return true;
 }
@@ -37,19 +35,31 @@ TEST(set_get_multiple) {
   hm.Set("sixty nine", j);
   hm.Set("four hundred and twenty", k);
   carbon_should_be(3, hm.size);
-  i32 x = 0, xx = 0, y = 0, yy = 0, z = 0, zz = 0;
-  y = hm.Get("sixty nine");
+  i32 x = 0, y = 0, z = 0;
+  y = hm["sixty nine"];
   carbon_should_be(j, y);
-  yy = hm["sixty nine"];
-  carbon_should_be(j, yy);
-  z = hm.Get("four hundred and twenty");
+  z = hm["four hundred and twenty"];
   carbon_should_be(k, z);
-  zz = hm["four hundred and twenty"];
-  carbon_should_be(k, zz);
-  x = hm.Get("seven");
+  x = hm["seven"];
   carbon_should_be(i, x);
-  xx = hm["seven"];
-  carbon_should_be(i, xx);
   carbon_should_be(3, hm.size);
+  return true;
+}
+
+TEST(set_get_nested) {
+  cbn::HashMap<const char *, cbn::HashMap<const char *, i32>> hm;
+  if (auto it = hm.Set("Dexterity", typeof(hm)::value_type{})) {
+    it->Set("Acrobatics", 2);
+    it->Set("Stealth", 4);
+  }
+  if (auto it = hm.Set("Strength", typeof(hm)::value_type{})) {
+    it->Set("Athletics", -1);
+  }
+  carbon_should_be(2, hm.size);
+  carbon_should_be(2, hm["Dexterity"].size);
+  carbon_should_be(2, hm["Dexterity"]["Acrobatics"]);
+  carbon_should_be(4, hm["Dexterity"]["Stealth"]);
+  carbon_should_be(1, hm["Strength"].size);
+  carbon_should_be(-1, hm["Strength"]["Athletics"]);
   return true;
 }
