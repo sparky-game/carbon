@@ -33,6 +33,8 @@ struct CBN_DrawCanvas {
   void LightSetIntensity(isz idx, f32 intensity) { carbon_drawcanvas_light_set_intensity(this, idx, intensity); }
   void LightSetColor(isz idx, u32 color) { carbon_drawcanvas_light_set_color(this, idx, color); }
 
+  void Clear(u32 color) { carbon_drawcanvas_clear(this, color); }
+
   void Fill(u32 color) { carbon_drawcanvas_fill(this, color); }
 
   void DrawLine(CBN_Vec2 v1, CBN_Vec2 v2, u32 color) { carbon_drawcanvas_line(this, v1, v2, color); }

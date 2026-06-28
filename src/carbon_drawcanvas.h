@@ -176,7 +176,14 @@ CBNDEF void carbon_drawcanvas_light_set_intensity(CBN_DrawCanvas *dc, isz idx, f
 CBNDEF void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color);
 
 /**
- * @brief Fills the canvas with the specified color.
+ * @brief ...
+ * @param dc The DrawCanvas object.
+ * @param color The color to ...
+ */
+CBNDEF void carbon_drawcanvas_clear(CBN_DrawCanvas *dc, u32 color);
+
+/**
+ * @brief Fills the canvas with the specified color (?).
  * @param dc The DrawCanvas object.
  * @param color The color to fill the canvas with.
  */
@@ -260,7 +267,7 @@ CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CB
  * @brief Draws a 3D mesh to the canvas.
  * @param dc The DrawCanvas object.
  * @param c The 3D camera used to look into the world.
- * @param mesh The 3D mesh to draw.
+ * @param m The 3D mesh to draw.
  * @param t The 3D transform to draw the mesh with.
  * @param color The color to draw the mesh's faces with.
  */

@@ -105,6 +105,14 @@ void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color) {
   dc->lights[idx].color = color;
 }
 
+void carbon_drawcanvas_clear(CBN_DrawCanvas *dc, u32 color) {
+  const usz n = dc->width * dc->height;
+  for (usz i = 0; i < n; ++i) {
+    dc->pixels[i] = color;
+    dc->zbuffer[i] = 1;
+  }
+}
+
 void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
   const usz n = dc->width * dc->height;
   for (usz i = 0; i < n; ++i) {
