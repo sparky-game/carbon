@@ -24,26 +24,63 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../thirdparty/stb/stb_truetype.h"
 
+#define CARBON_FONT__SDF_PADDING 2
+#define CARBON_FONT__SDF_ONEDGE  180
+#define CARBON_FONT__SDF_PXSCALE 32
+
 CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   CBN_Font f = {0};
   CBN_List data = carbon_list_create(sizeof(u8));
   CBN_ASSERT(carbon_fs_read_entire_file(&data, file));
-  i32 n = stbtt_BakeFontBitmap((u8 *)data.items,
-                               0,
-                               size,
-                               f.data,
-                               CARBON_FONT_DATA_SIZE,
-                               CARBON_FONT_DATA_SIZE,
-                               CARBON_FONT_ASCII_START,
-                               CARBON_FONT_ASCII_COUNT,
-                               (stbtt_bakedchar *)f.metadata.cdata);
-  CBN_ASSERT(n > 0);
+  stbtt_fontinfo fi;
+  CBN_ASSERT(stbtt_InitFont(&fi, data.items, 0));
+  f32 scale = stbtt_ScaleForPixelHeight(&fi, size);
+  i32 pen_x = 0, pen_y = 0, row_h = 0;
+  for (i32 c = CARBON_FONT_ASCII_START; c < CARBON_FONT_ASCII_START + CARBON_FONT_ASCII_COUNT; ++c) {
+    usz i = c - CARBON_FONT_ASCII_START;
+    i32 advance, lsb;
+    stbtt_GetCodepointHMetrics(&fi, c, &advance, &lsb);
+    f.metadata.cdata[i].xadvance = advance * scale;
+    i32 w, h, xoff, yoff;
+    u8 *sdf = stbtt_GetCodepointSDF(&fi, scale, c,
+                                    CARBON_FONT__SDF_PADDING,
+                                    CARBON_FONT__SDF_ONEDGE,
+                                    CARBON_FONT__SDF_PXSCALE,
+                                    &w, &h, &xoff, &yoff);
+    if (!sdf) continue;
+    if (pen_x + w > CARBON_FONT_DATA_SIZE) {
+      pen_x = 0;
+      pen_y += row_h;
+      row_h = 0;
+    }
+    CBN_ASSERT(pen_y + h <= CARBON_FONT_DATA_SIZE && "atlas overflow");
+    for (i32 row = 0; row < h; ++row) {
+      carbon_memory_copy(f.data + (pen_y + row)*CARBON_FONT_DATA_SIZE + pen_x, sdf + row*w, w);
+    }
+    f.metadata.cdata[i].x0 = pen_x;
+    f.metadata.cdata[i].x1 = pen_x + w;
+    f.metadata.cdata[i].y0 = pen_y;
+    f.metadata.cdata[i].y1 = pen_y + h;
+    f.metadata.cdata[i].xoff = xoff;
+    f.metadata.cdata[i].yoff = yoff;
+    pen_x += w;
+    if (h > row_h) row_h = h;
+    stbtt_FreeSDF(sdf, 0);
+  }
   carbon_list_destroy(&data);
   f.metadata.size = size;
-  f.metadata.yoff = f.metadata.cdata['A' - CARBON_FONT_ASCII_START].yoff;
+  f.metadata.sdf_onedge = CARBON_FONT__SDF_ONEDGE;
+  f.metadata.sdf_pxscale = CARBON_FONT__SDF_PXSCALE;
+  f.metadata.sdf_padding = CARBON_FONT__SDF_PADDING;
+  f.metadata.yoff_up = f.metadata.cdata['A' - CARBON_FONT_ASCII_START].yoff;
   for (char c = 'B'; c <= 'Z'; ++c) {
     usz i = c - CARBON_FONT_ASCII_START;
-    f.metadata.yoff = carbon_math_min(f.metadata.yoff, f.metadata.cdata[i].yoff);
+    f.metadata.yoff_up = carbon_math_min(f.metadata.yoff_up, f.metadata.cdata[i].yoff);
+  }
+  f.metadata.yoff_down = f.metadata.cdata[0].yoff + (f.metadata.cdata[0].y1 - f.metadata.cdata[0].y0);
+  for (usz i = 1; i < CARBON_FONT_ASCII_COUNT; ++i) {
+    f32 down = f.metadata.cdata[i].yoff + (f.metadata.cdata[i].y1 - f.metadata.cdata[i].y0);
+    f.metadata.yoff_down = carbon_math_max(f.metadata.yoff_down, down);
   }
   return f;
 }
