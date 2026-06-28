@@ -497,3 +497,17 @@ f32 carbon_math_atan2(f32 y, f32 x) {
   phi += (0.1963*r*r - 0.9817) * r;
   return y < 0 ? -phi : phi;
 }
+
+u32 carbon_math_gf2_mat_mult_vec(const u32 *m, u32 v, usz N) {
+  u32 s = 0;
+  for (usz i = 0; i < N && v; ++i, v >>= 1) {
+    if (v & 1) s ^= m[i];
+  }
+  return s;
+}
+
+void carbon_math_gf2_mat_sq(u32 *dest, const u32 *src, usz N) {
+  for (usz i = 0; i < N; ++i) {
+    dest[i] = carbon_math_gf2_mat_mult_vec(src, src[i], N);
+  }
+}

@@ -484,3 +484,20 @@ CBNDEF_AKA(cbn::math, Atan, carbon_math_atan);
  */
 CBNDEF f32 carbon_math_atan2(f32 y, f32 x);
 CBNDEF_AKA(cbn::math, Atan2, carbon_math_atan2);
+
+/**
+ * @brief Multiplies a NxN matrix by a column vector over GF(2).
+ * @param m Pointer to an array of size N representing the matrix columns.
+ * @param v The input column vector to be transformed.
+ * @param N The size or degree of the matrix and vector (# bits).
+ * @return The resulting transformed column vector over GF(2).
+ */
+CBNDEF u32 carbon_math_gf2_mat_mult_vec(const u32 *m, u32 v, usz N);
+
+/**
+ * @brief Squares a NxN matrix over GF(2) via matrix-matrix multiplication.
+ * @param dest Pointer to the destination array where the squared matrix will be stored.
+ * @param src Pointer to the source matrix array to be squared.
+ * @param N The size or degree of the matrices (# bits).
+ */
+CBNDEF void carbon_math_gf2_mat_sq(u32 *dest, const u32 *src, usz N);
