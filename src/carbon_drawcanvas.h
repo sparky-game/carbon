@@ -274,6 +274,16 @@ CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CB
 CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color);
 
 /**
+ * @brief Draws a 3D mesh to the canvas with a specific texture wrapping.
+ * @param dc The DrawCanvas object.
+ * @param c The 3D camera used to look into the world.
+ * @param m The 3D mesh to draw.
+ * @param t The 3D transform to draw the mesh with.
+ * @param s The texture to draw the mesh with.
+ */
+CBNDEF void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s);
+
+/**
  * @brief A 3D tetrahedron (d4) mesh.
  */
 CBNDEF CBN_Mesh const carbon_drawcanvas_tetrahedron;

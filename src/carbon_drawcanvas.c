@@ -3,7 +3,6 @@
 
 #define CARBON_DRAWCANVAS__CIRCLE_AA          2
 #define CARBON_DRAWCANVAS__MAX_LIGHTS         8
-#define CARBON_DRAWCANVAS__NEAR_PLANE_EPSILON 0.2
 
 struct CBN_DrawCanvas {
   u32 *pixels;
@@ -273,6 +272,27 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
     carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
+  }
+}
+
+void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s) {
+  if (!c || !m || !m->vertices || !m->texcoords || !m->faces || !s || !s->pixels) return;
+  Vertex3D vs[m->metadata.vertices_count];
+  carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
+  const CBN_Vec3 cam_pos = carbon_camera_get_position(c);
+  for (usz f = 0; f < m->metadata.faces_count; ++f) {
+    const usz *i    = m->faces[f][CARBON_MESH_FACE_COMP_VERTEX];
+    const usz *i_vt = m->faces[f][CARBON_MESH_FACE_COMP_TEXCOORD];
+    Vertex3D v1 = vs[i[0]], v2 = vs[i[1]], v3 = vs[i[2]];
+    v1.uv = m->texcoords[i_vt[0]];
+    v2.uv = m->texcoords[i_vt[1]];
+    v3.uv = m->texcoords[i_vt[2]];
+    if (dc->flags & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING) {
+      if (carbon_drawcanvas__is_back_face(dc, cam_pos, v1.world, v2.world, v3.world)) continue;
+    }
+    Vertex3D pvs[4];
+    usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
+    carbon_drawcanvas__poly_triangulation_with_texture(dc, pvs, pvs_count, s);
   }
 }
 
