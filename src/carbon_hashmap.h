@@ -9,10 +9,10 @@
 /**
  * @brief Represents ...
  */
-CBNDEF_T(CBN_HashMap_Node) {
-  CBN_HashMap_Node *next;
+typedef struct CBN_HashMap_Node {
+  struct CBN_HashMap_Node *next;
   u8 kv[];
-};
+} CBN_HashMap_Node;
 
 typedef usz (*CBN_HashMap_HashFunc)(const void *p, usz n);
 CBNDEF usz carbon_hashmap_hash_mem(const void *p, usz n);
@@ -44,9 +44,16 @@ CBNDEF CBN_HashMap carbon_hashmap_create(usz k_stride, usz v_stride, CBN_HashMap
 CBNDEF void carbon_hashmap_destroy(CBN_HashMap *hm);
 
 /**
+ * @see cbn::HashMap::Clear
  */
-CBNDEF void carbon_hashmap_set(CBN_HashMap *hm, void *key, void *value);
+CBNDEF void carbon_hashmap_clear(CBN_HashMap *hm);
 
 /**
+ * @see cbn::HashMap::Set
+ */
+CBNDEF void *carbon_hashmap_set(CBN_HashMap *hm, void *key, void *value);
+
+/**
+ * @see cbn::HashMap::Find
  */
 CBNDEF void *carbon_hashmap_get(const CBN_HashMap *hm, void *key);

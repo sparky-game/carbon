@@ -3,14 +3,15 @@
 
 #define CARBON_HASHMAP__RESIZE_FACTOR 2
 #define CARBON_HASHMAP__INITIAL_CAPACITY 16
+#define CARBON_HASHMAP__HASH_FUNC carbon_crypto_fnv1a
 
 usz carbon_hashmap_hash_mem(const void *p, usz n) {
-  return carbon_crypto_djb2(carbon_span_from_buf((void *)p, n));
+  return CARBON_HASHMAP__HASH_FUNC(carbon_span_from_buf((void *)p, n));
 }
 
 usz carbon_hashmap_hash_cstr(const void *p, usz n) {
   CARBON_UNUSED(n);
-  return carbon_crypto_djb2(carbon_strview_from_cstr(*(const char **)p));
+  return CARBON_HASHMAP__HASH_FUNC(carbon_strview_from_cstr(*(const char **)p));
 }
 
 bool carbon_hashmap_eq_mem(const void *a, const void *b, usz n) {
@@ -35,6 +36,12 @@ CBN_HashMap carbon_hashmap_create(usz k_stride, usz v_stride, CBN_HashMap_HashFu
 }
 
 void carbon_hashmap_destroy(CBN_HashMap *hm) {
+  carbon_hashmap_clear(hm);
+  carbon_memory_free(hm->buckets);
+  carbon_memory_set(hm, 0, sizeof(*hm));
+}
+
+void carbon_hashmap_clear(CBN_HashMap *hm) {
   if (!hm || !hm->buckets) return;
   for (usz i = 0; i < hm->capacity; ++i) {
     CBN_HashMap_Node *curr = hm->buckets[i];
@@ -43,9 +50,9 @@ void carbon_hashmap_destroy(CBN_HashMap *hm) {
       carbon_memory_free(curr);
       curr = next;
     }
+    hm->buckets[i] = 0;
   }
-  carbon_memory_free(hm->buckets);
-  carbon_memory_set(hm, 0, sizeof(*hm));
+  hm->size = 0;
 }
 
 CBNINL void carbon_hashmap__init(CBN_HashMap *hm) {
@@ -72,14 +79,14 @@ CBNINL void carbon_hashmap__resize(CBN_HashMap *hm, usz new_cap) {
   hm->capacity = new_cap;
 }
 
-void carbon_hashmap_set(CBN_HashMap *hm, void *key, void *value) {
-  if (!hm || !key || !value) return;
+void *carbon_hashmap_set(CBN_HashMap *hm, void *key, void *value) {
+  if (!hm || !key) return 0;
   if (!hm->buckets) carbon_hashmap__init(hm);
   CBN_HashMap_Node **head = &hm->buckets[hm->hash_fn(key, hm->k_stride) % hm->capacity];
   for (CBN_HashMap_Node *curr = *head; curr; curr = curr->next) {
     if (!hm->eq_fn(curr->kv, key, hm->k_stride)) continue;
-    carbon_memory_copy(curr->kv + hm->k_stride, value, hm->v_stride);
-    return;
+    if (value) carbon_memory_copy(curr->kv + hm->k_stride, value, hm->v_stride);
+    return curr->kv + hm->k_stride;
   }
   if (4*(hm->size + 1) > 3*hm->capacity) {// TODO: factor out this into a LOAD_FACTOR macro.
     carbon_hashmap__resize(hm, hm->capacity * CARBON_HASHMAP__RESIZE_FACTOR);
@@ -87,10 +94,11 @@ void carbon_hashmap_set(CBN_HashMap *hm, void *key, void *value) {
   }
   CBN_HashMap_Node *new = carbon_memory_alloc(sizeof(CBN_HashMap_Node) + hm->k_stride + hm->v_stride);
   carbon_memory_copy(new->kv, key, hm->k_stride);
-  carbon_memory_copy(new->kv + hm->k_stride, value, hm->v_stride);
+  if (value) carbon_memory_copy(new->kv + hm->k_stride, value, hm->v_stride);
   new->next = *head;
   *head = new;
   ++hm->size;
+  return new->kv + hm->k_stride;
 }
 
 void *carbon_hashmap_get(const CBN_HashMap *hm, void *key) {
