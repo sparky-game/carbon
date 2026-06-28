@@ -7,13 +7,13 @@ namespace res {
   static cbn::Opt<cbn::SKAP> s_AssetPack;
   static cbn::mesh_mgr::UID s_Mesh_Teapot;
 
-  static inline void LoadAsset(auto load, const char *path, auto &uid) {
-    if (auto i = ((*s_AssetPack).*load)(path)) uid = *i;
+  static inline void LoadAsset(auto load, const char *name, auto &uid) {
+    if (auto i = ((*s_AssetPack).*load)(name)) uid = *i;
     else CARBON_UNREACHABLE;
   }
 
-  static inline void LoadMesh(const char *path, auto &uid) {
-    LoadAsset(&cbn::SKAP::LoadMesh, path, uid);
+  static inline void LoadMesh(const char *name, auto &uid) {
+    LoadAsset(&cbn::SKAP::LoadMesh, name, uid);
   }
 
   static void Init(void) {
@@ -27,6 +27,7 @@ namespace res {
 
   static void Shutdown(void) {
     cbn::mesh_mgr::Shutdown();
+    s_AssetPack->Free();
     CBN_INFO("Shutdowned resource manager successfully");
   }
 }
@@ -62,14 +63,17 @@ void update(cbn::DrawCanvas &dc, cbn::Camera &c, const f64 dt) {
 }
 
 void mesh_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
-  static const auto * const mp = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
-  static cbn::Transform t {
-    .position = cbn::math::Vec3(-5, -1.5, -5),
-    .rotation = cbn::math::Vec3(),
-    .scale    = cbn::math::Vec3(1)
-  };
-  dc.DrawMesh(c, mp, t, Color_FG);
-  t.rotation.y += 50 * dt;
+  dc.DrawPlaneXZ(c, cbn::math::Vec3(-3, -2, -3), cbn::math::Vec2(/*6*/ 25), 0xff0000ff);
+  {// Teapot
+    static const auto * const m = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
+    static cbn::Transform t {
+      .position = cbn::math::Vec3(-5, -1.5, -5),
+      .rotation = cbn::math::Vec3(),
+      .scale    = cbn::math::Vec3(1)
+    };
+    dc.DrawMesh(c, m, t, Color_FG);
+    t.rotation.y += 50 * dt;
+  }
 }
 
 void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
@@ -104,7 +108,6 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
 
 void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
   dc.Fill(Color_BG);
-  dc.DrawPlaneXZ(c, cbn::math::Vec3(-3, -2, -3), cbn::math::Vec2(/*6*/ 25), 0xff0000ff);
   mesh_render(dc, c, dt);
   {
     static constexpr cbn::Transform t1 {
