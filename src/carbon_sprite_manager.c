@@ -11,7 +11,7 @@ void carbon_sprite_manager_init(void) {
 void carbon_sprite_manager_shutdown(void) {
   if (carbon_sprite__library.size) {
     carbon_slotmap_foreach(CBN_Sprite *, carbon_sprite__library) {
-      carbon_sprite_destroy(it.var);
+      carbon_image_destroy(it.var);
       carbon_memory_free(it.var);
     }
   }
@@ -20,45 +20,34 @@ void carbon_sprite_manager_shutdown(void) {
 }
 
 bool carbon_sprite_manager_load_from_file(const char *file, CBN_Sprite_UID *out_uid) {
-  if (!out_uid) {
-    CBN_ERROR("`out_uid` must be a valid pointer");
-    return false;
-  }
-  CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
-  CBN_Image img = carbon_image_read_from_file(file);
-  *sprite = carbon_sprite_from_img(&img);
-  carbon_image_destroy(&img);
-  *out_uid = carbon_slotmap_set(&carbon_sprite__library, &sprite);
+  if (!out_uid) return false;
+  CBN_Sprite *img = carbon_memory_alloc(sizeof(CBN_Sprite));
+  *img = carbon_image_read_from_file(file);
+  *out_uid = carbon_slotmap_set(&carbon_sprite__library, &img);
   return true;
 }
 
 bool carbon_sprite_manager_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Sprite_UID *out_uid) {
-  if (!out_uid) {
-    CBN_ERROR("`out_uid` must be a valid pointer");
+  if (!out_uid) return false;
+  CBN_Sprite *img = carbon_memory_alloc(sizeof(CBN_Sprite));
+  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_IMAGE, name, img)) {
+    carbon_memory_free(img);
     return false;
   }
-  CBN_Sprite *sprite = (CBN_Sprite *) carbon_memory_alloc(sizeof(CBN_Sprite));
-  CBN_Image img;
-  if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_IMAGE, name, &img)) {
-    carbon_memory_free(sprite);
-    return false;
-  }
-  *sprite = carbon_sprite_from_img(&img);
-  carbon_image_destroy(&img);
-  *out_uid = carbon_slotmap_set(&carbon_sprite__library, &sprite);
+  *out_uid = carbon_slotmap_set(&carbon_sprite__library, &img);
   return true;
 }
 
 void carbon_sprite_manager_unload(CBN_Sprite_UID uid) {
-  CBN_Sprite *sprite = carbon_sprite_manager_lookup(uid);
-  if (!sprite) return;
-  carbon_sprite_destroy(sprite);
-  carbon_memory_free(sprite);
+  CBN_Sprite *img = carbon_sprite_manager_lookup(uid);
+  if (!img) return;
+  carbon_image_destroy(img);
+  carbon_memory_free(img);
   carbon_slotmap_remove(&carbon_sprite__library, uid);
 }
 
 CBN_Sprite *carbon_sprite_manager_lookup(CBN_Sprite_UID uid) {
-  CBN_Sprite *sprite = 0;
-  carbon_slotmap_get(&carbon_sprite__library, uid, &sprite);
-  return sprite;
+  CBN_Sprite *img = 0;
+  carbon_slotmap_get(&carbon_sprite__library, uid, &img);
+  return img;
 }

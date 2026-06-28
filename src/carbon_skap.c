@@ -9,8 +9,8 @@
 typedef struct {
   CBN_SKAP_AssetType type;
   union {
-    CBN_Image_Metadata as_img;
     struct { usz size; } as_bin;
+    struct { usz width, height; } as_img;
     CBN_Mesh_Metadata as_mesh;
     CBN_Font_Metadata as_font;
   };
@@ -85,14 +85,15 @@ CBNINL bool carbon_skap__lookup_binary(const CBN_SKAP *handle, CBN_SKAP_AssetIdx
 CBNINL void carbon_skap__append_idx_image(CBN_SKAP_AssetIdx *idx) {
   CBN_Image asset = carbon_image_read_from_file(idx->name);
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &asset);
-  idx->metadata.as_img = asset.metadata;
+  idx->metadata.as_img.width = asset.width;
+  idx->metadata.as_img.height = asset.height;
 }
 
 CBNINL void carbon_skap__append_blob_image(void *p, CBN_SKAP_AssetIdx *idx, FILE *fd) {
   CBN_Image *asset = p;
-  idx->blob_size = idx->metadata.as_img.width * idx->metadata.as_img.height * idx->metadata.as_img.channels;
-  idx->checksum = carbon_crypto_crc32(asset->data, idx->blob_size);
-  fwrite(asset->data, idx->blob_size, 1, fd);
+  idx->blob_size = idx->metadata.as_img.width * idx->metadata.as_img.height * 4;
+  idx->checksum = carbon_crypto_crc32((u8 *)asset->pixels, idx->blob_size);
+  fwrite(asset->pixels, idx->blob_size, 1, fd);
 }
 
 CBNINL bool carbon_skap__lookup_image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx *idx, void *p) {
@@ -106,8 +107,9 @@ CBNINL bool carbon_skap__lookup_image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx 
     carbon_memory_free(p_data);
     return false;
   }
-  out_blob->data = p_data;
-  out_blob->metadata = idx->metadata.as_img;
+  out_blob->pixels = (u32 *)p_data;
+  out_blob->width = idx->metadata.as_img.width;
+  out_blob->height = idx->metadata.as_img.height;
   return true;
 }
 

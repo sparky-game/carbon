@@ -6,7 +6,7 @@ struct CBN_Image : CBN_Image_t {
   using Format = CBN_Image_Format;
 
   explicit CBN_Image(const char *file) : CBN_Image_t{carbon_image_read_from_file(file)} {}
-  explicit CBN_Image(const CBN_DrawCanvas &dc) : CBN_Image_t{carbon_image_from_canvas(&dc)} {}
+  explicit CBN_Image(const CBN_DrawCanvas &dc) : CBN_Image_t{carbon_image_view_from_canvas(&dc)} {}
 
   ~CBN_Image(void) { carbon_image_destroy(this); }
 

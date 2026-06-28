@@ -160,8 +160,9 @@ void carbon_audio_set_pitch(CBN_Audio_UID uid, f32 pitch) {
 }
 
 void carbon_audio_shift_pitch(CBN_Audio_UID uid) {
+  // Pentatonic scale
   static const i8 semitones[] = {-4, -2, 0, 2, 4, 7, 9};
   i8 semitone = semitones[carbon_rng_lcg_range(0, CARBON_ARRAY_LEN(semitones) - 1)];
-  f32 pitch = carbon_math_pow(2, (f32) semitone/12);
+  f32 pitch = carbon_math_pow(2, (f32)semitone/12);
   carbon_audio_set_pitch(uid, pitch);
 }

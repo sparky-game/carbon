@@ -42,7 +42,6 @@ static constexpr std::array c_HeaderFiles {
   "image.h", "image.hh",
   "win.hh",
   "drawcanvas.h", "drawcanvas.hh",
-  "sprite.h", "sprite.hh",
   "color.h",
   "fs.h", "fs.hh",
   "net.h",
