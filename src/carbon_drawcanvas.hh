@@ -55,7 +55,14 @@ struct CBN_DrawCanvas {
   void DrawAnnulus(CBN_Vec2 center, usz radius_out, usz radius_in, u32 color)
   { carbon_drawcanvas_annulus(this, center, radius_out, radius_in, color); }
 
-  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = cbn::math::Vec2(1)) { carbon_drawcanvas_sprite(this, s, position, scale); }
+  void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = {1}, u32 tint = 0xffffffff)
+  { carbon_drawcanvas_sprite(this, s, position, scale, tint); }
+
+  void DrawSprite(const CBN_DrawCanvas &dc, CBN_Vec2 position, CBN_Vec2 scale = {1}, u32 tint = 0xffffffff)
+  {
+    const CBN_Sprite s {dc};
+    DrawSprite(&s, position, scale, tint);
+  }
 
   void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color)
   { carbon_drawcanvas_mesh(this, &c, m, t, color); }

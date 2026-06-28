@@ -233,7 +233,7 @@ void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius_o
   }
 }
 
-void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale) {
+void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale, u32 tint) {
   const f32 sw = s->width * scale.x, sh = s->height * scale.y;
   const CBN_Rect r_dc = carbon_math_rect(0, 0, dc->width, dc->height);
   const CBN_Rect r_sp = carbon_math_rect(position.x, position.y, sw, sh);
@@ -244,12 +244,17 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   const f32 start_x = (xywh.x - r_sp.x) * inv_sx;
   f32 src_y = (xywh.y - r_sp.y) * inv_sy;
   for (usz j = 0; j < xywh.h; ++j) {
-    const usz y = (usz) src_y;
-    const u32 *row = s->pixels + y*s->width;
+    const usz y0 = (usz)src_y;
+    const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
+    const u32 *r0 = s->pixels + y0*s->width, *r1 = s->pixels + y1*s->width;
     f32 src_x = start_x;
     for (usz i = 0; i < xywh.w; ++i) {
-      const usz x = (usz) src_x;
-      carbon_drawcanvas__alpha_blending(p_dc, row[x]);
+      const usz x0 = (usz)src_x;
+      const usz x1 = x0 + (x0 + 1 < s->width ? 1 : 0);
+      const CBN_Vec2 t = carbon_math_vec2(src_x - x0, src_y - y0);
+      u32 c = carbon_color_bilerp(r0[x0], r0[x1], r1[x0], r1[x1], t);
+      c = carbon_color_mult(c, tint);
+      carbon_drawcanvas__alpha_blending(p_dc, c);
       src_x += inv_sx;
       ++p_dc;
     }
