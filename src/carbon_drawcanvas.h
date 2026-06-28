@@ -60,9 +60,6 @@ typedef struct {
 } CBN_Light;
 CBNDEF_TAKA(cbn, Light, CBN_Light);
 
-// Forward declaration
-CBNDEF_T(CBN_Sprite);
-
 /**
  * @brief Creates a new canvas.
  * @param width The width to set the canvas to.
