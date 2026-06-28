@@ -4,19 +4,18 @@
 bool carbon_math_box_ray_intersects(CBN_Box b, CBN_Ray r, f32 *t) {
   CBN_Vec3 min = b.xyz;
   CBN_Vec3 max = carbon_math_vec3_add(b.xyz, b.whd);
-  f32 t1, t2, tmin, tmax;
+  f32 t1, t2, tmin = 0, tmax = CARBON_INF;
   if (!r.direction.x) {
-    if (r.origin.x < min.x || r.origin.x > max.x) return false;
-    tmin = 0; tmax = 1;
+    if (min.x > r.origin.x || r.origin.x > max.x) return false;
   }
   else {
     t1 = (min.x - r.origin.x)/r.direction.x;
     t2 = (max.x - r.origin.x)/r.direction.x;
-    tmin = carbon_math_min(t1, t2);
-    tmax = carbon_math_max(t1, t2);
+    tmin = carbon_math_max(tmin, carbon_math_min(t1, t2));
+    tmax = carbon_math_min(tmax, carbon_math_max(t1, t2));
   }
   if (!r.direction.y) {
-    if (r.origin.y < min.y || r.origin.y > max.y) return false;
+    if (min.y > r.origin.y || r.origin.y > max.y) return false;
   }
   else {
     t1 = (min.y - r.origin.y)/r.direction.y;
@@ -25,7 +24,7 @@ bool carbon_math_box_ray_intersects(CBN_Box b, CBN_Ray r, f32 *t) {
     tmax = carbon_math_min(tmax, carbon_math_max(t1, t2));
   }
   if (!r.direction.z) {
-    if (r.origin.z < min.z || r.origin.z > max.z) return false;
+    if (min.z > r.origin.z || r.origin.z > max.z) return false;
   }
   else {
     t1 = (min.z - r.origin.z)/r.direction.z;
@@ -33,6 +32,9 @@ bool carbon_math_box_ray_intersects(CBN_Box b, CBN_Ray r, f32 *t) {
     tmin = carbon_math_max(tmin, carbon_math_min(t1, t2));
     tmax = carbon_math_min(tmax, carbon_math_max(t1, t2));
   }
-  *t = tmin;
-  return tmin <= tmax;
+  if (tmin <= tmax) {
+    if (t) *t = tmin;
+    return true;
+  }
+  return false;
 }
