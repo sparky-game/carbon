@@ -3,12 +3,7 @@
 
 #pragma once
 
-CBNINL void carbon_drawcanvas__st_fill(CBN_DrawCanvas *dc, u32 color) {
-  for (usz i = 0; i < dc->width * dc->height; ++i) {
-    carbon_drawcanvas__alpha_blending(&dc->pixels[i], color);
-    dc->zbuffer[i] = 1;
-  }
-}
+// ...
 
 // Local Variables:
 // mode: c

@@ -106,7 +106,11 @@ void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color) {
 }
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
-  carbon_drawcanvas__dispatch_backend(fill, dc, color);
+  const usz n = dc->width * dc->height;
+  for (usz i = 0; i < n; ++i) {
+    carbon_drawcanvas__alpha_blending(&dc->pixels[i], color);
+    dc->zbuffer[i] = 1;
+  }
 }
 
 void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
@@ -709,20 +713,23 @@ f32 carbon_drawcanvas_get_text_height(usz size) {
 
 void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  const u32 c_rgb = color & 0xffffff00, c_a = color & 0x000000ff;
+  const f32 edge = (f32)f->metadata.sdf_onedge/0xff, aa = f->metadata.sdf_pxscale/0xff/2;
   for (; *txt; ++txt) {
     usz idx = *txt - CARBON_FONT_ASCII_START;
     CBN_Font_Chardata cdata = f->metadata.cdata[idx];
-    usz src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
-    usz dst_w = sf*src_w, dst_h = sf*src_h;
-    for (usz dy = 0; dy < dst_h; ++dy) {
-      for (usz dx = 0; dx < dst_w; ++dx) {
-        i32 px = position.x + dx + sf*cdata.xoff;
-        i32 py = position.y + dy + sf*cdata.yoff;
+    f32 src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
+    f32 dst_w = sf*src_w, dst_h = sf*src_h;
+    for (f32 dy = 0; dy < dst_h; ++dy) {
+      for (f32 dx = 0; dx < dst_w; ++dx) {
+        i32 px = carbon_math_round(position.x + dx + sf*cdata.xoff);
+        i32 py = carbon_math_round(position.y + dy + sf*cdata.yoff);
         if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
           usz sx = cdata.x0 + dx/sf, sy = cdata.y0 + dy/sf;
-          u32 alpha = f->data[sy*CARBON_FONT_DATA_SIZE + sx];
-          u32 rgba = (color & 0xffffff00) | alpha;
-          carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), rgba);
+          f32 val = (f32)f->data[sy*CARBON_FONT_DATA_SIZE + sx]/0xff;
+          f32 fill = carbon_math_clamp((val - (edge - aa))/(2*aa), 0, 1);
+          if (fill <= 0) continue;
+          carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
         }
       }
     }
@@ -730,4 +737,30 @@ void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, con
   }
 }
 
+void carbon_drawcanvas_text_with_font_with_outline(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
+  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  const u32 c_rgb = color & 0xffffff00, c_a = color & 0x000000ff;
+  const f32 edge = (f32)f->metadata.sdf_onedge/0xff, pxn = f->metadata.sdf_pxscale/0xff;
+  const f32 aa = pxn/2, delta = (f32)f->metadata.sdf_padding * pxn;
+  for (; *txt; ++txt) {
+    usz idx = *txt - CARBON_FONT_ASCII_START;
+    CBN_Font_Chardata cdata = f->metadata.cdata[idx];
+    f32 src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
+    f32 dst_w = sf*src_w, dst_h = sf*src_h;
+    for (f32 dy = 0; dy < dst_h; ++dy) {
+      for (f32 dx = 0; dx < dst_w; ++dx) {
+        i32 px = carbon_math_round(position.x + dx + sf*cdata.xoff);
+        i32 py = carbon_math_round(position.y + dy + sf*cdata.yoff);
+        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
+          usz sx = cdata.x0 + dx/sf, sy = cdata.y0 + dy/sf;
+          f32 val = (f32)f->data[sy*CARBON_FONT_DATA_SIZE + sx]/0xff;
+          f32 fill = carbon_math_clamp((val - (edge - aa))/(2*aa), 0, 1);
+          f32 outline = carbon_math_clamp((val - (edge - delta - aa))/(2*aa), 0, 1);
+          if (outline > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), 0x33333300 | (u32)(outline * c_a));
+          if (fill    > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
+        }
+      }
+    }
+    position.x += sf * cdata.xadvance;
+  }
 }

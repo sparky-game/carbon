@@ -14,7 +14,7 @@ typedef struct {
   CBN_Vec3 world;
   CBN_Vec4 clip;
   CBN_Vec3 screen;
-} Vertex3D;  // TODO: find a better name for this struct
+} Vertex3D;  // TODO: find a better name for this struct (e.g. `VertexInfo`).
 
 CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
   const u32 a = src & 0xff;
