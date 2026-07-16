@@ -78,18 +78,6 @@ void carbon_time_sleep(u64 ms) {
 u64 carbon_time_snowflake(void) {
   u64 timestamp = (u64)(carbon_time_get() * 1e3) & ((1ULL << 42) - 1);
   u64 random = carbon_rng_mt1993764() & ((1ULL << 22) - 1);
-  /*
-   * Layout:
-   * =======
-   * [1][TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT][RRRRRRRRRRRRRRRRRRRRRR]
-   *  ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~
-   *  |                                           ^                       ^
-   *  |                                           |                       |------- 22-bit random payload [bits 21..0]
-   *  |                                           |
-   *  |                                           |------- 42-bit Timestamp (ms) [bits 62..22]
-   *  |
-   *  |------- Unused Most-Significant-Bit (MSB) set to 1 [bit 63]
-   */
   return (1ULL << 63) | (timestamp << 22) | random;
 }
 

@@ -40,16 +40,27 @@ CBNDEF char *carbon_time_get_iso8601(void);
 CBNDEF u64 carbon_time_get_yyyymmddhhmmss(void);
 
 /**
- * @brief ...
- * @param ms ...
+ * @brief Suspends the execution of the calling thread for a specified duration.
+ * @param ms The amount of time to sleep.
  */
 CBNDEF void carbon_time_sleep(u64 ms);
 
 /**
- * @brief ...
+ * @brief Generates a pseudo-random 64-bit snowflake-like unique identifier.
+ *
+ * [1][TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT][RRRRRRRRRRRRRRRRRRRRRR]
+ *  ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~
+ *  |                                           ^                       ^
+ *  |                                           |                       |------- 22-bit random payload [bits 21..0]
+ *  |                                           |
+ *  |                                           |------- 42-bit Timestamp (ms) [bits 62..22]
+ *  |
+ *  |------- Unused Most-Significant-Bit (MSB) set to 1 [bit 63]
+ *
  * @return The new 64-bit snowflake ID.
  */
 CBNDEF u64 carbon_time_snowflake(void);
+CBNDEF_AKA(cbn::time, Snowflake, carbon_time_snowflake);
 
 /**
  * @brief Extracts the timestamp (ms) from a snowflake ID.
