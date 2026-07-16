@@ -18,6 +18,14 @@ TEST(ends_with) {
   return true;
 }
 
+TEST(to_upper) {
+  carbon_should_be('H', cbn::str::ToUpper('h'));
+  carbon_should_be('W', cbn::str::ToUpper('w'));
+  carbon_should_be(69, cbn::str::ToUpper(69));
+  carbon_should_be('7', cbn::str::ToUpper('7'));
+  return true;
+}
+
 TEST(lev_dist) {
   carbon_should_be(2, cbn::str::LevDist("add", "daddy"));
   carbon_should_be(2, cbn::str::LevDist("daddy", "add"));

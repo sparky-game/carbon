@@ -146,6 +146,14 @@ CBNDEF f32 carbon_string_to_float(const char *s);
 CBNDEF_AKA(cbn::str, ToFloat, carbon_string_to_float);
 
 /**
+ * @brief Converts a lower-case letter to the corresponding upper-case letter.
+ * @param c The character (letter).
+ * @return The corresponding upper-case letter if there is one.
+ */
+CBNDEF char carbon_string_to_upper(char c);
+CBNDEF_AKA(cbn::str, ToUpper, carbon_string_to_upper);
+
+/**
  * @brief Gets the Levenshtein distance between two strings.
  * @param s1 The first string.
  * @param s2 The second string.

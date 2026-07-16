@@ -131,6 +131,10 @@ f32 carbon_string_to_float(const char *s) {
   return ret;
 }
 
+char carbon_string_to_upper(char c) {
+  return 'a' <= c && c <= 'z' ? c - ('a' - 'A') : c;
+}
+
 usz carbon_string_lev_dist(const char *s1, const char *s2) {
   usz n = carbon_string_len(s1);
   usz m = carbon_string_len(s2);
