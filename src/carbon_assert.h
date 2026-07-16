@@ -6,6 +6,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CBN_ASSERT(x) ((void) ((x) || (carbon_assert_abort(#x, __FILE__, __LINE__, __func__), 0)))
+#define CBN_ASSERT(x) ((void)((x) || (carbon_assert_abort(#x, __FILE__, __LINE__, __func__), 0)))
 
 CBNDEF void carbon_assert_abort(const char *expr, const char *file, u32 line, const char *func);
