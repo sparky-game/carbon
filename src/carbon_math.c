@@ -445,7 +445,7 @@ f32 carbon_math_cos(f32 x) {
 
 f32 carbon_math_tan(f32 x) {
   f32 c = carbon_math_cos(x);
-  if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_INF : -CARBON_INF;
+  if (carbon_math_abs(c) < CARBON_EPS) return x > 0 ? CARBON_F32_INF : -CARBON_F32_INF;
   return carbon_math_sin(x) / c;
 }
 

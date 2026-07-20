@@ -4,7 +4,7 @@
 bool carbon_math_box_ray_intersects(CBN_Box b, CBN_Ray r, f32 *t) {
   CBN_Vec3 min = b.xyz;
   CBN_Vec3 max = carbon_math_vec3_add(b.xyz, b.whd);
-  f32 t1, t2, tmin = 0, tmax = CARBON_INF;
+  f32 t1, t2, tmin = 0, tmax = CARBON_F32_INF;
   if (!r.direction.x) {
     if (min.x > r.origin.x || r.origin.x > max.x) return false;
   }
