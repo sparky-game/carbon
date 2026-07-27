@@ -38,7 +38,7 @@ bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, 
     CBN_ERROR("`out_uid` must be a valid pointer");
     return false;
   }
-  CBN_Mesh *mesh = (CBN_Mesh *) carbon_memory_alloc(sizeof(CBN_Mesh));
+  CBN_Mesh *mesh = carbon_memory_alloc(sizeof(CBN_Mesh));
   if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_MESH, name, mesh)) {
     carbon_memory_free(mesh);
     return false;
@@ -47,7 +47,15 @@ bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, 
   return true;
 }
 
-CBN_Mesh *carbon_mesh_manager_lookup(const CBN_Mesh_UID uid) {
+void carbon_mesh_manager_unload(CBN_Mesh_UID uid) {
+  CBN_Mesh *mesh = carbon_mesh_manager_lookup(uid);
+  if (!mesh) return;
+  carbon_mesh_destroy(mesh);
+  carbon_memory_free(mesh);
+  carbon_slotmap_remove(&carbon_mesh__library, uid);
+}
+
+CBN_Mesh *carbon_mesh_manager_lookup(CBN_Mesh_UID uid) {
   CBN_Mesh *mesh = 0;
   carbon_slotmap_get(&carbon_mesh__library, uid, &mesh);
   return mesh;
