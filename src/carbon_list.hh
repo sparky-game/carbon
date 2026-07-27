@@ -62,6 +62,15 @@ struct CBN_List_tt : CBN_List_t {
     else carbon_list_push((CBN_List *)this, (void *)&value);
   }
 
+  void Push(value_type &&value) {
+    if constexpr (!cbn::meta::IsTriviallyCopyable_v<value_type>) {
+      Reserve(size + 1);
+      new (items + size*stride) value_type(cbn::meta::Move(value));
+      ++size;
+    }
+    else carbon_list_push((CBN_List *)this, (void *)&value);
+  }
+
   void Push(const CBN_StrView &sv) requires typeeq(value_type, char) { PushRange(sv); }
   CBN_List_tt &operator<<(const CBN_StrView &sv) { Push(sv); return *this; }
 
