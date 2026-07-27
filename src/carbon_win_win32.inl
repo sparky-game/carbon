@@ -42,6 +42,12 @@ CBN_Vec2 carbon_win_get_mouse_position(void) {
   return carbon_math_vec2(x, y);
 }
 
+void carbon_win_set_mouse_visibility(bool visible) {
+  if (visible == carbon_win__cursor_visible) return;
+  carbon_win__cursor_visible = visible;
+  ShowCursor(visible);
+}
+
 void carbon_win_set_border_visibility(bool visible) {
   // ...
 }
