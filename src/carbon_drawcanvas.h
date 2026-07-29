@@ -284,6 +284,11 @@ CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, cons
 CBNDEF void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s);
 
 /**
+ * @brief A 3D XZ-axis-aligned plane mesh.
+ */
+CBNDEF CBN_Mesh const carbon_drawcanvas_plane;
+
+/**
  * @brief A 3D tetrahedron (d4) mesh.
  */
 CBNDEF CBN_Mesh const carbon_drawcanvas_tetrahedron;
@@ -312,16 +317,6 @@ CBNDEF CBN_Mesh const carbon_drawcanvas_dodecahedron;
  * @brief A 3D icosahedron (d20) mesh.
  */
 CBNDEF CBN_Mesh const carbon_drawcanvas_icosahedron;
-
-/**
- * @brief Draws a 3D XZ-axis-aligned plane to the canvas.
- * @param dc The DrawCanvas object.
- * @param c The 3D camera used to look into the world.
- * @param center The position of the center of the plane.
- * @param size The size of the plane (size.x -> X, size.y -> Z).
- * @param color The color to draw the plane with.
- */
-CBNDEF void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color);
 
 /**
  * @brief Draws text to the canvas with a specific color (using a default font).

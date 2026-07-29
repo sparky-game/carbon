@@ -6,6 +6,8 @@
 namespace res {
   static cbn::Opt<cbn::SKAP> s_AssetPack;
   static cbn::mesh_mgr::UID s_Mesh_Teapot;
+  static cbn::mesh_mgr::UID s_Mesh_Tree;
+  static cbn::sprite_mgr::UID s_Sprite_Tree;
 
   static inline void LoadAsset(auto load, const char *name, auto &uid) {
     if (auto i = ((*s_AssetPack).*load)(name)) uid = *i;
@@ -16,16 +18,24 @@ namespace res {
     LoadAsset(&cbn::SKAP::LoadMesh, name, uid);
   }
 
+  static inline void LoadSprite(const char *name, auto &uid) {
+    LoadAsset(&cbn::SKAP::LoadSprite, name, uid);
+  }
+
   static void Init(void) {
     CBN_ASSERT(cbn::fs::cd(cbn::fs::GetBinDir()));
     if (auto i = cbn::SKAP::Open("assets.skap")) s_AssetPack = cbn::meta::Move(i);
     else CARBON_UNREACHABLE;
     cbn::mesh_mgr::Init();
     LoadMesh("./3d_models/teapot.obj", s_Mesh_Teapot);
+    LoadMesh("./3d_models/tree.obj", s_Mesh_Tree);
+    cbn::sprite_mgr::Init();
+    LoadSprite("./3d_models/tree.png", s_Sprite_Tree);
     CBN_INFO("Initialized resource manager successfully");
   }
 
   static void Shutdown(void) {
+    cbn::sprite_mgr::Shutdown();
     cbn::mesh_mgr::Shutdown();
     s_AssetPack->Free();
     CBN_INFO("Shutdowned resource manager successfully");
@@ -62,16 +72,51 @@ void update(cbn::DrawCanvas &dc, cbn::Camera &c, const f64 dt) {
   if (cbn::win::GetKeyDown(cbn::win::KeyCode::B)) dc.FlagsToggle(CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING);
 }
 
-void mesh_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
-  dc.DrawPlaneXZ(c, cbn::math::Vec3(-3, -2, -3), cbn::math::Vec2(/*6*/ 25), 0xff0000ff);
+void meshes_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
+  {// Plane
+    // dc.DrawPlaneXZ(c, cbn::math::Vec3(-3, -2, -3), cbn::math::Vec2(/*6*/ 25), 0xff0000ff);
+    static constexpr cbn::Transform t {
+      .position = {-3, -2, -3},
+      .rotation = {0},
+      .scale    = {25}
+    };
+    dc.DrawMesh(c, &dc.Plane, t, 0x888888ff);
+  }
+  {// Cube #1
+    static constexpr cbn::Transform t {
+      .position = {-2, -1.5, -2},
+      .rotation = {0},
+      .scale    = {1}
+    };
+    dc.DrawMesh(c, &dc.Cube, t, Color_FG);
+  }
+  {// Cube #2
+    static constexpr cbn::Transform t {
+      .position = {-3, -1.5, -3},
+      .rotation = {0},
+      .scale    = {1}
+    };
+    dc.DrawMesh(c, &dc.Cube, t, Color_FG);
+  }
   {// Teapot
     static const auto * const m = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
     static cbn::Transform t {
-      .position = cbn::math::Vec3(-5, -1.5, -5),
-      .rotation = cbn::math::Vec3(),
-      .scale    = cbn::math::Vec3(1)
+      .position = {-5, -1.5, -5},
+      .rotation = {0},
+      .scale    = {1}
     };
     dc.DrawMesh(c, m, t, Color_FG);
+    t.rotation.y += 50 * dt;
+  }
+  {// Tree
+    static const auto * const m = cbn::mesh_mgr::Lookup(res::s_Mesh_Tree);
+    static const auto * const s = cbn::sprite_mgr::Lookup(res::s_Sprite_Tree);
+    static cbn::Transform t {
+      .position = {5, -1.5, -5},
+      .rotation = {0},
+      .scale    = {3}
+    };
+    dc.DrawMesh(c, m, t, s);
     t.rotation.y += 50 * dt;
   }
 }
@@ -108,21 +153,7 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
 
 void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
   dc.Fill(Color_BG);
-  mesh_render(dc, c, dt);
-  {
-    static constexpr cbn::Transform t1 {
-      .position = cbn::math::Vec3(-2, -1.5, -2),
-      .rotation = cbn::math::Vec3(),
-      .scale    = cbn::math::Vec3(1)
-    };
-    dc.DrawMesh(c, &dc.Cube, t1, Color_FG);
-    static constexpr cbn::Transform t2 {
-      .position = cbn::math::Vec3(-3, -1.5, -3),
-      .rotation = cbn::math::Vec3(),
-      .scale    = cbn::math::Vec3(1)
-    };
-    dc.DrawMesh(c, &dc.Cube, t2, Color_FG);
-  }
+  meshes_render(dc, c, dt);
   hud_render(dc, c);
 }
 

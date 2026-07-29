@@ -1,2 +1,6 @@
 ["./3d_models/" as meshes]
 teapot.obj
+tree.obj
+
+["./3d_models/" as images]
+tree.png

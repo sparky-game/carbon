@@ -303,6 +303,34 @@ void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c
   }
 }
 
+const CBN_Mesh carbon_drawcanvas_plane = {
+  .metadata = (CBN_Mesh_Metadata){
+    .vertices_count  = 4,
+    .texcoords_count = 4,   // 4 corners per face (square)
+    .normals_count   = 1,
+    .faces_count     = 2    // 2 triangles in a unique face
+  },
+  .vertices = (CBN_Vec3[]){
+    {{{-1,  0,  1}}},  // [0]
+    {{{ 1,  0,  1}}},  // [1]
+    {{{ 1,  0, -1}}},  // [2]
+    {{{-1,  0, -1}}}   // [3]
+  },
+  .texcoords = (CBN_Vec2[]){
+    {{{1/4., 2/3.}}},  // [0]
+    {{{2/4., 2/3.}}},  // [1]
+    {{{2/4., 3/3.}}},  // [2]
+    {{{1/4., 3/3.}}}   // [3]
+  },
+  .normals = (CBN_Vec3[]){
+    {{{0, 1, 0}}}
+  },
+  .faces = (usz[][CARBON_MESH_FACE_COMPS][3]){
+    {{0, 1, 2}, {0, 1, 2}, {0, 0, 0}},
+    {{0, 2, 3}, {0, 2, 3}, {0, 0, 0}}
+  }
+};
+
 const CBN_Mesh carbon_drawcanvas_tetrahedron = {
   .metadata = (CBN_Mesh_Metadata){
     .vertices_count  = 4,
@@ -687,33 +715,6 @@ const CBN_Mesh carbon_drawcanvas_icosahedron = {
 };
 
 #undef UVS_FACE
-
-void carbon_drawcanvas_plane_xz(CBN_DrawCanvas *dc, const CBN_Camera *c, CBN_Vec3 center, CBN_Vec2 size, u32 color) {
-  if (!c) return;
-  size = carbon_math_vec2_scale(size, 0.5);
-  Vertex3D vs[4];
-  vs[0].world = carbon_math_vec3(center.x - size.x, center.y, center.z - size.y);
-  vs[1].world = carbon_math_vec3(center.x + size.x, center.y, center.z - size.y);
-  vs[2].world = carbon_math_vec3(center.x + size.x, center.y, center.z + size.y);
-  vs[3].world = carbon_math_vec3(center.x - size.x, center.y, center.z + size.y);
-  const CBN_Mat4 V = carbon_camera_get_view(c);
-  const CBN_Mat4 P = carbon_camera_get_proj(c);
-  const CBN_Mat4 VP = carbon_math_mat4_mult(P, V);
-  for (usz i = 0; i < CARBON_ARRAY_LEN(vs); ++i) {
-    CBN_Vec4 v = carbon_math_vec4_3(vs[i].world, 1);
-    vs[i].clip = carbon_math_mat4_mult_vec4(VP, v);
-  }
-  {// First triangle
-    Vertex3D pvs[4];
-    usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[1], vs[2], pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
-  }
-  {// Second triangle
-    Vertex3D pvs[4];
-    usz pvs_count = carbon_drawcanvas__near_plane_clipping(vs[0], vs[2], vs[3], pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
-  }
-}
 
 void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   static const char *glyphs = &carbon_drawcanvas__monofont[0][0][0];
