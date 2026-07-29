@@ -23,6 +23,7 @@ CBNDEF_T(CBN_Image) {
   u32 *pixels;
   usz width;
   usz height;
+  usz stride;
   bool owned;
 };
 CBNDEF_TAKA(cbn, Image, CBN_Image);
@@ -44,6 +45,14 @@ CBNDEF CBN_Image carbon_image_read_from_file(const char *file);
  * @return The image object.
  */
 CBNDEF CBN_Image carbon_image_view_from_canvas(const CBN_DrawCanvas *dc);
+
+/**
+ * @brief ...
+ * @param img The source image object.
+ * @param xywh The sub-region rectangle within the source image.
+ * @return The new image object.
+ */
+CBNDEF CBN_Image carbon_image_view_from_another(const CBN_Image *img, CBN_Rect xywh);
 
 /**
  * @brief Destroy an image object.

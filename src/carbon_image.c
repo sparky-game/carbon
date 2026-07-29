@@ -39,10 +39,25 @@ CBN_Image carbon_image_read_from_file(const char *file) {
 }
 
 CBN_Image carbon_image_view_from_canvas(const CBN_DrawCanvas *dc) {
+  const usz w = carbon_drawcanvas_width(dc);
   return (CBN_Image){
     .pixels = carbon_drawcanvas_pixels(dc),
-    .width = carbon_drawcanvas_width(dc),
+    .width = w,
     .height = carbon_drawcanvas_height(dc),
+    .stride = w,
+    .owned = false
+  };
+}
+
+CBN_Image carbon_image_view_from_another(const CBN_Image *img, CBN_Rect xywh) {
+  usz x = carbon_math_round(xywh.x), y = carbon_math_round(xywh.y);
+  usz w = carbon_math_round(xywh.w), h = carbon_math_round(xywh.h);
+  CBN_ASSERT(x + w <= img->width && y + h <= img->height);
+  return (CBN_Image){
+    .pixels = img->pixels + y*img->stride + x,
+    .width = w,
+    .height = h,
+    .stride = img->stride,
     .owned = false
   };
 }
@@ -54,23 +69,33 @@ void carbon_image_destroy(CBN_Image *img) {
 
 bool carbon_image_write_to_file(const CBN_Image *img, CBN_Image_Format fmt, const char *file) {
   // return carbon_image_write_to_file_linearly(img->data, fmt, img->metadata.width, img->metadata.height, img->metadata.channels, file);
+  u32 *tmp = 0;
   i32 result = 0;
+  if (fmt == CBN_IMAGE_FORMAT_BMP || fmt == CBN_IMAGE_FORMAT_TGA || fmt == CBN_IMAGE_FORMAT_JPG) {
+    if (img->stride != img->width) {
+      tmp = carbon_memory_alloc(img->width * img->height * 4);
+      for (usz j = 0; j < img->height; ++j) {
+        carbon_memory_copy(tmp + j*img->width, img->pixels + j*img->stride, img->width * 4);
+      }
+    }
+  }
   switch (fmt) {
   case CBN_IMAGE_FORMAT_PNG:
-    result = stbi_write_png(file, img->width, img->height, 4, img->pixels, img->width * 4);
+    result = stbi_write_png(file, img->width, img->height, 4, img->pixels, img->stride * 4);
     break;
   case CBN_IMAGE_FORMAT_BMP:
-    result = stbi_write_bmp(file, img->width, img->height, 4, img->pixels);
+    result = stbi_write_bmp(file, img->width, img->height, 4, tmp ?: img->pixels);
     break;
   case CBN_IMAGE_FORMAT_TGA:
-    result = stbi_write_tga(file, img->width, img->height, 4, img->pixels);
+    result = stbi_write_tga(file, img->width, img->height, 4, tmp ?: img->pixels);
     break;
   case CBN_IMAGE_FORMAT_JPG:
     // TODO: customize the quality value [1, 100] with a macro (maybe `CARBON_FS_WRITE_IMG_JPG_QUALITY`)
-    result = stbi_write_jpg(file, img->width, img->height, 4, img->pixels, 90);
+    result = stbi_write_jpg(file, img->width, img->height, 4, tmp ?: img->pixels, 90);
     break;
   default: CARBON_UNREACHABLE;
   }
+  carbon_memory_free(tmp);
   if (!result) CBN_ERROR("unable to write pixels to file (`%s`)", file);
   // NOTE: maybe just `return result;` is fine?
   return result ? true : false;
