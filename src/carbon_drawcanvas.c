@@ -239,6 +239,8 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   const CBN_Rect r_sp = carbon_math_rect(position.x, position.y, sw, sh);
   CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
   if (xywh.w <= 0 || xywh.h <= 0) return;
+  xywh.x = carbon_math_floor(xywh.x), xywh.y = carbon_math_floor(xywh.y);
+  xywh.w = carbon_math_min(xywh.w, r_dc.w - xywh.x), xywh.h = carbon_math_min(xywh.h, r_dc.h - xywh.y);
   u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
   const f32 inv_sx = 1/scale.x, inv_sy = 1/scale.y;
   const f32 start_x = (xywh.x - r_sp.x) * inv_sx;
