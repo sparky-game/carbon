@@ -50,7 +50,7 @@
   +------------------------+----------------------------------------------------------+
 
   In the user's program, before including this header file:
-  +------------------------+----------------------------------------------------------+
+  +---------------------------------+-------------------------------------------------+
   |      CARBON_TESTING_ENTRY       | Redefines the `main` function, thus making it   |
   |                                 | behave as a test suite entrypoint. It's only    |
   |                                 | relevant to define it in the translation unit   |
