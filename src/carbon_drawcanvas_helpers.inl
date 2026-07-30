@@ -242,7 +242,7 @@ CBNINL void carbon_drawcanvas__triangle_3d_with_texture(CBN_DrawCanvas *dc, Vert
         f32 w = 1/iw;
         f32 u = carbon_math_clamp(uw * w, 0, 1), v = carbon_math_clamp(vw * w, 0, 1);
         usz x = u*(s->width - 1), y = (1 - v)*(s->height - 1);
-        u32 color = carbon_color_mult(s->pixels[y*s->width + x], shade);
+        u32 color = carbon_color_mult(s->pixels[y*s->stride + x], shade);
         carbon_drawcanvas__alpha_blending(pxls, color);
       }
       w0 += dw0_dx, w1 += dw1_dx, w2 += dw2_dx, z += dz_dx;

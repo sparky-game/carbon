@@ -110,6 +110,7 @@ CBNINL bool carbon_skap__lookup_image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx 
   out_blob->pixels = (u32 *)p_data;
   out_blob->width = idx->metadata.as_img.width;
   out_blob->height = idx->metadata.as_img.height;
+  out_blob->stride = out_blob->width;
   return true;
 }
 

@@ -248,7 +248,7 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   for (usz j = 0; j < xywh.h; ++j) {
     const usz y0 = (usz)src_y;
     const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
-    const u32 *r0 = s->pixels + y0*s->width, *r1 = s->pixels + y1*s->width;
+    const u32 *r0 = s->pixels + y0*s->stride, *r1 = s->pixels + y1*s->stride;
     f32 src_x = start_x;
     for (usz i = 0; i < xywh.w; ++i) {
       const usz x0 = (usz)src_x;
