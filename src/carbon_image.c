@@ -34,6 +34,7 @@ CBN_Image carbon_image_read_from_file(const char *file) {
   u8 *data = stbi_load(file, (i32 *)&img.width, (i32 *)&img.height, (i32 *)&chs, 0);
   CBN_ASSERT(chs == 4 && "The image file is not in RGBA format (4 channels)");
   img.pixels = carbon_image_8bit_to_32bit(data, img.width * img.height);
+  img.stride = img.width;
   img.owned = true;
   return img;
 }
