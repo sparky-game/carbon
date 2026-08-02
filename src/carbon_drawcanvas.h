@@ -258,8 +258,10 @@ CBNDEF void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz r
 /**
  * @brief Draws a sprite to the canvas.
  * @param dc The DrawCanvas object.
- * @param sprite The sprite to draw.
+ * @param s The sprite to draw.
  * @param position The position (top-left corner) to draw the sprite to.
+ * @param scale The scaling factor to apply to the sprite along the X and Y axis.
+ * @param tint The color used to tint the sprite's colors.
  */
 CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale, u32 tint);
 
@@ -269,9 +271,9 @@ CBNDEF void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CB
  * @param c The 3D camera used to look into the world.
  * @param m The 3D mesh to draw.
  * @param t The 3D transform to draw the mesh with.
- * @param color The color to draw the mesh's faces with.
+ * @param tint The color to draw the mesh's faces with.
  */
-CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color);
+CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 tint);
 
 /**
  * @brief Draws a 3D mesh to the canvas with a specific texture wrapping.
@@ -280,8 +282,9 @@ CBNDEF void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, cons
  * @param m The 3D mesh to draw.
  * @param t The 3D transform to draw the mesh with.
  * @param s The texture to draw the mesh with.
+ * @param tint The color used to tint the mesh's texture colors.
  */
-CBNDEF void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s);
+CBNDEF void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s, u32 tint);
 
 /**
  * @brief A 3D XZ-axis-aligned plane mesh.

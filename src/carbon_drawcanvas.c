@@ -265,7 +265,7 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   }
 }
 
-void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 color) {
+void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, u32 tint) {
   if (!c || !m || !m->vertices || !m->faces) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
@@ -278,11 +278,11 @@ void carbon_drawcanvas_mesh(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_M
     }
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
-    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, color);
+    carbon_drawcanvas__poly_triangulation(dc, pvs, pvs_count, tint);
   }
 }
 
-void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s) {
+void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s, u32 tint) {
   if (!c || !m || !m->vertices || !m->texcoords || !m->faces || !s || !s->pixels) return;
   Vertex3D vs[m->metadata.vertices_count];
   carbon_drawcanvas__local_to_clip_space(c, m, t, vs);
@@ -299,7 +299,7 @@ void carbon_drawcanvas_mesh_with_texture(CBN_DrawCanvas *dc, const CBN_Camera *c
     }
     Vertex3D pvs[4];
     usz pvs_count = carbon_drawcanvas__near_plane_clipping(v1, v2, v3, pvs);
-    carbon_drawcanvas__poly_triangulation_with_texture(dc, pvs, pvs_count, s);
+    carbon_drawcanvas__poly_triangulation_with_texture(dc, pvs, pvs_count, s, tint);
   }
 }
 

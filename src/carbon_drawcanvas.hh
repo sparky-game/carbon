@@ -64,10 +64,10 @@ struct CBN_DrawCanvas {
     DrawSprite(&s, position, scale, tint);
   }
 
-  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 color)
-  { carbon_drawcanvas_mesh(this, &c, m, t, color); }
-  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s)
-  { carbon_drawcanvas_mesh_with_texture(this, &c, m, t, s); }
+  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, u32 tint = 0xffffffff)
+  { carbon_drawcanvas_mesh(this, &c, m, t, tint); }
+  void DrawMesh(const CBN_Camera &c, const CBN_Mesh *m, CBN_Transform t, const CBN_Sprite *s, u32 tint = 0xffffffff)
+  { carbon_drawcanvas_mesh_with_texture(this, &c, m, t, s, tint); }
 
   static inline const auto &Plane {carbon_drawcanvas_plane};
   static inline const auto &Tetrahedron {carbon_drawcanvas_tetrahedron};

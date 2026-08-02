@@ -265,14 +265,14 @@ CBNINL void carbon_drawcanvas__poly_triangulation(CBN_DrawCanvas *dc, const Vert
   }
 }
 
-CBNINL void carbon_drawcanvas__poly_triangulation_with_texture(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, const CBN_Sprite *s) {
+CBNINL void carbon_drawcanvas__poly_triangulation_with_texture(CBN_DrawCanvas *dc, const Vertex3D *vs, usz vs_count, const CBN_Sprite *s, u32 tint) {
   if (vs_count < 3) return;
   for (usz i = 1; i + 1 < vs_count; ++i) {
     Vertex3D p1 = vs[0], p2 = vs[i], p3 = vs[i+1];
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p1.clip, &p1.screen)) continue;
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p2.clip, &p2.screen)) continue;
     if (!carbon_drawcanvas__clip_to_screen_space(dc, p3.clip, &p3.screen)) continue;
-    u32 shade = carbon_drawcanvas__flat_shading(dc, p1.world, p2.world, p3.world, 0xffffffff);
+    u32 shade = carbon_drawcanvas__flat_shading(dc, p1.world, p2.world, p3.world, tint);
     carbon_drawcanvas__triangle_3d_with_texture(dc, p1, p2, p3, s, shade);
   }
 }
