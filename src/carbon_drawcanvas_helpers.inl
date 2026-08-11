@@ -188,13 +188,13 @@ CBNINL u32 carbon_drawcanvas__flat_shading(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_
   dw0_dx = -dw0_dx, dw1_dx = -dw1_dx, dw2_dx = -dw2_dx;                 \
   dw0_dy = -dw0_dy, dw1_dy = -dw1_dy, dw2_dy = -dw2_dy;                 \
   }                                                                     \
-  w0_row += dw0_dx > 0 || (dw0_dx == 0 && dw0_dy > 0) ? 0 : -1;         \
-  w1_row += dw1_dx > 0 || (dw1_dx == 0 && dw1_dy > 0) ? 0 : -1;         \
-  w2_row += dw2_dx > 0 || (dw2_dx == 0 && dw2_dy > 0) ? 0 : -1;         \
   f32 iA = 1.f/A;                                                       \
   f32 dz_dx = ((v1).z*dw0_dx + (v2).z*dw1_dx + (v3).z*dw2_dx) * iA;     \
   f32 dz_dy = ((v1).z*dw0_dy + (v2).z*dw1_dy + (v3).z*dw2_dy) * iA;     \
-  f32 z_row = ((v1).z*w0_row + (v2).z*w1_row + (v3).z*w2_row) * iA;
+  f32 z_row = ((v1).z*w0_row + (v2).z*w1_row + (v3).z*w2_row) * iA;     \
+  w0_row += dw0_dx > 0 || (dw0_dx == 0 && dw0_dy > 0) ? 0 : -1;         \
+  w1_row += dw1_dx > 0 || (dw1_dx == 0 && dw1_dy > 0) ? 0 : -1;         \
+  w2_row += dw2_dx > 0 || (dw2_dx == 0 && dw2_dy > 0) ? 0 : -1;
 
 CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_Vec3 v2, CBN_Vec3 v3, u32 color) {
   // Pineda incremental edge function algorithm
