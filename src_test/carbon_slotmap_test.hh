@@ -82,6 +82,7 @@ TEST(set_remove) {
   auto key_4 = names.Set(name_4);
   carbon_should_be(2, names.size);
   carbon_should_be(names.size, names.data.size);
+  carbon_should_be(3, names.indices.size);
   carbon_should_be(1, key_4.id);
   carbon_should_be(5, key_4.gen);
   carbon_should_be(0, names.freelist);
@@ -94,6 +95,7 @@ TEST(set_remove) {
   auto key_5 = names.Set(name_5);
   carbon_should_be(3, names.size);
   carbon_should_be(names.size, names.data.size);
+  carbon_should_be(3, names.indices.size);
   carbon_should_be(0, key_5.id);
   carbon_should_be(6, key_5.gen);
   carbon_should_be(3, names.freelist);

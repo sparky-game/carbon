@@ -1,19 +1,23 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-char *carbon_slotmap_key_to_cstr(const CBN_SlotMap_Key key) {
+char *carbon_slotmap_key_to_cstr(CBN_SlotMap_Key key) {
   return carbon_string_fmt("(%llu, %llu)", key.id, key.gen);
 }
 
-CBNINL bool carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+CBNINL bool carbon_slotmap__is_valid_key(const CBN_SlotMap *sm, CBN_SlotMap_Key key) {
+  if (key.id >= sm->indices.size) return false;
   if (carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).gen != key.gen) return false;
   return true;
 }
 
 CBNINL u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
   u64 slot_id = sm->freelist;
-  carbon_list_push(&sm->indices, &(CBN_SlotMap_Key){.id = slot_id + 1, .gen = 0});
-  sm->freelist = carbon_list_at(CBN_SlotMap_Key, sm->indices, slot_id).id;
+  if (slot_id == sm->indices.size) {
+    carbon_list_push(&sm->indices, &(CBN_SlotMap_Key){.id = slot_id + 1, .gen = 0});
+    sm->freelist = slot_id + 1;
+  }
+  else sm->freelist = carbon_list_at(CBN_SlotMap_Key, sm->indices, slot_id).id;
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, slot_id);
   slot->id = sm->size;
   slot->gen = sm->generation;
@@ -22,7 +26,7 @@ CBNINL u64 carbon_slotmap__alloc(CBN_SlotMap *sm) {
   return slot_id;
 }
 
-CBNINL void carbon_slotmap__free(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+CBNINL void carbon_slotmap__free(CBN_SlotMap *sm, CBN_SlotMap_Key key) {
   CBN_ASSERT(carbon_slotmap__is_valid_key(sm, key) && "Key is not valid");
   CBN_SlotMap_Key *slot = &carbon_list_at_raw(CBN_SlotMap_Key, sm->indices, key.id);
   u64 data_id = slot->id;
@@ -69,14 +73,14 @@ CBN_SlotMap_Key carbon_slotmap_set(CBN_SlotMap *sm, void *value) {
   return key;
 }
 
-bool carbon_slotmap_get(const CBN_SlotMap *sm, const CBN_SlotMap_Key key, void *out_value) {
+bool carbon_slotmap_get(const CBN_SlotMap *sm, CBN_SlotMap_Key key, void *out_value) {
   if (!carbon_slotmap__is_valid_key(sm, key)) return false;
   u64 idx = carbon_list_at(CBN_SlotMap_Key, sm->indices, key.id).id;
   carbon_memory_copy(out_value, sm->data.items + (idx * sm->stride), sm->stride);
   return true;
 }
 
-bool carbon_slotmap_remove(CBN_SlotMap *sm, const CBN_SlotMap_Key key) {
+bool carbon_slotmap_remove(CBN_SlotMap *sm, CBN_SlotMap_Key key) {
   if (!carbon_slotmap__is_valid_key(sm, key)) return false;
   carbon_slotmap__free(sm, key);
   return true;
