@@ -38,26 +38,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-24.04
-            shell: bash
-          - os: ubuntu-24.04-arm
-            shell: bash
-          - os: windows-2025
-            shell: 'msys2 {0}'
+        os:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+          - windows-2025
     runs-on: ${{ matrix.os }}
     if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: checkout-repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: install-dependencies
+      - name: apt-install-dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update && sudo apt-get install -y \
             libx11-dev      \
             libxrandr-dev   \
             mesa-common-dev
-      - name: setup-msys2
+      - name: msys2-install-dependencies
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
@@ -65,6 +62,10 @@ jobs:
           update: true
           install: >-
             mingw-w64-clang-x86_64-toolchain
-      - name: build
-        shell: ${{ matrix.shell }}
+      - name: linux-build
+        if: runner.os == 'Linux'
+        run: CXX=clang++ ./src_build/make.sh build
+      - name: windows-build
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: CXX=clang++ ./src_build/make.sh build
