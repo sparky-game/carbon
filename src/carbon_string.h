@@ -57,11 +57,11 @@ CBNDEF_AKA(cbn::str, dup, Duplicate);
 
 /**
  */
-CBNDEF void carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) CBNFMT(3, 0);
+CBNDEF char *carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) CBNFMT(3, 0);
 
 /**
  */
-CBNDEF void carbon_string_sfmt(char *buf, usz n, const char *s, ...) CBNFMT(3, 4);
+CBNDEF char *carbon_string_sfmt(char *buf, usz n, const char *s, ...) CBNFMT(3, 4);
 
 /**
  * @brief Formats a string using a format specifier and a variadic list of arguments.

@@ -31,19 +31,21 @@ char *carbon_string_dup(const char *s) {
   return carbon_memory_copy(data, s, len);
 }
 
-void carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) {
+char *carbon_string_vsfmt(char *buf, usz n, const char *s, va_list args) {
   i32 bytes = stbsp_vsnprintf(buf, n, s, args);
   if (bytes >= (i32)n && n >= 4) {
     char *trunc = buf + n - 4;
     stbsp_snprintf(trunc, 4, "...");
   }
+  return buf;
 }
 
-void carbon_string_sfmt(char *buf, usz n, const char *s, ...) {
+char *carbon_string_sfmt(char *buf, usz n, const char *s, ...) {
   va_list args;
   va_start(args, s);
   carbon_string_vsfmt(buf, n, s, args);
   va_end(args);
+  return buf;
 }
 
 char *carbon_string_vfmt(const char *s, va_list args) {

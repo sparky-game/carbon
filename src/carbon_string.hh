@@ -2,12 +2,13 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
-#define VSFMT_WRAP(fn, vfn)                                           \
-  CBNFMT(3, 4) inline void fn(char *buf, usz n, const char *s, ...) { \
-  va_list args;                                                       \
-  va_start(args, s);                                                  \
-  vfn(buf, n, s, args);                                               \
-  va_end(args);                                                       \
+#define VSFMT_WRAP(fn, vfn)                                             \
+  CBNFMT(3, 4) inline char *fn(char *buf, usz n, const char *s, ...) {  \
+  va_list args;                                                         \
+  va_start(args, s);                                                    \
+  vfn(buf, n, s, args);                                                 \
+  va_end(args);                                                         \
+  return buf;                                                           \
   }
 #define VFMT_WRAP(fn, vfn)                            \
   CBNFMT(1, 2) inline char *fn(const char *s, ...) {  \
@@ -19,13 +20,13 @@
   }
 
 namespace cbn::str {
-  CBNFMT(3, 0) inline void vsFormat(char *buf, usz n, const char *s, va_list args) {
-    carbon_string_vsfmt(buf, n, s, args);
+  CBNFMT(3, 0) inline char *vsFormat(char *buf, usz n, const char *s, va_list args) {
+    return carbon_string_vsfmt(buf, n, s, args);
   }
   VSFMT_WRAP(sFormat, vsFormat);
 
-  CBNFMT(3, 0) inline void vsfmt(char *buf, usz n, const char *s, va_list args) {
-    vsFormat(buf, n, s, args);
+  CBNFMT(3, 0) inline char *vsfmt(char *buf, usz n, const char *s, va_list args) {
+    return vsFormat(buf, n, s, args);
   }
   VSFMT_WRAP(sfmt, vsfmt);
 
