@@ -166,3 +166,9 @@ void carbon_audio_shift_pitch(CBN_Audio_UID uid) {
   f32 pitch = carbon_math_pow(2, (f32)semitone/12);
   carbon_audio_set_pitch(uid, pitch);
 }
+
+void carbon_audio_set_looping(CBN_Audio_UID uid, bool yn) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_set_looping(entry.sound, yn);
+}

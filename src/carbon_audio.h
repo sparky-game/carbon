@@ -124,3 +124,11 @@ CBNDEF_AKA(cbn::audio, SetPitch, carbon_audio_set_pitch);
  */
 CBNDEF void carbon_audio_shift_pitch(CBN_Audio_UID uid);
 CBNDEF_AKA(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);
+
+/**
+ * @brief ...
+ * @param uid ...
+ * @param yn A boolean value representing whether the sound must loop or not.
+ */
+CBNDEF void carbon_audio_set_looping(CBN_Audio_UID uid, bool yn);
+CBNDEF_AKA(cbn::audio, SetLooping, carbon_audio_set_looping);
