@@ -19,17 +19,29 @@ jobs:
         os:
           - ubuntu-24.04
           - ubuntu-24.04-arm
+          - windows-2025
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout-repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: install-dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update && sudo apt-get install -y \
             libx11-dev      \
             libxrandr-dev   \
             mesa-common-dev
+      - name: setup-msys2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANG64
+          update: true
+          install: >-
+            mingw-w64-clang-x86_64-toolchain
+            tar
       - name: package
+        shell: ${{ runner.os == 'Windows' && 'msys2 {0}' || 'bash' }}
         run: CXX=clang++ ./src_build/make.sh
       - name: release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2

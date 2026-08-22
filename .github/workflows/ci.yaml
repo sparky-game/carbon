@@ -41,16 +41,26 @@ jobs:
         os:
           - ubuntu-24.04
           - ubuntu-24.04-arm
+          - windows-2025
     runs-on: ${{ matrix.os }}
     if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: checkout-repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: install-dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update && sudo apt-get install -y \
             libx11-dev      \
             libxrandr-dev   \
             mesa-common-dev
+      - name: setup-msys2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANG64
+          update: true
+          install: >-
+            mingw-w64-clang-x86_64-toolchain
       - name: build
         run: CXX=clang++ ./src_build/make.sh build
