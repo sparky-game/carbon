@@ -39,6 +39,7 @@ jobs:
           update: true
           install: >-
             mingw-w64-clang-x86_64-toolchain
+            vim
             tar
       - name: linux-package
         if: runner.os == 'Linux'

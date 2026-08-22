@@ -62,6 +62,7 @@ jobs:
           update: true
           install: >-
             mingw-w64-clang-x86_64-toolchain
+            vim
       - name: linux-build
         if: runner.os == 'Linux'
         run: CXX=clang++ ./src_build/make.sh build
