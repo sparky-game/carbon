@@ -4,18 +4,28 @@
 #pragma once
 
 #ifndef GL_VERTEX_SHADER
-#define GL_VERTEX_SHADER               0x8B31
-#define GL_FRAGMENT_SHADER             0x8B30
-#define GL_COMPILE_STATUS              0x8B81
-#define GL_LINK_STATUS                 0x8B82
-#define GL_UNSIGNED_INT_8_8_8_8        0x8035
-#define GL_TEXTURE0                    0x84C0
+#define GL_VERTEX_SHADER        0x8B31
+#define GL_FRAGMENT_SHADER      0x8B30
+#define GL_COMPILE_STATUS       0x8B81
+#define GL_LINK_STATUS          0x8B82
+#define GL_UNSIGNED_INT_8_8_8_8 0x8035
+#define GL_TEXTURE0             0x84C0
 #endif
+#ifndef GL_PIXEL_UNPACK_BUFFER
+#define GL_PIXEL_UNPACK_BUFFER 0x88EC
+#define GL_STREAM_DRAW         0x88E0
+#define GL_WRITE_ONLY          0x88B9
+typedef isz GLsizeiptr;
+#endif
+
+#define CARBON_WIN__GL_PBO_COUNT 2
 
 typedef char GLchar;
 
 static GLuint carbon_win__gl_tex;
 static GLuint carbon_win__gl_vao;
+static GLuint carbon_win__gl_pbo[CARBON_WIN__GL_PBO_COUNT];
+static usz carbon_win__gl_pbo_idx;
 
 #define CARBON_WIN__GL_PROCS                                            \
   x(GLuint, glCreateShader, GLenum)                                     \
@@ -30,7 +40,12 @@ static GLuint carbon_win__gl_vao;
   x(void, glGetShaderiv, GLuint, GLenum, GLint *)                       \
   x(void, glGetProgramiv, GLuint, GLenum, GLint *)                      \
   x(void, glGetShaderInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)     \
-  x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)
+  x(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei *, GLchar *)    \
+  x(void, glGenBuffers, GLsizei, GLuint *)                              \
+  x(void, glBindBuffer, GLenum, GLuint)                                 \
+  x(void, glBufferData, GLenum, GLsizeiptr, const void *, GLenum)       \
+  x(void *, glMapBuffer, GLenum, GLenum)                                \
+  x(GLboolean, glUnmapBuffer, GLenum)
 
 #define x(ret, name, ...)                       \
   typedef ret (*name ## _t)(__VA_ARGS__);       \
@@ -110,6 +125,12 @@ CBNINL void carbon_win__gl_init(usz w, usz h) {
                carbon_win__renderer_w,
                carbon_win__renderer_h,
                0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
+  glGenBuffers(CARBON_WIN__GL_PBO_COUNT, carbon_win__gl_pbo);
+  for (usz i = 0; i < CARBON_WIN__GL_PBO_COUNT; ++i) {
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[i]);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, w*h*4, 0, GL_STREAM_DRAW);
+  }
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
 
 CBNINL void carbon_win__gl_render(const u32 *pixels, usz w, usz h) {
@@ -121,14 +142,30 @@ CBNINL void carbon_win__gl_render(const u32 *pixels, usz w, usz h) {
                  carbon_win__renderer_w,
                  carbon_win__renderer_h,
                  0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
+    for (usz i = 0; i < CARBON_WIN__GL_PBO_COUNT; ++i) {
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[i]);
+      glBufferData(GL_PIXEL_UNPACK_BUFFER, w*h*4, 0, GL_STREAM_DRAW);
+    }
   }
+  const usz idx = carbon_win__gl_pbo_idx;
+  const usz next = (idx + 1) % CARBON_WIN__GL_PBO_COUNT;
+  carbon_win__gl_pbo_idx = next;
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[idx]);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
                   carbon_win__renderer_w,
                   carbon_win__renderer_h,
                   GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
-                  pixels);
+                  0);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[next]);
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, carbon_win__renderer_w * carbon_win__renderer_h * 4, 0, GL_STREAM_DRAW);
+  void *p = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+  if (p) {
+    carbon_memory_copy(p, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+  }
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   glClear(GL_COLOR_BUFFER_BIT);
   glBindVertexArray(carbon_win__gl_vao);
   glDrawArrays(GL_TRIANGLES, 0, 3);
