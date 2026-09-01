@@ -121,6 +121,7 @@ void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color) {
 }
 
 void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 color) {
+  // Bresenham's line algorithm
   i32 x1 = v1.x, y1 = v1.y, x2 = v2.x, y2 = v2.y;
   i32 dx =  carbon_math_abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
   i32 dy = -carbon_math_abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
@@ -132,12 +133,10 @@ void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 co
     if (x1 == x2 && y1 == y2) break;
     i32 e2 = 2 * err;
     if (e2 >= dy) {
-      if (x1 == x2) break;
       err += dy;
       x1 += sx;
     }
     if (e2 <= dx) {
-      if (y1 == y2) break;
       err += dx;
       y1 += sy;
     }
@@ -735,7 +734,8 @@ void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 positi
 }
 
 void carbon_drawcanvas_text_with_shadow(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
-  carbon_drawcanvas_text(dc, txt, carbon_math_vec2(position.x + 1 * size, position.y + 1 * size), size, 0x33333380);
+  u32 shadow = 0x33333300 | ((color & 0xff)/2);
+  carbon_drawcanvas_text(dc, txt, carbon_math_vec2(position.x + 1 * size, position.y + 1 * size), size, shadow);
   carbon_drawcanvas_text(dc, txt, position, size, color);
 }
 
