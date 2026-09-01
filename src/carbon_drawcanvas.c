@@ -235,15 +235,15 @@ void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius_o
 void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale, u32 tint) {
   const f32 sw = s->width * scale.x, sh = s->height * scale.y;
   const CBN_Rect r_dc = carbon_math_rect(0, 0, dc->width, dc->height);
-  const CBN_Rect r_sp = carbon_math_rect(position.x, position.y, sw, sh);
+  const CBN_Rect r_sp = carbon_math_rect_v(position, sw, sh);
   CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
   if (xywh.w <= 0 || xywh.h <= 0) return;
   xywh.x = carbon_math_floor(xywh.x), xywh.y = carbon_math_floor(xywh.y);
   xywh.w = carbon_math_min(xywh.w, r_dc.w - xywh.x), xywh.h = carbon_math_min(xywh.h, r_dc.h - xywh.y);
   u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
   const f32 inv_sx = 1/scale.x, inv_sy = 1/scale.y;
-  const f32 start_x = (xywh.x - r_sp.x) * inv_sx;
-  f32 src_y = (xywh.y - r_sp.y) * inv_sy;
+  const f32 start_x = carbon_math_max(0, (xywh.x - r_sp.x) * inv_sx);
+  f32 src_y = carbon_math_max(0, (xywh.y - r_sp.y) * inv_sy);
   for (usz j = 0; j < xywh.h; ++j) {
     const usz y0 = (usz)src_y;
     const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
