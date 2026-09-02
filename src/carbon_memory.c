@@ -14,6 +14,8 @@
 #define CARBON_MEMORY__FREE(p) __builtin_free((p))
 #endif
 
+#include "carbon_memory_simd.inl"
+
 static usz carbon_memory__usage;
 
 void *carbon_memory_alloc(usz size) {
@@ -76,7 +78,11 @@ i32 carbon_memory_cmp(const void *v1, const void *v2, usz n) {
 }
 
 void *carbon_memory_set(void *dst, i32 c, usz n) {
-  u8 *d = (u8 *)dst;
-  while (n--) *d++ = (u8)c;
+  u8 *d = (u8 *)dst, v = (u8)c;
+#ifdef CARBON_SIMD_INTRINSICS
+  carbon_memory_set__simd(d, v, n);
+#else
+  while (n--) *d++ = v;
+#endif
   return dst;
 }
