@@ -176,18 +176,12 @@ CBNDEF void carbon_drawcanvas_light_set_intensity(CBN_DrawCanvas *dc, isz idx, f
 CBNDEF void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color);
 
 /**
- * @brief ...
- * @param dc The DrawCanvas object.
- * @param color The color to ...
- */
-CBNDEF void carbon_drawcanvas_clear(CBN_DrawCanvas *dc, u32 color);
-
-/**
- * @brief Fills the canvas with the specified color (?).
+ * @brief Fills the canvas with the specified color.
  * @param dc The DrawCanvas object.
  * @param color The color to fill the canvas with.
+ * @param blend Whether or not to blend the color with the background.
  */
-CBNDEF void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color);
+CBNDEF void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color, bool blend);
 
 /**
  * @brief Draws a line to the canvas with a specific color.
