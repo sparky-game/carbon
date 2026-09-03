@@ -59,15 +59,26 @@ void *carbon_memory_copy(void *dst, const void *src, usz n) {
   u8 *d = (u8 *)dst;
   const u8 *s = (const u8 *)src;
   if (d == s || !n) return dst;
-  if (d < s) while (n--) *d++ = *s++;
-  else while (n--) d[n] = s[n];
+  if (d < s) return carbon_memory_copy_raw(dst, src, n);
+  usz words = n/sizeof(usz), tail = n % sizeof(usz);
+  d += n, s += n;
+  while (tail--) *--d = *--s;
+  usz *dw = (usz *)d;
+  const usz *sw = (const usz *)s;
+  while (words--) *--dw = *--sw;
   return dst;
 }
 
 void *carbon_memory_copy_raw(void *dst, const void *src, usz n) {
   u8 *d = (u8 *)dst;
   const u8 *s = (const u8 *)src;
-  while (n--) *d++ = *s++;
+  usz words = n/sizeof(usz), tail = n % sizeof(usz);
+  usz *dw = (usz *)d;
+  const usz *sw = (const usz *)s;
+  while (words--) *dw++ = *sw++;
+  d = (u8 *)dw;
+  s = (const u8 *)sw;
+  while (tail--) *d++ = *s++;
   return dst;
 }
 
