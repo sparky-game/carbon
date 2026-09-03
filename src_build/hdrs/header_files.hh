@@ -1,8 +1,8 @@
 #pragma once
 
 static constexpr std::array c_HeaderFiles {
-  "deps.h",
   "defs.hh",
+  "deps.h",
   "types.hh",
   "metaprogramming.hh",
   "version.h",

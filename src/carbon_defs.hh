@@ -184,7 +184,7 @@
 /**
  * @brief CPU identification.
  */
-#if defined(__x86_64__) || defined(__amd64__) || defined(_M_AMD64)
+#if defined(__x86_64__) || defined(_M_X64) || defined(__amd64__) || defined(_M_AMD64)
 #define CARBON_CPU_ARCH_AMD64
 #define CARBON_CPU_ARCH "amd64"
 #elif defined(__aarch64__)
@@ -198,14 +198,21 @@
  * @brief OS identification.
  */
 #if defined(__linux__)
+#define CARBON_TARGET_OS_LINUX
 #define CARBON_TARGET_OS "linux"
 #elif defined(__APPLE__)
+#define CARBON_TARGET_OS_MACOS
 #define CARBON_TARGET_OS "macos"
 #elif defined(__FreeBSD__)
+#define CARBON_TARGET_OS_FREEBSD
 #define CARBON_TARGET_OS "freebsd"
 #elif defined(_WIN32) && defined(_MSC_VER)
+#define CARBON_TARGET_OS_WINDOWS
+#define CARBON_TARGET_OS_WINDOWS_MSVC
 #define CARBON_TARGET_OS "windows-msvc"
 #elif defined(_WIN32) && defined(__MINGW64__)
+#define CARBON_TARGET_OS_WINDOWS
+#define CARBON_TARGET_OS_WINDOWS_MINGW
 #define CARBON_TARGET_OS "windows-mingw"
 #else
 #error Target OS is not supported
@@ -215,8 +222,8 @@
  * @brief Compiler identification.
  */
 #define CARBON_COMPILER_PRAGMA(x) _Pragma(#x)
-#if defined(__clang__)  // LLVM
-#if defined(_WIN32) && defined(__MINGW64__)  // MinGW-LLVM
+#if defined(__clang__)
+#ifdef CARBON_TARGET_OS_WINDOWS_MINGW
 #define CARBON_C_COMPILER "clang.exe"
 #define CARBON_CXX_COMPILER "clang++.exe"
 #else
@@ -227,8 +234,8 @@
 #define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(clang diagnostic push)
 #define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(clang diagnostic ignored w)
 #define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(clang diagnostic pop)
-#elif defined(__GNUC__)  // GCC
-#if defined(_WIN32) && defined(__MINGW64__)  // MinGW-GCC
+#elif defined(__GNUC__)
+#ifdef CARBON_TARGET_OS_WINDOWS_MINGW
 #define CARBON_C_COMPILER "gcc.exe"
 #define CARBON_CXX_COMPILER "g++.exe"
 #else
@@ -239,7 +246,7 @@
 #define CARBON_COMPILER_DIAG_BEGIN CARBON_COMPILER_PRAGMA(GCC diagnostic push)
 #define CARBON_COMPILER_DIAG_IGNORE(w) CARBON_COMPILER_PRAGMA(GCC diagnostic ignored w)
 #define CARBON_COMPILER_DIAG_END CARBON_COMPILER_PRAGMA(GCC diagnostic pop)
-#elif defined(_WIN32) && defined(_MSC_VER)  // MSVC
+#elif defined(CARBON_TARGET_OS_WINDOWS_MSVC)
 #define CARBON_C_COMPILER "cl.exe"
 #define CARBON_CXX_COMPILER "cl.exe"
 #define CARBON_COMPILER_VERSION _MSC_FULL_VER

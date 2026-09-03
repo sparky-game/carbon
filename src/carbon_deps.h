@@ -23,7 +23,7 @@
 #include <pthread.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#ifdef _WIN32  // Windows
+#ifdef CARBON_TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #define OEMRESOURCE
 #define NOMINMAX
@@ -44,7 +44,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #endif
-#ifdef __APPLE__  // macOS
+#ifdef CARBON_TARGET_OS_MACOS
 #include <mach-o/dyld.h>
 #endif
 #ifdef __cplusplus  // C++-only

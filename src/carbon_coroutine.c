@@ -3,7 +3,7 @@
 
 #define CARBON_COROUTINE__STACK_CAPACITY (1024 * getpagesize())
 
-#if defined(CARBON_CPU_ARCH_AMD64) && !defined(_WIN32)
+#if defined(CARBON_CPU_ARCH_AMD64) && !defined(CARBON_TARGET_OS_WINDOWS)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rdi\n"                                \
   "pushq %rbp\n"                                \
@@ -24,7 +24,7 @@
   "popq %rdi\n"                                 \
   "ret\n"
 
-#if defined(__linux__)
+#if defined(CARBON_TARGET_OS_LINUX)
 #define CARBON_COROUTINE__SLEEP_NONE            \
   "movq %rsp, %rdi\n"                           \
   "movq $0, %rsi\n"                             \
@@ -42,7 +42,7 @@
   "movq $2, %rsi\n"                             \
   "jmp carbon_coroutine__switch_ctx\n"
 
-#elif defined(__APPLE__)
+#elif defined(CARBON_TARGET_OS_MACOS)
 #define CARBON_COROUTINE__SLEEP_NONE            \
   "movq %rsp, %rdi\n"                           \
   "movq $0, %rsi\n"                             \
@@ -61,7 +61,7 @@
   "jmp _carbon_coroutine__switch_ctx\n"
 #endif
 
-#elif defined(CARBON_CPU_ARCH_AARCH64) && !defined(_WIN32)
+#elif defined(CARBON_CPU_ARCH_AARCH64) && !defined(CARBON_TARGET_OS_WINDOWS)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "sub sp, sp, #240\n"                          \
   "stp q8, q9, [sp, #0]\n"                      \
@@ -96,7 +96,7 @@
   "add sp, sp, #240\n"                          \
   "ret x1\n"
 
-#if defined(__linux__)
+#if defined(CARBON_TARGET_OS_LINUX)
 #define CARBON_COROUTINE__SLEEP_NONE            \
   "mov x0, sp\n"                                \
   "mov x1, #0\n"                                \
@@ -114,7 +114,7 @@
   "mov x1, #2\n"                                \
   "b carbon_coroutine__switch_ctx\n"
 
-#elif defined(__APPLE__)
+#elif defined(CARBON_TARGET_OS_MACOS)
 #define CARBON_COROUTINE__SLEEP_NONE            \
   "mov x0, sp\n"                                \
   "mov x1, #0\n"                                \
@@ -133,7 +133,7 @@
   "b _carbon_coroutine__switch_ctx\n"
 #endif
 
-#elif defined(CARBON_CPU_ARCH_AMD64) && defined(_WIN32)
+#elif defined(CARBON_CPU_ARCH_AMD64) && defined(CARBON_TARGET_OS_WINDOWS)
 #define CARBON_COROUTINE__STORE_REGISTERS       \
   "pushq %rcx\n"                                \
   "pushq %rbx\n"                                \
@@ -179,10 +179,10 @@
 #error Target platform is not supported
 #endif
 
-#if defined(_WIN32)
+#if defined(CARBON_TARGET_OS_WINDOWS)
 #define CARBON_COROUTINE__ALLOC_STACK() VirtualAlloc(0, CARBON_COROUTINE__STACK_CAPACITY, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE)
 #define CARBON_COROUTINE__ALLOC_STACK_FAILED 0
-#elif defined(__APPLE__)
+#elif defined(CARBON_TARGET_OS_MACOS)
 #define CARBON_COROUTINE__ALLOC_STACK() mmap(0, CARBON_COROUTINE__STACK_CAPACITY, PROT_WRITE | PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
 #define CARBON_COROUTINE__ALLOC_STACK_FAILED MAP_FAILED
 #else

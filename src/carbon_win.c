@@ -25,11 +25,11 @@ CBNINL CBN_Vec2 carbon_win__get_window_size(void);
 CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h);
 CBNINL bool carbon_win__poll_event(void);
 
-#if defined(__APPLE__)
+#if defined(CARBON_TARGET_OS_MACOS)
 #include "carbon_win_macos.m"
-#elif defined(_WIN32)
+#elif defined(CARBON_TARGET_OS_WINDOWS)
 #include "carbon_win_win32.inl"
-#elif defined(__linux__) || defined(__FreeBSD__)
+#elif defined(CARBON_TARGET_OS_LINUX) || defined(CARBON_TARGET_OS_FREEBSD)
 #include "carbon_win_x11.inl"
 #else
 #error Target platform is not supported

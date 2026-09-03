@@ -6,7 +6,7 @@
 #define CARBON_TIME_GET_ISO8601_MAX_BUFFERS 4
 
 f64 carbon_time_get(void) {
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   static f64 clock_freq;
   static LARGE_INTEGER start_time;
   if (!clock_freq) {

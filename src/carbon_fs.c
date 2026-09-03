@@ -152,7 +152,7 @@ char *carbon_fs_get_curr_directory(void) {
 char *carbon_fs_get_bin_directory(void) {
   static char dir[CARBON_FS_PATH_MAX_LEN];
   carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
-#if defined(_WIN32)
+#if defined(CARBON_TARGET_OS_WINDOWS)
   usz len = GetModuleFileNameA(0, dir, MAX_PATH);
   if (len > 0) {
     for (usz i = len;; --i) {
@@ -166,7 +166,7 @@ char *carbon_fs_get_bin_directory(void) {
     dir[0] = '.';
     dir[1] = '\\';
   }
-#elif defined(__linux__)
+#elif defined(CARBON_TARGET_OS_LINUX)
   extern isz readlink(const char *, char *, usz);
   usz len = readlink("/proc/self/exe", dir, sizeof(dir));
   if (len > 0) {
@@ -181,7 +181,7 @@ char *carbon_fs_get_bin_directory(void) {
     dir[0] = '.';
     dir[1] = '/';
   }
-#elif defined(__FreeBSD__)
+#elif defined(CARBON_TARGET_OS_FREEBSD)
   usz size = sizeof(dir);
   i32 mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
   if (!sysctl(mib, 4, dir, &size, 0, 0)) {
@@ -197,7 +197,7 @@ char *carbon_fs_get_bin_directory(void) {
     dir[0] = '.';
     dir[1] = '/';
   }
-#elif defined(__APPLE__)
+#elif defined(CARBON_TARGET_OS_MACOS)
   usz size = sizeof(dir);
   if (!_NSGetExecutablePath(dir, (u32 *) &size)) {
     usz len = carbon_string_len(dir);
