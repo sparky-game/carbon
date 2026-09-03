@@ -8,9 +8,9 @@ static bool carbon_win__cursor_visible = true;
 static CBN_Vec2 carbon_win__mouse_delta;
 static f32 carbon_win__mouse_scroll;
 
-static u32 carbon_win__max_fps;
-static u32 carbon_win__curr_fps;
 static u32 carbon_win__fps;
+static u32 carbon_win__max_fps;
+static u32 carbon_win__frame_count;
 static CBN_Chrono carbon_win__fps_timer;
 
 static bool carbon_win__keys[CBN_Win_KeyCode_Count];
@@ -79,12 +79,6 @@ f64 carbon_win_get_deltatime(void) {
 }
 
 u32 carbon_win_get_fps(void) {
-  if (!carbon_chrono_is_running(&carbon_win__fps_timer)) carbon_chrono_restart(&carbon_win__fps_timer);
-  else carbon_chrono_update(&carbon_win__fps_timer);
-  if (carbon_win__fps_timer.elapsed >= 0.5) {
-    carbon_chrono_restart(&carbon_win__fps_timer);
-    carbon_win__fps = carbon_win__curr_fps;
-  }
   return carbon_win__fps;
 }
 
@@ -98,8 +92,16 @@ CBNINL void carbon_win__update_fps(void) {
       t = carbon_time_get() - start;
     }
   }
-  carbon_win__curr_fps = t > 0 ? 1/t : 0;
   start = carbon_time_get();
+  ++carbon_win__frame_count;
+  if (!carbon_chrono_is_running(&carbon_win__fps_timer)) {
+    carbon_chrono_restart(&carbon_win__fps_timer);
+  } else carbon_chrono_update(&carbon_win__fps_timer);
+  if (carbon_win__fps_timer.elapsed >= 0.5) {
+    carbon_win__fps = carbon_win__frame_count/carbon_win__fps_timer.elapsed;
+    carbon_win__frame_count = 0;
+    carbon_chrono_restart(&carbon_win__fps_timer);
+  }
 }
 
 void carbon_win_update(const CBN_DrawCanvas *dc) {
