@@ -138,9 +138,10 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
     carbon_win__mtl_device = MTLCreateSystemDefaultDevice();
     carbon_win__mtl_queue  = [carbon_win__mtl_device newCommandQueue];
     carbon_win__mtl_layer  = [CAMetalLayer layer];
-    carbon_win__mtl_layer.device          = carbon_win__mtl_device;
-    carbon_win__mtl_layer.pixelFormat     = MTLPixelFormatBGRA8Unorm;
-    carbon_win__mtl_layer.framebufferOnly = NO;
+    carbon_win__mtl_layer.device               = carbon_win__mtl_device;
+    carbon_win__mtl_layer.pixelFormat          = MTLPixelFormatBGRA8Unorm;
+    carbon_win__mtl_layer.framebufferOnly      = NO;
+    carbon_win__mtl_layer.maximumDrawableCount = CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT;
     view.wantsLayer = YES;
     view.layer      = carbon_win__mtl_layer;
   }
@@ -363,14 +364,17 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
       carbon_win__renderer_h = h;
       carbon_win__renderer_upload_texture();
     }
+    dispatch_semaphore_wait(carbon_win__mtl_semaphore, DISPATCH_TIME_FOREVER);
     carbon_memory_copy(carbon_win__mtl_buffer.contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
     id<CAMetalDrawable> drawable = [carbon_win__mtl_layer nextDrawable];
-    if (!drawable) return;
+    if (!drawable) {
+      dispatch_semaphore_signal(carbon_win__mtl_semaphore);
+      return;
+    }
     MTLRenderPassDescriptor *pass = [MTLRenderPassDescriptor renderPassDescriptor];
     pass.colorAttachments[0].texture     = drawable.texture;
     pass.colorAttachments[0].loadAction  = MTLLoadActionClear;
     pass.colorAttachments[0].storeAction = MTLStoreActionStore;
-    dispatch_semaphore_wait(carbon_win__mtl_semaphore, DISPATCH_TIME_FOREVER);
     id<MTLCommandBuffer> cmd = [carbon_win__mtl_queue commandBuffer];
     [cmd addCompletedHandler:^(id<MTLCommandBuffer> _){
         dispatch_semaphore_signal(carbon_win__mtl_semaphore);
