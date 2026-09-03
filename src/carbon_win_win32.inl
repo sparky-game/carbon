@@ -4,7 +4,6 @@
 #pragma once
 
 #include <windowsx.h>
-#include <GL/gl.h>
 
 #ifndef WGL_CONTEXT_MAJOR_VERSION_ARB
 #define WGL_CONTEXT_MAJOR_VERSION_ARB    0x2091
@@ -199,6 +198,7 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
                                      0, 0, hinst, 0);
   CBN_ASSERT(carbon_win__hwnd && "CreateWindowExA failed");
   carbon_win__hdc = GetDC(carbon_win__hwnd);
+  timeBeginPeriod(1);
   carbon_win__renderer_init(w, h);
 }
 
@@ -210,6 +210,7 @@ CBNINL void carbon_win__renderer_shutdown(void) {
 
 CBNINL void carbon_win__destroy_window(void) {
   carbon_win__renderer_shutdown();
+  timeEndPeriod(1);
   if (carbon_win__hdc) ReleaseDC(carbon_win__hwnd, carbon_win__hdc);
   if (carbon_win__hwnd) DestroyWindow(carbon_win__hwnd);
   carbon_win__hdc = 0;

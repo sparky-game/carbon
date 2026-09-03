@@ -32,6 +32,7 @@
 #include <windns.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <mmsystem.h>
 #undef near
 #undef far
 #undef Yield

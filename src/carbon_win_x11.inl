@@ -4,7 +4,6 @@
 #pragma once
 
 #include <X11/Xlib.h>
-#include <GL/gl.h>
 #include <GL/glx.h>
 
 static Display *carbon_win__display;

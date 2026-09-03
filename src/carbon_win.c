@@ -47,8 +47,14 @@ void carbon_win_close(void) {
 }
 
 void carbon_win_set_max_fps(u32 fps) {
+#ifdef CARBON_TARGET_OS_MACOS
+  CBN_WARN("In macOS, Metal V-Sync is enabled with triple-buffering; "
+           "thus, the manual limit of %u FPS is not taken into account.", fps);
+  carbon_win__max_fps = 0;
+#else
   carbon_win__max_fps = fps;
   CBN_INFO("Window max FPS set to %u", carbon_win__max_fps);
+#endif
 }
 
 usz carbon_win_width(void) {

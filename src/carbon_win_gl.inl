@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <GL/gl.h>
+
 #ifndef GL_VERTEX_SHADER
 #define GL_VERTEX_SHADER        0x8B31
 #define GL_FRAGMENT_SHADER      0x8B30

@@ -141,6 +141,7 @@ CBNINL void carbon_win__renderer_init(usz w, usz h) {
     carbon_win__mtl_layer.device               = carbon_win__mtl_device;
     carbon_win__mtl_layer.pixelFormat          = MTLPixelFormatBGRA8Unorm;
     carbon_win__mtl_layer.framebufferOnly      = NO;
+    carbon_win__mtl_layer.displaySyncEnabled   = YES;
     carbon_win__mtl_layer.maximumDrawableCount = CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT;
     view.wantsLayer = YES;
     view.layer      = carbon_win__mtl_layer;
