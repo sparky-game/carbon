@@ -25,16 +25,13 @@ CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
     return;
   }
   const u32 d = *dst, sa = a + (a >> 7), ia = 0x100 - sa;
-  u32 dst_r = (d   >> 24) & 0xff;
-  u32 src_r = (src >> 24) & 0xff;
-  u32 r = (dst_r*ia + src_r*sa) >> 8;
-  u32 dst_g = (d   >> 16) & 0xff;
-  u32 src_g = (src >> 16) & 0xff;
-  u32 g = (dst_g*ia + src_g*sa) >> 8;
-  u32 dst_b = (d   >> 8) & 0xff;
-  u32 src_b = (src >> 8) & 0xff;
-  u32 b = (dst_b*ia + src_b*sa) >> 8;
-  *dst = (r << 24) | (g << 16) | (b << 8) | 0xff;
+  u32 dst_rb = (  d >> 8) & 0x00ff00ff;
+  u32 src_rb = (src >> 8) & 0x00ff00ff;
+  u32 rb = (dst_rb*ia + src_rb*sa) & 0xff00ff00;
+  u32 dst_g = (  d >> 8) & 0x0000ff00;
+  u32 src_g = (src >> 8) & 0x0000ff00;
+  u32 g = (dst_g*ia + src_g*sa) & 0x00ff0000;
+  *dst = rb | g | 0xff;
 }
 
 CBNINL bool carbon_drawcanvas__triangle_aabb(const CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, CBN_Vec2 v3, CBN_Vec2 *lo, CBN_Vec2 *hi) {

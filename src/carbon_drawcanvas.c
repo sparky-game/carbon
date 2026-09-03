@@ -124,8 +124,8 @@ void carbon_drawcanvas_line(CBN_DrawCanvas *dc, CBN_Vec2 v1, CBN_Vec2 v2, u32 co
   i32 dy = -carbon_math_abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
   i32 err = dx + dy;
   for (;;) {
-    if (0 <= x1 && x1 < (i32) dc->width && 0 <= y1 && y1 < (i32) dc->height) {
-      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz) x1, (usz) y1), color);
+    if (0 <= x1 && x1 < (i32)dc->width && 0 <= y1 && y1 < (i32)dc->height) {
+      carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, (usz)x1, (usz)y1), color);
     }
     if (x1 == x2 && y1 == y2) break;
     i32 e2 = 2 * err;
