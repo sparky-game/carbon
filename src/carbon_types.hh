@@ -142,4 +142,8 @@ namespace cbn {
 #else
 #undef bool
 typedef _Bool bool;
+#undef true
+#define true 1
+#undef false
+#define false 0
 #endif

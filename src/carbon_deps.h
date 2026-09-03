@@ -32,6 +32,9 @@
 #include <windns.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#undef near
+#undef far
+#undef Yield
 #else  // POSIX
 #include <glob.h>
 #include <poll.h>
@@ -46,6 +49,7 @@
 #endif
 #ifdef CARBON_TARGET_OS_MACOS
 #include <mach-o/dyld.h>
+#include <sys/sysctl.h>
 #endif
 #ifdef __cplusplus  // C++-only
 #include <tuple>

@@ -21,19 +21,6 @@
 #error C++20 standard is needed
 #endif
 
-#if !defined(__cplusplus)
-#undef true
-#define true 1
-#undef false
-#define false 0
-#endif
-
-#ifdef _WIN32
-#undef near
-#undef far
-#undef Yield
-#endif
-
 #if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #define static_assert _Static_assert
 #endif
