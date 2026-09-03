@@ -6,7 +6,7 @@
 #define CBN_COLOR__B(c)    (((c) >>  8) & 0xff)
 #define CBN_COLOR__A(c)    (((c) >>  0) & 0xff)
 #define CBN_COLOR__RGBA(c) (CBN_Color){.r=CBN_COLOR__R(c),.g=CBN_COLOR__G(c),.b=CBN_COLOR__B(c),.a=CBN_COLOR__A(c)}
-#define CBN_COLOR__U32_4(r, g, b, a) (((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | ((a & 0xff) << 0))
+#define CBN_COLOR__U32_4(r, g, b, a) (((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | (a & 0xff))
 #define CBN_COLOR__U32_1(rgba) CBN_COLOR__U32_4(rgba.r, rgba.g, rgba.b, rgba.a)
 
 u32 carbon_color_from_hsv(f32 h, f32 s, f32 v) {
