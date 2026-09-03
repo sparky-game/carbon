@@ -64,16 +64,16 @@ namespace cbn {
 
   namespace time {
     inline namespace literals {
-             consteval f64 operator""_ns(const u64 n)    { return n * 1e-9; }
-             consteval f64 operator""_ns(const flong n)  { return n * 1e-9; }
-             consteval f64 operator""_us(const u64 n)    { return n * 1e-6; }
-             consteval f64 operator""_us(const flong n)  { return n * 1e-6; }
-             consteval f64 operator""_ms(const u64 n)    { return n * 1e-3; }
-             consteval f64 operator""_ms(const flong n)  { return n * 1e-3; }
+             consteval f64 operator""_ns(const u64 n)    { return n * CARBON_SECS_PER_NANO; }
+             consteval f64 operator""_ns(const flong n)  { return n * CARBON_SECS_PER_NANO; }
+             consteval f64 operator""_us(const u64 n)    { return n * CARBON_SECS_PER_MICRO; }
+             consteval f64 operator""_us(const flong n)  { return n * CARBON_SECS_PER_MICRO; }
+             consteval f64 operator""_ms(const u64 n)    { return n * CARBON_SECS_PER_MILLI; }
+             consteval f64 operator""_ms(const flong n)  { return n * CARBON_SECS_PER_MILLI; }
              consteval f64 operator""_s(const u64 n)     { return n; }
              consteval f64 operator""_s(const flong n)   { return n; }
-             consteval f64 operator""_min(const u64 n)   { return n * 60; }
-             consteval f64 operator""_min(const flong n) { return n * 60; }
+             consteval f64 operator""_min(const u64 n)   { return n * CARBON_SECS_PER_MIN; }
+             consteval f64 operator""_min(const flong n) { return n * CARBON_SECS_PER_MIN; }
     }
   }
 }

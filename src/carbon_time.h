@@ -6,6 +6,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CARBON_SECS_PER_MIN   60
+#define CARBON_SECS_PER_MILLI 1e-3
+#define CARBON_SECS_PER_MICRO 1e-6
+#define CARBON_SECS_PER_NANO  1e-9
+
+#define CARBON_MILLIS_PER_SEC 1000
+#define CARBON_MICROS_PER_SEC 1000*1000
+#define CARBON_NANOS_PER_SEC  1000*1000*1000
+
 /**
  * @brief Returns a timestamp in seconds obtained from a monotonic clock.
  *

@@ -175,7 +175,7 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
     }
   }
   carbon_chrono_update(&timer), carbon_chrono_stop(&timer);
-  u32 total_time_micro = (u32) (timer.elapsed * 1e6);
+  u32 total_time_micro = (u32)(timer.elapsed * CARBON_MICROS_PER_SEC);
   u8 status = EXIT_SUCCESS;
   if (failed) {
     if (!((i32) timer.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %u us" CARBON_COLOR_RESET " ===========",

@@ -8,26 +8,20 @@
 f64 carbon_time_get(void) {
 #ifdef CARBON_TARGET_OS_WINDOWS
   static f64 clock_freq;
-  static LARGE_INTEGER start_time;
+  static LARGE_INTEGER start;
   if (!clock_freq) {
     LARGE_INTEGER freq;
     QueryPerformanceFrequency(&freq);
-    clock_freq = 1.0 / (f64)freq.QuadPart;
-    QueryPerformanceCounter(&start_time);
+    clock_freq = 1/(f64)freq.QuadPart;
+    QueryPerformanceCounter(&start);
   }
   LARGE_INTEGER now;
   QueryPerformanceCounter(&now);
-  return (f64)now.QuadPart * clock_freq;
-#elif _POSIX_C_SOURCE >= 199309L
+  return (f64)(now.QuadPart - start.QuadPart) * clock_freq;
+#else
   struct timespec now;
   clock_gettime(CLOCK_MONOTONIC_RAW, &now);
-  return now.tv_sec + now.tv_nsec * 1e-9;
-#elif defined(__unix__) || (defined (__APPLE__) && defined (__MACH__))
-  struct timeval now;
-  gettimeofday(&now, 0);
-  return now.tv_sec + now.tv_usec * 1e-6;
-#else
-#error `carbon_time_get` not implemented for this platform
+  return now.tv_sec + now.tv_nsec * CARBON_SECS_PER_NANO;
 #endif
 }
 
@@ -63,20 +57,18 @@ u64 carbon_time_get_yyyymmddhhmmss(void) {
 }
 
 void carbon_time_sleep(u64 ms) {
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   Sleep(ms);
-#elif _POSIX_C_SOURCE >= 199309L
-  struct timespec ts;
-  ts.tv_sec = ms / 1e3;
-  ts.tv_nsec = (ms % (u64)1e3) * 1e6;
-  nanosleep(&ts, 0);
 #else
-  sleep(ms / 1e3);
+  struct timespec ts;
+  ts.tv_sec = ms/CARBON_MILLIS_PER_SEC;
+  ts.tv_nsec = (ms % CARBON_MILLIS_PER_SEC) * CARBON_MICROS_PER_SEC;
+  nanosleep(&ts, 0);
 #endif
 }
 
 u64 carbon_time_snowflake(void) {
-  u64 timestamp = (u64)(carbon_time_get() * 1e3) & ((1ULL << 42) - 1);
+  u64 timestamp = (u64)(carbon_time_get() * CARBON_MILLIS_PER_SEC) & ((1ULL << 42) - 1);
   u64 random = carbon_rng_mt1993764() & ((1ULL << 22) - 1);
   return (1ULL << 63) | (timestamp << 22) | random;
 }
