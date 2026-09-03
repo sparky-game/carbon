@@ -87,7 +87,10 @@ CBNINL void carbon_win__update_fps(void) {
   f64 t = start ? carbon_time_get() - start : 0;
   if (carbon_win__max_fps) {
     f64 tgt = 1./carbon_win__max_fps;
-    if (t < tgt) carbon_time_sleep((tgt - t) * 1e3);
+    if (t < tgt) {
+      carbon_time_sleep((tgt - t) * CARBON_MILLIS_PER_SEC);
+      t = carbon_time_get() - start;
+    }
   }
   carbon_win__curr_fps = t > 0 ? 1/t : 0;
   start = carbon_time_get();
