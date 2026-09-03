@@ -19,22 +19,21 @@ typedef struct {
 
 CBNINL void carbon_drawcanvas__alpha_blending(u32 *dst, u32 src) {
   const u32 a = src & 0xff;
-  if (a == 0) return;
+  if (a == 0x00) return;
   if (a == 0xff) {
     *dst = src;
     return;
   }
-  const u32 d = *dst;
-  const u32 ia = 0xff - a;
+  const u32 d = *dst, sa = a + (a >> 7), ia = 0x100 - sa;
   u32 dst_r = (d   >> 24) & 0xff;
   u32 src_r = (src >> 24) & 0xff;
-  u32 r = ((dst_r*ia + src_r*a) * 0x101) >> 16;
+  u32 r = (dst_r*ia + src_r*sa) >> 8;
   u32 dst_g = (d   >> 16) & 0xff;
   u32 src_g = (src >> 16) & 0xff;
-  u32 g = ((dst_g*ia + src_g*a) * 0x101) >> 16;
+  u32 g = (dst_g*ia + src_g*sa) >> 8;
   u32 dst_b = (d   >> 8) & 0xff;
   u32 src_b = (src >> 8) & 0xff;
-  u32 b = ((dst_b*ia + src_b*a) * 0x101) >> 16;
+  u32 b = (dst_b*ia + src_b*sa) >> 8;
   *dst = (r << 24) | (g << 16) | (b << 8) | 0xff;
 }
 
