@@ -106,7 +106,7 @@ void carbon_drawcanvas_light_set_color(CBN_DrawCanvas *dc, isz idx, u32 color) {
 
 void carbon_drawcanvas_fill(CBN_DrawCanvas *dc, u32 color, bool blend) {
   const usz n = dc->width * dc->height;
-  carbon_memory_set(dc->zbuffer, 1, n * sizeof(*dc->zbuffer));
+  for (usz i = 0; i < n; ++i) dc->zbuffer[i] = 1;
   if (blend) {
     for (usz i = 0; i < n; ++i) {
       carbon_drawcanvas__alpha_blending(&dc->pixels[i], color);
