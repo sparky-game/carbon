@@ -238,6 +238,19 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   xywh.x = carbon_math_floor(xywh.x), xywh.y = carbon_math_floor(xywh.y);
   xywh.w = carbon_math_min(xywh.w, r_dc.w - xywh.x), xywh.h = carbon_math_min(xywh.h, r_dc.h - xywh.y);
   u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
+  if (scale.x == 1 && scale.y == 1 && position.x == carbon_math_floor(position.x) && position.y == carbon_math_floor(position.y)) {
+    const usz start_x = carbon_math_max(0, xywh.x - r_sp.x);
+    usz src_y = carbon_math_max(0, xywh.y - r_sp.y);
+    for (usz j = 0; j < xywh.h; ++j, ++src_y) {
+      const u32 *r = s->pixels + src_y*s->stride + start_x;
+      for (usz i = 0; i < xywh.w; ++i) {
+        u32 c = carbon_color_mult(r[i], tint);
+        carbon_drawcanvas__alpha_blending(p_dc + i, c);
+      }
+      p_dc += dc->width;
+    }
+    return;
+  }
   const f32 inv_sx = 1/scale.x, inv_sy = 1/scale.y;
   const f32 start_x = carbon_math_max(0, (xywh.x - r_sp.x) * inv_sx);
   f32 src_y = carbon_math_max(0, (xywh.y - r_sp.y) * inv_sy);
