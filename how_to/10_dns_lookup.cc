@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     return 1;
   }
   auto domain = CARBON_SHIFT_ARGS(argc, argv);
-  cbn::println("Domain: %s", domain);
+  println("Domain: %s", domain);
   auto ip = cbn::net::ResolveDNS(domain);
-  cbn::println("IP: %s", ip);
+  println("IP: %s", ip);
 }

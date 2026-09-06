@@ -13,6 +13,6 @@ int main(int argc, char **argv) {
     const char *file = CARBON_SHIFT_ARGS(argc, argv);
     auto data = cbn::List<char>::FromFile(file);
     if (!data) return 1;
-    cbn::print("%.*s", data->size, data->items);
+    print("%.*s", (i32)data->size, data->items);
   }
 }

@@ -9,39 +9,6 @@
 #ifdef __cplusplus
 
 namespace cbn {
-  template <typename... Args>
-  constexpr void print(const char *msg, Args &&... args) {
-    carbon_print(msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void eprint(const char *msg, Args &&... args) {
-    carbon_eprint(msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void println(const char *msg = "", Args &&... args) {
-    carbon_println(msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void eprintln(const char *msg = "", Args &&... args) {
-    carbon_eprintln(msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void cprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprint(color, msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void ceprint(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprint(color, msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void cprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_cprintln(color, msg, cbn::meta::Forward<Args>(args)...);
-  }
-  template <typename... Args>
-  constexpr void ceprintln(const log::Color color, const char *msg, Args &&... args) {
-    carbon_ceprintln(color, msg, cbn::meta::Forward<Args>(args)...);
-  }
-
   namespace co {
     inline void Create(void (*f)(void *), void *arg = 0) { carbon_coroutine_create(f, arg); }
   }

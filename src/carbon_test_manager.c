@@ -20,11 +20,11 @@ void carbon_test_manager_argparse(i32 argc, char * const *argv) {
                     !carbon_string_cmp(argv[1], "help")  ||
                     !carbon_string_cmp(argv[1], "-help") ||
                     !carbon_string_cmp(argv[1], "--help"))) {
-    carbon_println(help_msg);
+    println("%s", help_msg);
     exit(0);
   }
   CBN_ERROR("unrecognized option");
-  carbon_println(help_msg);
+  println("%s", help_msg);
   CARBON_UNREACHABLE;
 }
 
@@ -87,8 +87,8 @@ void carbon_test_manager_rebuild(const char *src_file, char * const *host_argv) 
     CBN_ERROR("errors detected during rebuild");
     carbon_fs_rename(bin_file_old, bin_file), carbon_test_manager__cleanup_and_exit();
   }
-  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
-  carbon_println("=======================================");
+  cprintln(CARBON_LOG_YELLOW, "[*] Binary rebuilt successfully (`%s`)", bin_file);
+  println("=======================================");
   // 4. Replace current binary with new one (execvp)
   if (-1 == execvp(bin_file, host_argv)) {
     CBN_ERROR("unable to execvp rebuilt binary");
@@ -141,29 +141,29 @@ void carbon_test_manager_cleanup(CBN_Suite *s) {
 }
 
 u8 carbon_test_manager_run_s(CBN_Suite *s) {
-  carbon_cprintln(CARBON_COLOR_CYAN, "*** " CARBON_LIBNAME " (" CARBON_VERSION_STR ") ***");
-  carbon_println("=======================================");
+  cprintln(CARBON_LOG_CYAN, "*** " CARBON_LIBNAME " (" CARBON_VERSION_STR ") ***");
+  println("=======================================");
   if (!s->tests || !s->n) {
     CBN_ERROR("`(Suite *) s` has not been initialized");
     return EXIT_FAILURE;
   }
-  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Collected %zu tests", s->n);
-  if (!carbon_test_manager__cmd_args.output) carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output disabled");
-  else carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output);
-  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
-  carbon_cprintln(CARBON_COLOR_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
-  carbon_println("=======================================");
+  cprintln(CARBON_LOG_YELLOW, "[*] Collected %zu tests", s->n);
+  if (!carbon_test_manager__cmd_args.output) cprintln(CARBON_LOG_YELLOW, "[*] Output disabled");
+  else cprintln(CARBON_LOG_YELLOW, "[*] Output to ./%s", carbon_test_manager__cmd_args.output);
+  cprintln(CARBON_LOG_YELLOW, "[*] Compiler is " CARBON_COMPILER_VERSION);
+  cprintln(CARBON_LOG_YELLOW, "[*] Compiled on %s at %s", __DATE__, __TIME__);
+  println("=======================================");
   usz passed = 0, failed = 0;
   CBN_List junit_testcase_infos = carbon_list_create(sizeof(CBN_JUnitTestcase));
   CBN_Chrono timer = carbon_chrono_start();
   for (usz i = 0; i < s->n; ++i) {
     u8 has_passed = s->tests[i].f();
     if (has_passed) {
-      carbon_cprintln(CARBON_COLOR_GREEN, "(%.2zu/%.2zu) PASSED :: %s", i + 1, s->n, s->tests[i].name);
+      cprintln(CARBON_LOG_GREEN, "(%.2zu/%.2zu) PASSED :: %s", i + 1, s->n, s->tests[i].name);
       ++passed;
     }
     else {
-      carbon_ceprintln(CARBON_COLOR_RED, "(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
+      ceprintln(CARBON_LOG_RED, "(%.2zu/%.2zu) FAILED :: %s", i + 1, s->n, s->tests[i].name);
       ++failed;
     }
     if (carbon_test_manager__cmd_args.output) {
@@ -178,21 +178,21 @@ u8 carbon_test_manager_run_s(CBN_Suite *s) {
   u32 total_time_micro = (u32)(timer.elapsed * CARBON_MICROS_PER_SEC);
   u8 status = EXIT_SUCCESS;
   if (failed) {
-    if (!((i32) timer.elapsed)) carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %u us" CARBON_COLOR_RESET " ===========",
+    if (!((i32) timer.elapsed)) eprintln("=========== " CARBON_LOG_RED "%zu failed, %zu passed in %u us" CARBON_LOG_RESET " ===========",
                                                 failed,
                                                 passed,
                                                 total_time_micro);
-    else carbon_eprintln("=========== " CARBON_COLOR_RED "%zu failed, %zu passed in %.2f s" CARBON_COLOR_RESET " ===========",
+    else eprintln("=========== " CARBON_LOG_RED "%zu failed, %zu passed in %.2f s" CARBON_LOG_RESET " ===========",
                          failed,
                          passed,
                          timer.elapsed);
     status = EXIT_FAILURE;
   }
   else {
-    if (!((i32) timer.elapsed)) carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %u us" CARBON_COLOR_RESET " ===========",
+    if (!((i32) timer.elapsed)) println("=========== " CARBON_LOG_GREEN "%zu passed in %u us" CARBON_LOG_RESET " ===========",
                                                passed,
                                                total_time_micro);
-    else carbon_println("=========== " CARBON_COLOR_GREEN "%zu passed in %.2f s" CARBON_COLOR_RESET " ===========",
+    else println("=========== " CARBON_LOG_GREEN "%zu passed in %.2f s" CARBON_LOG_RESET " ===========",
                         passed,
                         timer.elapsed);
   }

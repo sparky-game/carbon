@@ -517,7 +517,7 @@ CBNINL void carbon_skap__append_blobs(const char *skap, FILE *fd) {
       fseek(fd, *loc, SEEK_SET);
       fwrite(idx, sizeof(*idx), 1, fd);
       fseek(fd, next_loc, SEEK_SET);
-      carbon_println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")",
+      println("  WRITE   %s -> %s @ [" CARBON_SKAP__HEX_SPEC "]+(" CARBON_SKAP__HEX_SPEC ")",
                      idx->name, skap, idx->blob_offset, idx->blob_size);
     }
   }
@@ -621,12 +621,12 @@ void carbon_skap_close(CBN_SKAP *handle) {
 
 void carbon_skap_print(const CBN_SKAP *handle) {
   if (!handle) return;
-  carbon_println("SKAP v%u (build %llu) with %zu assets:",
+  println("SKAP v%u (build %llu) with %zu assets:",
                  handle->header.fmt_ver,
                  handle->header.build_ver,
                  carbon_skap_count(handle));
   for (CBN_SKAP_AssetType i = 0; i < CARBON_SKAP_ASSET_TYPE_COUNT; ++i) {
-    carbon_println("  - %s: %zu", carbon_skap__type2str[i], carbon_skap_count_of(handle, i));
+    println("  - %s: %zu", carbon_skap__type2str[i], carbon_skap_count_of(handle, i));
   }
 }
 

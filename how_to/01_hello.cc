@@ -4,10 +4,10 @@
 #include <carbon.h>
 
 int main(void) {
-  cbn::println("Hello, World!");
+  println("Hello, World!");
   auto v = cbn::Version();
   auto patch = v & 0xff;
   auto minor = (v >> 8) & 0xff;
   auto major = (v >> 16) & 0xff;
-  cbn::println("Carbon version %u.%u.%u (%s)", major, minor, patch, cbn::VersionStr());
+  println("Carbon version %u.%u.%u (%s)", major, minor, patch, cbn::VersionStr());
 }
