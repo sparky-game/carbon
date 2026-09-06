@@ -132,3 +132,11 @@ CBNDEF_AKA(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);
  */
 CBNDEF void carbon_audio_set_looping(CBN_Audio_UID uid, bool yn);
 CBNDEF_AKA(cbn::audio, SetLooping, carbon_audio_set_looping);
+
+/**
+ * @brief ...
+ * @param uid ...
+ * @return ...
+ */
+CBNDEF f32 carbon_audio_get_cursor(CBN_Audio_UID uid);
+CBNDEF_AKA(cbn::audio, GetCursor, carbon_audio_get_cursor);

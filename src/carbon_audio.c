@@ -172,3 +172,11 @@ void carbon_audio_set_looping(CBN_Audio_UID uid, bool yn) {
   if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_set_looping(entry.sound, yn);
 }
+
+f32 carbon_audio_get_cursor(CBN_Audio_UID uid) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return 0;
+  f32 cur = 0;
+  ma_sound_get_cursor_in_seconds(entry.sound, &cur);
+  return cur;
+}
