@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
+#define CBN_WIN__MAX_DELTA_TIME 0.333
+
 static bool carbon_win__should_close;
 static usz carbon_win__renderer_w, carbon_win__renderer_h;
 
@@ -71,11 +73,12 @@ f64 carbon_win_get_deltatime(void) {
   if (is_first_time) {
     last_frame_time = carbon_time_get();
     is_first_time = false;
+    return 0;
   }
   f64 curr_frame_time = carbon_time_get();
   f64 dt = curr_frame_time - last_frame_time;
   last_frame_time = curr_frame_time;
-  return dt;
+  return carbon_math_clamp(dt, 0, CBN_WIN__MAX_DELTA_TIME);
 }
 
 u32 carbon_win_get_fps(void) {
