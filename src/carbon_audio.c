@@ -49,6 +49,18 @@ void carbon_audio_shutdown(void) {
   CBN_INFO("Shutdowned audio subsystem successfully");
 }
 
+void carbon_audio_pause_exec(void) {
+  ma_result res = ma_engine_stop(&carbon_audio__engine);
+  const char *res_str = ma_result_description(res);
+  CBN_INFO("Paused execution of audio subsystem (%s)", res_str);
+}
+
+void carbon_audio_resume_exec(void) {
+  ma_result res = ma_engine_start(&carbon_audio__engine);
+  const char *res_str = ma_result_description(res);
+  CBN_INFO("Resumed execution of audio subsystem (%s)", res_str);
+}
+
 f32 carbon_audio_get_volume(void) {
   return ma_engine_get_volume(&carbon_audio__engine);
 }

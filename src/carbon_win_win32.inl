@@ -138,6 +138,12 @@ LRESULT CALLBACK carbon_win__wndproc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
   case WM_CLOSE:
     carbon_win__should_close = true;
     return 0;
+  case WM_ENTERSIZEMOVE:
+    carbon_audio_pause_exec();
+    return 0;
+  case WM_EXITSIZEMOVE:
+    carbon_audio_resume_exec();
+    return 0;
   case WM_SIZE:
     if (carbon_win__hglrc) glViewport(0, 0, LOWORD(lp), HIWORD(lp));
     return 0;

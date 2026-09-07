@@ -25,6 +25,18 @@ CBNDEF void carbon_audio_shutdown(void);
 CBNDEF_AKA(cbn::audio, Shutdown, carbon_audio_shutdown);
 
 /**
+ * @brief Pauses the execution of the audio subsystem.
+ */
+CBNDEF void carbon_audio_pause_exec(void);
+CBNDEF_AKA(cbn::audio, PauseExec, carbon_audio_pause_exec);
+
+/**
+ * @brief Resumes the execution of the audio subsystem.
+ */
+CBNDEF void carbon_audio_resume_exec(void);
+CBNDEF_AKA(cbn::audio, ResumeExec, carbon_audio_resume_exec);
+
+/**
  * @brief Gets the current global engine volume level.
  * @return 32-bit float in [0..1] for normal levels, or in [1..+inf) if amplified.
  */

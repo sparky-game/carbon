@@ -35,6 +35,14 @@
   carbon_win__should_close = true;
   return NO;
 }
+
+- (void)windowWillStartLiveResize:(NSNotification *)noti {
+  carbon_audio_pause_exec();
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)noti {
+  carbon_audio_resume_exec();
+}
 @end
 
 static NSApplication *carbon_win__app;
