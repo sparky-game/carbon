@@ -230,8 +230,9 @@ void carbon_drawcanvas_annulus(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius_o
 }
 
 void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale, u32 tint) {
-  const f32 sw = s->width * scale.x, sh = s->height * scale.y;
+  if (scale.x <= 0 || scale.y <= 0) return;
   const CBN_Rect r_dc = carbon_math_rect(0, 0, dc->width, dc->height);
+  const f32 sw = s->width * scale.x, sh = s->height * scale.y;
   const CBN_Rect r_sp = carbon_math_rect_v(position, sw, sh);
   CBN_Rect xywh = carbon_math_rect_intersection(r_dc, r_sp);
   if (xywh.w <= 0 || xywh.h <= 0) return;
@@ -244,7 +245,9 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
     xywh.h = carbon_math_min(xywh.h, r_dc.h - xywh.y);
   }
   u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
-  if (scale.x == 1 && scale.y == 1 && position.x == carbon_math_floor(position.x) && position.y == carbon_math_floor(position.y)) {
+  if (scale.x == 1 && scale.y == 1                &&
+      position.x == carbon_math_floor(position.x) &&
+      position.y == carbon_math_floor(position.y)) {
     const usz start_x = carbon_math_max(0, xywh.x - r_sp.x);
     usz src_y = carbon_math_max(0, xywh.y - r_sp.y);
     for (usz j = 0; j < xywh.h; ++j, ++src_y) {
@@ -261,12 +264,12 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   const f32 start_x = carbon_math_max(0, (xywh.x - r_sp.x) * inv_sx);
   f32 src_y = carbon_math_max(0, (xywh.y - r_sp.y) * inv_sy);
   for (usz j = 0; j < xywh.h; ++j) {
-    const usz y0 = (usz)src_y;
+    const usz y0 = carbon_math_min((usz)src_y, s->height - 1);
     const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
     const u32 *r0 = s->pixels + y0*s->stride, *r1 = s->pixels + y1*s->stride;
     f32 src_x = start_x;
     for (usz i = 0; i < xywh.w; ++i) {
-      const usz x0 = (usz)src_x;
+      const usz x0 = carbon_math_min((usz)src_x, s->width - 1);
       const usz x1 = x0 + (x0 + 1 < s->width ? 1 : 0);
       const CBN_Vec2 t = carbon_math_vec2(src_x - x0, src_y - y0);
       u32 c = carbon_color_bilerp(r0[x0], r0[x1], r1[x0], r1[x1], t);
