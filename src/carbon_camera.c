@@ -143,9 +143,9 @@ CBN_Ray carbon_camera_screen_to_world(const CBN_Camera *c, const CBN_DrawCanvas 
   switch (c->type) {
   case CBN_Camera_Type_Perspective: {
     CBN_Vec3 near = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, 1));
-    CBN_Vec3 far = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, 0));
+    CBN_Vec4 dir = carbon_math_mat4_mult_vec4(VP_inv, carbon_math_vec4_2(p, 0, 1));
     ray.origin = near;
-    ray.direction = carbon_math_vec3_norm(carbon_math_vec3_sub(far, near));
+    ray.direction = carbon_math_vec3_norm(dir.xyz);
   } break;
   case CBN_Camera_Type_Orthographic: {
     ray.origin = carbon_camera__ndc_to_world_space(VP_inv, carbon_math_vec3_2(p, 1));
