@@ -141,24 +141,25 @@ CBN_Mat4 carbon_math_mat4_view(CBN_Vec3 position, CBN_Quat rotation) {
 }
 
 CBN_Mat4 carbon_math_mat4_perspective(f32 fov, f32 aspect, f32 near, f32 far) {
+  CARBON_UNUSED(far);
   f32 f = 1/carbon_math_tan(CARBON_TO_RADIANS(fov)/2);
   CBN_Mat4 m = carbon_math_mat4_zero();
   m.m[0][0] = f/aspect;
   m.m[1][1] = f;
-  m.m[2][2] = (near + far)/(near - far);
-  m.m[2][3] = (2*near*far)/(near - far);
+  m.m[2][2] = 0;
+  m.m[2][3] = near;
   m.m[3][2] = -1;
   return m;
 }
 
 CBN_Mat4 carbon_math_mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
   CBN_Mat4 m = carbon_math_mat4_zero();
-  m.m[0][0] =  2/(right - left);
-  m.m[1][1] =  2/(top - bottom);
-  m.m[2][2] = -2/(far - near);
+  m.m[0][0] = 2/(right - left);
+  m.m[1][1] = 2/(top - bottom);
+  m.m[2][2] = 1/(far - near);
   m.m[0][3] = -(right + left)/(right - left);
   m.m[1][3] = -(top + bottom)/(top - bottom);
-  m.m[2][3] = -(far + near)/(far - near);
+  m.m[2][3] = far/(far - near);
   m.m[3][3] = 1;
   return m;
 }

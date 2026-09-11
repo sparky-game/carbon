@@ -87,11 +87,11 @@ CBNINL bool carbon_drawcanvas__is_back_face(const CBN_DrawCanvas *dc, CBN_Vec3 c
 }
 
 CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
-  // Intersects edge (a -> b) against plane (z + w = 0)
-  f32 n = -(a.clip.z + a.clip.w);
-  f32 d = (b.clip.z - a.clip.z) + (b.clip.w - a.clip.w);
+  // Intersects edge (a -> b) against plane (w - z = 0)
+  f32 da = a.clip.w - a.clip.z, db = b.clip.w - b.clip.z;
+  f32 d = da - db;
   f32 t = 0;
-  if (carbon_math_abs(d) > CARBON_EPS) t = n/d;
+  if (carbon_math_abs(d) > CARBON_EPS) t = da/d;
   t = carbon_math_clamp(t, 0, 1);
   return (Vertex3D) {
     .world = carbon_math_vec3_lerp(a.world, b.world, t),
@@ -102,17 +102,21 @@ CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
 
 CBNINL usz carbon_drawcanvas__near_plane_clipping(Vertex3D v1, Vertex3D v2, Vertex3D v3, Vertex3D *out_poly) {
   // Sutherland-Hodgman polygon clipping algorithm
-  // Clips against plane (z + w >= 0)
+  // Clips against plane (w - z >= 0)
   Vertex3D in[] = {v1, v2, v3};
   Vertex3D out[4];
   usz out_count = 0;
   for (usz i = 0; i < 3; ++i) {
     Vertex3D a = in[i];
     Vertex3D b = in[(i + 1) % 3];
-    bool is_in_a = a.clip.z + a.clip.w >= 0;
-    bool is_in_b = b.clip.z + b.clip.w >= 0;
-    if (is_in_a && is_in_b)       out[out_count++] = b;
-    else if (is_in_a && !is_in_b) out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
+    bool is_in_a = a.clip.w - a.clip.z >= 0;
+    bool is_in_b = b.clip.w - b.clip.z >= 0;
+    if (is_in_a && is_in_b) {
+      out[out_count++] = b;
+    }
+    else if (is_in_a && !is_in_b) {
+      out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
+    }
     else if (!is_in_a && is_in_b) {
       out[out_count++] = carbon_drawcanvas__clip_intersect(a, b);
       out[out_count++] = b;
@@ -201,7 +205,7 @@ CBNINL void carbon_drawcanvas__triangle_3d(CBN_DrawCanvas *dc, CBN_Vec3 v1, CBN_
     f32 *zbuf = dc->zbuffer + j*dc->width + (usz)lo.x;
     u32 *pxls = dc->pixels + j*dc->width + (usz)lo.x;
     for (usz i = lo.x; i <= hi.x; ++i, ++zbuf, ++pxls) {
-      if (w0 >= 0 && w1 >= 0 && w2 >= 0 && z < *zbuf) {
+      if (w0 >= 0 && w1 >= 0 && w2 >= 0 && z > *zbuf) {
         *zbuf = z;
         carbon_drawcanvas__alpha_blending(pxls, color);
       }
@@ -233,7 +237,7 @@ CBNINL void carbon_drawcanvas__triangle_3d_with_texture(CBN_DrawCanvas *dc, Vert
     f32 *zbuf = dc->zbuffer + j*dc->width + (usz)lo.x;
     u32 *pxls = dc->pixels + j*dc->width + (usz)lo.x;
     for (usz i = lo.x; i <= hi.x; ++i, ++zbuf, ++pxls) {
-      if (w0 >= 0 && w1 >= 0 && w2 >= 0 && z < *zbuf) {
+      if (w0 >= 0 && w1 >= 0 && w2 >= 0 && z > *zbuf) {
         *zbuf = z;
         f32 w = 1/iw;
         f32 u = carbon_math_clamp(uw * w, 0, 1), v = carbon_math_clamp(vw * w, 0, 1);
