@@ -9,7 +9,7 @@
 /**
  * @brief Represents a 4x4 matrix that is used to encode 3D physical transformations.
  */
-CBNDEF_T(alignas(16) CBN_Mat4) {
+CBNDEF_T(alignas(4*4) CBN_Mat4) {
   union {
     CBN_Vec4 v[4];
     f32 m[4][4];

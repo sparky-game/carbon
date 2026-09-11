@@ -2,7 +2,7 @@
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 #ifdef __cplusplus
 
-struct alignas(16) CBN_Vec4 : CBN_Vec4_t {
+struct alignas(4*4) CBN_Vec4 : CBN_Vec4_t {
   constexpr CBN_Vec4(f32 _x, f32 _y, f32 _z, f32 _w) : CBN_Vec4_t{.c = {_x, _y, _z, _w}} {}
   constexpr CBN_Vec4(f32 _x = 0) : CBN_Vec4(_x, _x, _x, _x) {}
 

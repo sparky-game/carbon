@@ -1,6 +1,6 @@
 #ifdef __cplusplus
 
-struct alignas(16) CBN_Mat4 : CBN_Mat4_t {
+struct alignas(4*4) CBN_Mat4 : CBN_Mat4_t {
   // ...
 };
 
