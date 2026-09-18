@@ -139,7 +139,9 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
     }
   }
   {// Bottom-left info
-    const auto text = cbn::str::fmt("Camera: [Pos = %s, Rot = %s]", c.GetPosition().ToString(), c.GetRotation().ToString());
+    const auto text = cbn::str::fmt("Camera: [Pos = %s, Rot = %s]",
+                                    c.GetPosition().ToString(),
+                                    c.GetRotation().ToString());
     static const auto text_pos = cbn::math::Vec2(text_padding, dc.Height() - text_padding - text_height);
     dc.DrawText(text, text_pos, text_size, color);
   }
@@ -160,7 +162,6 @@ void render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
 int main(void) {
   auto canvas = cbn::DrawCanvas::New(1280, 720);
   auto cam = canvas->CreateCamera();
-  // cam->SetType(cbn::Camera::Type::Orthographic);
   canvas->LightAdd({
       .type = cbn::LightType::Directional,
       .color = 0xffffffff,
@@ -171,6 +172,10 @@ int main(void) {
     });
   res::Init();
   canvas->OpenWindow("3D");
+  cbn::win::postfx::BarrelDistortion(true, 0.25);
+  cbn::win::postfx::ChromaticAberration(true, 0.4, 0.7);
+  cbn::win::postfx::Scanlines(true, 0.65, 0.25);
+  cbn::win::postfx::Vignette(true, 0.35, 0.55, 0.75);
   cbn::win::ForFrame([&](const auto dt){
     update(*canvas, *cam, dt);
     render(*canvas, *cam, dt);
