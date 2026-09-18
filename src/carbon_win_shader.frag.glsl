@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec2 i_uv;
-out vec4 o_color;
+in vec2 v_UV;
+out vec4 f_Color;
 uniform sampler2D u_tex;
 
 layout(std140) uniform PostFX {
@@ -33,7 +33,7 @@ vec3 chromatic_aberration(vec2 uv) {
 #define scanlines_density u_scanlines[1]
 #define scanlines_opacity u_scanlines[2]
 vec3 scanlines(vec3 c) {
-  float s=1.-(abs(sin(gl_fragCoord.y*mix(.5,2.5,scanlines_density)))*scanlines_opacity);
+  float s=1.-(abs(sin(gl_FragCoord.y*mix(.5,2.5,scanlines_density)))*scanlines_opacity);
   return c*s;
 }
 
@@ -47,10 +47,10 @@ vec3 vignette(vec3 c, vec2 uv) {
 }
 
 void main() {
-  vec2 uv = i_uv;
+  vec2 uv = v_UV;
   if (u_barrel_distortion[0] > .5) uv = barrel_distortion(uv);
   vec3 c = u_chromatic_aberration[0] > .5 ? chromatic_aberration(uv) : texture(u_tex, uv).rgb;
   if (u_scanlines[0] > .5) c = scanlines(c);
   if (u_vignette[0] > .5) c = vignette(c, uv);
-  o_color = vec4(c, 1.);
+  f_Color = vec4(c, 1.);
 }
