@@ -211,3 +211,23 @@ CBNDEF_AKA(cbn::win, SetBorderVisibility, carbon_win_set_border_visibility);
  */
 CBNDEF void carbon_win_set_fullscreen(bool yn);
 CBNDEF_AKA(cbn::win, SetFullscreen, carbon_win_set_fullscreen);
+
+/**
+ */
+CBNDEF void carbon_win_postfx_barrel_distortion(bool yn, f32 intensity);
+CBNDEF_AKA(cbn::win::postfx, BarrelDistortion, carbon_win_postfx_barrel_distortion);
+
+/**
+ */
+CBNDEF void carbon_win_postfx_chromatic_aberration(bool yn, f32 intensity, f32 edge_fade);
+CBNDEF_AKA(cbn::win::postfx, ChromaticAberration, carbon_win_postfx_chromatic_aberration);
+
+/**
+ */
+CBNDEF void carbon_win_postfx_scanlines(bool yn, f32 density, f32 opacity);
+CBNDEF_AKA(cbn::win::postfx, Scanlines, carbon_win_postfx_scanlines);
+
+/**
+ */
+CBNDEF void carbon_win_postfx_vignette(bool yn, f32 radius, f32 smoothness, f32 intensity);
+CBNDEF_AKA(cbn::win::postfx, Vignette, carbon_win_postfx_vignette);

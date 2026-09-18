@@ -391,6 +391,24 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
     id<MTLRenderCommandEncoder> enc = [cmd renderCommandEncoderWithDescriptor:pass];
     [enc setRenderPipelineState:carbon_win__mtl_pipeline];
     [enc setFragmentTexture:carbon_win__mtl_texture atIndex:0];
+    const f32 fx[4*4] = {
+      carbon_win__postfx.barrel_distortion.yn,
+      carbon_win__postfx.barrel_distortion.intensity,
+      0, 0,
+      carbon_win__postfx.chromatic_aberration.yn,
+      carbon_win__postfx.chromatic_aberration.intensity,
+      carbon_win__postfx.chromatic_aberration.edge_fade,
+      0,
+      carbon_win__postfx.scanlines.yn,
+      carbon_win__postfx.scanlines.density,
+      carbon_win__postfx.scanlines.opacity,
+      0,
+      carbon_win__postfx.vignette.yn,
+      carbon_win__postfx.vignette.radius,
+      carbon_win__postfx.vignette.smoothness,
+      carbon_win__postfx.vignette.intensity
+    };
+    [enc setFragmentBytes:fx length:sizeof(fx) atIndex:0];
     [enc drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
     [enc endEncoding];
     [cmd presentDrawable:drawable];

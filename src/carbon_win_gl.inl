@@ -19,15 +19,19 @@
 #define GL_WRITE_ONLY          0x88B9
 typedef isz GLsizeiptr;
 #endif
+#ifndef GL_UNIFORM_BUFFER
+#define GL_UNIFORM_BUFFER 0x8A11
+#define GL_DYNAMIC_DRAW   0x88E8
+typedef isz GLintptr;
+#endif
+#ifndef GL_CLAMP_TO_BORDER
+#define GL_CLAMP_TO_BORDER      0x812D
+#define GL_TEXTURE_BORDER_COLOR 0x1004
+#endif
 
 #define CARBON_WIN__GL_PBO_COUNT 2
 
 typedef char GLchar;
-
-static GLuint carbon_win__gl_tex;
-static GLuint carbon_win__gl_vao;
-static GLuint carbon_win__gl_pbo[CARBON_WIN__GL_PBO_COUNT];
-static usz carbon_win__gl_pbo_idx;
 
 #define CARBON_WIN__GL_PROCS                                            \
   x(GLuint, glCreateShader, GLenum)                                     \
@@ -47,7 +51,11 @@ static usz carbon_win__gl_pbo_idx;
   x(void, glBindBuffer, GLenum, GLuint)                                 \
   x(void, glBufferData, GLenum, GLsizeiptr, const void *, GLenum)       \
   x(void *, glMapBuffer, GLenum, GLenum)                                \
-  x(GLboolean, glUnmapBuffer, GLenum)
+  x(GLboolean, glUnmapBuffer, GLenum)                                   \
+  x(void, glBufferSubData, GLenum, GLintptr, GLsizeiptr, const void *)  \
+  x(void, glBindBufferBase, GLenum, GLuint, GLuint)                     \
+  x(GLuint, glGetUniformBlockIndex, GLuint, const GLchar *)             \
+  x(void, glUniformBlockBinding, GLuint, GLuint, GLuint)
 
 #define x(ret, name, ...)                       \
   typedef ret (*name ## _t)(__VA_ARGS__);       \
@@ -59,6 +67,12 @@ x(void, glActiveTexture, GLenum);
 #undef x
 
 CBNINL void *carbon_win__gl_func_loader(const char *name);
+
+static GLuint carbon_win__gl_tex;
+static GLuint carbon_win__gl_vao;
+static GLuint carbon_win__gl_pbo[CARBON_WIN__GL_PBO_COUNT];
+static usz carbon_win__gl_pbo_idx;
+static GLuint carbon_win__gl_ubo_postfx;
 
 CBNINL void carbon_win__gl_load_funcs(void) {
 #define x(ret, name, ...)                                 \
@@ -115,24 +129,40 @@ CBNINL void carbon_win__gl_init(usz w, usz h) {
       CBN_ERROR("prog link error: %s", log);
       CARBON_UNREACHABLE;
     }
+  } glUseProgram(prog);
+  {// VAO
+    glGenVertexArrays(1, &carbon_win__gl_vao);
+    glBindVertexArray(carbon_win__gl_vao);
   }
-  glUseProgram(prog);
-  glGenVertexArrays(1, &carbon_win__gl_vao);
-  glBindVertexArray(carbon_win__gl_vao);
-  glGenTextures(1, &carbon_win__gl_tex);
-  glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-               carbon_win__renderer_w,
-               carbon_win__renderer_h,
-               0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
-  glGenBuffers(CARBON_WIN__GL_PBO_COUNT, carbon_win__gl_pbo);
-  for (usz i = 0; i < CARBON_WIN__GL_PBO_COUNT; ++i) {
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[i]);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, w*h*4, 0, GL_STREAM_DRAW);
+  {// Texture
+    glGenTextures(1, &carbon_win__gl_tex);
+    glBindTexture(GL_TEXTURE_2D, carbon_win__gl_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    const f32 c[] = {0, 0, 0, 1};
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, c);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+                 carbon_win__renderer_w,
+                 carbon_win__renderer_h,
+                 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, 0);
   }
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  {// PBO
+    glGenBuffers(CARBON_WIN__GL_PBO_COUNT, carbon_win__gl_pbo);
+    for (usz i = 0; i < CARBON_WIN__GL_PBO_COUNT; ++i) {
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, carbon_win__gl_pbo[i]);
+      glBufferData(GL_PIXEL_UNPACK_BUFFER, w*h*4, 0, GL_STREAM_DRAW);
+    }
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  }
+  {// UBO
+    glUniformBlockBinding(prog, glGetUniformBlockIndex(prog, "PostFX"), 0);
+    glGenBuffers(1, &carbon_win__gl_ubo_postfx);
+    glBindBuffer(GL_UNIFORM_BUFFER, carbon_win__gl_ubo_postfx);
+    glBufferData(GL_UNIFORM_BUFFER, 4*4*sizeof(f32), 0, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, carbon_win__gl_ubo_postfx);
+  }
 }
 
 CBNINL void carbon_win__gl_render(const u32 *pixels, usz w, usz h) {
@@ -169,6 +199,25 @@ CBNINL void carbon_win__gl_render(const u32 *pixels, usz w, usz h) {
   }
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   glClear(GL_COLOR_BUFFER_BIT);
+  const f32 fx[4*4] = {
+    carbon_win__postfx.barrel_distortion.yn,
+    carbon_win__postfx.barrel_distortion.intensity,
+    0, 0,
+    carbon_win__postfx.chromatic_aberration.yn,
+    carbon_win__postfx.chromatic_aberration.intensity,
+    carbon_win__postfx.chromatic_aberration.edge_fade,
+    0,
+    carbon_win__postfx.scanlines.yn,
+    carbon_win__postfx.scanlines.density,
+    carbon_win__postfx.scanlines.opacity,
+    0,
+    carbon_win__postfx.vignette.yn,
+    carbon_win__postfx.vignette.radius,
+    carbon_win__postfx.vignette.smoothness,
+    carbon_win__postfx.vignette.intensity
+  };
+  glBindBuffer(GL_UNIFORM_BUFFER, carbon_win__gl_ubo_postfx);
+  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(fx), fx);
   glBindVertexArray(carbon_win__gl_vao);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }

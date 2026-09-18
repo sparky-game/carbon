@@ -20,6 +20,29 @@ static bool carbon_win__prev_keys[CBN_Win_KeyCode_Count];
 static bool carbon_win__mouse_buttons[CBN_Win_MouseButton_Count];
 static bool carbon_win__prev_mouse_buttons[CBN_Win_MouseButton_Count];
 
+static struct {
+  struct {
+    bool yn;
+    f32 intensity;
+  } barrel_distortion;
+  struct {
+    bool yn;
+    f32 intensity;
+    f32 edge_fade;
+  } chromatic_aberration;
+  struct {
+    bool yn;
+    f32 density;
+    f32 opacity;
+  } scanlines;
+  struct {
+    bool yn;
+    f32 radius;
+    f32 smoothness;
+    f32 intensity;
+  } vignette;
+} carbon_win__postfx;
+
 // Internal platform API
 CBNINL void carbon_win__create_window(usz w, usz h, const char *title);
 CBNINL void carbon_win__destroy_window(void);
@@ -176,4 +199,28 @@ CBN_Vec2 carbon_win_get_mouse_delta(void) {
 
 f32 carbon_win_get_mouse_scroll(void) {
   return carbon_win__mouse_scroll;
+}
+
+void carbon_win_postfx_barrel_distortion(bool yn, f32 intensity) {
+  carbon_win__postfx.barrel_distortion.yn = yn;
+  carbon_win__postfx.barrel_distortion.intensity = intensity;
+}
+
+void carbon_win_postfx_chromatic_aberration(bool yn, f32 intensity, f32 edge_fade) {
+  carbon_win__postfx.chromatic_aberration.yn = yn;
+  carbon_win__postfx.chromatic_aberration.intensity = intensity;
+  carbon_win__postfx.chromatic_aberration.edge_fade = edge_fade;
+}
+
+void carbon_win_postfx_scanlines(bool yn, f32 density, f32 opacity) {
+  carbon_win__postfx.scanlines.yn = yn;
+  carbon_win__postfx.scanlines.density = density;
+  carbon_win__postfx.scanlines.opacity = opacity;
+}
+
+void carbon_win_postfx_vignette(bool yn, f32 radius, f32 smoothness, f32 intensity) {
+  carbon_win__postfx.vignette.yn = yn;
+  carbon_win__postfx.vignette.radius = radius;
+  carbon_win__postfx.vignette.smoothness = smoothness;
+  carbon_win__postfx.vignette.intensity = intensity;
 }
