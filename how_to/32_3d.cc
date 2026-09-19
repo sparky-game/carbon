@@ -70,6 +70,7 @@ void camera_update(cbn::Camera &c, const f64 dt) {
 void update(cbn::DrawCanvas &dc, cbn::Camera &c, const f64 dt) {
   camera_update(c, dt);
   if (cbn::win::GetKeyDown(cbn::win::KeyCode::B)) dc.FlagsToggle(CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING);
+  if (cbn::win::GetKeyDown(cbn::win::KeyCode::F)) dc.FlagsToggle(CARBON_DRAWCANVAS_FLAG_FRUSTUM_CULLING);
 }
 
 void meshes_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
@@ -132,7 +133,9 @@ void hud_render(cbn::DrawCanvas &dc, const cbn::Camera &c) {
       cbn::str::fmt(CARBON_LIBNAME " %s", cbn::VersionStr()),
       cbn::str::fmt("%u fps", cbn::win::GetFPS()),
       render_res.c_str(),
-      cbn::str::fmt("Back-face culling [b]: %s", dc.Flags() & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING ? "ON" : "OFF")
+      "Rendering options:",
+      cbn::str::fmt("  - Back-face culling [b]: %s", dc.Flags() & CARBON_DRAWCANVAS_FLAG_BACKFACE_CULLING ? "ON" : "OFF"),
+      cbn::str::fmt("  - Frustum culling [f]: %s", dc.Flags() & CARBON_DRAWCANVAS_FLAG_FRUSTUM_CULLING ? "ON" : "OFF"),
     };
     for (usz i = 0; i < CARBON_ARRAY_LEN(text); ++i) {
       dc.DrawText(text[i], cbn::math::Vec2(text_padding, text_padding + i*text_height), text_size, color);
@@ -173,7 +176,7 @@ int main(void) {
   res::Init();
   canvas->OpenWindow("3D");
   cbn::win::postfx::BarrelDistortion(true, 0.25);
-  cbn::win::postfx::ChromaticAberration(true, 0.4, 0.7);
+  cbn::win::postfx::ChromaticAberration(true, 0.4, 0.15);
   cbn::win::postfx::Scanlines(true, 0.65, 0.25);
   cbn::win::postfx::Vignette(true, 0.35, 0.55, 0.75);
   cbn::win::ForFrame([&](const auto dt){

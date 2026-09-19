@@ -126,13 +126,9 @@ CBN_Box carbon_mesh_get_bounds(const CBN_Mesh *m) {
     return b;
   }
   CBN_Vec3 min = m->vertices[0], max = m->vertices[0];
-  for (usz i = 0; i < m->metadata.vertices_count; ++i) {
-    min.x = carbon_math_min(min.x, m->vertices[i].x);
-    min.y = carbon_math_min(min.y, m->vertices[i].y);
-    min.z = carbon_math_min(min.z, m->vertices[i].z);
-    max.x = carbon_math_max(max.x, m->vertices[i].x);
-    max.y = carbon_math_max(max.y, m->vertices[i].y);
-    max.z = carbon_math_max(max.z, m->vertices[i].z);
+  for (usz i = 1; i < m->metadata.vertices_count; ++i) {
+    min = carbon_math_vec3_min(min, m->vertices[i]);
+    max = carbon_math_vec3_max(max, m->vertices[i]);
   }
   b.xyz = min;
   b.whd = carbon_math_vec3_sub(max, min);

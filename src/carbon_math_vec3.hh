@@ -34,6 +34,8 @@ struct CBN_Vec3 : CBN_Vec3_t {
 
   CBN_Vec3 Lerp(CBN_Vec3 v, f32 t) const { return carbon_math_vec3_lerp(*this, v, t); }
 
+  CBN_Vec3 Min(CBN_Vec3 v) const { return carbon_math_vec3_min(*this, v); }
+
   CBN_Vec3 Max(CBN_Vec3 v) const { return carbon_math_vec3_max(*this, v); }
 
   CBN_Vec3 Normalize(void) const { return carbon_math_vec3_norm(*this); }

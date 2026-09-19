@@ -86,6 +86,30 @@ CBNINL bool carbon_drawcanvas__is_back_face(const CBN_DrawCanvas *dc, CBN_Vec3 c
   return dc->flags & CARBON_DRAWCANVAS_FLAG_FRONTFACE_CW ? orientation >= 0 : orientation <= 0;
 }
 
+CBNINL bool carbon_drawcanvas__is_outside_frustum(const CBN_Camera *c, const CBN_Mesh *m, CBN_Transform t) {
+  const CBN_Mat4 M = carbon_math_mat4_model(t.position,
+                                            carbon_math_quat_from_euler(t.rotation),
+                                            carbon_math_vec3_scale(t.scale, 0.5));
+  const CBN_Mat4 V = carbon_camera_get_view(c);
+  const CBN_Mat4 P = carbon_camera_get_proj(c);
+  const CBN_Mat4 MVP = carbon_math_mat4_mult(P, carbon_math_mat4_mult(V, M));
+  const CBN_Box bounds = carbon_mesh_get_bounds(m);
+  const CBN_Vec3 lo = bounds.xyz, hi = carbon_math_vec3_add(lo, bounds.whd);
+  bool left = true, right = true, bottom = true, top = true, near = true;
+  for (usz i = 0; i < 8 && (left || right || bottom || top || near); ++i) {
+    const CBN_Vec3 v = carbon_math_vec3(i & 0b001 ? hi.x : lo.x,
+                                        i & 0b010 ? hi.y : lo.y,
+                                        i & 0b100 ? hi.z : lo.z);
+    const CBN_Vec4 clip = carbon_math_mat4_mult_vec4(MVP, carbon_math_vec4_3(v, 1));
+    left   &= clip.x < -clip.w;
+    right  &= clip.x >  clip.w;
+    bottom &= clip.y < -clip.w;
+    top    &= clip.y >  clip.w;
+    near   &= clip.z >  clip.w;
+  }
+  return left || right || bottom || top || near;
+}
+
 CBNINL Vertex3D carbon_drawcanvas__clip_intersect(Vertex3D a, Vertex3D b) {
   // Intersects edge (a -> b) against plane (w - z = 0)
   f32 da = a.clip.w - a.clip.z, db = b.clip.w - b.clip.z;
