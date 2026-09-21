@@ -12,12 +12,21 @@
 #define CARBON_FS_PATH_MAX_LEN 4096
 #endif
 
-#define carbon_fs_pattern_match_foreach(pmf) for (struct { usz i; char *f; } it = {0, (pmf).files[0]}; it.i < (pmf).count; ++it.i, it.i < (pmf).count ? it.f = (pmf).files[it.i] : it.f)
+typedef enum {
+  CARBON_FS_WALK_CONT,
+  CARBON_FS_WALK_SKIP,
+  CARBON_FS_WALK_STOP
+} CBN_FS_WalkAction;
 
-CBNDEF_T(CBN_PatternMatchedFiles) {
-  char **files;
-  usz count;
-};
+typedef struct {
+  const char *path;
+  const char *name;
+  bool is_dir;
+  usz depth;
+  void *arg;
+} CBN_FS_WalkEntry;
+
+typedef CBN_FS_WalkAction (*CBN_FS_WalkFunc)(const CBN_FS_WalkEntry *);
 
 /**
  * @brief ...
@@ -125,8 +134,6 @@ CBNDEF char *carbon_fs_get_directory(const char *path);
 CBNDEF_AKA(cbn::fs, GetDir, carbon_fs_get_directory);
 CBNDEF_AKA(cbn::fs, dirname, GetDir);
 
-CBNDEF CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern);
-
 /**
  * @brief ...
  * @param path ...
@@ -152,3 +159,7 @@ CBNDEF_AKA(cbn::fs, ReadFile, carbon_fs_read_entire_file);
  */
 CBNDEF bool carbon_fs_write_entire_file(const CBN_List *l, const char *file);
 CBNDEF_AKA(cbn::fs, WriteFile, carbon_fs_write_entire_file);
+
+/**
+ */
+CBNDEF bool carbon_fs_glob(const char *pattern, CBN_FS_WalkFunc f, void *arg);

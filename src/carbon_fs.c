@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-#define CARBON_FS__PATMAT_MAX_STRUCTS 4
-
 bool carbon_fs_exists(const char *file) {
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   DWORD attrs = GetFileAttributes(file);
   return attrs != INVALID_FILE_ATTRIBUTES;
 #else
@@ -15,7 +13,7 @@ bool carbon_fs_exists(const char *file) {
 
 bool carbon_fs_is_regular_file(const char *file) {
   if (!carbon_fs_exists(file)) return false;
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   DWORD attrs = GetFileAttributes(file);
   if (attrs == INVALID_FILE_ATTRIBUTES) return false;
   return !(attrs & FILE_ATTRIBUTE_DIRECTORY);
@@ -28,7 +26,7 @@ bool carbon_fs_is_regular_file(const char *file) {
 
 bool carbon_fs_is_directory(const char *file) {
   if (!carbon_fs_exists(file)) return false;
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   DWORD attrs = GetFileAttributes(file);
   if (attrs == INVALID_FILE_ATTRIBUTES) return false;
   return attrs & FILE_ATTRIBUTE_DIRECTORY;
@@ -40,7 +38,7 @@ bool carbon_fs_is_directory(const char *file) {
 }
 
 bool carbon_fs_rename(const char *oldie, const char *newie) {
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   if (carbon_fs_exists(newie) && !carbon_fs_remove(newie)) return false;
 #endif
   if (-1 == rename(oldie, newie)) {
@@ -76,7 +74,7 @@ bool carbon_fs_remove(const char *file) {
 /* } */
 
 bool carbon_fs_change_directory(const char *path) {
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   i8 result = _chdir(path);
 #else
   i8 result = chdir(path);
@@ -94,7 +92,7 @@ bool carbon_fs_create_directory(const char *path) {
     return false;
   }
   if (carbon_fs_is_directory(path)) return true;
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   i8 result = _mkdir(path);
 #else
   i8 result = mkdir(path, 0755);
@@ -131,7 +129,7 @@ char *carbon_fs_get_curr_directory(void) {
   static char dir[CARBON_FS_PATH_MAX_LEN];
   carbon_memory_set(dir, 0, CARBON_FS_PATH_MAX_LEN);
   char sep = '/';
-#ifdef _WIN32
+#ifdef CARBON_TARGET_OS_WINDOWS
   char *path = _getcwd(dir, CARBON_FS_PATH_MAX_LEN - 1);
   sep = '\\';
 #else
@@ -228,61 +226,6 @@ char *carbon_fs_get_directory(const char *path) {
   return dir;
 }
 
-CBN_PatternMatchedFiles carbon_fs_pattern_match(const char *pattern) {
-  static usz i = 0;
-  CBN_PatternMatchedFiles out;
-  carbon_memory_set(&out, 0, sizeof(out));
-#ifdef _WIN32
-  static usz counts[CARBON_FS__PATMAT_MAX_STRUCTS];
-  static char *results[CARBON_FS__PATMAT_MAX_STRUCTS][MAX_PATH];
-  HANDLE h_find;
-  WIN32_FIND_DATA find_data;
-  for (usz j = 0; j < counts[i]; ++j) free(results[i][j]);
-  counts[i] = 0;
-  h_find = FindFirstFile(pattern, &find_data);
-  if (h_find == INVALID_HANDLE_VALUE) {
-    CBN_ERROR("no found matches");
-    return out;
-  }
-  do {
-    if (counts[i] < MAX_PATH) {
-      results[i][counts[i]] = carbon_string_dup(find_data.cFileName);
-      ++counts[i];
-    }
-    else {
-      CBN_ERROR("too many matches");
-      break;
-    }
-  } while (FindNextFile(h_find, &find_data));
-  FindClose(h_find);
-  out.count = counts[i];
-  out.files = results[i];
-  ++i;
-  if (i >= CARBON_FS__PATMAT_MAX_STRUCTS) i = 0;
-  return out;
-#else
-  static glob_t xs[CARBON_FS__PATMAT_MAX_STRUCTS];
-  glob_t *x = &xs[i];
-  carbon_memory_set(x, 0, sizeof(*x));
-  switch (glob(pattern, GLOB_TILDE, 0, x)) {
-  case GLOB_NOSPACE:
-    CBN_ERROR("out of memory");
-    return out;
-  case GLOB_ABORTED:
-    CBN_ERROR("read error");
-    return out;
-  case GLOB_NOMATCH:
-    CBN_ERROR("no found matches");
-    return out;
-  }
-  ++i;
-  if (i >= CARBON_FS__PATMAT_MAX_STRUCTS) i = 0;
-  out.count = x->gl_pathc;
-  out.files = x->gl_pathv;
-  return out;
-#endif
-}
-
 u32 carbon_fs_get_file_size(const char *file) {
   if (!carbon_fs_is_regular_file(file)) {
     CBN_ERROR("file (`%s`) needs to be regular", file);
@@ -345,4 +288,76 @@ bool carbon_fs_write_entire_file(const CBN_List *l, const char *file) {
   }
   fclose(fd);
   return true;
+}
+
+bool carbon_fs_glob(const char *pattern, CBN_FS_WalkFunc f, void *arg) {
+#ifdef CARBON_TARGET_OS_WINDOWS
+  usz pat_len = carbon_string_len(pattern);
+  usz dir_len = 0;
+  for (usz i = pat_len; i > 0; --i) {
+    if (pattern[i - 1] == '\\' || pattern[i - 1] == '/') {
+      dir_len = i;
+      break;
+    }
+  }
+  if (dir_len >= CARBON_FS_PATH_MAX_LEN) {
+    CBN_ERROR("pattern too long (`%s`)", pattern);
+    return false;
+  }
+  char buf[CARBON_FS_PATH_MAX_LEN] = {0};
+  carbon_memory_copy(buf, pattern, dir_len);
+  WIN32_FIND_DATA fd;
+  HANDLE h = FindFirstFile(pattern, &fd);
+  if (h == INVALID_HANDLE_VALUE) return true;
+  do {
+    if (!carbon_string_cmp(fd.cFileName, ".") || !carbon_string_cmp(fd.cFileName, "..")) continue;
+    usz len = carbon_string_len(fd.cFileName);
+    if (dir_len + len + 1 > CARBON_FS_PATH_MAX_LEN) {
+      CBN_WARN("skipping path, too long (`%s%s`)", buf, fd.cFileName);
+      continue;
+    }
+    carbon_memory_copy(buf + dir_len, fd.cFileName, len + 1);
+    const CBN_FS_WalkEntry e = {
+      .path = buf,
+      .name = buf + dir_len,
+      .is_dir = carbon_fs_is_directory(buf),
+      .depth = 0,
+      .arg = arg
+    };
+    if (f(&e) == CARBON_FS_WALK_STOP) break;
+  } while (FindNextFile(h, &fd));
+#else
+  glob_t g = {0};
+  switch (glob(pattern, GLOB_TILDE, 0, &g)) {
+  case 0: break;
+  case GLOB_NOMATCH:
+    globfree(&g);
+    return true;
+  case GLOB_NOSPACE:
+    CBN_ERROR("out of memory");
+    globfree(&g);
+    return false;
+  case GLOB_ABORTED:
+    CBN_ERROR("read error");
+    globfree(&g);
+    return false;
+  }
+  for (usz i = 0; i < g.gl_pathc; ++i) {
+    const char *path = g.gl_pathv[i];
+    const char *name = path;
+    for (const char *p = path; *p; ++p) {
+      if (*p == '/') name = p + 1;
+    }
+    const CBN_FS_WalkEntry e = {
+      .path = path,
+      .name = name,
+      .is_dir = carbon_fs_is_directory(g.gl_pathv[i]),
+      .depth = 0,
+      .arg = arg
+    };
+    if (f(&e) == CARBON_FS_WALK_STOP) break;
+  }
+  globfree(&g);
+  return true;
+#endif
 }
