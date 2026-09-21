@@ -24,9 +24,10 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../thirdparty/stb/stb_truetype.h"
 
-#define CARBON_FONT__SDF_PADDING 2
-#define CARBON_FONT__SDF_ONEDGE  180
-#define CARBON_FONT__SDF_PXSCALE 32
+#define CARBON_FONT__SDF_PADDING  2
+#define CARBON_FONT__SDF_ONEDGE   180
+#define CARBON_FONT__SDF_PXSCALE  32
+#define CARBON_FONT__ATLAS_GUTTER 1
 
 CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   CBN_Font f = {0};
@@ -50,7 +51,7 @@ CBN_Font carbon_font_create_from_file(const char *file, usz size) {
     if (!sdf) continue;
     if (pen_x + w > CARBON_FONT_DATA_SIZE) {
       pen_x = 0;
-      pen_y += row_h;
+      pen_y += row_h + CARBON_FONT__ATLAS_GUTTER;
       row_h = 0;
     }
     CBN_ASSERT(pen_y + h <= CARBON_FONT_DATA_SIZE && "atlas overflow");
@@ -63,7 +64,7 @@ CBN_Font carbon_font_create_from_file(const char *file, usz size) {
     f.metadata.cdata[i].y1 = pen_y + h;
     f.metadata.cdata[i].xoff = xoff;
     f.metadata.cdata[i].yoff = yoff;
-    pen_x += w;
+    pen_x += w + CARBON_FONT__ATLAS_GUTTER;
     if (h > row_h) row_h = h;
     stbtt_FreeSDF(sdf, 0);
   }
@@ -98,4 +99,14 @@ f32 carbon_font_get_text_width(const CBN_Font *f, const char *txt, usz size) {
 f32 carbon_font_get_text_height(const CBN_Font *f, usz size) {
   const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
   return sf * (f->metadata.yoff_down - f->metadata.yoff_up);
+}
+
+f32 carbon_font_sample_sdf(const CBN_Font *f, f32 x, f32 y) {
+  usz x0 = x, y0 = y;
+  usz x1 = x0 + 1 < CARBON_FONT_DATA_SIZE ? x0 + 1 : x0, y1 = y0 + 1 < CARBON_FONT_DATA_SIZE ? y0 + 1 : y0;
+  f32 tx = x - x0, ty = y - y0;
+  f32 v00 = f->data[y0*CARBON_FONT_DATA_SIZE + x0], v01 = f->data[y1*CARBON_FONT_DATA_SIZE + x0];
+  f32 v10 = f->data[y0*CARBON_FONT_DATA_SIZE + x1], v11 = f->data[y1*CARBON_FONT_DATA_SIZE + x1];
+  f32 top = v00 + (v10 - v00)*tx, bot = v01 + (v11 - v01)*tx;
+  return (top + (bot - top)*ty)/0xff;
 }

@@ -20,6 +20,8 @@ struct CBN_Font : CBN_Font_t {
   f32 TextWidth(const char *txt, usz size) const { return carbon_font_get_text_width(this, txt, size); }
 
   f32 TextHeight(usz size) const { return carbon_font_get_text_height(this, size); }
+
+  f32 SampleSDF(f32 x, f32 y) const { return carbon_font_sample_sdf(this, x, y); }
 };
 
 #endif

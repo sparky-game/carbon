@@ -51,3 +51,12 @@ CBNDEF f32 carbon_font_get_text_width(const CBN_Font *f, const char *txt, usz si
  * @return The height of the text using the specified font size.
  */
 CBNDEF f32 carbon_font_get_text_height(const CBN_Font *f, usz size);
+
+/**
+ * @brief Bilinearly samples the SDF atlas of the font at specific fractional atlas coordinates.
+ * @param f The font to sample from.
+ * @param x The fractional X coordinate within the atlas.
+ * @param y The fractional Y coordinate within the atlas.
+ * @return The interpolated SDF value, normalized to [0, 1].
+ */
+CBNDEF f32 carbon_font_sample_sdf(const CBN_Font *f, f32 x, f32 y);

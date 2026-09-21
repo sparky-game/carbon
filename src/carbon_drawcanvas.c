@@ -742,17 +742,21 @@ const CBN_Mesh carbon_drawcanvas_icosahedron = {
 
 void carbon_drawcanvas_text(CBN_DrawCanvas *dc, const char *txt, CBN_Vec2 position, usz size, u32 color) {
   static const char *glyphs = &carbon_drawcanvas__monofont[0][0][0];
+  static const usz glyph_count = CARBON_ARRAY_LEN(carbon_drawcanvas__monofont);
   for (usz i = 0; *txt; ++i, ++txt) {
+    u8 c = *txt;
+    if (c >= glyph_count) continue;
     i32 gx = position.x + (i * CARBON_DRAWCANVAS__MONOFONT_WIDTH * size);
     i32 gy = position.y;
-    const char *glyph = &glyphs[(*txt) * CARBON_DRAWCANVAS__MONOFONT_WIDTH * CARBON_DRAWCANVAS__MONOFONT_HEIGHT];
+    const char *glyph = &glyphs[c * CARBON_DRAWCANVAS__MONOFONT_WIDTH * CARBON_DRAWCANVAS__MONOFONT_HEIGHT];
     for (usz dy = 0; dy < CARBON_DRAWCANVAS__MONOFONT_HEIGHT; ++dy) {
       for (usz dx = 0; dx < CARBON_DRAWCANVAS__MONOFONT_WIDTH; ++dx) {
-        i32 px = gx + dx*size;
-        i32 py = gy + dy*size;
-        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height && glyph[dy*CARBON_DRAWCANVAS__MONOFONT_WIDTH + dx]) {
-          carbon_drawcanvas_rect(dc, carbon_math_rect_sq(px, py, size), color);
+        if (!glyph[dy*CARBON_DRAWCANVAS__MONOFONT_WIDTH + dx]) continue;
+        i32 px = gx + dx*size, py = gy + dy*size;
+        if (size == 1 && 0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
+          carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), color);
         }
+        else carbon_drawcanvas_rect(dc, carbon_math_rect_sq(px, py, size), color);
       }
     }
   }
@@ -773,25 +777,25 @@ f32 carbon_drawcanvas_get_text_height(usz size) {
 }
 
 void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
-  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1, isf = 1/sf;
   const u32 c_rgb = color & 0xffffff00, c_a = color & 0x000000ff;
-  const f32 edge = (f32)f->metadata.sdf_onedge/0xff, aa = f->metadata.sdf_pxscale/0xff/2;
+  const f32 edge = (f32)f->metadata.sdf_onedge/0xff, aa = (f->metadata.sdf_pxscale/0xff/2)*carbon_math_max(1, isf);
   for (; *txt; ++txt) {
     usz idx = *txt - CARBON_FONT_ASCII_START;
     CBN_Font_Chardata cdata = f->metadata.cdata[idx];
     f32 src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
     f32 dst_w = sf*src_w, dst_h = sf*src_h;
+    const f32 bx = position.x + sf*cdata.xoff, by = position.y + sf*cdata.yoff;
     for (f32 dy = 0; dy < dst_h; ++dy) {
+      i32 py = carbon_math_round(by + dy);
+      if (0 > py || py >= (i32)dc->height) continue;
+      f32 sy = cdata.y0 + dy*isf;
       for (f32 dx = 0; dx < dst_w; ++dx) {
-        i32 px = carbon_math_round(position.x + dx + sf*cdata.xoff);
-        i32 py = carbon_math_round(position.y + dy + sf*cdata.yoff);
-        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
-          usz sx = cdata.x0 + dx/sf, sy = cdata.y0 + dy/sf;
-          f32 val = (f32)f->data[sy*CARBON_FONT_DATA_SIZE + sx]/0xff;
-          f32 fill = carbon_math_clamp((val - (edge - aa))/(2*aa), 0, 1);
-          if (fill <= 0) continue;
-          carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
-        }
+        i32 px = carbon_math_round(bx + dx);
+        if (0 > px || px >= (i32)dc->width) continue;
+        f32 s = carbon_font_sample_sdf(f, cdata.x0 + dx*isf, sy);
+        f32 fill = carbon_math_clamp((s - (edge - aa))/(2*aa), 0, 1);
+        if (fill > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
       }
     }
     position.x += sf * cdata.xadvance;
@@ -799,27 +803,28 @@ void carbon_drawcanvas_text_with_font(CBN_DrawCanvas *dc, const CBN_Font *f, con
 }
 
 void carbon_drawcanvas_text_with_font_with_outline(CBN_DrawCanvas *dc, const CBN_Font *f, const char *txt, CBN_Vec2 position, usz size, u32 color) {
-  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1;
+  const f32 sf = (0 < size && size <= f->metadata.size) ? (f32)size/(f32)f->metadata.size : 1, isf = 1/sf;
   const u32 c_rgb = color & 0xffffff00, c_a = color & 0x000000ff;
   const f32 edge = (f32)f->metadata.sdf_onedge/0xff, pxn = f->metadata.sdf_pxscale/0xff;
-  const f32 aa = pxn/2, delta = (f32)f->metadata.sdf_padding * pxn;
+  const f32 aa = (pxn/2)*carbon_math_max(1, isf), delta = (f32)f->metadata.sdf_padding * pxn;
   for (; *txt; ++txt) {
     usz idx = *txt - CARBON_FONT_ASCII_START;
     CBN_Font_Chardata cdata = f->metadata.cdata[idx];
     f32 src_w = cdata.x1 - cdata.x0, src_h = cdata.y1 - cdata.y0;
     f32 dst_w = sf*src_w, dst_h = sf*src_h;
+    const f32 bx = position.x + sf*cdata.xoff, by = position.y + sf*cdata.yoff;
     for (f32 dy = 0; dy < dst_h; ++dy) {
+      i32 py = carbon_math_round(by + dy);
+      if (0 > py || py >= (i32)dc->height) continue;
+      f32 sy = cdata.y0 + dy*isf;
       for (f32 dx = 0; dx < dst_w; ++dx) {
-        i32 px = carbon_math_round(position.x + dx + sf*cdata.xoff);
-        i32 py = carbon_math_round(position.y + dy + sf*cdata.yoff);
-        if (0 <= px && px < (i32)dc->width && 0 <= py && py < (i32)dc->height) {
-          usz sx = cdata.x0 + dx/sf, sy = cdata.y0 + dy/sf;
-          f32 val = (f32)f->data[sy*CARBON_FONT_DATA_SIZE + sx]/0xff;
-          f32 fill = carbon_math_clamp((val - (edge - aa))/(2*aa), 0, 1);
-          f32 outline = carbon_math_clamp((val - (edge - delta - aa))/(2*aa), 0, 1);
-          if (outline > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), 0x33333300 | (u32)(outline * c_a));
-          if (fill    > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
-        }
+        i32 px = carbon_math_round(bx + dx);
+        if (0 > px || px >= (i32)dc->width) continue;
+        f32 s = carbon_font_sample_sdf(f, cdata.x0 + dx*isf, sy);
+        f32 fill = carbon_math_clamp((s - (edge - aa))/(2*aa), 0, 1);
+        f32 outline = carbon_math_clamp((s - (edge - delta - aa))/(2*aa), 0, 1);
+        if (outline > 0 && fill < 1) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), 0x33333300 | (u32)(outline * c_a));
+        if (fill > 0) carbon_drawcanvas__alpha_blending(&carbon_drawcanvas_at(dc, px, py), c_rgb | (u32)(fill * c_a));
       }
     }
     position.x += sf * cdata.xadvance;
