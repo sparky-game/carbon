@@ -87,6 +87,7 @@ u32 carbon_color_lerp_3(u32 c1, u32 c2, u32 c3, CBN_Vec3 t) {
 }
 
 u32 carbon_color_bilerp(u32 c1, u32 c2, u32 c3, u32 c4, CBN_Vec2 t) {
+  t = carbon_math_vec2_clamp(t, carbon_math_vec2_1(0), carbon_math_vec2_1(1));
   u32 tx = 0x100 * t.x, itx = 0x100 - tx;
   u32 ty = 0x100 * t.y, ity = 0x100 - ty;
   u32 w1 = (itx*ity) >> 8, w2 = (tx*ity) >> 8, w3 = (itx*ty) >> 8, w4 = (tx*ty) >> 8;

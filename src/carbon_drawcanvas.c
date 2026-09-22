@@ -247,7 +247,7 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
   u32 *p_dc = dc->pixels + (usz)(xywh.y * r_dc.w + xywh.x);
   if (scale.x == 1 && scale.y == 1                &&
       position.x == carbon_math_floor(position.x) &&
-      position.y == carbon_math_floor(position.y)) {
+      position.y == carbon_math_floor(position.y)) {// Pixel-aligned path (fast)
     const usz start_x = carbon_math_max(0, xywh.x - r_sp.x);
     usz src_y = carbon_math_max(0, xywh.y - r_sp.y);
     for (usz j = 0; j < xywh.h; ++j, ++src_y) {
@@ -258,28 +258,31 @@ void carbon_drawcanvas_sprite(CBN_DrawCanvas *dc, const CBN_Sprite *s, CBN_Vec2 
       }
       p_dc += dc->width;
     }
-    return;
   }
-  const f32 inv_sx = 1/scale.x, inv_sy = 1/scale.y;
-  const f32 start_x = carbon_math_max(0, (xywh.x - r_sp.x) * inv_sx);
-  f32 src_y = carbon_math_max(0, (xywh.y - r_sp.y) * inv_sy);
-  for (usz j = 0; j < xywh.h; ++j) {
-    const usz y0 = carbon_math_min((usz)src_y, s->height - 1);
-    const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
-    const u32 *r0 = s->pixels + y0*s->stride, *r1 = s->pixels + y1*s->stride;
-    f32 src_x = start_x;
-    for (usz i = 0; i < xywh.w; ++i) {
-      const usz x0 = carbon_math_min((usz)src_x, s->width - 1);
-      const usz x1 = x0 + (x0 + 1 < s->width ? 1 : 0);
-      const CBN_Vec2 t = carbon_math_vec2(src_x - x0, src_y - y0);
-      u32 c = carbon_color_bilerp(r0[x0], r0[x1], r1[x0], r1[x1], t);
-      c = carbon_color_mult(c, tint);
-      carbon_drawcanvas__alpha_blending(p_dc, c);
-      src_x += inv_sx;
-      ++p_dc;
+  else {// Bilerp path (slow)
+    const f32 isx = 1/scale.x, isy = 1/scale.y;
+    const f32 start_x = (xywh.x - r_sp.x) * isx;
+    f32 src_y = (xywh.y - r_sp.y) * isy;
+    for (usz j = 0; j < xywh.h; ++j) {
+      const f32 y = carbon_math_max(0, src_y);
+      const usz y0 = carbon_math_min((usz)y, s->height - 1);
+      const usz y1 = y0 + (y0 + 1 < s->height ? 1 : 0);
+      const u32 *r0 = s->pixels + y0*s->stride, *r1 = s->pixels + y1*s->stride;
+      f32 src_x = start_x;
+      for (usz i = 0; i < xywh.w; ++i) {
+        const f32 x = carbon_math_max(0, src_x);
+        const usz x0 = carbon_math_min((usz)x, s->width - 1);
+        const usz x1 = x0 + (x0 + 1 < s->width ? 1 : 0);
+        const CBN_Vec2 t = carbon_math_vec2(x - x0, y - y0);
+        u32 c = carbon_color_bilerp(r0[x0], r0[x1], r1[x0], r1[x1], t);
+        c = carbon_color_mult(c, tint);
+        carbon_drawcanvas__alpha_blending(p_dc, c);
+        src_x += isx;
+        ++p_dc;
+      }
+      src_y += isy;
+      p_dc += (usz)(r_dc.w - xywh.w);
     }
-    src_y += inv_sy;
-    p_dc += (usz)(r_dc.w - xywh.w);
   }
 }
 
