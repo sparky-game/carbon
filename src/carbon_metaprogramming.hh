@@ -470,5 +470,35 @@ namespace cbn::meta {
                          RemoveCV_t<RemoveRef_t<T>>>> {};
   template <typename T>
   using Decay_t = Decay<T>::type;
+
+  /**
+   */
+  template <typename T>
+  auto Declval(void) -> AddRVRef_t<T>;
+
+  /**
+   */
+  template <typename... Ts>
+  requires (sizeof...(Ts) > 0)
+  struct Common;
+  template <typename... Ts>
+  using Common_t = Common<Ts...>::type;
+  template <typename T>
+  struct Common<T> : TID<Decay_t<T>> {};
+  template <typename T, typename U>
+  struct Common2 {};
+  template <typename T, typename U>
+  requires requires { false ? Declval<T>() : Declval<U>(); }
+  struct Common2<T, U> : TID<Decay_t<typeof(false ? Declval<T>() : Declval<U>())>> {};
+  template <typename T, typename U>
+  struct Common<T, U> : Common2<Decay_t<T>, Decay_t<U>> {};
+  template <typename T, typename U, typename V, typename... Ts>
+  requires requires { typename Common_t<T, U>; }
+  struct Common<T, U, V, Ts...> : Common<Common_t<T, U>, V, Ts...> {};
+
+  /**
+   */
+  template <typename... Ts>
+  concept HasCommon = requires { typename Common_t<Ts...>; };
 }
 #endif  // __cplusplus
