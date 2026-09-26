@@ -151,6 +151,15 @@ struct CBN_List_tt : CBN_List_t {
     sort(items, size, sizeof(value_type), f_cmp);
   }
 
+  template <typename Predicate>
+  usz CountIf(Predicate pred) const {
+    usz count = 0;
+    for (const auto &i : *this) {
+      if (pred(i)) ++count;
+    }
+    return count;
+  }
+
   value_type &operator[](usz idx) const { return carbon_list_at(value_type, *this, idx); }
 
   iterator begin(void) const { return (iterator)items; }
