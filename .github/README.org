@@ -58,7 +58,7 @@ You might want to take a look to the [[https://github.com/sparky-game/carbon/rel
 
 #+begin_quote
 [!TIP]
-You can checkout the [[../INSTALL][installation instructions]], so /Carbon/ can be made available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
+You can checkout the [[../INSTALL.TXT][installation instructions]], so /Carbon/ can be made available on your system as any other library (the ~PREFIX~ is customizable according to your needs).
 #+end_quote
 
 ** Tutorials

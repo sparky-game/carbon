@@ -23,7 +23,7 @@ void license_amalgamation(void) {
   for (const auto &e : fs::directory_iterator(THIRDPARTY_DIR)) {
     if (!e.is_directory()) continue;
     const auto p = e.path();
-    const auto l = p / "LICENSE";
+    const auto l = p / LICENSE_FILE;
     if (!fs::is_regular_file(l)) continue;
     const auto name = p.filename();
     ofs << "** " << name.string() << " **\n";
@@ -144,8 +144,8 @@ void build(void) {
 }
 
 void pkg(void) {
-  printf("  CP      ./LICENSE -> " BUILD_DIR "/LICENSE\n");
-  fs::copy_file("./LICENSE", BUILD_DIR "/LICENSE", fs::copy_options::overwrite_existing);
+  printf("  CP      ./" LICENSE_FILE " -> " BUILD_DIR "/" LICENSE_FILE "\n");
+  fs::copy_file("./" LICENSE_FILE, BUILD_DIR "/" LICENSE_FILE, fs::copy_options::overwrite_existing);
   printf("  GZIP    " PKG_FILE "\n");
   RunCmd("tar -zcf " PKG_FILE " " BUILD_DIR);
 }
