@@ -192,7 +192,19 @@ CBNINL void carbon_win__create_window(usz w, usz h, const char *title) {
     .lpfnWndProc = carbon_win__wndproc,
     .hInstance = hinst,
     .hCursor = LoadCursor(NULL, IDC_ARROW),
-    .lpszClassName = "CarbonWinClass"
+    .lpszClassName = "CarbonWinClass",
+    .hIcon = (HICON)LoadImageA(hinst,
+                               MAKEINTRESOURCEA(1),
+                               IMAGE_ICON,
+                               GetSystemMetrics(SM_CXICON),
+                               GetSystemMetrics(SM_CYICON),
+                               0),
+    .hIconSm = (HICON)LoadImageA(hinst,
+                                 MAKEINTRESOURCEA(1),
+                                 IMAGE_ICON,
+                                 GetSystemMetrics(SM_CXSMICON),
+                                 GetSystemMetrics(SM_CYSMICON),
+                                 0)
   };
   RegisterClassExA(&wc);
   DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
