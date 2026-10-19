@@ -90,7 +90,7 @@ u32 carbon_color_bilerp(u32 c1, u32 c2, u32 c3, u32 c4, CBN_Vec2 t) {
   t = carbon_math_vec2_clamp(t, carbon_math_vec2_1(0), carbon_math_vec2_1(1));
   u32 tx = 0x100 * t.x, itx = 0x100 - tx;
   u32 ty = 0x100 * t.y, ity = 0x100 - ty;
-  u32 w1 = (itx*ity) >> 8, w2 = (tx*ity) >> 8, w3 = (itx*ty) >> 8, w4 = (tx*ty) >> 8;
+  u32 w1 = (itx*ity) >> 8, w2 = (tx*ity) >> 8, w3 = (itx*ty) >> 8, w4 = 0x100 - w1 - w2 - w3;
   u32 rb1 = c1 & 0x00ff00ff, ag1 = (c1 >> 8) & 0x00ff00ff;
   u32 rb2 = c2 & 0x00ff00ff, ag2 = (c2 >> 8) & 0x00ff00ff;
   u32 rb3 = c3 & 0x00ff00ff, ag3 = (c3 >> 8) & 0x00ff00ff;
