@@ -3,7 +3,7 @@
 # Cover
 #+begin_html
 <p align="center">
-<img src="../assets/cover.png" alt="Carbon Cover">
+<img src="./cover.png" alt="Cover">
 </p>
 #+end_html
 
