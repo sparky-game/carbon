@@ -253,6 +253,7 @@ CBNDEF_AKA(cbn::math, Sqrt, carbon_math_sqrt);
  * @return An approximation of 1/√x, provided x ≥ 0.
  */
 CBNDEF f32 carbon_math_rsqrt(f32 x);
+CBNDEF_AKA(cbn::math, RSqrt, carbon_math_rsqrt);
 
 /**
  * @brief Performs a true modulo operation for integers.

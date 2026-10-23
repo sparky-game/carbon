@@ -202,13 +202,18 @@ f32 carbon_math_sqrt(f32 x) {
 
 f32 carbon_math_rsqrt(f32 x) {
 #if defined(CARBON_CPU_ARCH_AMD64)
-  f32 res;
-  __asm__("rsqrtss %1, %0" : "=x"(res) : "x"(x));
-  return res;
+  f32 y;
+  __asm__("rsqrtss %1, %0" : "=x"(y) : "x"(x));
+  return y * (1.5 - 0.5*x*y*y);  // Newton-Raphson refinement (11-bit -> 22-bit precision)
 #elif defined(CARBON_CPU_ARCH_AARCH64)
-  f32 res;
-  __asm__("frsqrte %s0, %s1" : "=w"(res) : "w"(x));
-  return res;
+  f32 y;
+  __asm__("frsqrte %s0, %s1" : "=w"(y) : "w"(x));
+  for (usz i = 0; i < 2; ++i) {// Newton-Raphson refinement (8-bit -> 32-bit precision)
+    f32 s;
+    __asm__("frsqrts %s0, %s1, %s2" : "=w"(s) : "w"(x*y), "w"(y));
+    y *= s;
+  }
+  return y;
 #else
   // Fast Inverse Square Root algorithm
   f32 x2 = x/2, y = x;

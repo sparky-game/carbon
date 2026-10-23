@@ -62,6 +62,11 @@ TEST(sqrt) {
   return true;
 }
 
+TEST(rsqrt) {
+  carbon_should_be_f(1, cbn::math::Sqrt(1));
+  return true;
+}
+
 TEST(fmod) {
   carbon_should_be_f(0, carbon_math_fmod(1, 1));
   carbon_should_be_f(0, carbon_math_fmod(2, 1));
