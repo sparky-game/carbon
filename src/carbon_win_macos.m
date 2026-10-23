@@ -53,8 +53,9 @@ static id<MTLDevice> carbon_win__mtl_device;
 static id<MTLCommandQueue> carbon_win__mtl_queue;
 static CAMetalLayer *carbon_win__mtl_layer;
 static id<MTLRenderPipelineState> carbon_win__mtl_pipeline;
-static id<MTLTexture> carbon_win__mtl_texture;
-static id<MTLBuffer> carbon_win__mtl_buffer;
+static id<MTLTexture> carbon_win__mtl_textures[CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT];
+static id<MTLBuffer> carbon_win__mtl_buffers[CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT];
+static usz carbon_win__mtl_frame;
 static dispatch_semaphore_t carbon_win__mtl_semaphore;
 
 CBNINL CBN_Vec2 carbon_win__get_window_size(void) {
@@ -98,12 +99,8 @@ void carbon_win_set_fullscreen(bool yn) {
 }
 
 CBNINL void carbon_win__renderer_upload_texture(void) {
-  if (carbon_win__mtl_buffer)  [carbon_win__mtl_buffer  release];
-  if (carbon_win__mtl_texture) [carbon_win__mtl_texture release];
   NSUInteger bytes_per_row = carbon_win__renderer_w * 4;
   NSUInteger total_bytes   = carbon_win__renderer_h * bytes_per_row;
-  carbon_win__mtl_buffer = [carbon_win__mtl_device newBufferWithLength:total_bytes
-                                                               options:MTLResourceStorageModeShared];
   MTLTextureDescriptor *desc = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm
                                                                                   width:carbon_win__renderer_w
                                                                                  height:carbon_win__renderer_h
@@ -116,9 +113,15 @@ CBNINL void carbon_win__renderer_upload_texture(void) {
                                                MTLTextureSwizzleGreen,
                                                MTLTextureSwizzleRed);
 #endif
-  carbon_win__mtl_texture = [carbon_win__mtl_buffer newTextureWithDescriptor:desc
-                                                                      offset:0
-                                                                 bytesPerRow:bytes_per_row];
+  for (usz i = 0; i < CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT; ++i) {
+    if (carbon_win__mtl_buffers[i])  [carbon_win__mtl_buffers[i]  release];
+    if (carbon_win__mtl_textures[i]) [carbon_win__mtl_textures[i] release];
+    carbon_win__mtl_buffers[i] = [carbon_win__mtl_device newBufferWithLength:total_bytes
+                                                                     options:MTLResourceStorageModeShared];
+    carbon_win__mtl_textures[i] = [carbon_win__mtl_buffers[i] newTextureWithDescriptor:desc
+                                                                                offset:0
+                                                                           bytesPerRow:bytes_per_row];
+  }
 }
 
 CBNINL void carbon_win__create_system_menu(const char *title) {
@@ -225,8 +228,10 @@ CBNINL void carbon_win__renderer_shutdown(void) {
     dispatch_semaphore_signal(carbon_win__mtl_semaphore);
   }
   dispatch_release(carbon_win__mtl_semaphore);
-  [carbon_win__mtl_buffer   release];
-  [carbon_win__mtl_texture  release];
+  for (usz i = 0; i < CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT; ++i) {
+    [carbon_win__mtl_buffers[i]  release];
+    [carbon_win__mtl_textures[i] release];
+  }
   [carbon_win__mtl_pipeline release];
   [carbon_win__mtl_layer    release];
   [carbon_win__mtl_queue    release];
@@ -374,7 +379,8 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
       carbon_win__renderer_upload_texture();
     }
     dispatch_semaphore_wait(carbon_win__mtl_semaphore, DISPATCH_TIME_FOREVER);
-    carbon_memory_copy(carbon_win__mtl_buffer.contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
+    const usz f = carbon_win__mtl_frame;
+    carbon_memory_copy(carbon_win__mtl_buffers[f].contents, pixels, carbon_win__renderer_w * carbon_win__renderer_h * 4);
     id<CAMetalDrawable> drawable = [carbon_win__mtl_layer nextDrawable];
     if (!drawable) {
       dispatch_semaphore_signal(carbon_win__mtl_semaphore);
@@ -390,7 +396,7 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
       }];
     id<MTLRenderCommandEncoder> enc = [cmd renderCommandEncoderWithDescriptor:pass];
     [enc setRenderPipelineState:carbon_win__mtl_pipeline];
-    [enc setFragmentTexture:carbon_win__mtl_texture atIndex:0];
+    [enc setFragmentTexture:carbon_win__mtl_textures[f] atIndex:0];
     const f32 fx[4*4] = {
       carbon_win__postfx.barrel_distortion.yn,
       carbon_win__postfx.barrel_distortion.intensity,
@@ -413,5 +419,6 @@ CBNINL void carbon_win__renderer_present(const u32 *pixels, usz w, usz h) {
     [enc endEncoding];
     [cmd presentDrawable:drawable];
     [cmd commit];
+    carbon_win__mtl_frame = (f + 1) % CARBON_WIN__MTL_MAX_FRAMES_IN_FLIGHT;
   }
 }
