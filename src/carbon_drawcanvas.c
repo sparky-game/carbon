@@ -172,14 +172,15 @@ void carbon_drawcanvas_rect(CBN_DrawCanvas *dc, CBN_Rect r, u32 color) {
 
 void carbon_drawcanvas_rect_outline(CBN_DrawCanvas *dc, CBN_Rect r, usz thick, u32 color) {
   if (!thick) return;
-  if (2*thick >= r.w || 2*thick >= r.h) {
-    carbon_drawcanvas_rect(dc, r, color);
+  const i32 t = thick, x1 = r.x, y1 = r.y, x2 = r.x + r.w, y2 = r.y + r.h, w = x2 - x1, h = y2 - y1;
+  if (2*t >= w || 2*t >= h) {
+    carbon_drawcanvas_rect(dc, carbon_math_rect(x1, y1, w, h), color);
     return;
   }
-  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y, r.w, thick), color);
-  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y + r.h - thick, r.w, thick), color);
-  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x, r.y + thick, thick, r.h - 2*thick), color);
-  carbon_drawcanvas_rect(dc, carbon_math_rect(r.x + r.w - thick, r.y + thick, thick, r.h - 2*thick), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(x1, y1, w, t), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(x1, y2 - t, w, t), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(x1, y1 + t, t, h - 2*t), color);
+  carbon_drawcanvas_rect(dc, carbon_math_rect(x2 - t, y1 + t, t, h - 2*t), color);
 }
 
 void carbon_drawcanvas_circle(CBN_DrawCanvas *dc, CBN_Vec2 center, usz radius, u32 color) {
