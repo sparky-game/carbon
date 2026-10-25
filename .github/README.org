@@ -18,7 +18,7 @@
 </p>
 #+end_html
 
-~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑːbᵊn\slash{}]]/) is the ultimate *simple* and *easy to use* C/C++ standard library to enjoy programming. @@html:<br>@@
+~Carbon~ (/[[https://en.wikipedia.org/wiki/Help:IPA/English][\slash{}ˈkɑː.bən\slash{}]]/) is the ultimate *simple* and *easy to use* C/C++ standard library to enjoy programming. @@html:<br>@@
 It serves a wide variety of use cases, from CLI programs, graphics-intensive real-time applications, to complex full-fledged testing suites. @@html:<br>@@
 If you'd like to make a contribution, you can check the project's [[CONTRIBUTING.org][guidelines]]; also, keep an eye on both security issues reporting [[SECURITY.md][instructions]] and our [[CODE_OF_CONDUCT.md][Code of Conduct]]. Furthermore, if you do something cool with /Carbon/, don't forget to add the [[https://github.com/topics/sk-cbn][#sk-cbn]] tag to your /topics/!
 
