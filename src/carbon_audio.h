@@ -6,7 +6,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-typedef CBN_SlotMap_Key CBN_Audio_UID;
+/**
+ * @brief Represents ...
+ */
+CBNDEF_TEQ(CBN_Audio_UID, CBN_SlotMap_Key);
 CBNDEF_TAKA(cbn::audio, UID, CBN_Audio_UID);
 
 // Forward declaration
@@ -83,28 +86,24 @@ CBNDEF_AKA(cbn::audio, LoadFromSKAP, carbon_audio_load_from_skap);
  * @param uid ...
  */
 CBNDEF void carbon_audio_unload(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, Unload, carbon_audio_unload);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_play(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, Play, carbon_audio_play);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_stop(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, Stop, carbon_audio_stop);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_resume(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, Resume, carbon_audio_resume);
 
 /**
  * @brief ...
@@ -112,7 +111,6 @@ CBNDEF_AKA(cbn::audio, Resume, carbon_audio_resume);
  * @return ...
  */
 CBNDEF bool carbon_audio_is_playing(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, IsPlaying, carbon_audio_is_playing);
 
 /**
  * @brief ...
@@ -120,7 +118,6 @@ CBNDEF_AKA(cbn::audio, IsPlaying, carbon_audio_is_playing);
  * @return ... in (0..+inf) ...
  */
 CBNDEF f32 carbon_audio_get_pitch(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, GetPitch, carbon_audio_get_pitch);
 
 /**
  * @brief ...
@@ -128,14 +125,12 @@ CBNDEF_AKA(cbn::audio, GetPitch, carbon_audio_get_pitch);
  * @param pitch ... in (0..+inf) ...
  */
 CBNDEF void carbon_audio_set_pitch(CBN_Audio_UID uid, f32 pitch);
-CBNDEF_AKA(cbn::audio, SetPitch, carbon_audio_set_pitch);
 
 /**
  * @brief ...
  * @param uid ...
  */
 CBNDEF void carbon_audio_shift_pitch(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);
 
 /**
  * @brief ...
@@ -143,7 +138,6 @@ CBNDEF_AKA(cbn::audio, ShiftPitch, carbon_audio_shift_pitch);
  * @param yn A boolean value representing whether the sound must loop or not.
  */
 CBNDEF void carbon_audio_set_looping(CBN_Audio_UID uid, bool yn);
-CBNDEF_AKA(cbn::audio, SetLooping, carbon_audio_set_looping);
 
 /**
  * @brief ...
@@ -151,4 +145,12 @@ CBNDEF_AKA(cbn::audio, SetLooping, carbon_audio_set_looping);
  * @return ...
  */
 CBNDEF f32 carbon_audio_get_cursor(CBN_Audio_UID uid);
-CBNDEF_AKA(cbn::audio, GetCursor, carbon_audio_get_cursor);
+
+/**
+ * @brief ...
+ * @param uid ...
+ * @param target ...
+ * @param len_ms ...
+ * @return ...
+ */
+CBNDEF void carbon_audio_set_fade(CBN_Audio_UID uid, f32 target, u64 len_ms);

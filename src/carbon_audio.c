@@ -192,3 +192,9 @@ f32 carbon_audio_get_cursor(CBN_Audio_UID uid) {
   ma_sound_get_cursor_in_seconds(entry.sound, &cur);
   return cur;
 }
+
+void carbon_audio_set_fade(CBN_Audio_UID uid, f32 target, u64 len_ms) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_set_fade_in_milliseconds(entry.sound, -1, target, len_ms);
+}
