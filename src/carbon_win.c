@@ -9,6 +9,8 @@ static usz carbon_win__renderer_w, carbon_win__renderer_h;
 static bool carbon_win__cursor_visible = true;
 static CBN_Vec2 carbon_win__mouse_delta;
 static f32 carbon_win__mouse_scroll;
+static f32 carbon_win__gesture_rotation;
+static bool carbon_win__is_gesture_rotating;
 
 static u32 carbon_win__fps;
 static u32 carbon_win__max_fps;
@@ -150,6 +152,7 @@ bool carbon_win_shouldclose(void) {
     carbon_win__prev_mouse_buttons[i] = carbon_win__mouse_buttons[i];
   }
   carbon_win__mouse_scroll = 0;
+  carbon_win__gesture_rotation = 0;
   while (carbon_win__poll_event());
   carbon_win__update_mouse_delta();
   return carbon_win__should_close;
@@ -199,6 +202,14 @@ CBN_Vec2 carbon_win_get_mouse_delta(void) {
 
 f32 carbon_win_get_mouse_scroll(void) {
   return carbon_win__mouse_scroll;
+}
+
+f32 carbon_win_get_gesture_rotation(void) {
+  return carbon_win__gesture_rotation;
+}
+
+bool carbon_win_is_gesture_rotating(void) {
+  return carbon_win__is_gesture_rotating;
 }
 
 void carbon_win_postfx_barrel_distortion(bool yn, f32 intensity) {

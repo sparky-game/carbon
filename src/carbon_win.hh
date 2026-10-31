@@ -192,6 +192,20 @@ CBNDEF f32 carbon_win_get_mouse_scroll(void);
 CBNDEF_AKA(cbn::win, GetMouseScroll, carbon_win_get_mouse_scroll);
 
 /**
+ * @brief Returns the trackpad two-finger rotation gesture delta accumulated during the current frame.
+ * @return The rotation in degrees (positive is counterclockwise), or 0 if the platform does not support it.
+ */
+CBNDEF f32 carbon_win_get_gesture_rotation(void);
+CBNDEF_AKA(cbn::win, GetGestureRotation, carbon_win_get_gesture_rotation);
+
+/**
+ * @brief Returns true while the user is performing a trackpad two-finger rotation gesture, even if the fingers are momentarily still.
+ * @return A boolean value representing whether the gesture is in progress or not, or false if the platform does not support it.
+ */
+CBNDEF bool carbon_win_is_gesture_rotating(void);
+CBNDEF_AKA(cbn::win, IsGestureRotating, carbon_win_is_gesture_rotating);
+
+/**
  * @brief Sets the visibility state of the mouse cursor, between shown or hidden.
  * @param visible A boolean value representing whether the mouse cursor must be visible or not.
  */

@@ -364,6 +364,12 @@ CBNINL bool carbon_win__poll_event(void) {
       if ([e hasPreciseScrollingDeltas]) carbon_win__mouse_scroll += (f32)[e scrollingDeltaY] * 0.1;
       else carbon_win__mouse_scroll += (f32)[e scrollingDeltaY];
       break;
+    case NSEventTypeRotate: {
+      carbon_win__gesture_rotation += (f32)[e rotation];
+      const NSEventPhase p = [e phase];
+      if (p & NSEventPhaseBegan) carbon_win__is_gesture_rotating = true;
+      else if (p & (NSEventPhaseEnded | NSEventPhaseCancelled)) carbon_win__is_gesture_rotating = false;
+    } break;
     default: break;
     }
     [carbon_win__app sendEvent:e];

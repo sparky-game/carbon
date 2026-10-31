@@ -55,7 +55,6 @@ struct CBN_DrawCanvas {
 
   void DrawSprite(const CBN_Sprite *s, CBN_Vec2 position, CBN_Vec2 scale = {1}, u32 tint = 0xffffffff)
   { carbon_drawcanvas_sprite(this, s, position, scale, tint); }
-
   void DrawSprite(const CBN_DrawCanvas &dc, CBN_Vec2 position, CBN_Vec2 scale = {1}, u32 tint = 0xffffffff)
   {
     const CBN_Sprite s {dc};
