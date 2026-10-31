@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-typedef CBN_SlotMap_Key CBN_Sprite_UID;
+CBNDEF_TEQ(CBN_Sprite_UID, CBN_SlotMap_Key);
 CBNDEF_TAKA(cbn::sprite_mgr, UID, CBN_Sprite_UID);
 
 // Forward declaration
@@ -48,7 +48,6 @@ CBNDEF_AKA(cbn::sprite_mgr, LoadFromSKAP, carbon_sprite_manager_load_from_skap);
  * @param uid The UID of the sprite to unload.
  */
 CBNDEF void carbon_sprite_manager_unload(CBN_Sprite_UID uid);
-CBNDEF_AKA(cbn::sprite_mgr, Unload, carbon_sprite_manager_unload);
 
 /**
  * @brief Looks up a sprite in the subsystem by its UID.
@@ -56,4 +55,3 @@ CBNDEF_AKA(cbn::sprite_mgr, Unload, carbon_sprite_manager_unload);
  * @return A pointer to the corresponding sprite, or null if the UID was invalid.
  */
 CBNDEF CBN_Sprite *carbon_sprite_manager_lookup(CBN_Sprite_UID uid);
-CBNDEF_AKA(cbn::sprite_mgr, Lookup, carbon_sprite_manager_lookup);

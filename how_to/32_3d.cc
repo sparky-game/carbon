@@ -100,7 +100,7 @@ void meshes_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
     dc.DrawMesh(c, &dc.Cube, t, Color_FG);
   }
   {// Teapot
-    static const auto * const m = cbn::mesh_mgr::Lookup(res::s_Mesh_Teapot);
+    static const auto * const m = res::s_Mesh_Teapot.Lookup();
     static cbn::Transform t {
       .position = {-5, -1.5, -5},
       .rotation = {0},
@@ -110,8 +110,8 @@ void meshes_render(cbn::DrawCanvas &dc, const cbn::Camera &c, const f64 dt) {
     t.rotation.y += 50 * dt;
   }
   {// Tree
-    static const auto * const m = cbn::mesh_mgr::Lookup(res::s_Mesh_Tree);
-    static const auto * const s = cbn::sprite_mgr::Lookup(res::s_Sprite_Tree);
+    static const auto * const m = res::s_Mesh_Tree.Lookup();
+    static const auto * const s = res::s_Sprite_Tree.Lookup();
     static cbn::Transform t {
       .position = {5, -1.5, -5},
       .rotation = {0},

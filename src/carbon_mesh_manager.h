@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) Wasym A. Alonso. All Rights Reserved.
 
-typedef CBN_SlotMap_Key CBN_Mesh_UID;
+CBNDEF_TEQ(CBN_Mesh_UID, CBN_SlotMap_Key);
 CBNDEF_TAKA(cbn::mesh_mgr, UID, CBN_Mesh_UID);
 
 /**
@@ -44,12 +44,10 @@ CBNDEF_AKA(cbn::mesh_mgr, LoadFromSKAP, carbon_mesh_manager_load_from_skap);
  * @param uid The UID of the mesh to unload.
  */
 CBNDEF void carbon_mesh_manager_unload(CBN_Mesh_UID uid);
-CBNDEF_AKA(cbn::mesh_mgr, Unload, carbon_mesh_manager_unload);
 
 /**
- * @brief ...
- * @param uid ...
- * @return ...
+ * @brief Looks up a mesh in the subsystem by its UID.
+ * @param uid The UID of the mesh to retrieve.
+ * @return A pointer to the corresponding mesh, or null if the UID was invalid.
  */
 CBNDEF CBN_Mesh *carbon_mesh_manager_lookup(CBN_Mesh_UID uid);
-CBNDEF_AKA(cbn::mesh_mgr, Lookup, carbon_mesh_manager_lookup);
