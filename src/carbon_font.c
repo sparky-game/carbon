@@ -32,7 +32,7 @@
 CBN_Font carbon_font_create_from_file(const char *file, usz size) {
   CBN_Font f = {0};
   CBN_List data = carbon_list_create(sizeof(u8));
-  CBN_ASSERT(carbon_fs_read_entire_file(&data, file));
+  CBN_ASSERT(carbon_fs_read_entire_file(file, &data));
   stbtt_fontinfo fi;
   CBN_ASSERT(stbtt_InitFont(&fi, data.items, 0));
   f32 scale = stbtt_ScaleForPixelHeight(&fi, size);

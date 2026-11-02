@@ -21,6 +21,7 @@ typedef struct {
 
 static ma_engine carbon_audio__engine;
 static CBN_SlotMap carbon_audio__library;
+static CBN_SlotMap carbon_audio__groups;
 
 #define CARBON_AUDIO__SOUND_FLAGS (MA_SOUND_FLAG_ASYNC)
 #define CARBON_AUDIO__SOUND_STREAM_FLAGS (MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING | MA_SOUND_FLAG_NO_PITCH)
@@ -29,6 +30,7 @@ void carbon_audio_init(void) {
   ma_result res = ma_engine_init(0, &carbon_audio__engine);
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
   carbon_audio__library = carbon_slotmap_create(sizeof(CBN_Audio_Entry));
+  carbon_audio__groups = carbon_slotmap_create(sizeof(ma_sound_group *));
   CBN_INFO("Initialized audio subsystem successfully");
 }
 
@@ -45,6 +47,11 @@ void carbon_audio_shutdown(void) {
     }
   }
   carbon_slotmap_destroy(&carbon_audio__library);
+  carbon_slotmap_foreach(ma_sound_group *, carbon_audio__groups) {
+    ma_sound_group_uninit(it.var);
+    carbon_memory_free(it.var);
+  }
+  carbon_slotmap_destroy(&carbon_audio__groups);
   ma_engine_uninit(&carbon_audio__engine);
   CBN_INFO("Shutdowned audio subsystem successfully");
 }
@@ -69,35 +76,73 @@ void carbon_audio_set_volume(f32 volume) {
   ma_engine_set_volume(&carbon_audio__engine, volume);
 }
 
-CBNINL bool carbon_audio__load_from_file_ex(const char *file, CBN_Audio_UID *out_uid, ma_sound_flags flags) {
-  if (!out_uid) {
-    CBN_ERROR("`out_uid` must be a valid pointer");
+bool carbon_audio_new_group(CBN_Audio_GID *out) {
+  if (!out) {
+    CBN_ERROR("`out` must be a valid pointer");
     return false;
   }
+  ma_sound_group *g = carbon_memory_alloc(sizeof(ma_sound_group));
+  if (MA_SUCCESS != ma_sound_group_init(&carbon_audio__engine, 0, 0, g)) {
+    CBN_ERROR("Failed to init new sound group");
+    carbon_memory_free(g);
+    return false;
+  }
+  *out = carbon_slotmap_set(&carbon_audio__groups, &g);
+  return true;
+}
+
+f32 carbon_audio_group_get_volume(CBN_Audio_GID gid) {
+  ma_sound_group *g = 0;
+  if (!carbon_slotmap_get(&carbon_audio__groups, gid, &g)) return 0;
+  return ma_sound_group_get_volume(g);
+}
+
+void carbon_audio_group_set_volume(CBN_Audio_GID gid, f32 volume) {
+  ma_sound_group *g = 0;
+  if (!carbon_slotmap_get(&carbon_audio__groups, gid, &g)) return;
+  ma_sound_group_set_volume(g, volume);
+}
+
+CBNINL bool carbon_audio__lookup_group(const CBN_Audio_GID *gid, ma_sound_group **out) {
+  *out = 0;
+  if (!gid) return true;
+  if (!carbon_slotmap_get(&carbon_audio__groups, *gid, out)) return false;
+  return true;
+}
+
+CBNINL bool carbon_audio__load_from_file_ex(const char *file, const CBN_Audio_GID *gid, CBN_Audio_UID *out, ma_sound_flags flags) {
+  if (!out) {
+    CBN_ERROR("`out` must be a valid pointer");
+    return false;
+  }
+  ma_sound_group *g = 0;
+  if (!carbon_audio__lookup_group(gid, &g)) return false;
   CBN_Audio_Entry entry = {0};
   entry.sound = carbon_memory_alloc(sizeof(ma_sound));
-  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, 0, 0, entry.sound)) {
+  if (MA_SUCCESS != ma_sound_init_from_file(&carbon_audio__engine, file, flags, g, 0, entry.sound)) {
     CBN_ERROR("Failed to load sound from file (`%s`)", file);
     carbon_memory_free(entry.sound);
     return false;
   }
-  *out_uid = carbon_slotmap_set(&carbon_audio__library, &entry);
+  *out = carbon_slotmap_set(&carbon_audio__library, &entry);
   return true;
 }
 
-bool carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_FLAGS);
+bool carbon_audio_load_from_file(const char *file, const CBN_Audio_GID *gid, CBN_Audio_UID *out) {
+  return carbon_audio__load_from_file_ex(file, gid, out, CARBON_AUDIO__SOUND_FLAGS);
 }
 
-bool carbon_audio_load_from_file_streaming(const char *file, CBN_Audio_UID *out_uid) {
-  return carbon_audio__load_from_file_ex(file, out_uid, CARBON_AUDIO__SOUND_STREAM_FLAGS);
+bool carbon_audio_load_from_file_streaming(const char *file, const CBN_Audio_GID *gid, CBN_Audio_UID *out) {
+  return carbon_audio__load_from_file_ex(file, gid, out, CARBON_AUDIO__SOUND_STREAM_FLAGS);
 }
 
-bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Audio_UID *out_uid) {
-  if (!out_uid) {
-    CBN_ERROR("`out_uid` must be a valid pointer");
+bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, const CBN_Audio_GID *gid, CBN_Audio_UID *out) {
+  if (!out) {
+    CBN_ERROR("`out` must be a valid pointer");
     return false;
   }
+  ma_sound_group *g = 0;
+  if (!carbon_audio__lookup_group(gid, &g)) return false;
   CBN_Audio_Entry entry = {0};
   if (!carbon_skap_lookup(skap, CARBON_SKAP_ASSET_TYPE_BINARY, name, &entry.binary)) return false;
   entry.decoder = carbon_memory_alloc(sizeof(ma_decoder));
@@ -108,14 +153,15 @@ bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Aud
     return false;
   }
   entry.sound = carbon_memory_alloc(sizeof(ma_sound));
-  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, entry.decoder, CARBON_AUDIO__SOUND_FLAGS, 0, entry.sound)) {
+  if (MA_SUCCESS != ma_sound_init_from_data_source(&carbon_audio__engine, entry.decoder, CARBON_AUDIO__SOUND_FLAGS, g, entry.sound)) {
     CBN_ERROR("Failed to load sound from audio buffer");
     carbon_memory_free(entry.sound);
+    ma_decoder_uninit(entry.decoder);
     carbon_memory_free(entry.decoder);
     carbon_memory_free(entry.binary.data);
     return false;
   }
-  *out_uid = carbon_slotmap_set(&carbon_audio__library, &entry);
+  *out = carbon_slotmap_set(&carbon_audio__library, &entry);
   return true;
 }
 
@@ -197,4 +243,16 @@ void carbon_audio_set_fade(CBN_Audio_UID uid, f32 target, u64 len_ms) {
   CBN_Audio_Entry entry = {0};
   if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
   ma_sound_set_fade_in_milliseconds(entry.sound, -1, target, len_ms);
+}
+
+f32 carbon_audio_sound_get_volume(CBN_Audio_UID uid) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return 0;
+  return ma_sound_get_volume(entry.sound);
+}
+
+void carbon_audio_sound_set_volume(CBN_Audio_UID uid, f32 volume) {
+  CBN_Audio_Entry entry = {0};
+  if (!carbon_slotmap_get(&carbon_audio__library, uid, &entry)) return;
+  ma_sound_set_volume(entry.sound, volume);
 }

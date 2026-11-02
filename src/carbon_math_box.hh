@@ -8,9 +8,7 @@ struct CBN_Box : CBN_Box_t {
   constexpr CBN_Box(CBN_Vec3 p, CBN_Vec3 sz) : CBN_Box(p.x, p.y, p.z, sz.x, sz.y, sz.z) {}
 
   cbn::Opt<f32> RayIntersects(const CBN_Ray &r) const {
-    f32 t;
-    if (!carbon_math_box_ray_intersects(*this, r, &t)) return {};
-    return t;
+    return cbn::meta::OptWrap<f32>(carbon_math_box_ray_intersects, *this, r);
   }
 };
 

@@ -8,7 +8,7 @@
 
 CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
   CBN_List data = carbon_list_create(sizeof(u8));
-  if (!carbon_fs_read_entire_file(&data, file)) {
+  if (!carbon_fs_read_entire_file(file, &data)) {
     CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
@@ -26,7 +26,7 @@ CBNINL bool carbon_mesh__parse_sizes_from_file(CBN_Mesh *m, const char *file) {
 
 CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
   CBN_List data = carbon_list_create(sizeof(u8));
-  if (!carbon_fs_read_entire_file(&data, file)) {
+  if (!carbon_fs_read_entire_file(file, &data)) {
     CBN_ERROR("OBJ file (`%s`) could not be read", file);
     return false;
   }
@@ -78,7 +78,7 @@ CBNINL bool carbon_mesh__parse_data_from_file(CBN_Mesh *m, const char *file) {
   return true;
 }
 
-bool carbon_mesh_create_from_file(CBN_Mesh *m, const char *file) {
+bool carbon_mesh_create_from_file(const char *file, CBN_Mesh *m) {
   if (!m) {
     CBN_WARN("`m` is not a valid pointer, skipping creation");
     return false;

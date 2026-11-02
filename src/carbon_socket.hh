@@ -118,15 +118,11 @@ CBNDEF_TAKA(cbn::net::udp, Socket, CBN_Socket_UDP);
 
 struct CBN_Socket_TCP : CBN_Socket {
   static cbn::Opt<CBN_Socket_TCP> make(void) {
-    CBN_Socket_TCP sock {};
-    if (!carbon_socket_tcp_create(&sock)) return {};
-    return sock;
+    return cbn::meta::OptWrap<CBN_Socket_TCP>(carbon_socket_tcp_create);
   }
 
   static cbn::Opt<CBN_Socket_TCP> make_async(void) {
-    CBN_Socket_TCP sock {};
-    if (!carbon_socket_tcp_create_async(&sock)) return {};
-    return sock;
+    return cbn::meta::OptWrap<CBN_Socket_TCP>(carbon_socket_tcp_create_async);
   }
 
   bool Listen(void) const {

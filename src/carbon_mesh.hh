@@ -4,9 +4,7 @@
 
 struct CBN_Mesh : CBN_Mesh_t {
   static cbn::Opt<CBN_Mesh> New(const char *file) {
-    CBN_Mesh m = {};
-    if (!carbon_mesh_create_from_file(&m, file)) return {};
-    return m;
+    return cbn::meta::OptWrap<CBN_Mesh>(carbon_mesh_create_from_file, file);
   }
 
   void Free(void) { carbon_mesh_destroy(this); }

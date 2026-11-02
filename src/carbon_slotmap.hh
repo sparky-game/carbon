@@ -40,9 +40,7 @@ struct CBN_SlotMap_tt : CBN_SlotMap_t {
   Key Set(const value_type &v) { return carbon_slotmap_set((CBN_SlotMap *)this, (void *)&v); }
 
   cbn::Opt<value_type> Get(Key k) const {
-    value_type v;
-    if (!carbon_slotmap_get((CBN_SlotMap *)this, k, (void *)&v)) return {};
-    return v;
+    return cbn::meta::OptWrap<value_type>(carbon_slotmap_get, (CBN_SlotMap *)this, k);
   }
   cbn::Opt<value_type> operator[](Key k) const { return Get(k); }
 

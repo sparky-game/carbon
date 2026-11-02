@@ -28,7 +28,6 @@ CBNDEF_AKA(cbn::mesh_mgr, Shutdown, carbon_mesh_manager_shutdown);
  * @return ...
  */
 CBNDEF bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid);
-CBNDEF_AKA(cbn::mesh_mgr, LoadFromFile, carbon_mesh_manager_load_from_file);
 
 /**
  * @param name ...
@@ -37,7 +36,6 @@ CBNDEF_AKA(cbn::mesh_mgr, LoadFromFile, carbon_mesh_manager_load_from_file);
  * @return ...
  */
 CBNDEF bool carbon_mesh_manager_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Mesh_UID *out_uid);
-CBNDEF_AKA(cbn::mesh_mgr, LoadFromSKAP, carbon_mesh_manager_load_from_skap);
 
 /**
  * @brief Unloads and frees a mesh from the subsystem by its UID.

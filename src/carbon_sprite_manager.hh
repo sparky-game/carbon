@@ -8,4 +8,14 @@ struct CBN_Sprite_UID : CBN_Sprite_UID_t {
   CBN_Sprite *Lookup(void) const { return carbon_sprite_manager_lookup(*this); }
 };
 
+namespace cbn::sprite_mgr {
+  inline Opt<UID> LoadFromFile(const char *file) {
+    return meta::OptWrap<UID>(carbon_sprite_manager_load_from_file, file);
+  }
+
+  inline Opt<UID> LoadFromSKAP(const char *name, const CBN_SKAP *skap) {
+    return meta::OptWrap<UID>(carbon_sprite_manager_load_from_skap, name, skap);
+  }
+}
+
 #endif

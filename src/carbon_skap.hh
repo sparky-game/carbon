@@ -34,9 +34,7 @@ struct CBN_SKAP : CBN_SKAP_t {
   static bool Create(const char *decl, const char *skap) { return carbon_skap_create(decl, skap); }
 
   static cbn::Opt<CBN_SKAP> Open(const char *skap) {
-    CBN_SKAP handle;
-    if (!carbon_skap_open(skap, &handle)) return {};
-    return handle;
+    return cbn::meta::OptWrap<CBN_SKAP>(carbon_skap_open, skap);
   }
 
   void Free(void) { carbon_skap_close(this); }
@@ -44,10 +42,8 @@ struct CBN_SKAP : CBN_SKAP_t {
   void Print(void) const { carbon_skap_print(this); }
 
   template <CBN_SKAP_ValidAssetType T>
-  cbn::Opt<T> Lookup(const char *asset_name) const {
-    T asset;
-    if (!carbon_skap_lookup(this, GetAssetType<T>(), asset_name, &asset)) return {};
-    return asset;
+  cbn::Opt<T> Lookup(const char *name) const {
+    return cbn::meta::OptWrap<T>(carbon_skap_lookup, this, GetAssetType<T>(), name);
   }
 
   usz Count(void) const { return carbon_skap_count(this); }
@@ -55,22 +51,16 @@ struct CBN_SKAP : CBN_SKAP_t {
   template <CBN_SKAP_ValidAssetType T>
   usz CountOf(void) const { return carbon_skap_count_of(this, GetAssetType<T>()); }
 
-  cbn::Opt<CBN_Sprite_UID> LoadSprite(const char *name) const {
-    CBN_Sprite_UID uid;
-    if (!cbn::sprite_mgr::LoadFromSKAP(name, this, &uid)) return {};
-    return uid;
+  cbn::Opt<cbn::sprite_mgr::UID> LoadSprite(const char *name) const {
+    return cbn::sprite_mgr::LoadFromSKAP(name, this);
   }
 
-  cbn::Opt<CBN_Mesh_UID> LoadMesh(const char *name) const {
-    CBN_Mesh_UID uid;
-    if (!cbn::mesh_mgr::LoadFromSKAP(name, this, &uid)) return {};
-    return uid;
+  cbn::Opt<cbn::mesh_mgr::UID> LoadMesh(const char *name) const {
+    return cbn::mesh_mgr::LoadFromSKAP(name, this);
   }
 
-  cbn::Opt<CBN_Audio_UID> LoadAudio(const char *name) const {
-    CBN_Audio_UID uid;
-    if (!cbn::audio::LoadFromSKAP(name, this, &uid)) return {};
-    return uid;
+  cbn::Opt<cbn::audio::UID> LoadAudio(const char *name, const cbn::audio::GID *gid = nullptr) const {
+    return cbn::audio::LoadFromSKAP(name, this, gid);
   }
   
 private:

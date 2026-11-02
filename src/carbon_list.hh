@@ -9,8 +9,8 @@ struct CBN_List_tt : CBN_List_t {
 
   CBN_List_tt(void) : CBN_List_t{carbon_list_create(sizeof(value_type))} {}
 
-  static cbn::Opt<CBN_List_tt> FromFile(const char *file);
-  bool ToFile(const char *file) const;
+  static cbn::Opt<CBN_List_tt> FromFile(const char *file) requires cbn::meta::IsTriviallyCopyable_v<T>;
+  bool ToFile(const char *file) const requires cbn::meta::IsTriviallyCopyable_v<T>;
 
   CBN_List_tt(const CBN_List_tt &) = delete;
   CBN_List_tt &operator=(const CBN_List_tt &) = delete;

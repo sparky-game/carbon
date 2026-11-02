@@ -48,7 +48,7 @@ CBNINL void carbon_skap__destroy_binary(void *p) { carbon_memory_free(((CBN_Span
 
 CBNINL void carbon_skap__append_idx_binary(CBN_SKAP_AssetIdx *idx) {
   CBN_List data = carbon_list_create(sizeof(u8));
-  CBN_ASSERT(carbon_fs_read_entire_file(&data, idx->name));
+  CBN_ASSERT(carbon_fs_read_entire_file(idx->name, &data));
   CBN_Span view = carbon_span_from_list(&data);
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &view);
   idx->metadata.as_bin.size = view.size;
@@ -121,7 +121,7 @@ CBNINL bool carbon_skap__lookup_image(const CBN_SKAP *handle, CBN_SKAP_AssetIdx 
 
 CBNINL void carbon_skap__append_idx_mesh(CBN_SKAP_AssetIdx *idx) {
   CBN_Mesh asset = {0};
-  CBN_ASSERT(carbon_mesh_create_from_file(&asset, idx->name));
+  CBN_ASSERT(carbon_mesh_create_from_file(idx->name, &asset));
   carbon_list_push(&carbon_skap__assets[idx->metadata.type], &asset);
   idx->metadata.as_mesh = asset.metadata;
 }

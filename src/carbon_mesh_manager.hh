@@ -8,4 +8,14 @@ struct CBN_Mesh_UID : CBN_Mesh_UID_t {
   CBN_Mesh *Lookup(void) const { return carbon_mesh_manager_lookup(*this); }
 };
 
+namespace cbn::mesh_mgr {
+  inline Opt<UID> LoadFromFile(const char *file) {
+    return meta::OptWrap<UID>(carbon_mesh_manager_load_from_file, file);
+  }
+
+  inline Opt<UID> LoadFromSKAP(const char *name, const CBN_SKAP *skap) {
+    return meta::OptWrap<UID>(carbon_mesh_manager_load_from_skap, name, skap);
+  }
+}
+
 #endif

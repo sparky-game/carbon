@@ -144,11 +144,11 @@ CBNDEF_AKA(cbn::fs, Size, carbon_fs_get_file_size);
 
 /**
  * @brief Reads all the data from the given file into a List object.
- * @param l The List object where the read data will be stored.
  * @param file The file to read the data from.
+ * @param l The List object where the read data will be stored.
  * @return A boolean value representing the success of the operation.
  */
-CBNDEF bool carbon_fs_read_entire_file(CBN_List *l, const char *file);
+CBNDEF bool carbon_fs_read_entire_file(const char *file, CBN_List *l);
 CBNDEF_AKA(cbn::fs, ReadFile, carbon_fs_read_entire_file);
 
 /**

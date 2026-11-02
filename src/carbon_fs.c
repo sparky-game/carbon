@@ -249,19 +249,20 @@ u32 carbon_fs_get_file_size(const char *file) {
   return size;
 }
 
-bool carbon_fs_read_entire_file(CBN_List *l, const char *file) {
+bool carbon_fs_read_entire_file(const char *file, CBN_List *l) {
   u32 n = carbon_fs_get_file_size(file);
+  if (n % l->stride) {
+    CBN_ERROR("file size (%uB) is not a multiple of the list stride (%zuB) (`%s`)", n, l->stride, file);
+    return false;
+  }
   FILE *fd = fopen(file, "rb");
   if (!fd) {
     CBN_ERROR("unable to open file (`%s`)", file);
     return false;
   }
-  usz count = l->size + n;
-  if (count > l->capacity) {
-    l->items = carbon_memory_realloc(l->items, count);
-    l->capacity = count;
-  }
-  if (1 != fread(l->items + l->size, n, 1, fd)) {
+  usz count = n / l->stride;
+  carbon_list_reserve(l, l->size + count);
+  if (n && 1 != fread(l->items + l->size*l->stride, n, 1, fd)) {
     CBN_ERROR("failed to read 1 item of %uB (`%s`)", n, file);
     fclose(fd);
     return false;
@@ -271,7 +272,7 @@ bool carbon_fs_read_entire_file(CBN_List *l, const char *file) {
     fclose(fd);
     return false;
   }
-  l->size = count;
+  l->size += count;
   fclose(fd);
   return true;
 }
@@ -282,8 +283,10 @@ bool carbon_fs_write_entire_file(const CBN_List *l, const char *file) {
     CBN_ERROR("unable to open file (`%s`)", file);
     return false;
   }
-  if (1 != fwrite(l->items, l->size, 1, fd)) {
-    CBN_ERROR("failed to write 1 item of %zuB (`%s`)", l->size, file);
+  usz n = l->size * l->stride;
+  if (n && 1 != fwrite(l->items, n, 1, fd)) {
+    CBN_ERROR("failed to write 1 item of %zuB (`%s`)", n, file);
+    fclose(fd);
     return false;
   }
   fclose(fd);

@@ -25,7 +25,7 @@ bool carbon_mesh_manager_load_from_file(const char *file, CBN_Mesh_UID *out_uid)
     return false;
   }
   CBN_Mesh *mesh = carbon_memory_alloc(sizeof(CBN_Mesh));
-  if (!carbon_mesh_create_from_file(mesh, file)) {
+  if (!carbon_mesh_create_from_file(file, mesh)) {
     carbon_memory_free(mesh);
     return false;
   }

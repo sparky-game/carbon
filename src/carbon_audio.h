@@ -12,6 +12,12 @@
 CBNDEF_TEQ(CBN_Audio_UID, CBN_SlotMap_Key);
 CBNDEF_TAKA(cbn::audio, UID, CBN_Audio_UID);
 
+/**
+ * @brief Represents ...
+ */
+CBNDEF_TEQ(CBN_Audio_GID, CBN_SlotMap_Key);
+CBNDEF_TAKA(cbn::audio, GID, CBN_Audio_GID);
+
 // Forward declaration
 CBNDEF_T(CBN_SKAP);
 
@@ -54,13 +60,22 @@ CBNDEF void carbon_audio_set_volume(f32 volume);
 CBNDEF_AKA(cbn::audio, SetVolume, carbon_audio_set_volume);
 
 /**
- * @brief ...
- * @param file ...
- * @param out_uid ... (output argument pointer).
- * @return ...
  */
-CBNDEF bool carbon_audio_load_from_file(const char *file, CBN_Audio_UID *out_uid);
-CBNDEF_AKA(cbn::audio, LoadFromFile, carbon_audio_load_from_file);
+CBNDEF bool carbon_audio_new_group(CBN_Audio_GID *out);
+
+/**
+ * @brief Gets the current group-local volume level.
+ * @param gid ...
+ * @return 32-bit float in [0..1] for normal levels, or in [1..+inf) if amplified.
+ */
+CBNDEF f32 carbon_audio_group_get_volume(CBN_Audio_GID gid);
+
+/**
+ * @brief Sets the desired group-local volume level.
+ * @param gid ...
+ * @param volume 32-bit float in [0..1] for normal levels, or in [1..+inf] for amplification.
+ */
+CBNDEF void carbon_audio_group_set_volume(CBN_Audio_GID gid, f32 volume);
 
 /**
  * @brief ...
@@ -68,8 +83,15 @@ CBNDEF_AKA(cbn::audio, LoadFromFile, carbon_audio_load_from_file);
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF bool carbon_audio_load_from_file_streaming(const char *file, CBN_Audio_UID *out_uid);
-CBNDEF_AKA(cbn::audio, LoadFromFileStreaming, carbon_audio_load_from_file_streaming);
+CBNDEF bool carbon_audio_load_from_file(const char *file, const CBN_Audio_GID *gid, CBN_Audio_UID *out);
+
+/**
+ * @brief ...
+ * @param file ...
+ * @param out_uid ... (output argument pointer).
+ * @return ...
+ */
+CBNDEF bool carbon_audio_load_from_file_streaming(const char *file, const CBN_Audio_GID *gid, CBN_Audio_UID *out);
 
 /**
  * @brief ...
@@ -78,8 +100,7 @@ CBNDEF_AKA(cbn::audio, LoadFromFileStreaming, carbon_audio_load_from_file_stream
  * @param out_uid ... (output argument pointer).
  * @return ...
  */
-CBNDEF bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, CBN_Audio_UID *out_uid);
-CBNDEF_AKA(cbn::audio, LoadFromSKAP, carbon_audio_load_from_skap);
+CBNDEF bool carbon_audio_load_from_skap(const char *name, const CBN_SKAP *skap, const CBN_Audio_GID *gid, CBN_Audio_UID *out);
 
 /**
  * @brief ...
@@ -154,3 +175,17 @@ CBNDEF f32 carbon_audio_get_cursor(CBN_Audio_UID uid);
  * @return ...
  */
 CBNDEF void carbon_audio_set_fade(CBN_Audio_UID uid, f32 target, u64 len_ms);
+
+/**
+ * @brief Gets the current volume level for a specific sound.
+ * @param uid ...
+ * @return 32-bit float in [0..1] for normal levels, or in [1..+inf) if amplified.
+ */
+CBNDEF f32 carbon_audio_sound_get_volume(CBN_Audio_UID uid);
+
+/**
+ * @brief Sets the desired volume level for a specific sound.
+ * @param uid ...
+ * @param volume 32-bit float in [0..1] for normal levels, or in [1..+inf] for amplification.
+ */
+CBNDEF void carbon_audio_sound_set_volume(CBN_Audio_UID uid, f32 volume);

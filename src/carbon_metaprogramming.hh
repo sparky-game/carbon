@@ -500,5 +500,18 @@ namespace cbn::meta {
    */
   template <typename... Ts>
   concept HasCommon = requires { typename Common_t<Ts...>; };
+
+  /**
+   */
+  template <typename T, typename F, typename... Args>
+  inline cbn::Opt<T> OptWrap(F &&f, Args &&... args)
+    requires requires (T *x) {
+      { f(Forward<Args>(args)..., x) } -> SameAs<bool>;
+  }
+  {
+    T x {};
+    if (!f(Forward<Args>(args)..., &x)) return {};
+    return x;
+  }
 }
 #endif  // __cplusplus

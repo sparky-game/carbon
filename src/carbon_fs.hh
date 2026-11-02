@@ -12,14 +12,18 @@ namespace cbn::fs {
 }
 
 template <typename T>
-auto CBN_List_tt<T>::FromFile(const char *file) -> cbn::Opt<CBN_List_tt> {
-  CBN_List_tt data;
-  if (!cbn::fs::ReadFile((CBN_List *) &data, file)) return {};
-  return data;
+auto CBN_List_tt<T>::FromFile(const char *file) -> cbn::Opt<CBN_List_tt>
+  requires cbn::meta::IsTriviallyCopyable_v<T>
+{
+  return cbn::meta::OptWrap<CBN_List_tt>([](const char *f, CBN_List_tt *l){
+    return cbn::fs::ReadFile(f, (CBN_List *)l);
+  }, file);
 }
 
 template <typename T>
-bool CBN_List_tt<T>::ToFile(const char *file) const {
+bool CBN_List_tt<T>::ToFile(const char *file) const
+  requires cbn::meta::IsTriviallyCopyable_v<T>
+{
   return cbn::fs::WriteFile((CBN_List *)this, file);
 }
 

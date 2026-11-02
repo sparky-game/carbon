@@ -59,9 +59,7 @@ struct CBN_Vec3 : CBN_Vec3_t {
   //}
 
   cbn::Opt<CBN_Vec2> Project2D(f32 near_z) const {
-    CBN_Vec2 v;
-    if (!carbon_math_vec3_project_2d(*this, near_z, &v)) return {};
-    return v;
+    return cbn::meta::OptWrap<CBN_Vec2>(carbon_math_vec3_project_2d, *this, near_z);
   }
 
   CBN_Vec2 xx(void)  const { return CBN_Vec2(x);       }

@@ -32,7 +32,7 @@ CBNDEF_TAKA(cbn, Mesh, CBN_Mesh);
 
 /**
  */
-CBNDEF bool carbon_mesh_create_from_file(CBN_Mesh *m, const char *file);
+CBNDEF bool carbon_mesh_create_from_file(const char *file, CBN_Mesh *m);
 
 /**
  */
