@@ -3,33 +3,46 @@
 #ifdef __cplusplus
 
 struct CBN_Audio_UID : CBN_Audio_UID_t {
-  void Unload(void) const { carbon_audio_unload(*this); }
+  const CBN_Audio_UID &Unload(void) const { carbon_audio_unload(*this); return *this; }
 
-  void Play(void) const { carbon_audio_play(*this); }
+  const CBN_Audio_UID &Play(void) const { carbon_audio_play(*this); return *this; }
 
-  void Stop(void) const { carbon_audio_stop(*this); }
+  const CBN_Audio_UID &Stop(void) const { carbon_audio_stop(*this); return *this; }
 
-  void Resume(void) const { carbon_audio_resume(*this); }
+  const CBN_Audio_UID &Resume(void) const { carbon_audio_resume(*this); return *this; }
 
   bool IsPlaying(void) const { return carbon_audio_is_playing(*this); }
 
-  f32 GetPitch(void) const { return carbon_audio_get_pitch(*this); }
-  void SetPitch(f32 pitch) const { carbon_audio_set_pitch(*this, pitch); }
-  void ShiftPitch(void) const { carbon_audio_shift_pitch(*this); }
+  f32 GetPitch(void) const
+  { return carbon_audio_get_pitch(*this); }
+  const CBN_Audio_UID &SetPitch(f32 pitch) const
+  { carbon_audio_set_pitch(*this, pitch); return *this; }
+  const CBN_Audio_UID &ShiftPitch(void) const
+  { carbon_audio_shift_pitch(*this); return *this; }
 
-  void SetLooping(bool yn) const { carbon_audio_set_looping(*this, yn); }
+  const CBN_Audio_UID &SetLooping(bool yn) const
+  { carbon_audio_set_looping(*this, yn); return *this; }
 
   f32 GetCursor(void) const { return carbon_audio_get_cursor(*this); }
 
-  void SetFade(f32 target, u64 len_ms) const { carbon_audio_set_fade(*this, target, len_ms); }
+  const CBN_Audio_UID &SetFade(f32 from, f32 to, u64 len_ms) const
+  { carbon_audio_set_fade(*this, from, to, len_ms); return *this; }
+  const CBN_Audio_UID &SetFadeIn(u64 len_ms) const
+  { SetFade(0, 1, len_ms); return *this; }
+  const CBN_Audio_UID &SetFadeOut(u64 len_ms) const
+  { SetFade(-1, 0, len_ms); return *this; }
 
-  f32 GetVolume(void) const { return carbon_audio_sound_get_volume(*this); }
-  void SetVolume(f32 volume) const { return carbon_audio_sound_set_volume(*this, volume); }
+  f32 GetVolume(void) const
+  { return carbon_audio_sound_get_volume(*this); }
+  const CBN_Audio_UID &SetVolume(f32 volume) const
+  { carbon_audio_sound_set_volume(*this, volume); return *this; }
 };
 
 struct CBN_Audio_GID : CBN_Audio_GID_t {
-  f32 GetVolume(void) const { return carbon_audio_group_get_volume(*this); }
-  void SetVolume(f32 volume) const { return carbon_audio_group_set_volume(*this, volume); }
+  f32 GetVolume(void) const
+  { return carbon_audio_group_get_volume(*this); }
+  const CBN_Audio_GID &SetVolume(f32 volume) const
+  { carbon_audio_group_set_volume(*this, volume); return *this; }
 };
 
 namespace cbn::audio {
