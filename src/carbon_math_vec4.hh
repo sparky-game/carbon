@@ -6,6 +6,8 @@ struct alignas(4*4) CBN_Vec4 : CBN_Vec4_t {
   constexpr CBN_Vec4(f32 _x, f32 _y, f32 _z, f32 _w) : CBN_Vec4_t{.c = {_x, _y, _z, _w}} {}
   constexpr CBN_Vec4(f32 _x = 0) : CBN_Vec4(_x, _x, _x, _x) {}
 
+  constexpr bool operator==(CBN_Vec2 v) const { return x == v.x && y == v.y; }
+
   CBN_Vec4 operator+(CBN_Vec4 v) const { return carbon_math_vec4_add(*this, v); }
   
   CBN_Vec4 operator+(f32 s) const { return CBN_Vec4(x + s, y + s, z + s, w + s); }

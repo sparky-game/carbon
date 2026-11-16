@@ -28,17 +28,12 @@ struct CBN_StrView : CBN_StrView_t {
 
   usz LevDist(const CBN_StrView &sv) const { return carbon_string_lev_dist(c_str(), sv.c_str()); }
   
-  bool operator==(const CBN_StrView &sv) const { return carbon_strview_are_equal(*this, sv); }
-  
-  bool operator==(const char *s) const { return *this == CBN_StrView(s); }
-  
-  friend bool operator==(const char *s, const CBN_StrView &sv) { return sv == s; }
-  
-  bool operator!=(const CBN_StrView &sv) const { return !(*this == sv); }
-  
-  bool operator!=(const char *s) const { return !(*this == s); }
-  
-  friend bool operator!=(const char *s, const CBN_StrView &sv) { return !(s == sv); }
+  bool operator==(const CBN_StrView &sv) const
+  { return carbon_strview_are_equal(*this, sv); }
+  bool operator==(const char *s) const
+  { return *this == CBN_StrView(s); }
+  friend bool operator==(const char *s, const CBN_StrView &sv)
+  { return sv == s; }
 };
 
 namespace cbn::str::literals {

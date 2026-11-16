@@ -7,6 +7,8 @@ struct CBN_Vec3 : CBN_Vec3_t {
   constexpr CBN_Vec3(f32 _x = 0) : CBN_Vec3(_x, _x, _x) {}
   constexpr CBN_Vec3(CBN_Vec2 v, f32 _z = 0) : CBN_Vec3(v.x, v.y, _z) {}
 
+  constexpr bool operator==(CBN_Vec2 v) const { return x == v.x && y == v.y; }
+
   CBN_Vec3 operator+(CBN_Vec3 v) const
   { return carbon_math_vec3_add(*this, v); }
   constexpr CBN_Vec3 operator+(f32 s) const
@@ -19,7 +21,10 @@ struct CBN_Vec3 : CBN_Vec3_t {
   CBN_Vec3 &operator+=(f32 s)
   { return *this = *this + s; }
 
-  CBN_Vec3 operator-(CBN_Vec3 v) const { return carbon_math_vec3_sub(*this, v); }
+  CBN_Vec3 operator-(void) const
+  { return *this * -1; }
+  CBN_Vec3 operator-(CBN_Vec3 v) const
+  { return carbon_math_vec3_sub(*this, v); }
 
   f32 operator*(CBN_Vec3 v) const
   { return carbon_math_vec3_dot(*this, v); }

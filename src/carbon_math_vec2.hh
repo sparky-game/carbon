@@ -8,27 +8,36 @@ struct CBN_Vec2 : CBN_Vec2_t {
 
   static CBN_Vec2 FromPolar(f32 r, f32 phi) { return carbon_math_vec2_p(r, phi); }
 
-  CBN_Vec2 operator+(CBN_Vec2 v) const { return carbon_math_vec2_add(*this, v); }
+  constexpr bool operator==(CBN_Vec2 v) const { return x == v.x && y == v.y; }
 
-  CBN_Vec2 &operator+=(CBN_Vec2 v) { return *this = *this + v; }
+  CBN_Vec2 operator+(CBN_Vec2 v) const
+  { return carbon_math_vec2_add(*this, v); }
+  constexpr CBN_Vec2 operator+(f32 s) const
+  { return CBN_Vec2(x + s, y + s); }
+  friend constexpr CBN_Vec2 operator+(f32 s, CBN_Vec2 v)
+  { return v + s; }
 
-  constexpr CBN_Vec2 operator+(f32 s) const { return CBN_Vec2(x + s, y + s); }
-  friend constexpr CBN_Vec2 operator+(f32 s, CBN_Vec2 v) { return v + s; }
-  constexpr CBN_Vec2 &operator+=(f32 s) { return *this = *this + s; }
+  CBN_Vec2 &operator+=(CBN_Vec2 v)
+  { return *this = *this + v; }
+  constexpr CBN_Vec2 &operator+=(f32 s)
+  { return *this = *this + s; }
 
-  CBN_Vec2 operator-(void) const { return *this * -1; }
-
-  CBN_Vec2 operator-(CBN_Vec2 v) const { return carbon_math_vec2_sub(*this, v); }
+  CBN_Vec2 operator-(void) const
+  { return *this * -1; }
+  CBN_Vec2 operator-(CBN_Vec2 v) const
+  { return carbon_math_vec2_sub(*this, v); }
 
   CBN_Vec2 operator-(f32 s) const { return CBN_Vec2(x - s, y - s); }
   friend CBN_Vec2 operator-(f32 s, CBN_Vec2 v) { return -v + s; }
 
   CBN_Vec2 &operator-=(CBN_Vec2 v) { return *this = *this - v; }
 
-  CBN_Vec2 operator*(CBN_Vec2 v) const { return carbon_math_vec2_mult(*this, v); }
-
-  CBN_Vec2 operator*(f32 s) const { return carbon_math_vec2_scale(*this, s); }
-  friend CBN_Vec2 operator*(f32 s, CBN_Vec2 v) { return v * s; }
+  CBN_Vec2 operator*(CBN_Vec2 v) const
+  { return carbon_math_vec2_mult(*this, v); }
+  CBN_Vec2 operator*(f32 s) const
+  { return carbon_math_vec2_scale(*this, s); }
+  friend CBN_Vec2 operator*(f32 s, CBN_Vec2 v)
+  { return v * s; }
 
   CBN_Vec2 &operator*=(f32 s) { return *this = *this * s; }
 
