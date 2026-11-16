@@ -23,11 +23,14 @@ static ma_engine carbon_audio__engine;
 static CBN_SlotMap carbon_audio__library;
 static CBN_SlotMap carbon_audio__groups;
 
+#define CARBON_AUDIO__VOLUME_SMOOTH_PCM 960  // 960 PCM frames @ 44.1 kHz = 22 ms of smoothing (latency)
 #define CARBON_AUDIO__SOUND_FLAGS (MA_SOUND_FLAG_ASYNC)
 #define CARBON_AUDIO__SOUND_STREAM_FLAGS (MA_SOUND_FLAG_ASYNC | MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_LOOPING | MA_SOUND_FLAG_NO_PITCH)
 
 void carbon_audio_init(void) {
-  ma_result res = ma_engine_init(0, &carbon_audio__engine);
+  ma_engine_config cfg = ma_engine_config_init();
+  cfg.defaultVolumeSmoothTimeInPCMFrames = CARBON_AUDIO__VOLUME_SMOOTH_PCM;
+  ma_result res = ma_engine_init(&cfg, &carbon_audio__engine);
   CBN_ASSERT(res == MA_SUCCESS && "Failed to initialize the audio engine");
   carbon_audio__library = carbon_slotmap_create(sizeof(CBN_Audio_Entry));
   carbon_audio__groups = carbon_slotmap_create(sizeof(ma_sound_group *));
@@ -82,7 +85,9 @@ bool carbon_audio_new_group(CBN_Audio_GID *out) {
     return false;
   }
   ma_sound_group *g = carbon_memory_alloc(sizeof(ma_sound_group));
-  if (MA_SUCCESS != ma_sound_group_init(&carbon_audio__engine, 0, 0, g)) {
+  ma_sound_group_config cfg = ma_sound_group_config_init_2(&carbon_audio__engine);
+  cfg.volumeSmoothTimeInPCMFrames = CARBON_AUDIO__VOLUME_SMOOTH_PCM;
+  if (MA_SUCCESS != ma_sound_group_init_ex(&carbon_audio__engine, &cfg, g)) {
     CBN_ERROR("Failed to init new sound group");
     carbon_memory_free(g);
     return false;
